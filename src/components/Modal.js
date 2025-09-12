@@ -3,7 +3,12 @@ import React, { useState } from "react";
 //assets import
 import close_icon from "../assets/close_icon.png"
 
-function Modal({modal, active}) {
+function Modal({ modal, active, isOpen, onClose }) {
+
+
+    console.log(modal)
+
+    console.log(isOpen)
     const initialvalues = {
         name: "",
         email: "",
@@ -28,6 +33,7 @@ function Modal({modal, active}) {
         if (Object.keys(error).length === 0) {
             console.log(formValues);
         }
+        handleGSheet()
     }
 
     //Error hiding function (UX Improvement)
@@ -68,12 +74,27 @@ function Modal({modal, active}) {
         return errors;
     };
 
-
+    const handleGSheet = () => {
+        console.log(formValues);
+        const url = "https://script.google.com/a/macros/algorism.in/s/AKfycbz07AF6GYMOdXflkQCol5Udr2QzT6bnnjJTBt19WFibfu-KGuHdgjldCER1ZmHQ3iwT/exec"
+        fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: new URLSearchParams(formValues).toString(),
+        })
+            .then((res) => res.text(console.log("response", res)))
+            .then((data) => {
+                console.log("data", data);
+            })
+            .catch((error) => {
+                console.log("error", error);
+            });
+    }
     return (
         <>
             <div className={modal === true ? "bg-black bg-opacity-70 inset-0 fixed z-50 w-full h-full flex flex-col items-center justify-center" : "hidden"}>
                 <div className="bg-secondary p-7 rounded-lg relative w-[393px]">
-                    <img src={close_icon} alt="close-icon" className="w-[29px] h-[29px] absolute top-3 right-3 cursor-pointer" onClick={() => {active()}}/>
+                    <img src={close_icon} alt="close-icon" className="w-[29px] h-[29px] absolute top-3 right-3 cursor-pointer" onClick={() => { active() }} />
 
                     <h4 className="font-poppins text-center text-[#28040E] text-[18px] font-normal leading-normal mt-5">Please fill out this form. We will get in touch with you soon.</h4>
 
