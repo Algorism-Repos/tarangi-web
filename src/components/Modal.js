@@ -2,8 +2,11 @@ import React, { useState } from "react";
 
 //assets import
 import close_icon from "../assets/close_icon.png";
+import completed_illustration from "../assets/completed_illustration.png"
 
 function Modal({ modal, active, isOpen, onClose }) {
+
+  const [showModal, setshowModal] = useState("form");
   const initialvalues = {
     name: "",
     email: "",
@@ -30,6 +33,12 @@ function Modal({ modal, active, isOpen, onClose }) {
     if (Object.keys(error).length === 0) {
       console.log(formValues);
       handleGSheet();
+      setshowModal("thankyou");
+      setTimeout(() => {
+        active();
+        setshowModal("form");
+        setFormValues(initialvalues);
+      },3000);
     }
     
   };
@@ -114,10 +123,10 @@ const handleGSheet = () => {
           />
 
           <h4 className="font-poppins text-center text-[#28040E] text-[18px] font-normal leading-normal mt-5">
-            Please fill out this form. We will get in touch with you soon.
+            {showModal === "form" ? "Please fill out this form. We will get in touch with you soon." : "Your enquiry has been submitted successfully!"}
           </h4>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className={showModal === "form" ? "block" : "hidden"}>
             <div className="flex flex-col items-center gap-y-5 max-w-[317px] mx-auto mt-7">
               <div className="flex flex-col w-full">
                 <label className="font-poppins text-[12px] font-medium leading-[16.8px] text-[#03060D]">
@@ -129,6 +138,7 @@ const handleGSheet = () => {
                   type="text"
                   onChange={handleChange}
                   onFocus={handleFocus}
+                  value={formValues.name}
                 />
                 <h4 className="font-poppins text-red-700 text-[12px] mt-1">
                   {formErrors.name}
@@ -146,6 +156,7 @@ const handleGSheet = () => {
                   onChange={handleChange}
                   onFocus={handleFocus}
                   placeholder="+91 00000 00000"
+                  value={formValues.phone}
                 />
                 <h4 className="font-poppins text-red-700 text-[12px] mt-1">
                   {formErrors.phone}
@@ -162,6 +173,7 @@ const handleGSheet = () => {
                   type="Email"
                   onChange={handleChange}
                   onFocus={handleFocus}
+                  value={formValues.email}
                 />
                 <h4 className="font-poppins text-red-700 text-[12px] mt-1">
                   {formErrors.email}
@@ -178,6 +190,7 @@ const handleGSheet = () => {
                   type="text"
                   onChange={handleChange}
                   onFocus={handleFocus}
+                  value={formValues.product}
                 />
                 <h4 className="font-poppins text-red-700 text-[12px] mt-1">
                   {formErrors.product}
@@ -191,6 +204,8 @@ const handleGSheet = () => {
               </button>
             </div>
           </form>
+
+          <img src={completed_illustration} alt="Illustration" className={showModal != "form" ? "block" : "hidden"} />
         </div>
       </div>
     </>

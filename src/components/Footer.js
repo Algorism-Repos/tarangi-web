@@ -4,8 +4,6 @@ import React, { useState } from "react";
 import logo from "../assets/logo.png"
 import instagram from "../assets/instagram_icon.svg"
 import whatsapp from '../assets/whatsapp_icon.svg'
-import twitter from "../assets/twitter_icon.svg"
-import linkedin from "../assets/linkedin_icon.svg"
 import Modal from "./Modal";
 function Footer() {
 
