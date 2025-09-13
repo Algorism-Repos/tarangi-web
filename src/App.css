@@ -4,7 +4,7 @@
 }
 
 .banner-section {
-  background-image: url("./assets/backgrounds/banner_background.png");
+  background: url("./assets/backgrounds/banner_background.png");
   height: 780px;
   background-size: cover;
   background-repeat: no-repeat;
@@ -108,6 +108,10 @@
   align-items: center;
 }
 
+html {
+  @apply scroll-smooth;
+}
+
 /* Form Classes */
 .input-box{
   width: 100%;
@@ -126,6 +130,13 @@ input::placeholder{
   line-height: 22.4px;
   color: #B2AC99;
 }
+
+/* @media  only screen and (max-width : 1025px) {
+    .about-first-section{
+    background-image: url("./assets/backgrounds/about_firstsection_background_mobile.png");
+    height: fit-content;
+  }
+} */
 
 @media only screen and (max-width: 620px) {
   .footer-section {
@@ -152,6 +163,7 @@ input::placeholder{
 
   .whyus {
     background-image: url("./assets/backgrounds/whyus_background_mobile.png");
+    padding: 100px 0px;
   }
 
   .section-heading {
