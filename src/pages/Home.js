@@ -124,28 +124,34 @@ function Home() {
             {/* Gold vs Gold Plated Silver Section */}
             <div className="bg-secondary">
                 <div className="max-w-[1220px] mx-auto py-20 sm:pt-40 sm:pb-20  px-3 ">
-                    <h1 className="section-heading sm:w-[846px] w-[336px] mx-auto">Gold vs Silver Jewellery</h1>
+                    <h1 className="section-heading sm:w-[846px] w-[336px] mx-auto tracking-[]">Gold vs Silver Jewellery</h1>
                     <p className="section-content text-center sm:w-[1034px] w-[330px] mx-auto mt-14">Gold jewelry has always been cherished for its permanence, but often feels out of reach for everyday style. Gold-plated silver brings the same timeless look with the ease and affordability to make elegance part of daily life.</p>
                     {/* <p className="section-content text-center sm:w-[1034px] w-[330px] mx-auto mt-9">At Tarangi, each gold-plated silver piece fuses the richness of gold with the strength of sterling silver. </p> */}
 
 
                     {/* Images */}
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-y-12 sm:gap-y-28 w-full mt-16 sm:mt-28">
+
+                    <h1 className="max-w-[650px] mx-auto text-center font-atteron text-[#5C0A1F] text-[26px] sm:text-[40px] font-semibold tracking-[1px] sm:tracking-[2.5px] mt-16 sm:mt-20">Enjoy stunning designs without the heavy price tag</h1>
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-y-12 sm:gap-y-28 w-full mt-16 sm:mt-20">
+
                         <div className="relative border">
                             <img src={silver_jewel} alt="silver_jewel" className="sm:w-[542px] sm:h-[645px]" />
                             <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute top-[100px] sm:top-[150px] left-1/2 -translate-x-1/2 -translate-y-1/2">Gold</h2>
-                            <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2">₹ 15,00,000</h2>
+                            <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2">₹ 4,00,000</h2>
                         </div>
 
                         <div className="relative">
                             <img src={gold_jewel} alt="silver_jewel" className="sm:w-[542px] sm:h-[645px]" />
                             <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute top-[100px] sm:top-[150px] left-1/2 -translate-x-1/2 -translate-y-1/2">Silver</h2>
-                            <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2">₹ 1,50,000</h2>
+                            <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2">₹ 12,000</h2>
+
+                            {/* <h2 className="max-w-[350px] font-atteron text-white text-center font-normal leading-normal text-[25px] sm:text-[24px] z-20 tracking-[2px] absolute bottom-0 sm:bottom-8 left-[20%]">Get the Look of Luxury At just<span className="text-[30px] font-bold"> ₹12,000</span></h2> */}
+                            <p></p>
                         </div>
                     </div>
 
                     <div className="max-w-6xl mx-auto mt-8 sm:mt-28 px-4 py-12">
-                        <h1 className="font-atteron text-[30px] font-bold text-[#5C0A1F] text-center sm:text-[48px]">Why choose Tarangi’s<br className="hidden md:block" />silver jewelry?</h1>
+                        <h1 className="font-atteron text-[30px] font-bold text-[#5C0A1F] text-center tracking-[2px] sm:text-[48px]">Why choose Tarangi’s<br className="hidden md:block" />silver jewelry?</h1>
 
                         <div className="flex flex-col w-fit mx-auto gap-y-7 mt-16 px-4 sm:px-0">
                             <div className="flex flex-row items-center gap-x-4">
