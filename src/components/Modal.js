@@ -112,7 +112,7 @@ const handleGSheet = () => {
             : "hidden"
         }
       >
-        <div className="bg-secondary p-7 rounded-lg relative w-[393px]">
+        <div className="bg-secondary p-7 rounded-lg relative w-full sm:w-[393px]">
           <img
             src={close_icon}
             alt="close-icon"

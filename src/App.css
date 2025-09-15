@@ -1,3 +1,9 @@
+
+html {
+  @apply scroll-smooth;
+}
+
+
 @font-face {
   font-family: "Atteron";
   src: url("./assets/fonts/atteron.ttf") format("truetype");
@@ -108,9 +114,6 @@
   align-items: center;
 }
 
-html {
-  @apply scroll-smooth;
-}
 
 /* Form Classes */
 .input-box{

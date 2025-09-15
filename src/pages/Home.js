@@ -84,7 +84,7 @@ function Home() {
                         </div>
                     </div>
 
-                    <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-32 sm:mt-0 ">Tarangi Specials</h1>
+                    <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-32 sm:mt-0 overflow-x-hidden ">Tarangi Specials</h1>
 
                     <div className="flex flex-col sm:flex-row items-center sm:gap-x-12 gap-y-24 sm:flex-wrap justify-center mt-12 sm:mt-44">
 
@@ -131,7 +131,7 @@ function Home() {
 
                     {/* Images */}
 
-                    <h1 className="max-w-[650px] mx-auto text-center font-atteron text-[#5C0A1F] text-[26px] sm:text-[40px] font-semibold tracking-[1px] sm:tracking-[2.5px] mt-16 sm:mt-20">Enjoy stunning designs without the heavy price tag</h1>
+                    <h1 className="w-[340px] sm:w-[680px] mx-auto text-center font-atteron text-[#5C0A1F] text-[20px] sm:text-[40px] font-semibold tracking-[1px] sm:tracking-[2.5px] mt-16 sm:mt-20">Enjoy stunning designs without the heavy price tag</h1>
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-y-12 sm:gap-y-28 w-full mt-16 sm:mt-20">
 
                         <div className="relative border">
