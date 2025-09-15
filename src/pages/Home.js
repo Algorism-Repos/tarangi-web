@@ -47,6 +47,7 @@ function Home() {
     return (
         <>
             <a href="https://wa.me/919003058300/?text=Hi," target="_blank"><img src={whatsapp_floating} alt="Whatsapp_Icon" className="w-[50px] sm:w-[70px] h-fit fixed bottom-3 right-3 sm:bottom-9 sm:right-7 animate-bounce hover:scale-125 duration-300 transition-transform z-30" /></a>
+
             <div className="banner-section">
                 <h1 className="font-atteron uppercase text-[52px] leading-[70px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px]">Born from tradition Designed for today</h1>
                 <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">Because exculsive 925 silver jewelry should feel as unique as the one who wears it.</h4>
@@ -59,14 +60,14 @@ function Home() {
                 <h1 className="font-atteron text-[52px] sm:text-[72px] text-center text-[#5C0A1F] leading-normal">WHY US?</h1>
 
                 <div className="font-poppins text-center text-[16px] sm:text-[24px] font-medium sm:leading-[38px] text-[#28040E] max-w-[318px] sm:max-w-[1000px] mt-5 sm:mt-9 ">
-                    <p>With nearly 60 years of heritage, Tarangi carries forward the craftsmanship and trust of their familiy's tradition, reimagined for today by the daughters. Each piece blends timeless artistry with a modern sensibility, creating jewelry that feels rooted and refreshingly new.The handmade silver jewelry designs celebrate everyone, including women, men and couples, making inclusivity our defining hallmark. Tarangi offers fine 925 silver jewelry </p>
+                    <p>With nearly 60 years of heritage, Tarangi carries forward the craftsmanship and trust of their family's tradition, reimagined for today by the daughters. Each piece blends timeless artistry with a modern sensibility, creating jewelry that feels rooted and refreshingly new. The handmade silver jewelry designs celebrate everyone, including women, men and couples, making inclusivity our defining hallmark. Tarangi offers fine 925 silver jewelry. </p>
                 </div>
             </div>
 
             {/* Collections - Section */}
             <div className="design-section py-40 relative">
                 <div className="max-w-7xl mx-auto">
-                    <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white ">Our Curations</h1>
+                    <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white">Our Curations</h1>
                     <div className="flex flex-col gap-y-[160px] sm:gap-y-0 sm:flex-row items-center justify-center gap-x-12 relative my-36 sm:my-56">
                         <div className="border-2 border-white w-[360px] h-[374px] relative z-0 overflow-hidden" onClick={toggle}>
                             <img src={men_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
@@ -151,24 +152,24 @@ function Home() {
                     </div>
 
                     <div className="max-w-6xl mx-auto mt-8 sm:mt-28 px-4 py-12">
-                        <h1 className="font-atteron text-[30px] font-bold text-[#5C0A1F] text-center tracking-[2px] sm:text-[48px]">Why choose Tarangi’s<br className="hidden md:block" />silver jewelry?</h1>
+                        <h1 className="font-atteron text-[30px] font-bold text-[#5C0A1F] text-center tracking-[2px] sm:text-[48px]">Why choose Tarangi’s<br className="hidden md:block" /> silver jewelry?</h1>
 
                         <div className="flex flex-col w-fit mx-auto gap-y-7 mt-16 px-4 sm:px-0">
                             <div className="flex flex-row items-center gap-x-4">
                                 <img className="w-[28px]" src={bullet_icon} />
-                                <p className="font-poppins text-left text-[18px] sm:text-[24px]">The luminous beauty of gold, made affordable</p>
+                                <p className="font-poppins text-left text-[18px] sm:text-[24px]">The luminous beauty of gold, made affordable.</p>
                             </div>
                             <div className="flex flex-row items-center gap-x-4">
                                 <img className="w-[28px]" src={bullet_icon} />
-                                <p className="font-poppins text-left text-[18px] sm:text-[24px]">Lightweight and comfortable for everyday wear</p>
+                                <p className="font-poppins text-left text-[18px] sm:text-[24px]">Lightweight and comfortable for everyday wear.</p>
                             </div>
                             <div className="flex flex-row items-center gap-x-4">
                                 <img className="w-[28px]" src={bullet_icon} />
-                                <p className="font-poppins text-left text-[18px] sm:text-[24px]">Versatile, from casual looks to special occasions</p>
+                                <p className="font-poppins text-left text-[18px] sm:text-[24px]">Versatile, from casual looks to special occasions.</p>
                             </div>
                             <div className="flex flex-row items-center gap-x-4">
                                 <img className="w-[28px]" src={bullet_icon} />
-                                <p className="font-poppins text-left text-[18px] sm:text-[24px]">Crafted with lasting artistry and care</p>
+                                <p className="font-poppins text-left text-[18px] sm:text-[24px]">Crafted with lasting artistry and care.</p>
                             </div>
                         </div>
 
@@ -223,7 +224,7 @@ function Home() {
                         <div className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
                             <img src={new_product_6} alt="new_product_image" className="w-[395px] h-[395px]" />
                             <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">Choco Hollow Bracelet</h5>
-                            <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">₹ 2,400</h4>
+                            <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">₹ 4,100</h4>
                         </div>
                     </div>
                 </div>
