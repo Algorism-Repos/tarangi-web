@@ -50,7 +50,7 @@ function Navbar() {
 
                     <div className="flex flex-col items-center mt-10 gap-y-12">
                         <Link to="/home"><h2 className="font-poppins text-[16px] font-normal leading-normal text-center text-white" onClick={() => { setMenuVisible(false) }}>Home</h2></Link>
-                        <Link to="/home"><h2 className="font-poppins text-[16px] font-normal leading-normal text-center text-white" onClick={() => { setMenuVisible(false) }}>About Us</h2></Link>
+                        <Link to="/about"><h2 className="font-poppins text-[16px] font-normal leading-normal text-center text-white" onClick={() => { setMenuVisible(false) }}>About Us</h2></Link>
 
                     </div>
 
