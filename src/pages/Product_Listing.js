@@ -9,6 +9,7 @@ import brown_ellipse from '../assets/Products/brown_ellipse.png'
 
 
 function Product_Listing() {
+     console.log("hello")
 
     const Products = [
         {
