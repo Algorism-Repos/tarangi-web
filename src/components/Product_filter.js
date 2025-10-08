@@ -63,7 +63,11 @@ function Product_Filter() {
                                 <label className="flex items-center justify-between text-font-grey cursor-pointer">
 
                                     <div className="flex items-center space-x-3">
-                                        <input type="checkbox" />
+                                        {/* Checkbox */}
+                                        <label className="custom-checkbox">
+                                            <input type="checkbox" />
+                                            <span class="checkmark"></span>
+                                        </label>
                                         <span className="text-[18px]">{items.label}</span>
                                     </div>
 
@@ -93,10 +97,13 @@ function Product_Filter() {
                                 <label className="flex items-center justify-between text-font-grey cursor-pointer">
 
                                     <div className="flex items-center space-x-3">
-                                        <input type="checkbox" />
+                                        {/* Checkbox */}
+                                        <label className="custom-checkbox">
+                                            <input type="checkbox" />
+                                            <span class="checkmark"></span>
+                                        </label>
                                         <span className="text-[18px]">{items.label}</span>
                                     </div>
-
                                 </label>
                             ))}
 
@@ -123,7 +130,11 @@ function Product_Filter() {
                                 <label className="flex items-center justify-between text-font-grey cursor-pointer">
 
                                     <div className="flex items-center space-x-3">
-                                        <input type="checkbox" />
+                                        {/* Checkbox */}
+                                        <label className="custom-checkbox">
+                                            <input type="checkbox" />
+                                            <span class="checkmark"></span>
+                                        </label>
                                         <span className="text-[18px]">{items.label}</span>
                                     </div>
 
@@ -174,14 +185,14 @@ function Product_Filter() {
                 <div className={showFilter === true ? "font-poppins bg-light-sandal w-full h-[469px] fixed inset-0 right-0 z-20 p-6" : "hidden"}>
 
                     <div className="flex justify-between my-4">
-                        <h2 className="text-[18px] font-semibold text-[#434343]">Sort Designs By</h2>
-                        <img className="w-[26px] h-[26px]" src={close_icon} alt="Close icon" onClick={() => { setShowFilter(false) }} />
+                        <h2 className="text-[18px] font-semibold text-[#434343]">Filter</h2>
+                        <img className="w-[32px] h-[32px]" src={close_icon} alt="Close icon" onClick={() => { setShowFilter(false) }} />
                     </div>
 
-                    <div className="flex gap-x-8 justify-evenly mt-10">
+                    <div className="flex gap-x-16 justify-start mt-10">
 
-                        <div className="flex flex-col items-start space-y-6 text-[#747474]">
-                            <button className=" focus:text-primary" onClick={() => setTab("productCatergory")}>Product Catergory</button>
+                        <div className="flex flex-col items-start text-[16px] space-y-6 text-[#747474]">
+                            <button className=" focus:text-primary" onClick={() => setTab("productCatergory")}>Catergory</button>
                             <hr className="border border-t-[#D9D9D9] w-full" />
                             <button className=" focus:text-primary" onClick={() => setTab("priceRange")}>Price Range</button>
                             <hr className="border border-t-[#D9D9D9] w-full" />
@@ -194,15 +205,19 @@ function Product_Filter() {
                         {/* Catergory */}
                         {tab === "productCatergory" &&
                             <div>
-                                <div className="space-y-3">
+                                <div className="space-y-5">
 
                                     {productCatergory.map((items) => (
 
                                         <label className="flex items-center justify-between text-font-grey cursor-pointer">
 
-                                            <div className="flex items-center space-x-3">
-                                                <input type="checkbox" />
-                                                <span className="text-[14px]">{items.label}</span>
+                                            <div className="flex items-center space-x-2">
+                                                {/* Checkbox */}
+                                                <label className="custom-checkbox">
+                                                    <input type="checkbox" />
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                                <span className="text-[15px]">{items.label}</span>
                                             </div>
 
                                         </label>
@@ -215,17 +230,20 @@ function Product_Filter() {
                         {/* Price Filter */}
                         {tab === "priceRange" &&
                             <div>
-                                <div className="space-y-3">
+                                <div className="w-[160px] space-y-5">
 
                                     {priceRanges.map((items) => (
 
                                         <label className="flex items-center justify-between text-font-grey cursor-pointer">
 
-                                            <div className="flex items-center space-x-3">
-                                                <input type="checkbox" />
+                                            <div className="flex items-center space-x-2">
+                                                {/* Checkbox */}
+                                                <label className="custom-checkbox">
+                                                    <input type="checkbox" />
+                                                    <span class="checkmark"></span>
+                                                </label>
                                                 <span className="text-[14px]">{items.label}</span>
                                             </div>
-
                                         </label>
                                     ))}
 
@@ -236,15 +254,19 @@ function Product_Filter() {
                         {/* Occasion */}
                         {tab === "occasion" &&
                             <div>
-                                <div className="space-y-3">
+                                <div className="space-y-5">
 
                                     {Occasion.map((items) => (
 
                                         <label className="flex items-center justify-between text-font-grey cursor-pointer">
 
-                                            <div className="flex items-center space-x-3">
-                                                <input type="checkbox" />
-                                                <span className="text-[14px]">{items.label}</span>
+                                            <div className="flex items-center space-x-2">
+                                                {/* Checkbox */}
+                                                <label className="custom-checkbox ">
+                                                    <input type="checkbox" />
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                                <span className="text-[15px]">{items.label}</span>
                                             </div>
 
                                         </label>
