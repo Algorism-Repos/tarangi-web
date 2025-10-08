@@ -6,6 +6,7 @@ import Navbar from './components/Navbar.js';
 import Footer from './components/Footer.js';
 import Home from "./pages/Home.js"
 import About from "./pages/About.js"
+import Product_page from './pages/Product_page.js';
 
 
 
@@ -17,6 +18,7 @@ function App() {
           <Route path="/*" element={<Navigate to="/home" />} />
           <Route path='/home' element={<Home />} />
           <Route path='/about' element={<About />} />
+          <Route path='/products' element={<Product_page />} />
         </Routes>
       <Footer />
     </>

@@ -189,3 +189,10 @@ input::placeholder{
   }
 
 }
+
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  border: 1px solid #C89A5D;
+  cursor: pointer;
+}
