@@ -29,6 +29,7 @@ function Navbar() {
                 <div className="font-poppins text-white text-[16px] leading-normal font-normal flex flex-row gap-x-[60px] items-center">
                     <Link to="/home"><p>Home</p></Link>
                     <Link to="/about"><p>About Us</p></Link>
+                    <Link to="/products">Products</Link>
                 </div>
 
                 <div className="flex flex-row items-center gap-x-2.5">
