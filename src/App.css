@@ -68,6 +68,7 @@ html {
 
 .footer-section {
   background-image: url("./assets/backgrounds/footer_background.png");
+  background-color: #4B001A;
   background-size: cover;
   background-repeat: no-repeat;
   display: flex;
@@ -144,9 +145,11 @@ input::placeholder{
 @media only screen and (max-width: 620px) {
   .footer-section {
     background-image: url("./assets/backgrounds/footer_background_mobile.png");
+    background-color: #4B001A;
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: center center;
+    background-position: center right;
+    width: 100%;
 
   }
 

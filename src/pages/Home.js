@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Modal from "../components/Modal"
 
@@ -44,9 +44,22 @@ function Home() {
     // -------------------
 
 
+    const [animate, setAnimate] = useState(false);
+
+    useEffect(() => {
+        // small timeout to ensure mount
+        const timer = setTimeout(() => {
+            setAnimate(true);
+        }, 100);  // try 50-100 ms
+        return () => clearTimeout(timer);
+    }, []);
+
+
     return (
         <>
-            <a href="https://wa.me/919003058300/?text=Hi," target="_blank"><img src={whatsapp_floating} alt="Whatsapp_Icon" className="w-[50px] sm:w-[70px] h-fit fixed bottom-3 right-3 sm:bottom-9 sm:right-7 animate-bounce hover:scale-125 duration-300 transition-transform z-30" /></a>
+            <a href="https://wa.me/919003058300/?text=Hi," target="_blank" className="fixed bottom-3 right-3 sm:bottom-9 sm:right-7 z-30 ">
+                <img src={whatsapp_floating} alt="Whatsapp_Icon" className={`w-[50px] sm:w-[70px] h-fit hover:scale-125 max-h-[70px] ${animate ? " animate-bounce duration-300 transition-transform will-change-transform transform-gpu" : ""}`} />
+            </a>
 
             <div className="banner-section">
                 <h1 className="font-atteron uppercase text-[52px] leading-[70px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px]">Born from tradition Designed for today</h1>
@@ -60,7 +73,7 @@ function Home() {
                 <h1 className="font-atteron text-[52px] sm:text-[72px] text-center text-[#5C0A1F] leading-normal">WHY US?</h1>
 
                 <div className="font-poppins text-center text-[16px] sm:text-[24px] font-medium sm:leading-[38px] text-[#28040E] max-w-[318px] sm:max-w-[1000px] mt-5 sm:mt-9 ">
-                    <p>With nearly 60 years of heritage, Tarangi carries forward the craftsmanship and trust of their family's tradition, reimagined for today by the daughters. Each piece blends timeless artistry with a modern sensibility, creating jewelry that feels rooted and refreshingly new. The handmade silver jewelry designs celebrate everyone, including women, men and couples, making inclusivity our defining hallmark. Tarangi offers fine 925 silver jewelry. </p>
+                    <p>With nearly 60 years of heritage, Tarangi carries forward the craftsmanship and trust of their family's tradition, reimagined for today by the siblings. Each piece blends timeless artistry with a modern sensibility, creating jewelry that feels rooted and refreshingly new. The handmade silver jewelry designs celebrate everyone, including women, men and couples, making inclusivity our defining hallmark. Tarangi offers fine 925 silver jewelry. </p>
                 </div>
             </div>
 
@@ -95,8 +108,8 @@ function Home() {
                         </div>
 
                         <div className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
-                            <img src={statement_earrings} alt="tarangi_special_1" className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white " />
-                            <h3 className="font-atteron text-[34px] font-normal leading-normal text-white mt-2">Statement Earings</h3>
+                            <img src={statement_earrings} alt="tarangi_special_1" className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-whi te " />
+                            <h3 className="font-atteron text-[34px] font-normal leading-normal text-white mt-2">Statement Ear rings</h3>
                         </div>
 
                         <div className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 
 //assets import
 import illustration from "../assets/about-banner-illustration.png"
@@ -11,16 +11,30 @@ import whatsapp_floating from "../assets/whatsapp_icon.svg"
 
 
 function About() {
+
+    const [animate, setAnimate] = useState(false);
+
+    useEffect(() => {
+        // small timeout to ensure mount
+        const timer = setTimeout(() => {
+            setAnimate(true);
+        }, 100);  // try 50-100 ms
+        return () => clearTimeout(timer);
+    }, []);
+
+
     return (
         <>
-            <a href="https://wa.me/919003058300/?text=Hi," target="_blank"><img src={whatsapp_floating} alt="Whatsapp_Icon" className="w-[50px] sm:w-[70px] h-fit fixed bottom-3 right-3 sm:bottom-9 sm:right-7 animate-bounce hover:scale-125 duration-300 transition-transform z-30" /></a>
+            <a href="https://wa.me/919003058300/?text=Hi," target="_blank" className="fixed bottom-3 right-3 sm:bottom-9 sm:right-7 z-30 ">
+                <img src={whatsapp_floating} alt="Whatsapp_Icon" className={`w-[50px] sm:w-[70px] h-fit hover:scale-125 max-h-[70px] ${animate ? " animate-bounce duration-300 transition-transform will-change-transform transform-gpu" : ""}`} />
+            </a>
 
             {/* Banner Section */}
             <div className="about-banner">
                 <div className="flex flex-col lg:flex-row items-center sm:items-start gap-x-32 sm:mt-[130px]">
                     <div className="sm:mt-32 w-[335px] sm:w-full text-center sm:text-left">
                         <h1 className="font-atteron  sm:w-full text-[52px] sm:text-[128px] text-white font-normal leading-normal mx-auto sm:mx-0">Our Story</h1>
-                        <h6 className="font-poppins text-[16px] sm:text-[22px] text-white font-normal leading-normal">Crafted from South Indian heritage, for today’s world.</h6>
+                        <h6 className="font-poppins text-[16px] sm:text-[22px] text-white font-normal leading-normal">Blending traditional artistry with a modern sensibility</h6>
                     </div>
                     <img src={illustration} alt="banner-illustration" className="w-[271px] h-[492px] mt-[50px] sm:w-[406px] sm:h-[738px] mx-auto" />
                 </div>
@@ -36,7 +50,7 @@ function About() {
 
                         <div className="max-w-[350px] sm:max-w-[620px] mx-auto px-3">
                             <h1 className="font-atteron text-[36px] sm:text-[63px] font-normal leading-tight text-[#5C0A1F] ">trusted legacy timeless jewelry </h1>
-                            <p className="font-poppins text-[16px] sm:text-[24px] font-normal leading-normal text-[#28040E] mt-5 sm:mt-9">Tarangi is founded by third generation daughters from the familiy of jewellers. We are sisters united in vision to shape a globally admired fine jewelry brand that blends timeless South Indian artistry with modern elegance.</p>
+                            <p className="font-poppins text-[16px] sm:text-[24px] font-normal leading-normal text-[#28040E] mt-5 sm:mt-9">Tarangi is founded by third generation Entreprenuers from the family of jewellers. We are siblings united in vision to shape a globally admired fine jewelry brand that blends timeless artistry with modern elegance.</p>
                         </div>
                     </div>
                 </div>
@@ -51,7 +65,7 @@ function About() {
                         <img src={about_product_2} alt="about-product-1" className="w-[324px] h-[318px] sm:w-[619px] sm:h-[607px] absolute top-3 sm:top-7 left-[-30px] " />
                     </div>
 
-                    <h5 className="font-poppins text-white text-[16px] sm:text-[24px] font-normal leading-normal sm:w-[623px] w-[361px] mx-auto px-3">Every piece at Tarangi is handmade by skilled artisans, reflecting detail and elegance. We design and craft silver jewelry that is premium yet accessible, without compromising on the quality or artistry.</h5>
+                    <h5 className="font-poppins text-white text-[16px] sm:text-[24px] font-normal leading-normal sm:w-[623px] w-[361px] mx-auto px-3">Every piece at Tarangi is handmade by skilled artisans, reflecting detail and elegance. We design and craft silver jewelry that is premium yet accessible.</h5>
                 </div>
 
                 <div className="flex flex-col gap-y-24 sm:flex-row items-end sm:items-center sm:justify-between mt-20 sm:pl-28 overflow-hidden">
