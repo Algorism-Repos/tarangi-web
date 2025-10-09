@@ -7,6 +7,8 @@ import Footer from './components/Footer.js';
 import Home from "./pages/Home.js"
 import About from "./pages/About.js"
 import Product_page from './pages/Product_page.js';
+import Product_Description from './pages/Product_Description.js';
+import Favourites from './pages/Favourites.js'
 
 
 
@@ -19,6 +21,8 @@ function App() {
           <Route path='/home' element={<Home />} />
           <Route path='/about' element={<About />} />
           <Route path='/products' element={<Product_page />} />
+          <Route path='/productdescription' element={<Product_Description />} />
+          <Route path='/favourites' element={<Favourites />} />
         </Routes>
       <Footer />
     </>

@@ -146,7 +146,6 @@ function Product_Filter() {
                         <hr className="border border-[#C8C8C8] my-[25px]" />
                     </div>
 
-
                 </div >
 
                 {/* Mobile Verion */}
@@ -181,7 +180,7 @@ function Product_Filter() {
                     </div>
                 </div>
 
-                {/* Filter */}
+                {/* Filter popup */}
                 <div className={showFilter === true ? "font-poppins bg-light-sandal w-full h-[469px] fixed inset-0 right-0 z-20 p-6" : "hidden"}>
 
                     <div className="flex justify-between my-4">
@@ -190,14 +189,15 @@ function Product_Filter() {
                     </div>
 
                     <div className="flex gap-x-16 justify-start mt-10">
-
+                        
+                        {/* Tabs */}
                         <div className="flex flex-col items-start text-[16px] space-y-6 text-[#747474]">
                             <button className=" focus:text-primary" onClick={() => setTab("productCatergory")}>Catergory</button>
-                            <hr className="border border-t-[#D9D9D9] w-full" />
+                                <hr className="border border-t-[#D9D9D9] w-full" />
                             <button className=" focus:text-primary" onClick={() => setTab("priceRange")}>Price Range</button>
-                            <hr className="border border-t-[#D9D9D9] w-full" />
+                                <hr className="border border-t-[#D9D9D9] w-full" />
                             <button className=" focus:text-primary" onClick={() => setTab("occasion")}>Occasion</button>
-                            <hr className="border border-t-[#D9D9D9] w-full" />
+                                <hr className="border border-t-[#D9D9D9] w-full" />
                         </div>
 
 

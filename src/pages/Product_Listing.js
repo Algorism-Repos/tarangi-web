@@ -32,6 +32,7 @@ function Product_Listing() {
             product_name: "Stone Necklace"
 
         },
+        
     ]
 
     return (
