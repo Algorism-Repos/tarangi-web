@@ -17,12 +17,12 @@ function Footer() {
     return (
         <>
             {/* Coming Soon - Section */}
-            {/* <div className="coming-soon">
+            <div className="coming-soon">
                 <h1 className="font-atteron text-[32px] sm:text-[49px] font-normal leading-normal text-white w-[328px] text-center sm:w-full ">Launching our products soon</h1>
                 <button className="font-poppins text-white text-[24px] font-extralight leading-normal bg-[#4B001A] rounded-[93px] py-[16px] px-[26px] cursor-pointer mt-7 sm:mt-20 " onClick={toggle}
                 >Get in Touch</button>
-            </div> */}
-            <div className="footer-section">
+            </div>
+            <div className="footer-section ">
                 <div className="flex flex-col gap-y-20 sm:flex-row sm:items-center sm:justify-between px-3 pt-5 pb-12 sm:py-0 sm:pt-0 sm:px-[70px] ">
                     <div className="">
                         <img src={logo} alt="brand-logo" className="w-[231px] h-fit" />

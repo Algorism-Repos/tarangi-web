@@ -7,9 +7,7 @@ module.exports = {
         "white": "#FFFFFF",
         "black" : "#000000",
         "primary": "#680F26",
-        "secondary": "#FCE8CD",
-        "light-sandal" : "#FFF5E8",
-        "font-grey" : "#4E4E4E"
+        "secondary": "#FCE8CD"
       },
       fontFamily:{
         "atteron" : ['atteron', 'serif'],
