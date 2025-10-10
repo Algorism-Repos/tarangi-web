@@ -36,6 +36,14 @@ function Product_Filter() {
 
     ];
 
+    const ScrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "smooth"
+        })
+    }
+
 
     return (
         <>
@@ -173,10 +181,10 @@ function Product_Filter() {
 
                         <h2 className="text-center text-[18px] font-semibold text-[#434343]">Sort Designs By</h2>
 
-                        <button className="text-[16px] font-medium text-left focus:text-primary" onClick={() => { setShowSort(false) }} >Latest</button>
-                        <button className="text-[16px] font-medium text-left focus:text-primary" onClick={() => { setShowSort(false) }} >Featured</button>
-                        <button className="text-[16px] font-medium text-left focus:text-primary" onClick={() => { setShowSort(false) }} >Price High to Low</button>
-                        <button className="text-[16px] font-medium text-left focus:text-primary" onClick={() => { setShowSort(false) }} >Price Low to High</button>
+                        <button className="text-[16px] font-medium text-left focus:text-primary" onClick={() => {setShowSort(false); ScrollToTop();}} >Latest</button>
+                        <button className="text-[16px] font-medium text-left focus:text-primary" onClick={() => { setShowSort(false); ScrollToTop(); }} >Featured</button>
+                        <button className="text-[16px] font-medium text-left focus:text-primary" onClick={() => { setShowSort(false); ScrollToTop(); }} >Price High to Low</button>
+                        <button className="text-[16px] font-medium text-left focus:text-primary" onClick={() => { setShowSort(false); ScrollToTop(); }} >Price Low to High</button>
                     </div>
                 </div>
 
@@ -185,19 +193,19 @@ function Product_Filter() {
 
                     <div className="flex justify-between my-4">
                         <h2 className="text-[18px] font-semibold text-[#434343]">Filter</h2>
-                        <img className="w-[32px] h-[32px]" src={close_icon} alt="Close icon" onClick={() => { setShowFilter(false) }} />
+                        <img className="w-[32px] h-[32px]" src={close_icon} alt="Close icon" onClick={() => { setShowFilter(false); ScrollToTop(); }} />
                     </div>
 
                     <div className="flex gap-x-16 justify-start mt-10">
-                        
+
                         {/* Tabs */}
                         <div className="flex flex-col items-start text-[16px] space-y-6 text-[#747474]">
                             <button className=" focus:text-primary" onClick={() => setTab("productCatergory")}>Catergory</button>
-                                <hr className="border border-t-[#D9D9D9] w-full" />
+                            <hr className="border border-t-[#D9D9D9] w-full" />
                             <button className=" focus:text-primary" onClick={() => setTab("priceRange")}>Price Range</button>
-                                <hr className="border border-t-[#D9D9D9] w-full" />
-                            <button className=" focus:text-primary" onClick={() => setTab("occasion")}>Occasion</button>
-                                <hr className="border border-t-[#D9D9D9] w-full" />
+                            <hr className="border border-t-[#D9D9D9] w-full" />
+                            <button className=" focus:text-primary hidden" onClick={() => setTab("occasion")}>Occasion</button>
+                            <hr className="border border-t-[#D9D9D9] w-full hidden" />
                         </div>
 
 
