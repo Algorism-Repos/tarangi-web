@@ -10,7 +10,7 @@ function Pincode_Input() {
 
       <div className="flex items-center justify-between p-3 sm:p-4">
 
-        <div className="flex gap-x-2">
+        <div className="flex w-[50%] sm:gap-x-2">
           <img className="w-[24px]" src={location_icon} alt="location_icon" />
           <input type="number" placeholder="Enter Pincode" maxlength="6" size="6" className="text-[#979797] focus:outline-none" />
         </div>

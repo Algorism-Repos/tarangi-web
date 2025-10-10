@@ -1,5 +1,5 @@
 import react from "react";
-
+import { Link } from "react-router";
 // Image 
 import product_1 from '../assets/Products/product_1.png'
 import product_2 from '../assets/Products/product_2.png'
@@ -32,7 +32,6 @@ function Product_Listing() {
             product_name: "Stone Necklace"
 
         },
-        
     ]
 
     return (
@@ -42,7 +41,7 @@ function Product_Listing() {
                 {
                     Products.map((item) => {
                         return (
-                            <div className="font-poppins w-[170px] sm:w-[310px] mx-auto">
+                            <Link to="/productdescription" className="font-poppins w-[170px] sm:w-[310px] mx-auto">
                                 <img className="w-full h-fit" src={item.product_img} alt={item.alt} />
 
                                 <div className="mt-2 flex justify-between sm:mt-4">
@@ -63,7 +62,7 @@ function Product_Listing() {
                                     </div>
                                 </div>
 
-                            </div>
+                            </Link>
                         )
                     })
                 }

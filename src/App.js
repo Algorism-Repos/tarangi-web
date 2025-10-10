@@ -13,6 +13,8 @@ import Checkout from './pages/Checkout.js'
 import Payment from './pages/payment.js';
 
 
+import ThankYou from './pages/Thank_you.js';
+import Cart from './pages/Cart.js'
 
 function App() {
   return (
@@ -20,6 +22,7 @@ function App() {
       <Navbar />
         <Routes>
           <Route path="/*" element={<Navigate to="/home" />} />
+          <Route path='/' element={<Home />} />
           <Route path='/home' element={<Home />} />
           <Route path='/about' element={<About />} />
           <Route path='/products' element={<Product_page />} />
@@ -27,6 +30,8 @@ function App() {
           <Route path='/favourites' element={<Favourites />} />
           <Route path='/checkout' element={<Checkout />} />
           <Route path='/payment' element={<Payment/>} />
+          <Route path='/thankyou' element={<ThankYou />} />
+          <Route path='/cart' element={<Cart />} />
         </Routes>
       <Footer />
     </>

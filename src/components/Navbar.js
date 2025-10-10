@@ -15,7 +15,6 @@ function Navbar() {
   const location = useLocation(); // ✅ get current path
 
   const toggle = () => setModalToggle(!modalToggle);
-
   // Helper function to determine active link
   const getLinkClass = (path) =>
     location.pathname === path
