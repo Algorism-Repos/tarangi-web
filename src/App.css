@@ -1,4 +1,3 @@
-
 html {
   @apply scroll-smooth;
 }
@@ -237,18 +236,19 @@ input::placeholder {
   .about-banner {
     background-image: url("./assets/backgrounds/about_background_mobile.png ");
     min-height: 400px;
-    padding-top: 40px;
+    padding: 40px 0px;
   }
 
   .about-first-section {
     background-image: url("./assets/backgrounds/about_firstsection_background_mobile.png");
     height: fit-content;
   }
+
   .thankyou {
-  background-image: url("./assets/backgrounds/thankyou_background_mobile.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-}
+    background-image: url("./assets/backgrounds/thankyou_background_mobile.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
 
 }
 
@@ -329,8 +329,7 @@ input::placeholder {
   /* white-space: nowrap; */
 }
 
-.swiper-pagination-bullet-active 
-{
+.swiper-pagination-bullet-active {
   background-color: #6E0027 !important;
 }
 
@@ -339,6 +338,7 @@ input::placeholder {
   height: 14px !important;
 }
 
-.swiper-button-prev, .swiper-button-next {
+.swiper-button-prev,
+.swiper-button-next {
   color: #CFA266 !important;
 }

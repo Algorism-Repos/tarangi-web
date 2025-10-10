@@ -91,24 +91,7 @@ function Modal({ modal, active, productName }) {
             className={showModal === "form" ? "block" : "hidden"}
           >
             <div className="flex flex-col items-center gap-y-5 max-w-[317px] mx-auto mt-7">
-              {/* Product Name */}
-              <div className="flex flex-col w-full">
-                <label className="font-poppins text-[12px] font-medium leading-[16.8px] text-[#03060D]">
-                  Product Name
-                </label>
-                <input
-                  className="input-box"
-                  name="productname"
-                  type="text"
-                  readOnly={!!productName} // ✅ readonly if coming from click
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.productname}
-                />
-                <h4 className="font-poppins text-red-700 text-[12px] mt-1">
-                  {formik.touched.productname && formik.errors.productname}
-                </h4>
-              </div>
+
 
               {/* Name */}
               <div className="flex flex-col w-full">
@@ -165,23 +148,46 @@ function Modal({ modal, active, productName }) {
                 </h4>
               </div>
 
-              {/* Product Interested In */}
-              <div className="flex flex-col w-full">
-                <label className="font-poppins text-[12px] font-medium leading-[16.8px] text-[#03060D]">
-                  Products interested in
-                </label>
-                <input
-                  className="input-box"
-                  name="product"
-                  type="text"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.product}
-                />
-                <h4 className="font-poppins text-red-700 text-[12px] mt-1">
-                  {formik.touched.product && formik.errors.product}
-                </h4>
-              </div>
+              {/* Product Field*/}
+              {!productName ? (
+                <div className="flex flex-col w-full">
+                  <label className="font-poppins text-[12px] font-medium leading-[16.8px] text-[#03060D]">
+                    Products interested in
+                  </label>
+                  <input
+                    className="input-box"
+                    name="product"
+                    type="text"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.product}
+                  />
+                  <h4 className="font-poppins text-red-700 text-[12px] mt-1">
+                    {formik.touched.product && formik.errors.product}
+                  </h4>
+                </div>
+              ) : (
+                // Product Name  
+                < div className="flex flex-col w-full">
+                  <label className="font-poppins text-[12px] font-medium leading-[16.8px] text-[#03060D]">
+                    Product Name
+                  </label>
+                  <input
+                    className="input-box"
+                    name="productname"
+                    type="text"
+                    disabled={productName} // ✅ readonly if coming from click
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.productname}
+                  />
+                  <h4 className="font-poppins text-red-700 text-[12px] mt-1">
+                    {formik.touched.productname && formik.errors.productname}
+                  </h4>
+                </div>)}
+
+
+
 
               <button
                 type="submit"
@@ -198,8 +204,8 @@ function Modal({ modal, active, productName }) {
             alt="Illustration"
             className={showModal !== "form" ? "block mx-auto" : "hidden"}
           />
-        </div>
-      </div>
+        </div >
+      </div >
     </>
   );
 }

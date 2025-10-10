@@ -18,8 +18,8 @@ function Navbar() {
   // Helper function to determine active link
   const getLinkClass = (path) =>
     location.pathname === path
-      ? "text-white font-semibold" // active
-      : "text-[#A0A0A0] font-normal"; // inactive gray
+      ? "text-white " // active
+      : "text-white opacity-[0.5]"; // inactive gray
 
   return (
     <>
