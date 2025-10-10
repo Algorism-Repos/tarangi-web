@@ -6,4 +6,4 @@ const app = express();
 app.use(cors());
 // Make sure this matches your frontend call
 app.use("/api/shopify", shopifyRouter);
-app.listen(5000, () => console.log("Server running on port 5000"));
+app.listen(8080, () => console.log("Server running on port 8080"));

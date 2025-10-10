@@ -443,9 +443,9 @@ function Product_Filter({
                 <div className="w-[275px] font-poppins text-font-grey hidden lg:block pl-6">
                     <div className="flex justify-between">
                         <p className="text-[16px] font-semibold uppercase">Filters</p>
-                        <button className="text-primary text-[16px] font-semibold uppercase " onClick={() => clearAll()}>
+                        {/* <button className="text-primary text-[16px] font-semibold uppercase " onClick={() => clearAll()}>
                             Clear All
-                        </button>
+                        </button> */}
                     </div>
 
                     <hr className="border border-[#C8C8C8] my-[25px]" />
@@ -461,13 +461,13 @@ function Product_Filter({
                                 <label className="flex items-center justify-between text-font-grey cursor-pointer">
                                     <div className="flex items-center space-x-3">
                                         {/* Checkbox */}
-                                        <label className="custom-checkbox">
+                                        <div className="custom-checkbox">
                                             <input
                                                 type="checkbox"
                                                 onChange={() => handleCheckbox(items.label, "price")}
                                             />
                                             <span class="checkmark"></span>
-                                        </label>
+                                        </div>
                                         <span className="text-[18px]">{items.label}</span>
                                     </div>
                                 </label>

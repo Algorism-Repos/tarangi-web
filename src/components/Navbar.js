@@ -44,7 +44,7 @@ function Navbar() {
         <div className="flex flex-row items-center gap-x-2.5">
           <button
             className="rounded-[32px] bg-[#CFA266] w-[137px] font-poppins text-[16px] font-normal text-white py-[10px] px-[16px] cursor-pointer"
-            onClick={toggle}
+            onClick={() => {toggle()}}
           >
             Get in Touch
           </button>

@@ -54,15 +54,17 @@ function Home() {
   const [festiveProducts, setPfestiveProducts] = useState([]);
   const [selectedType, setSelectedType] = useState(null);
   const [instafeed, setInstafeed] = useState();
-  function toggle(type) {
-    setSelectedType(type);
-    console.log(type);
+
+
+  function toggle(product) {
+    setSelectedType(product);
+    console.log(product);
     setModalToggle(!modalToggle);
   }
   const festiveProduct = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/shopify/products"
+        "http://localhost:8080/api/shopify/products"
       );
       setPfestiveProducts(response.data);
       console.log(response);
@@ -72,7 +74,7 @@ function Home() {
         error.response?.data || error.message
       );
     }
-    
+
   };
   const festiveFiltered = festiveProducts.filter((product) =>
     product.tags
@@ -174,13 +176,14 @@ function Home() {
         <div className="max-w-7xl mx-auto">
           <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white">Our Curations</h1>
           <div className="flex flex-col gap-y-[160px] sm:gap-y-0 sm:flex-row items-center justify-center gap-x-12 relative my-36 sm:my-56">
-            <div className="border-2 border-white w-[360px] h-[374px] relative z-0 overflow-hidden" onClick={toggle}> <img src={men_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
+          <div className="border-2 border-white w-[360px] h-[374px] relative z-0 overflow-hidden" onClick={() => {toggle()}}>
+              <img src={men_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/3 ">Men</h2>
             </div>
-            <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 " onClick={toggle}> <img src={women_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
+            <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 " onClick={() => {toggle()}}> <img src={women_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/4 ">Women</h2>
             </div>
-            <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 overflow-hidden" onClick={toggle}> <img src={couple_design} alt="men-image" className="w-[360px] h-[360px] sm:w-[374px] sm:h-[374px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute z-10" />
+            <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 overflow-hidden" onClick={() => {toggle()}}> <img src={couple_design} alt="men-image" className="w-[360px] h-[360px] sm:w-[374px] sm:h-[374px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute z-10" />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-[-15px] left-1/4 ">Couples</h2>
             </div>
           </div>
@@ -193,14 +196,13 @@ function Home() {
               <div
                 className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
                 onClick={() => {
-                  setSelectedType(type.name);
-                  toggle();
+                  toggle(type?.title);
                 }}
               >
                 <img
                   src={type?.image?.src}
                   alt={type?.name}
-                  className="w-[395px] h-[395px]"
+                  className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] rounded-[16px]"
                 />
                 <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">
                   {type?.title}

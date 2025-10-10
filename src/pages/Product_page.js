@@ -22,7 +22,7 @@ function Product_page() {
     const productList = async () => {
         try {
             const response = await axios.get(
-                "http://localhost:5000/api/shopify/products"
+                "http://localhost:8080/api/shopify/products"
             );
             setProduct(response.data);
         } catch (error) {
