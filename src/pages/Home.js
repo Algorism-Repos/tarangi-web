@@ -36,46 +36,23 @@ import whatsapp_floating from "../assets/whatsapp_icon.svg"
 
 function Home() {
 
-
-
-
     // Modal State & Function
- const [modalToggle, setModalToggle] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(""); // ✅ holds clicked product name
-
-  function toggle() {
-    setModalToggle(!modalToggle);
-  }
-
-  const [animate, setAnimate] = useState(false);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setAnimate(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
+    const [modalToggle, setModalToggle] = useState(false);
+    function toggle() {
+        setModalToggle(!modalToggle);
+    }
     // -------------------
 
 
-      const bestSellers = [
-    { img: new_product_1, name: "Flora Beauty", price: "₹ 1,700" },
-    { img: new_product_2, name: "Queen Necklace", price: "₹ 4,650" },
-    { img: new_product_3, name: "Bloom Haathphool", price: "₹ 2,400" },
-    { img: new_product_4, name: "Bold Black Stud", price: "₹ 990" },
-    { img: new_product_5, name: "Lord Shiva Kada", price: "₹ 16,500" },
-    { img: new_product_6, name: "Choco Hollow Bracelet", price: "₹ 4,100" },
-  ];
+    const [animate, setAnimate] = useState(false);
 
-
-
-  const specials = [
-    { img: pink_collection, title: "Pink Collection" },
-    { img: statement_earrings, title: "Statement Ear rings" },
-    { img: dangers, title: "Danglers" },
-    { img: jaguar_bracelet, title: "Jaguar Bracelets" },
-    { img: watch_charms, title: "Watch Charms" },
-  ];
-
+    useEffect(() => {
+        // small timeout to ensure mount
+        const timer = setTimeout(() => {
+            setAnimate(true);
+        }, 100);  // try 50-100 ms
+        return () => clearTimeout(timer);
+    }, []);
 
 
     return (
@@ -100,52 +77,63 @@ function Home() {
                 </div>
             </div>
 
-    {/* Collections - Section */}
-     <div className="design-section py-40 relative"> 
-        <div className="max-w-7xl mx-auto">
-         <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white">Our Curations</h1> 
-           <div className="flex flex-col gap-y-[160px] sm:gap-y-0 sm:flex-row items-center justify-center gap-x-12 relative my-36 sm:my-56"> 
-            <div className="border-2 border-white w-[360px] h-[374px] relative z-0 overflow-hidden" onClick={toggle}> <img src={men_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" /> 
-            <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/3 ">Men</h2>
-             </div>
-              <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 " onClick={toggle}> <img src={women_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" /> 
-              <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/4 ">Women</h2> 
-              </div> 
-              <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 overflow-hidden" onClick={toggle}> <img src={couple_design} alt="men-image" className="w-[360px] h-[360px] sm:w-[374px] sm:h-[374px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute z-10" /> 
-              <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-[-15px] left-1/4 ">Couples</h2> 
-              </div> 
-    </div>
+            {/* Collections - Section */}
+            <div className="design-section py-40 relative">
+                <div className="max-w-7xl mx-auto">
+                    <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white">Our Curations</h1>
+                    <div className="flex flex-col gap-y-[160px] sm:gap-y-0 sm:flex-row items-center justify-center gap-x-12 relative my-36 sm:my-56">
+                        <div className="border-2 border-white w-[360px] h-[374px] relative z-0 overflow-hidden" onClick={toggle}>
+                            <img src={men_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
+                            <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/3 ">Men</h2>
+                        </div>
+
+                        <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 " onClick={toggle}>
+                            <img src={women_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
+                            <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/4 ">Women</h2>
+                        </div>
+
+                        <div className="border-2 border-white w-[360px] h-[374.15px]  relative z-0 overflow-hidden" onClick={toggle}>
+                            <img src={couple_design} alt="men-image" className="w-[360px] h-[360px] sm:w-[374px] sm:h-[374px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute z-10" />
+                            <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-[-15px] left-1/4 ">Couples</h2>
+                        </div>
+                    </div>
+
+                    <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-32 sm:mt-0 overflow-x-hidden ">Tarangi Specials</h1>
+
+                    <div className="flex flex-col sm:flex-row items-center sm:gap-x-12 gap-y-24 sm:flex-wrap justify-center mt-12 sm:mt-44">
+
+                        <div className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
+                            <img src={pink_collection} alt="tarangi_special_1" className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white" />
+                            <h3 className="font-atteron text-[34px] font-normal leading-normal text-white mt-2">Pink Collection</h3>
+                        </div>
+
+                        <div className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
+                            <img src={statement_earrings} alt="tarangi_special_1" className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-whi te " />
+                            <h3 className="font-atteron text-[34px] font-normal leading-normal text-white mt-2">Statement Ear rings</h3>
+                        </div>
+
+                        <div className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
+                            <img src={dangers} alt="tarangi_special_1" className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white" />
+                            <h3 className="font-atteron text-[34px] font-normal leading-normal text-white mt-2">Danglers</h3>
+                        </div>
 
 
-          {/* Best Sellers */}
-          <h1 className="section-heading !text-white">Best Sellers</h1>
-          <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-between mt-20 sm:mt-36">
-            {bestSellers.map((product, index) => (
-              <div
-                key={index}
-                className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
-                onClick={() => {
-                  setSelectedProduct(product.name);
-                  toggle();
-                }}
-              >
-                <img
-                  src={product.img}
-                  alt={product.name}
-                  className="w-[395px] h-[395px]"
-                />
-                <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">
-                  {product.name}
-                </h5>
-                <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">
-                  {product.price}
-                </h4>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-            
+                        <div className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
+                            <img src={jaguar_bracelet} alt="tarangi_special_1" className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white " />
+                            <h3 className="font-atteron text-[34px] font-normal leading-normal text-white mt-2">Jaguar Bracelets</h3>
+                        </div>
+
+
+                        <div className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
+                            <img src={watch_charms} alt="tarangi_special_1" className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white " />
+                            <h3 className="font-atteron text-[34px] font-normal leading-normal text-white mt-2">Watch Charms</h3>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
 
             {/* Gold vs Gold Plated Silver Section */}
             <div className="bg-secondary">
@@ -176,8 +164,6 @@ function Home() {
                         </div>
                     </div>
 
-
-                    
                     <div className="max-w-6xl mx-auto mt-8 sm:mt-28 px-4 py-12">
                         <h1 className="font-atteron text-[30px] font-bold text-[#5C0A1F] text-center tracking-[2px] sm:text-[48px]">Why choose Tarangi’s<br className="hidden md:block" /> silver jewelry?</h1>
 
@@ -212,38 +198,50 @@ function Home() {
 
             </div>
 
+            {/* New Products Section */}
+            <div id="launchOffers" className="newproducts-section">
+                <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
+                    <h1 className="section-heading !text-white">Launch Offers</h1>
 
-          {/* Tarangi Specials */}
-      <div id="launchOffers" className="newproducts-section">
-        <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
-          <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-32 sm:mt-0 overflow-x-hidden">
-            Tarangi Specials
-          </h1>
+                    <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-between mt-20 sm:mt-36">
+                        <div className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
+                            <img src={new_product_1} alt="new_product_image" className="w-[395px] h-[395px]" />
+                            <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">Flora Beauty</h5>
+                            <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">₹ 1,700</h4>
+                        </div>
 
-          <div className="flex flex-col sm:flex-row items-center sm:gap-x-12 gap-y-24 sm:flex-wrap justify-center mt-12 sm:mt-44">
-            {specials.map((item, index) => (
-              <div
-                key={index}
-                className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
-                onClick={() => {
-                  setSelectedProduct(item.title);
-                  toggle();
-                }}
-              >
-                <img
-                  src={item.img}
-                  alt={item.title}
-                  className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white"
-                />
-                <h3 className="font-atteron text-[34px] font-normal leading-normal text-white mt-2">
-                  {item.title}
-                </h3>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+                        <div className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
+                            <img src={new_product_2} alt="new_product_image" className="w-[395px] h-[395px]" />
+                            <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">Queen Necklace</h5>
+                            <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">₹ 4,650</h4>
+                        </div>
 
+                        <div className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
+                            <img src={new_product_3} alt="new_product_image" className="w-[395px] h-[395px]" />
+                            <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">Bloom Haathphool</h5>
+                            <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">₹ 2,400</h4>
+                        </div>
+
+                        <div className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
+                            <img src={new_product_4} alt="new_product_image" className="w-[395px] h-[395px]" />
+                            <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">Bold Black Stud</h5>
+                            <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">₹ 990</h4>
+                        </div>
+
+                        <div className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
+                            <img src={new_product_5} alt="new_product_image" className="w-[395px] h-[395px]" />
+                            <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">Lord Shiva Kada</h5>
+                            <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">₹ 16,500</h4>
+                        </div>
+
+                        <div className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
+                            <img src={new_product_6} alt="new_product_image" className="w-[395px] h-[395px]" />
+                            <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">Choco Hollow Bracelet</h5>
+                            <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">₹ 4,100</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             {/* Fast Selling Products - Section */}
             <div className="fastselling-section hidden">
@@ -317,8 +315,10 @@ function Home() {
                 </div>
             </div>
 
- {/* Modal */}
-      <Modal modal={modalToggle} active={toggle} productName={selectedProduct} />
+            <Modal
+                modal={modalToggle}
+                active={toggle}
+            />
 
         </>
     )
