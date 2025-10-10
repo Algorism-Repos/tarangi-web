@@ -104,7 +104,7 @@ function Product_Description() {
                         <div className="lg:max-w-[640px] mx-auto">
 
                             <div className="space-y-[3px]">
-                                <h1 className="font-atteron text-primary text-[26px] sm:text-[32px]">Classic Gold Chain</h1>
+                                <h1 className="font-atteron text-primary text-[26px] sm:text-[32px] tracking-[1px]">Classic Gold Chain</h1>
                                 <h2 className="text-[26px] font-semibold sm:text-[32px]">₹10,000</h2>
                                 <p className="text-[#878787] text-[14px]">MRP Incl. of all taxes</p>
                             </div>

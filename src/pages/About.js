@@ -56,7 +56,7 @@ function About() {
             {/* First Section */}
             <div className="about-first-section py-28 lg:py-[300px] relative">
                 <div className="max-w-7xl mx-auto ">
-                    <h1 className="font-atteron text-[52px] sm:text-[72px] text-[#5C0A1F] font-normal leading-normal text-center sm:w-[748px] mx-auto"><span className="font-poppins font-extralight">6</span>0+ Years of Experience</h1>
+                    <h1 className="font-atteron text-[52px] sm:text-[72px] text-[#5C0A1F] font-normal leading-normal tracking-[1px] text-center sm:w-[748px] mx-auto"><span className="font-poppins font-extralight">6</span>0+ Years of Experience</h1>
 
                     <div className="flex flex-col xl:flex-row items-center gap-x-16 mt-[200px] gap-y-8 mx-auto xl:absolute xl:bottom-60">
                         <img src={crafted_jewellery} alt="product image" className="w-[341px] h-[351px] sm:w-[577px] sm:h-[577px] rounded-[16px] mx-auto" />
@@ -71,7 +71,7 @@ function About() {
 
             {/* Second Section */}
             <div className="bg-[#4B001A] py-20 sm:py-40 relative">
-                <h1 className="section-heading px-2 sm:px-0 !text-[46px] sm:!text-[64px] sm:max-w-[890px] mx-auto !text-white">Handcrafted jewelry by local artisans</h1>
+                <h1 className="section-heading px-2 sm:px-0 !text-[46px] sm:!text-[64px] sm:max-w-[890px] mx-auto tracking-[1px] !text-white">Handcrafted jewelry by local artisans</h1>
 
                 <div className="flex flex-col sm:flex-row items-start sm:items-center mt-20 sm:mt-40 gap-x-32 gap-y-20 sm:gap-y-0">
                     <div className="w-[324px] h-[318px] sm:w-[619px] sm:h-[607px] border-[#FCD99F] border-2 relative">

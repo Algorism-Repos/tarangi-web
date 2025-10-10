@@ -435,6 +435,14 @@ function Product_Filter({
         { label: "Price High to Low" },
         { label: " Price Low to High" },
     ];
+    const ScrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "smooth"
+        })
+    }
+
 
     return (
         <>
