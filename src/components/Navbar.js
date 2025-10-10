@@ -24,7 +24,7 @@ function Navbar() {
         <>
             {/* Navbar - large screens */}
             <div className="bg-primary sm:flex flex-row justify-between w-full py-2 px-7 hidden">
-                <Link to="/home"><img src={logo} alt="brand-logo" className="w-[106px] h-[71px]" /></Link>
+                <Link to="/"><img src={logo} alt="brand-logo" className="w-[106px] h-[71px]" /></Link>
 
                 <div className="font-poppins text-white text-[16px] leading-normal font-normal flex flex-row gap-x-[60px] items-center">
                     <Link to="/home"><p>Home</p></Link>
@@ -40,7 +40,9 @@ function Navbar() {
 
             {/* Navbar -small screens */}
             <div className="bg-primary flex flex-row justify-between w-full p-7 sm:hidden ">
-                <img src={logo} alt="brand-logo" className="w-[68px] h-[45px]" />
+                <Link to="/">
+                    <img src={logo} alt="brand-logo" className="w-[68px] h-[45px]" />
+                </Link>
                 <img src={menu} alt="menu_icon" className="w-[37px] h-[37px] cursor-pointer" onClick={() => { setMenuVisible(true) }} />
 
                 <div className={menuVisible === true ? "bg-[#4B001A] h-full inset-y-0 w-full fixed right-0  z-20 p-7" : "hidden"}>
@@ -59,7 +61,7 @@ function Navbar() {
             </div>
 
             <Modal
-                modal= {modalToggle}
+                modal={modalToggle}
                 active={toggle}
             />
         </>

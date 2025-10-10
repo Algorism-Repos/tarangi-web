@@ -1,7 +1,7 @@
 import React from "react";
 
 // Images
-// import down_arrow from '../assets/Products/down_arrow.png'
+import down_arrow from '../assets/Products/down_arrow.png'
 
 // Component
 import Product_Filter from "../components/Product_filter";
@@ -25,13 +25,16 @@ function Product_page() {
 
                         <label className="font-poppins text-font-grey text-[18px]">Sort by</label>
 
-                        <div>
-                            <select className="border border-[#B9B9B9] rounded-md p-2.5 bg-white text-font-grey text-[14px] cursor-pointer outline-none" >
+                        <div className="relative">
+                            <select className="appearance-none border border-[#B9B9B9] rounded-md p-2.5 bg-white text-font-grey text-[14px] cursor-pointer outline-none" >
                                 <option value="Latest">Latest</option>
                                 <option value="Featured">Featured</option>
                                 <option value="Price High to Low">Price High to Low</option>
                                 <option value="Price Low to High">Price Low to High</option>
                             </select>
+                            <div className=" absolute right-2 top-2.5">
+                                <img src={down_arrow} alt="Down Arrow" />
+                            </div>
                         </div>
                     </div>
                 </div>

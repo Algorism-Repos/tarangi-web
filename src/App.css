@@ -17,6 +17,20 @@
   padding: 0px 110px;
 }
 
+.festive-banner {
+  background: url("./assets/backgrounds/festive_banner.png");
+  height: 780px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 784px;
+  background-position: center center;
+  object-fit: contain;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0px 110px;
+}
+
 .section-heading {
   font-family: "Atteron", serif;
   font-size: 72px;
@@ -109,6 +123,12 @@
   align-items: center;
 }
 
+.thankyou {
+  background-image: url("./assets/backgrounds/thankyou_background.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 html {
   @apply scroll-smooth;
 }
@@ -140,6 +160,17 @@ input::placeholder {
   }
 } */
 
+@media only screen and (max-width: 1024px) {
+  .festive-banner {
+    background-image: url("./assets/backgrounds/festive_banner_tablet.png");
+    width: 100%;
+    /* height: 568px; */
+    object-fit: contain;
+    padding: 100px 0;
+    object-fit: contain;
+  }
+}
+
 @media only screen and (max-width: 620px) {
   .footer-section {
     background-image: url("./assets/backgrounds/footer_background_mobile.png");
@@ -151,6 +182,20 @@ input::placeholder {
 
   .banner-section {
     background-image: url("./assets/backgrounds/banner_background_mobile.png");
+    height: 780px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 110px 0px;
+    background-position: center center;
+  }
+
+  .festive-banner {
+    background-image: url("./assets/backgrounds/festive_banner_mobile.png");
     height: 780px;
     background-size: cover;
     background-repeat: no-repeat;
@@ -190,6 +235,11 @@ input::placeholder {
     background-image: url("./assets/backgrounds/about_firstsection_background_mobile.png");
     height: fit-content;
   }
+  .thankyou {
+  background-image: url("./assets/backgrounds/thankyou_background_mobile.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 
 }
 
@@ -270,11 +320,16 @@ input::placeholder {
   /* white-space: nowrap; */
 }
 
-.swiper-pagination-bullet-active {
+.swiper-pagination-bullet-active 
+{
   background-color: #6E0027 !important;
 }
 
 .swiper-pagination-bullet {
   width: 14px !important;
   height: 14px !important;
+}
+
+.swiper-button-prev, .swiper-button-next {
+  color: #CFA266 !important;
 }

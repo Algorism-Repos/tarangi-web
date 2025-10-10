@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
+import { Link } from 'react-router';
 
 // images
 import grey_arrow from '../assets/Products/grey_arrow.png'
@@ -18,6 +19,7 @@ import favorie_icon from '../assets/Products/favorite_icon.png'
 
 // components
 import PincodeInput from "../components/Pincode_Input";
+import Recently_Viewed from '../components/Recently-Viewed';
 
 
 function Product_Description() {
@@ -86,6 +88,7 @@ function Product_Description() {
                                 <SwiperSlide>
                                     <img className="w-full sm:w-[388px] sm:h-[399px] mx-auto" src={product_1} alt="" />
                                 </SwiperSlide>
+                                
                                 <SwiperSlide>
                                     <img className="w-full sm:w-[388px] sm:h-[399px] mx-auto" src={product_1} alt="" />
                                 </SwiperSlide>
@@ -147,15 +150,19 @@ function Product_Description() {
 
                             {/* Buttons */}
                             <div className="flex flex-col sm:flex-row items-center gap-[16px]">
-                                <button className="flex items-center justify-center gap-x-[8px] bg-[#4B001A] w-full h-[56px] rounded-full text-white text-[18px] font-medium sm:w-[210px]">
-                                    <img className="w-[32px] h-[32px]" src={shopping_cart} alt="cart_icon" />
-                                    Add to cart
-                                </button>
+                                <Link to="/cart" >
+                                    <button className="flex items-center justify-center gap-x-[8px] bg-[#4B001A] w-full h-[56px] rounded-full text-white text-[18px] font-medium sm:w-[210px]">
+                                        <img className="w-[32px] h-[32px]" src={shopping_cart} alt="cart_icon" />
+                                        Add to cart
+                                    </button>
+                                </Link>
 
-                                <button className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[56px] rounded-full text-primary text-[18px] font-medium sm:w-[210px]">
-                                    <img className="w-[32px] h-[32px]" src={favorie_icon} alt="like_icon" />
-                                    Wishlist
-                                </button>
+                                <Link to="/favourites">
+                                    <button className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[56px] rounded-full text-primary text-[18px] font-medium sm:w-[210px]">
+                                        <img className="w-[32px] h-[32px]" src={favorie_icon} alt="like_icon" />
+                                        Wishlist
+                                    </button>
+                                </Link>
                             </div>
                         </div>
 
@@ -176,7 +183,7 @@ function Product_Description() {
                                 Products.map((item) => {
                                     return (
                                         <div className="font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0">
-                                            <img className="w-full h-fit" src={item.product_img} alt={item.alt} />
+                                            <img className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px]" src={item.product_img} alt={item.alt} />
 
                                             <div className="mt-2 flex justify-between sm:mt-4">
 
@@ -203,42 +210,7 @@ function Product_Description() {
                         </div>
                     </div>
 
-                     {/* Recently Viewed */}
-                    <div className='mt-[50px] lg:mt-[80px]'>
-                        <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px]  xl:text-left">Recently Viewed</h1>
-
-                        <div className='flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]'>
-                            {/* Looping */}
-                            {
-                                Products.map((item) => {
-                                    return (
-                                        <div className="font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0">
-                                            <img className="w-full h-fit" src={item.product_img} alt={item.alt} />
-
-                                            <div className="mt-2 flex justify-between sm:mt-4">
-
-                                                <div>
-                                                    <h3 className="text-[16px] font-semibold sm:text-[20px]">{item.price}</h3>
-                                                    <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">{item.product_name}</p>
-                                                </div>
-
-                                                <div className="hidden sm:block">
-                                                    <p className="text-[15px] text-[#6F6F6F]">Colors Available</p>
-
-                                                    <div className="mt-1 flex justify-end gap-x-3">
-                                                        <img className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]" src={gold_ellipse} alt="gold ellipse" />
-                                                        <img className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]" src={silver_ellipse} alt="Silver ellipse" />
-                                                        <img className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]" src={brown_ellipse} alt="brown ellipse" />
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
-                    </div>
+                    <Recently_Viewed />
 
                 </div>
             </div>
