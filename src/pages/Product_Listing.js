@@ -48,7 +48,7 @@ function Product_Listing() {
 
                                     <div>
                                         <h3 className="text-[16px] font-semibold sm:text-[20px]">{item.price}</h3>
-                                        <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">{item.product_name}</p>
+                                        <p className="text-[14px] font-semibold text-[#6F6F6F] sm:text-[14px]">{item.product_name}</p>
                                     </div>
 
                                     <div className="hidden sm:block">

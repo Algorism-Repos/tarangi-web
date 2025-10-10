@@ -29,7 +29,7 @@ import offer_product_1 from "../assets/offer_product_1.png"
 import offer_product_2 from "../assets/offer_product_2.png"
 import offer_product_3 from "../assets/offer_product_3.png"
 import men_design from "../assets/men_design.png"
-import women_design from "../assets/women_design.png"
+import women_design from "../assets/women_1.png"
 import couple_design from "../assets/couple_design.png"
 import pink_collection from "../assets/pink_collection_design.png"
 import statement_earrings from "../assets/statement_earrings_design.png"
@@ -59,7 +59,7 @@ function Home() {
 
     return (
         <>
-            {/* <a href="https://wa.me/919003058300/?text=Hi," target="_blank"><img src={whatsapp_floating} alt="Whatsapp_Icon" className="w-[50px] sm:w-[70px] h-fit fixed bottom-3 right-3 sm:bottom-9 sm:right-7 animate-bounce hover:scale-125 duration-300 transition-transform z-30" /></a> */}
+            <a href="https://wa.me/919003058300/?text=Hi," target="_blank"><img src={whatsapp_floating} alt="Whatsapp_Icon" className="w-[50px] sm:w-[70px] h-fit fixed bottom-3 right-3 sm:bottom-9 sm:right-7 animate-bounce hover:scale-125 duration-300 transition-transform z-30" /></a>
 
             <Swiper
                 spaceBetween={30}
@@ -68,9 +68,9 @@ function Home() {
                     delay: 3500,
                     disableOnInteraction: false,
                 }}
-                pagination={{
-                    clickable: true,
-                }}
+                // pagination={{
+                //     clickable: true,
+                // }}
                 navigation={true}
                 modules={[Autoplay, Pagination, Navigation]}
                 className="mySwiper"
@@ -82,15 +82,15 @@ function Home() {
                         </a>
                     </div>
                 </SwiperSlide>
-                {/* <SwiperSlide>
+                <SwiperSlide>
                     <div className="banner-section">
-                        <h1 className="font-atteron uppercase text-[52px] leading-[70px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px]">Born from tradition Designed for today</h1>
+                        <h1 className="font-atteron uppercase text-[52px] leading-[70px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">Born from tradition Designed for today</h1>
                         <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">Because exculsive 925 silver jewelry should feel as unique as the one who wears it.</h4>
                         <a href="#launchOffers" className="w-fit hover:scale-110 transition duration-300">
                             <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">View our Best Sellers</button>
                         </a>
                     </div>
-                </SwiperSlide> */}
+                </SwiperSlide>
 
             </Swiper>
 
@@ -114,15 +114,15 @@ function Home() {
             {/* Collections - Section */}
             <div className="design-section py-40 relative">
                 <div className="max-w-7xl mx-auto">
-                    <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white">Our Curations</h1>
-                    <div className="flex flex-col gap-y-[160px] sm:gap-y-0 sm:flex-row items-center justify-center gap-x-12 relative my-36 sm:my-56">
+                    <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white tracking-[1px]">Our Curations</h1>
+                    <div className="flex flex-col gap-y-[160px] sm:gap-y-0 sm:flex-row items-center justify-center gap-x-12 relative tracking-[1px] my-36 sm:my-56">
                         <div className="border-2 border-white w-[360px] h-[374px] relative z-0 overflow-hidden" onClick={toggle}>
                             <img src={men_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
                             <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/3 ">Men</h2>
                         </div>
 
                         <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 " onClick={toggle}>
-                            <img src={women_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
+                            <img src={women_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[410px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
                             <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/4 ">Women</h2>
                         </div>
 
@@ -132,9 +132,9 @@ function Home() {
                         </div>
                     </div>
 
-                    <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-32 sm:mt-0 ">Tarangi Specials</h1>
+                    <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-32 sm:mt-0 tracking-[1px]">Tarangi Specials</h1>
 
-                    <div className="flex flex-col sm:flex-row items-center sm:gap-x-12 gap-y-24 sm:flex-wrap justify-center mt-12 sm:mt-44">
+                    <div className="flex flex-col sm:flex-row items-center sm:gap-x-12 gap-y-24 sm:flex-wrap justify-center mt-12 sm:mt-44 tracking-[1px]">
 
                         <div className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
                             <img src={pink_collection} alt="tarangi_special_1" className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white" />
@@ -143,7 +143,7 @@ function Home() {
 
                         <div className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
                             <img src={statement_earrings} alt="tarangi_special_1" className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white " />
-                            <h3 className="font-atteron text-[34px] font-normal leading-normal text-white mt-2">Statement Earings</h3>
+                            <h3 className="font-atteron text-[34px] font-normal leading-normal text-white mt-2">Statement Earrings</h3>
                         </div>
 
                         <div className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
@@ -154,7 +154,7 @@ function Home() {
 
                         <div className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
                             <img src={jaguar_bracelet} alt="tarangi_special_1" className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white " />
-                            <h3 className="font-atteron text-[34px] font-normal leading-normal text-white mt-2">Jaguar Bracelets</h3>
+                            <h3 className="font-atteron text-[34px] font-normal leading-normal text-white mt-2 ">Jaguar Bracelets</h3>
                         </div>
 
 
@@ -172,7 +172,7 @@ function Home() {
             {/* Gold vs Gold Plated Silver Section */}
             <div className="bg-secondary">
                 <div className="max-w-[1220px] mx-auto py-20 sm:pt-40 sm:pb-20  px-3 ">
-                    <h1 className="section-heading lg:w-[846px] w-[336px] mx-auto tracking-[]">Gold vs Silver Jewellery</h1>
+                    <h1 className="section-heading lg:w-[846px] w-[336px] mx-auto tracking-[1px]">Gold vs Silver Jewellery</h1>
                     <p className="section-content text-center sm:max-w-[1034px] mx-auto mt-14">Gold jewelry has always been cherished for its permanence, but often feels out of reach for everyday style. Gold-plated silver brings the same timeless look with the ease and affordability to make elegance part of daily life.</p>
                     {/* <p className="section-content text-center sm:w-[1034px] w-[330px] mx-auto mt-9">At Tarangi, each gold-plated silver piece fuses the richness of gold with the strength of sterling silver. </p> */}
 
@@ -235,7 +235,7 @@ function Home() {
             {/* New Products Section */}
             <div id="launchOffers" className="newproducts-section">
                 <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
-                    <h1 className="section-heading !text-white">Launch Offers</h1>
+                    <h1 className="section-heading !text-white tracking-[1px]">Best Sellers</h1>
 
                     <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-between mt-20 sm:mt-36">
                         <div className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>

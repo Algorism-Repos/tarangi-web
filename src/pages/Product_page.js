@@ -16,7 +16,7 @@ function Product_page() {
                 <div className="max-w-[1350px] mx-auto flex flex-wrap justify-between px-4">
 
                     <div className="lg:flex flex-wrap items-center gap-x-[18px]">
-                        <h2 className="font-atteron text-[26px] text-primary sm:text-[36px]">Women Collections</h2>
+                        <h2 className="font-atteron text-[26px] text-primary tracking-[1px] sm:text-[36px]">Women Collections</h2>
                         <p className="font-poppins text-font-grey text-[14px] sm:mt-3 sm:text-[16px]">180 Designs</p>
                     </div>
 
