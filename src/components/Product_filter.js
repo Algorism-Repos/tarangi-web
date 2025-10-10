@@ -580,14 +580,22 @@ function Product_Filter({
                 <div
                     className={
                         showSort === true
-                            ? "font-poppins bg-light-sandal w-full h-[302px] fixed inset-0 right-0 z-20 p-7 rounded-t-8 transition-all duration-300 ease-in-out"
+                            ? "font-poppins bg-light-sandal w-full h-[200px] fixed inset-0 right-0 z-20 p-7 rounded-t-8 transition-all duration-300 ease-in-out"
                             : "hidden"
                     }
                 >
-                    <div className="flex flex-col space-y-[20px] text-[#747474]">
+                    <div className="flex flex-col space-y-[20px] text-[#747474] ">
                         <h2 className="text-center text-[18px] font-semibold text-[#434343]">
                             Sort Designs By
                         </h2>
+                        <img
+                            className="w-[32px] h-[32px] absolute top-3 right-3"
+                            src={close_icon}
+                            alt="Close icon"
+                            onClick={(e) => {
+                                setShowSort(false);
+                            }}
+                        />
                         {Sort.map((items) => (
                             <button
                                 className="text-[16px] font-medium text-left focus:text-primary"
@@ -606,7 +614,7 @@ function Product_Filter({
                 <div
                     className={
                         showFilter === true
-                            ? "font-poppins bg-light-sandal w-full h-[469px] fixed inset-0 right-0 z-20 p-6"
+                            ? "font-poppins bg-light-sandal w-full h-fit fixed inset-0 right-0 z-20 p-6"
                             : "hidden"
                     }
                 >
@@ -648,21 +656,24 @@ function Product_Filter({
                         </div>
 
                         {/* Catergory */}
+                        {/* Catergory */}
                         {tab === "productCatergory" && (
                             <div>
                                 <div className="space-y-5">
-                                    {/* {productCatergory.map((items) => ( */}
-                                    <label className="flex items-center justify-between text-font-grey cursor-pointer">
-                                        <div className="flex items-center space-x-2">
-                                            {/* Checkbox */}
-                                            <label className="custom-checkbox">
-                                                <input type="checkbox" />
-                                                <span class="checkmark"></span>
-                                            </label>
-                                            {/* <span className="text-[15px]">{items.label}</span> */}
-                                        </div>
-                                    </label>
-                                    {/* ))} */}
+                                    {Object.keys(productCatergory).map((type) => (
+                                        <label className="flex items-center justify-between text-font-grey cursor-pointer">
+                                            <div className="flex items-center space-x-2">
+                                                {/* Checkbox */}
+                                                <label className="custom-checkbox">
+                                                    <input type="checkbox"
+                                                        onChange={() => handleCheckbox(type, "category")}
+                                                    />
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                                <span className="text-[15px]">{type}</span>
+                                            </div>
+                                        </label>
+                                    ))}
                                 </div>
                             </div>
                         )}
@@ -674,9 +685,10 @@ function Product_Filter({
                                     {priceRanges.map((items) => (
                                         <label className="flex items-center justify-between text-font-grey cursor-pointer">
                                             <div className="flex items-center space-x-2">
-                                                {/* Checkbox */}
                                                 <label className="custom-checkbox">
-                                                    <input type="checkbox" />
+                                                    <input type="checkbox"
+                                                        onChange={() => handleCheckbox(items.label, "price")}
+                                                    />
                                                     <span class="checkmark"></span>
                                                 </label>
                                                 <span className="text-[14px]">{items.label}</span>
