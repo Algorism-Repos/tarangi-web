@@ -9,6 +9,8 @@ import About from "./pages/About.js"
 import Product_page from './pages/Product_page.js';
 import Product_Description from './pages/Product_Description.js';
 import Favourites from './pages/Favourites.js'
+import Checkout from './pages/Checkout.js'
+import Payment from './pages/payment.js';
 
 
 
@@ -23,6 +25,8 @@ function App() {
           <Route path='/products' element={<Product_page />} />
           <Route path='/productdescription' element={<Product_Description />} />
           <Route path='/favourites' element={<Favourites />} />
+          <Route path='/checkout' element={<Checkout />} />
+          <Route path='/payment' element={<Payment/>} />
         </Routes>
       <Footer />
     </>

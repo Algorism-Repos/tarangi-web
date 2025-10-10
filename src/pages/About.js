@@ -31,12 +31,12 @@ function About() {
 
             {/* Banner Section */}
             <div className="about-banner">
-                <div className="flex flex-col lg:flex-row items-center sm:items-start gap-x-32 sm:mt-[130px]">
-                    <div className="sm:mt-32 w-[335px] sm:w-full text-center sm:text-left">
+                <div className="flex flex-col xl:flex-row items-center sm:items-start gap-x-32 sm:mt-[80px] px-5">
+                    <div className="w-[335px] sm:w-full text-center xl:text-left my-auto">
                         <h1 className="font-atteron  sm:w-full text-[52px] sm:text-[128px] text-white font-normal leading-normal mx-auto sm:mx-0">Our Story</h1>
                         <h6 className="font-poppins text-[16px] sm:text-[22px] text-white font-normal leading-normal">Blending traditional artistry with a modern sensibility</h6>
                     </div>
-                    <img src={illustration} alt="banner-illustration" className="w-[271px] h-[492px] mt-[50px] sm:w-[406px] sm:h-[738px] mx-auto" />
+                    <img src={illustration} alt="banner-illustration" className="w-[330px] h-[492px] object-contain m-auto sm:w-[706px] sm:h-[750px]" />
                 </div>
             </div>
 
