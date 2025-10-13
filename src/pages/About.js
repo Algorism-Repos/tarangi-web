@@ -30,26 +30,39 @@ function About() {
             </a>
 
             {/* Banner Section */}
-            <div className="about-banner">
-                <div className="flex flex-col lg:flex-row items-center sm:items-start gap-x-32 sm:mt-[130px]">
-                    <div className="sm:mt-32 w-[335px] sm:w-full text-center sm:text-left">
+            {/* <div className="about-banner">
+                <div className="flex flex-col xl:flex-row items-center sm:items-start  px-5">
+                    <div className="w-[335px] sm:w-full text-center xl:text-left my-auto">
                         <h1 className="font-atteron  sm:w-full text-[52px] sm:text-[128px] text-white font-normal leading-normal mx-auto sm:mx-0">Our Story</h1>
                         <h6 className="font-poppins text-[16px] sm:text-[22px] text-white font-normal leading-normal">Blending traditional artistry with a modern sensibility</h6>
                     </div>
-                    <img src={illustration} alt="banner-illustration" className="w-[271px] h-[492px] mt-[50px] sm:w-[406px] sm:h-[738px] mx-auto" />
+                    <img src={illustration} alt="banner-illustration" className="w-[330px] h-[492px] object-contain m-auto sm:w-[706px] sm:h-fit" />
+                </div>
+            </div> */}
+
+            <div className="about-banner">
+                <div className="text-center">
+                       <h1 className="font-atteron text-[52px] sm:text-[100px] leading-normal font-normal text-white">Our Story</h1>
+                       <h6 className="font-poppins text-[16px] sm:text-[22px] font-normal text-white ml-2">Blending traditional artistry with a modern sensibility</h6>
+                </div>
+                <img src={illustration} alt="banner-illustration" className="w-fit h-[270px] sm:w-[730px] sm:h-[450px] mt-12" />
+                <div className="flex flex-row items-center gap-x-16 px-3">
+                    
+
+                    
                 </div>
             </div>
 
             {/* First Section */}
             <div className="about-first-section py-28 lg:py-[300px] relative">
                 <div className="max-w-7xl mx-auto ">
-                    <h1 className="font-atteron text-[52px] sm:text-[72px] text-[#5C0A1F] font-normal leading-normal text-center sm:w-[748px] mx-auto"><span className="font-poppins font-extralight">6</span>0+ Years of Experience</h1>
+                    <h1 className="font-atteron text-[52px] sm:text-[72px] text-[#5C0A1F] font-normal leading-normal tracking-[1px] text-center sm:w-[748px] mx-auto"><span className="font-poppins font-extralight">6</span>0+ Years of Experience</h1>
 
                     <div className="flex flex-col xl:flex-row items-center gap-x-16 mt-[200px] gap-y-8 mx-auto xl:absolute xl:bottom-60">
                         <img src={crafted_jewellery} alt="product image" className="w-[341px] h-[351px] sm:w-[577px] sm:h-[577px] rounded-[16px] mx-auto" />
 
                         <div className="max-w-[350px] sm:max-w-[620px] mx-auto px-3">
-                            <h1 className="font-atteron text-[36px] sm:text-[63px] font-normal leading-tight text-[#5C0A1F] ">trusted legacy timeless jewelry </h1>
+                            <h1 className="font-atteron text-[36px] sm:text-[63px] font-normal leading-tight text-[#5C0A1F] tracking-[1px] ">trusted legacy timeless jewelry </h1>
                             <p className="font-poppins text-[16px] sm:text-[24px] font-normal leading-normal text-[#28040E] mt-5 sm:mt-9">Tarangi is founded by third generation Entreprenuers from the family of jewellers. We are siblings united in vision to shape a globally admired fine jewelry brand that blends timeless artistry with modern elegance.</p>
                         </div>
                     </div>
@@ -58,7 +71,7 @@ function About() {
 
             {/* Second Section */}
             <div className="bg-[#4B001A] py-20 sm:py-40 relative">
-                <h1 className="section-heading px-2 sm:px-0 !text-[46px] sm:!text-[64px] sm:max-w-[890px] mx-auto !text-white">Handcrafted jewelry by local artisans</h1>
+                <h1 className="section-heading px-2 sm:px-0 !text-[46px] sm:!text-[64px] sm:max-w-[890px] mx-auto tracking-[1px] !text-white">Handcrafted jewelry by local artisans</h1>
 
                 <div className="flex flex-col sm:flex-row items-start sm:items-center mt-20 sm:mt-40 gap-x-32 gap-y-20 sm:gap-y-0">
                     <div className="w-[324px] h-[318px] sm:w-[619px] sm:h-[607px] border-[#FCD99F] border-2 relative">
