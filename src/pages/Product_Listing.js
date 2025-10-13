@@ -35,7 +35,7 @@ function Product_Listing({ productCatergory }) {
                     productCatergory.map((item) => {
                         return (
                             <div className="font-poppins w-[173px] sm:w-[310px] mx-auto transform transition-transform duration-300 ease-out hover:scale-110" onClick={() => { toggle(item?.title) }}>
-                                <img className="w-full h-fit rounded-[16px]" src={item?.image?.src} alt={item?.alt} />
+                                <img className="w-[173px] h-[174px] sm:w-[339px] sm:h-[326px] rounded-[16px]" src={item?.image?.src} alt={item?.alt} />
 
                                 <div className="mt-2 flex justify-between sm:mt-4">
 
@@ -44,15 +44,15 @@ function Product_Listing({ productCatergory }) {
                                         <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">{item?.title}</p>
                                     </div>
 
-                                    <div className="hidden sm:block">
-                                        {/* <p className="text-[15px] text-[#6F6F6F]">Colors Available</p> */}
+                                    {/* <div className="hidden sm:block">
+                                        <p className="text-[15px] text-[#6F6F6F]">Colors Available</p>
 
-                                        {/* <div className="mt-1 flex justify-end gap-x-3">
+                                        <div className="mt-1 flex justify-end gap-x-3">
                                             <img className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]" src={gold_ellipse} alt="gold ellipse" />
                                             <img className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]" src={silver_ellipse} alt="Silver ellipse" />
                                             <img className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]" src={brown_ellipse} alt="brown ellipse" />
-                                        </div> */}
-                                    </div>
+                                        </div>
+                                    </div> */}
                                 </div>
 
                             </div>

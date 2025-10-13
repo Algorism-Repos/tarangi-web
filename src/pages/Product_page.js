@@ -22,7 +22,7 @@ function Product_page() {
     const productList = async () => {
         try {
             const response = await axios.get(
-                "http://localhost:8080/api/shopify/products"
+                "https://tarangi-website.de.r.appspot.com/api/shopify/products"
             );
             setProduct(response.data);
         } catch (error) {
@@ -53,7 +53,7 @@ function Product_page() {
         let filtered = product;
         if (categories.length > 0) {
             filtered = filtered.filter((p) =>
-                categories.includes(p.product_type || "Uncateg  orized")
+                categories.includes(p.product_type || "Uncategorized")
             );
         }
         if (prices.length > 0) {
@@ -118,14 +118,14 @@ function Product_page() {
                         <label className="font-poppins text-font-grey text-[18px]">Sort by</label>
 
                         <div className="relative" >
-                            <select className="appearance-none border w-[150px] border-[#B9B9B9] rounded-md p-2.5 bg-white text-font-grey text-[14px] cursor-pointer outline-none " onChange={(e) => handleSortChange(e.target.value)} >
+                            <select className="appearance-none border w-[155px] border-[#B9B9B9] rounded-md p-2.5 bg-white text-font-grey text-[14px] cursor-pointer outline-none " onChange={(e) => handleSortChange(e.target.value)} >
                                 {SortOptions.map((option) => (
                                     <option key={option} value={option}>
                                         {option}
                                     </option>
                                 ))}
                             </select>
-                            <div className=" absolute right-2 top-2.5">
+                            <div className=" absolute right-1.5 top-2.5">
                                 <img src={down_arrow} alt="Down Arrow" />
                             </div>
                         </div>
@@ -140,10 +140,11 @@ function Product_page() {
                         onFilterChange={handleFilterChange}
                         selectedCategories={selectedCategories}
                         selectedPrices={selectedPrices}
+                        onSortChange={handleSortChange}
                     />
                     <Product_Listing productCatergory={filteredProducts} />
 
-                    
+
                 </div>
 
 

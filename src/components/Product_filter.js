@@ -336,6 +336,7 @@ function Product_Filter({
     onFilterChange,
     selectedCategories: initialCategories = [],
     selectedPrices: initialPrices = [],
+    onSortChange
 }) {
     const [showSort, setShowSort] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
@@ -413,6 +414,8 @@ function Product_Filter({
         setSelectedCategories([]);
         setSelectedPrices([]);
         onFilterChange([], []);
+        window.location.reload();
+        ScrollToTop()
     };
 
     const priceRanges = [
@@ -451,9 +454,9 @@ function Product_Filter({
                 <div className="w-[275px] font-poppins text-font-grey hidden lg:block pl-6">
                     <div className="flex justify-between">
                         <p className="text-[16px] font-semibold uppercase">Filters</p>
-                        {/* <button className="text-primary text-[16px] font-semibold uppercase " onClick={() => clearAll()}>
+                        <button className="text-primary text-[16px] font-semibold uppercase " onClick={() => clearAll()}>
                             Clear All
-                        </button> */}
+                        </button>
                     </div>
 
                     <hr className="border border-[#C8C8C8] my-[25px]" />
@@ -608,8 +611,9 @@ function Product_Filter({
                             <button
                                 className="text-[16px] font-medium text-left focus:text-primary"
                                 onClick={(e) => {
-                                    handleSortChange(e.target.value);
+                                    onSortChange?.(items.label.trim());
                                     setShowSort(false);
+                                    ScrollToTop();
                                 }}
                             >
                                 {items.label}
@@ -634,6 +638,7 @@ function Product_Filter({
                             alt="Close icon"
                             onClick={(e) => {
                                 setShowFilter(e.target.value);
+                                ScrollToTop();
                             }}
                         />
                     </div>
@@ -654,20 +659,24 @@ function Product_Filter({
                                 Price Range
                             </button>
                             <hr className="border border-t-[#D9D9D9] w-full" />
-                            <button
+
+                            <button className="text-primary text-[14px] font-semibold uppercase " onClick={() => clearAll()}>
+                                Clear All
+                            </button>
+                            {/* <button
                                 className=" focus:text-primary"
                                 onClick={() => setTab("occasion")}
                             >
                                 Occasion
                             </button>
-                            <hr className="border border-t-[#D9D9D9] w-full" />
+                            <hr className="border border-t-[#D9D9D9] w-full" /> */}
                         </div>
 
                         {/* Catergory */}
                         {/* Catergory */}
                         {tab === "productCatergory" && (
                             <div>
-                                <div className="space-y-5">
+                                <div className="space-y-4">
                                     {Object.keys(productCatergory).map((type) => (
                                         <label className="flex items-center justify-between text-font-grey cursor-pointer">
                                             <div className="flex items-center space-x-2">
@@ -714,7 +723,7 @@ function Product_Filter({
                                     {Occasion.map((items) => (
                                         <label className="flex items-center justify-between text-font-grey cursor-pointer">
                                             <div className="flex items-center space-x-2">
-                                                {/* Checkbox */}
+
                                                 <label className="custom-checkbox ">
                                                     <input type="checkbox" />
                                                     <span class="checkmark"></span>

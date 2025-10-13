@@ -45,7 +45,7 @@ function About() {
                        <h1 className="font-atteron text-[52px] sm:text-[100px] leading-normal font-normal text-white">Our Story</h1>
                        <h6 className="font-poppins text-[16px] sm:text-[22px] font-normal text-white ml-2">Blending traditional artistry with a modern sensibility</h6>
                 </div>
-                <img src={illustration} alt="banner-illustration" className="w-fit h-[270px] sm:h-[450px] mt-12" />
+                <img src={illustration} alt="banner-illustration" className="w-fit h-[270px] sm:w-[730px] sm:h-[450px] mt-12" />
                 <div className="flex flex-row items-center gap-x-16 px-3">
                     
 
@@ -62,7 +62,7 @@ function About() {
                         <img src={crafted_jewellery} alt="product image" className="w-[341px] h-[351px] sm:w-[577px] sm:h-[577px] rounded-[16px] mx-auto" />
 
                         <div className="max-w-[350px] sm:max-w-[620px] mx-auto px-3">
-                            <h1 className="font-atteron text-[36px] sm:text-[63px] font-normal leading-tight text-[#5C0A1F] ">trusted legacy timeless jewelry </h1>
+                            <h1 className="font-atteron text-[36px] sm:text-[63px] font-normal leading-tight text-[#5C0A1F] tracking-[1px] ">trusted legacy timeless jewelry </h1>
                             <p className="font-poppins text-[16px] sm:text-[24px] font-normal leading-normal text-[#28040E] mt-5 sm:mt-9">Tarangi is founded by third generation Entreprenuers from the family of jewellers. We are siblings united in vision to shape a globally admired fine jewelry brand that blends timeless artistry with modern elegance.</p>
                         </div>
                     </div>

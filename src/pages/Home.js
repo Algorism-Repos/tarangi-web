@@ -64,7 +64,7 @@ function Home() {
   const festiveProduct = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/shopify/products"
+        "https://tarangi-website.de.r.appspot.com/api/shopify/products"
       );
       setPfestiveProducts(response.data);
       console.log(response);
@@ -110,7 +110,7 @@ function Home() {
 
   const specials = [
     { img: pink_collection, title: "Pink Collection" },
-    { img: statement_earrings, title: "Statement Ear rings" },
+    { img: statement_earrings, title: "Statement Earrings" },
     { img: dangers, title: "Danglers" },
     { img: jaguar_bracelet, title: "Jaguar Bracelets" },
     { img: watch_charms, title: "Watch Charms" },
@@ -128,7 +128,7 @@ function Home() {
         spaceBetween={30}
         centeredSlides={true}
         autoplay={{
-          delay: 3500,
+          delay: 5000,
           disableOnInteraction: false,
         }}
         navigation={true}
@@ -173,45 +173,47 @@ function Home() {
 
       {/* Collections - Section */}
       <div className="design-section py-40 relative">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white">Our Curations</h1>
+        <div className="max-w-7xl mx-auto tracking-[1px]">
+          <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white ">Our Curations</h1>
           <div className="flex flex-col gap-y-[160px] sm:gap-y-0 sm:flex-row items-center justify-center gap-x-12 relative my-36 sm:my-56">
-          <div className="border-2 border-white w-[360px] h-[374px] relative z-0 overflow-hidden" onClick={() => {toggle()}}>
+            <div className="border-2 border-white w-[360px] h-[374px] relative z-0 overflow-hidden" onClick={() => { toggle() }}>
               <img src={men_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/3 ">Men</h2>
             </div>
-            <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 " onClick={() => {toggle()}}> <img src={women_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
+            <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 " onClick={() => { toggle() }}> <img src={women_design} alt="men-image" className="w-[359px] h-[465px] sm:w-[373px] sm:h-[430px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/4 ">Women</h2>
             </div>
-            <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 overflow-hidden" onClick={() => {toggle()}}> <img src={couple_design} alt="men-image" className="w-[360px] h-[360px] sm:w-[374px] sm:h-[374px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute z-10" />
+            <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 overflow-hidden" onClick={() => { toggle() }}> <img src={couple_design} alt="men-image" className="w-[360px] h-[360px] sm:w-[374px] sm:h-[374px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute z-10" />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-[-15px] left-1/4 ">Couples</h2>
             </div>
           </div>
 
 
           {/* Best Sellers */}
-          <h1 className="section-heading !text-white">Best Sellers</h1>
-          <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-between mt-20 sm:mt-36">
-            {festiveFiltered.map((type) => (
-              <div
-                className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
-                onClick={() => {
-                  toggle(type?.title);
-                }}
-              >
-                <img
-                  src={type?.image?.src}
-                  alt={type?.name}
-                  className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] rounded-[16px]"
-                />
-                <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">
-                  {type?.title}
-                </h5>
-                <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">
-                  ₹ {type.variants[0]?.price || "N/A"}
-                </h4>
-              </div>
-            ))}
+          <div id="launchOffers">
+            <h1 className="section-heading !text-white tracking-[1px]">Best Sellers</h1>
+            <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-between mt-20 sm:mt-36">
+              {festiveFiltered.map((type) => (
+                <div
+                  className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
+                  onClick={() => {
+                    toggle(type?.title);
+                  }}
+                >
+                  <img
+                    src={type?.image?.src}
+                    alt={type?.name}
+                    className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] rounded-[16px]"
+                  />
+                  <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">
+                    {type?.title}
+                  </h5>
+                  <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">
+                    ₹ {type.variants[0]?.price || "N/A"}
+                  </h4>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -220,14 +222,14 @@ function Home() {
       {/* Gold vs Gold Plated Silver Section */}
       <div className="bg-secondary">
         <div className="max-w-[1220px] mx-auto py-20 sm:pt-40 sm:pb-20  px-3 ">
-          <h1 className="section-heading lg:w-[846px] w-[336px] mx-auto tracking-[]">Gold vs Silver Jewellery</h1>
+          <h1 className="section-heading lg:w-[846px] w-[336px] mx-auto tracking-[1px]">Gold vs Silver Jewellery</h1>
           <p className="section-content text-center sm:max-w-[1034px] mx-auto mt-14">Gold jewelry has always been cherished for its permanence, but often feels out of reach for everyday style. Gold-plated silver brings the same timeless look with the ease and affordability to make elegance part of daily life.</p>
           {/* <p className="section-content text-center sm:w-[1034px] w-[330px] mx-auto mt-9">At Tarangi, each gold-plated silver piece fuses the richness of gold with the strength of sterling silver. </p> */}
 
 
           {/* Images */}
 
-          <h1 className="w-[340px] sm:w-[680px] mx-auto text-center font-atteron text-[#5C0A1F] text-[20px] sm:text-[40px] font-semibold tracking-[1px] sm:tracking-[2.5px] mt-16 sm:mt-20">Enjoy stunning designs without the heavy price tag</h1>
+          <h1 className="w-[340px] sm:w-[680px] mx-auto text-center font-atteron text-[#5C0A1F] text-[20px] sm:text-[40px] font-semibold tracking-[1px] sm:tracking-[1px] mt-16 sm:mt-20">Enjoy stunning designs without the heavy price tag</h1>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-y-12 sm:gap-y-28 w-full mt-16 sm:mt-20">
 
             <div className="relative border">
@@ -284,7 +286,7 @@ function Home() {
 
 
       {/* Tarangi Specials */}
-      <div id="launchOffers" className="newproducts-section">
+      <div className="newproducts-section tracking-[1px]">
         <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
           <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-32 sm:mt-0 overflow-x-hidden">
             Tarangi Specials
