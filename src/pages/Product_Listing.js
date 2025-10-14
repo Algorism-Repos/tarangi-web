@@ -1,4 +1,3 @@
-import react from "react";
 import { Link } from "react-router";
 // Image 
 import product_1 from '../assets/Products/product_1.png'
@@ -51,7 +50,9 @@ function Product_Listing() {
                                         <p className="text-[14px] font-semibold text-[#6F6F6F] sm:text-[14px]">{item.product_name}</p>
                                     </div>
 
-                                    <div className="hidden sm:block">
+                                    <p className="text-primary font-semibold text-[20px]">Sold Out</p>
+
+                                    <div className="hidden">
                                         <p className="text-[15px] text-[#6F6F6F]">Colors Available</p>
 
                                         <div className="mt-1 flex justify-end gap-x-3">
