@@ -42,6 +42,7 @@ import women_image from "../assets/women_image.jpg"
 import silver_jewel from "../assets/silver_jewel.jpg"
 import gold_jewel from "../assets/gold_jewel.jpg"
 import whatsapp_floating from "../assets/whatsapp_icon.svg"
+import refresh_icon from '../assets/Refresh_icon.png'
 
 
 
@@ -59,7 +60,42 @@ function Home() {
 
     return (
         <>
+            {/* Floating Whatsapp icon */}
             <a href="https://wa.me/919003058300/?text=Hi," target="_blank"><img src={whatsapp_floating} alt="Whatsapp_Icon" className="w-[50px] sm:w-[70px] h-fit fixed bottom-3 right-3 sm:bottom-9 sm:right-7 animate-bounce hover:scale-125 duration-300 transition-transform z-30" /></a>
+
+            {/* Silver price */}
+
+            {/* Mobile */}
+            <div className='w-full bg-[#FCE8CD] font-poppins lg:hidden'>
+                <p className='bg-[#CFA266] text-white font-medium text-center py-4 text-[18px]'>Silver Price Today</p>
+
+                <div className='flex justify-between p-3'>
+                    <div className='flex items-center w-[161px] sm:w-[175px]'>
+                        <p className='text-[#28040E] text-[15px] font-normal  sm:text-[16px]'><span className='font-semibold'>₹ 169.90</span> /g <br /> <span className='font-semibold'>₹ 1,69,900</span>/ kilogram.</p>
+                    </div>
+
+                    <div className='flex items-center gap-x-1 w-[155px] sm:w-[170px]'>
+                        <img className='w-[15px] h-[15px]' src={refresh_icon} alt='Refresh icon' />
+                        <p className='text-[14px] text-right sm:text-[16px]'>Last Updated 27 Oct 2025, 11:00 AM</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Desktop */}
+            <div className='w-full bg-[#FCE8CD] font-poppins hidden lg:block'>
+
+                <div className='flex justify-between'>
+                    <div className='flex items-center gap-x-[25px]'>
+                        <p className='bg-[#CFA266] px-8 py-3 w-fit text-white font-medium'>Silver Price Today</p>
+                        <p className='text-[#28040E] text-[18px] font-normal'><span className='font-semibold'>₹169.90</span> per gram and <span className='font-semibold'>₹1,69,900</span> per kilogram.</p>
+                    </div>
+
+                    <div className='flex items-center gap-x-2 mr-6'>
+                        <img className='w-[15px] h-[15px]' src={refresh_icon} alt='Refresh icon' />
+                        <p>Last Updated 27 Oct 2025, 11:00 AM</p>
+                    </div>
+                </div>
+            </div>
 
             <Swiper
                 spaceBetween={30}
@@ -75,13 +111,13 @@ function Home() {
                 modules={[Autoplay, Pagination, Navigation]}
                 className="mySwiper"
             >
-                <SwiperSlide>
+                {/* <SwiperSlide>
                     <div className="festive-banner relative">
                         <a href="#launchOffers" className="hover:scale-110 transition duration-300 absolute bottom-8 sm:bottom-16 sm:left-[24%]  ">
                             <button className="rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">View our Best Sellers</button>
                         </a>
                     </div>
-                </SwiperSlide>
+                </SwiperSlide> */}
                 <SwiperSlide>
                     <div className="banner-section">
                         <h1 className="font-atteron uppercase text-[52px] leading-[70px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">Born from tradition Designed for today</h1>
@@ -106,7 +142,7 @@ function Home() {
             <div className="whyus">
                 <h1 className="font-atteron text-[52px] sm:text-[72px] text-center text-[#5C0A1F] leading-normal">WHY US?</h1>
 
-                <div className="font-poppins text-center text-[16px] sm:text-[24px] font-medium sm:leading-[38px] text-[#28040E] max-w-[330px] sm:max-w-[1000px] mt-5 sm:mt-9 ">
+                <div className="font-poppins text-center text-[16px] sm:text-[20px] font-normal text-[#28040E] max-w-[330px] sm:max-w-[1035px] mt-5 sm:mt-10 ">
                     <p>With nearly 60 years of heritage, Tarangi carries forward the craftsmanship and trust of their family's tradition, reimagined for today by the daughters. Each piece blends timeless artistry with a modern sensibility, creating jewelry that feels rooted and refreshingly new. The handmade silver jewelry designs celebrate everyone, including women, men and couples, making inclusivity our defining hallmark. Tarangi offers fine 925 silver jewelry. </p>
                 </div>
             </div>
@@ -122,7 +158,7 @@ function Home() {
                         </div>
 
                         <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 " onClick={toggle}>
-                            <img src={women_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[410px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
+                            <img src={women_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[410px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute  bottom-[-0px] z-10" />
                             <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/4 ">Women</h2>
                         </div>
 
@@ -185,13 +221,13 @@ function Home() {
                         <div className="relative border">
                             <img src={silver_jewel} alt="silver_jewel" className="sm:w-[542px] sm:h-[645px]" />
                             <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute top-[100px] sm:top-[150px] left-1/2 -translate-x-1/2 -translate-y-1/2">Gold</h2>
-                            <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2">₹ 4,00,000</h2>
+                            <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2">₹ 4<span className='font-poppins'>,</span>00<span className='font-poppins'>,</span>000</h2>
                         </div>
 
                         <div className="relative">
                             <img src={gold_jewel} alt="silver_jewel" className="sm:w-[542px] sm:h-[645px]" />
                             <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute top-[100px] sm:top-[150px] left-1/2 -translate-x-1/2 -translate-y-1/2">Silver</h2>
-                            <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2">₹ 12,000</h2>
+                            <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2">₹ 12<span className='font-poppins'>,</span>000</h2>
 
                             {/* <h2 className="max-w-[350px] font-atteron text-white text-center font-normal leading-normal text-[25px] sm:text-[24px] z-20 tracking-[2px] absolute bottom-0 sm:bottom-8 left-[20%]">Get the Look of Luxury At just<span className="text-[30px] font-bold"> ₹12,000</span></h2> */}
                             <p></p>
@@ -238,40 +274,40 @@ function Home() {
                     <h1 className="section-heading !text-white tracking-[1px]">Best Sellers</h1>
 
                     <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-between mt-20 sm:mt-36">
-                        <div className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
-                            <img src={new_product_1} alt="new_product_image" className="w-[395px] h-[395px]" />
-                            <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">Flora Beauty</h5>
-                            <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">₹ 1,700</h4>
+                        <div className="flex flex-col items-center gap-y-1 " onClick={toggle}>
+                            <img src={new_product_1} alt="new_product_image" className="w-[395px] h-[395px] transition-transform duration-300 ease-out hover:scale-110" />
+                            <h5 className="font-poppins text-[22px] font-normal text-white mt-5">Flora Beauty</h5>
+                            <h4 className="font-poppins text-[20px] font-semibold text-[#FCD99F]">₹ 1,700</h4>
                         </div>
 
                         <div className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
                             <img src={new_product_2} alt="new_product_image" className="w-[395px] h-[395px]" />
-                            <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">Queen Necklace</h5>
-                            <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">₹ 4,650</h4>
+                            <h5 className="font-poppins text-[22px] font-normal text-white mt-5">Queen Necklace</h5>
+                            <h4 className="font-poppins text-[20px] font-semibold text-[#FCD99F]">₹ 4,650</h4>
                         </div>
 
                         <div className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
                             <img src={new_product_3} alt="new_product_image" className="w-[395px] h-[395px]" />
-                            <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">Bloom Haathphool</h5>
-                            <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">₹ 2,400</h4>
+                            <h5 className="font-poppins text-[22px] font-normal text-white mt-5">Bloom Haathphool</h5>
+                            <h4 className="font-poppins text-[20px] font-semibold text-[#FCD99F]">₹ 2,400</h4>
                         </div>
 
                         <div className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
                             <img src={new_product_4} alt="new_product_image" className="w-[395px] h-[395px]" />
-                            <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">Bold Black Stud</h5>
-                            <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">₹ 990</h4>
+                            <h5 className="font-poppins text-[22px] font-normal text-white mt-5">Bold Black Stud</h5>
+                            <h4 className="font-poppins text-[20px] font-semibold text-[#FCD99F]">₹ 990</h4>
                         </div>
 
                         <div className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
                             <img src={new_product_5} alt="new_product_image" className="w-[395px] h-[395px]" />
-                            <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">Lord Shiva Kada</h5>
-                            <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">₹ 16,500</h4>
+                            <h5 className="font-poppins text-[22px] font-normal text-white mt-5">Lord Shiva Kada</h5>
+                            <h4 className="font-poppins text-[20px] font-semibold text-[#FCD99F]">₹ 16,500</h4>
                         </div>
 
                         <div className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
                             <img src={new_product_6} alt="new_product_image" className="w-[395px] h-[395px]" />
-                            <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">Choco Hollow Bracelet</h5>
-                            <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">₹ 4,100</h4>
+                            <h5 className="font-poppins text-[22px] font-normal text-white mt-5">Choco Hollow Bracelet</h5>
+                            <h4 className="font-poppins text-[20px] font-semibold text-[#FCD99F]">₹ 4,100</h4>
                         </div>
                     </div>
                 </div>

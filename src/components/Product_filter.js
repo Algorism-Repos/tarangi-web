@@ -190,7 +190,7 @@ function Product_Filter() {
 
                         </div >
 
-                        {/* Mobile Verion */}
+                        {/* Mobile Verion Filter */}
                         <div className="w-full bg-[#EBBB85] font-poppins absolute bottom-0 p-5 lg:hidden px-4">
 
                             <div className="flex justify-between">

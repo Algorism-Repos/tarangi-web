@@ -40,7 +40,7 @@ function Product_Listing() {
                 {
                     Products.map((item) => {
                         return (
-                            <Link to="/productdescription" className="font-poppins w-[170px] sm:w-[310px] mx-auto">
+                            <Link to="/productdescription" className="relative font-poppins w-[173px] sm:w-[310px] mx-auto hover:grayscale">
                                 <img className="w-full h-fit" src={item.product_img} alt={item.alt} />
 
                                 <div className="mt-2 flex justify-between sm:mt-4">
@@ -49,10 +49,12 @@ function Product_Listing() {
                                         <h3 className="text-[16px] font-semibold sm:text-[20px]">{item.price}</h3>
                                         <p className="text-[14px] font-semibold text-[#6F6F6F] sm:text-[14px]">{item.product_name}</p>
                                     </div>
+                                    {/* Sold out */}
+                                    <div className="bg-[#FFF5E8] absolute top-3 right-3 rounded-full px-3.5 py-1.5">
+                                        <p className="text-primary font-semibold text-[14px]">Sold Out</p>
+                                    </div>
 
-                                    <p className="text-primary font-semibold text-[20px]">Sold Out</p>
-
-                                    <div className="hidden">
+                                    <div className="hidden sm:block">
                                         <p className="text-[15px] text-[#6F6F6F]">Colors Available</p>
 
                                         <div className="mt-1 flex justify-end gap-x-3">

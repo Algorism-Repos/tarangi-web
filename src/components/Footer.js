@@ -35,7 +35,7 @@ function Footer() {
                         </div>
                     </div>
 
-                    <div className="font-poppins text-[16px] sm:text-[22px] text-white text-left sm:text-right ml-7 sm:ml-0">
+                    <div className="font-poppins text-[16px] sm:text-[18px] text-white text-left sm:text-right ml-7 sm:ml-0">
                         <a href="tel:9003058300"><p>+91 90030 58300</p></a>
                         <a href="mailto:tarangijewelsindia@gmail.com"><p className="mt-3">tarangijewelsindia@gmail.com</p></a>
                         <a href="https://share.google/6f6U8XByQoc0FWsBP" target="_blank">
