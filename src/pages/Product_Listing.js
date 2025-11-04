@@ -37,7 +37,7 @@ function Product_Listing() {
         <>
             <div className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-y-10 sm:gap-x-[30px] px-3.5">
                 {/* Looping */}
-                {/* {
+                {
                     Products.map((item) => {
                         return (
                             <Link to="/productdescription" className="relative font-poppins w-[173px] sm:w-[310px] mx-auto hover:grayscale">
@@ -67,29 +67,9 @@ function Product_Listing() {
                             </Link>
                         )
                     })
-                } */}
+                }
 
-                <label className="flex items-center gap-3 custom-checkbox">
-                    <input type="checkbox" />
-                    <span className="checkmark"></span>
-                    <span className="text-[16px] text-[#313131] mx-2 mb-[40px] inline-block">
-                        Add gift wrap for ₹50
-                    </span>
-                </label>
-
-                <label className="flex items-center gap-3 custom-checkbox">
-                    <input type="checkbox" />
-                    <span className="checkmark"></span>
-                    <span className="text-[16px] text-[#313131] mx-2 mb-[40px] inline-block">
-                        Add gift wrap for ₹50
-                    </span>
-                </label>
-
-                <div className="flex items-center gap-x-1">
-                    <input type="checkbox" />
-                    <span className="checkmark"></span>
-                    <p>Add gift wrap for ₹50</p>
-                </div>
+              
 
 
             </div>
