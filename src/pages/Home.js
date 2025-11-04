@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import axios from "axios";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
+// import { ImgComparisonSlider } from '@img-comparison-slider/react';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -43,6 +44,10 @@ import women_image from "../assets/women_image.jpg"
 import silver_jewel from "../assets/silver_jewel.jpg"
 import gold_jewel from "../assets/gold_jewel.jpg"
 import whatsapp_floating from "../assets/whatsapp_icon.svg"
+import before_img from "../assets/before.png"
+import after_img from "../assets/after.png"
+import slider_button from "../assets/slider_button.png"
+import { Container } from 'postcss';
 
 
 
@@ -95,7 +100,21 @@ function Home() {
     return () => clearTimeout(timer);
   }, []);
   // -------------------
+  useEffect(() => {
+    const container = document.querySelector(".container");
+    const slider = document.querySelector(".slider");
 
+    if (!container || !slider) return;
+
+    const handleInput = (e) => {
+      container.style.setProperty("--position", `${e.target.value}%`);
+    };
+
+    slider.addEventListener("input", handleInput);
+
+
+    return () => slider.removeEventListener("input", handleInput);
+  }, []);
 
   const bestSellers = [
     { img: new_product_1, name: "Flora Beauty", price: "₹ 1,700" },
@@ -177,7 +196,7 @@ function Home() {
           <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white ">Our Curations</h1>
           <div className="flex flex-col gap-y-[160px] sm:gap-y-0 sm:flex-row items-center justify-center gap-x-12 relative my-36 sm:my-56">
             <div className="border-2 border-white w-[360px] h-[374px] relative z-0 overflow-hidden" onClick={() => { toggle() }}>
-              <img src={men_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
+              <img src={men_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10 " />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/3 ">Men</h2>
             </div>
             <div className="border-2 border-white w-[360px] h-[374px] relative z-0 " onClick={() => { toggle() }}>
@@ -224,7 +243,7 @@ function Home() {
 
 
       {/* Gold vs Gold Plated Silver Section */}
-      <div className="bg-secondary">
+      <div className="bg-secondary ">
         <div className="max-w-[1220px] mx-auto py-20 sm:pt-40 sm:pb-20  px-3 ">
           <h1 className="section-heading lg:w-[846px] w-[336px] mx-auto tracking-[1px]">Gold vs Silver Jewellery</h1>
           <p className="section-content text-center sm:max-w-[1034px] mx-auto mt-14">Gold jewelry has always been cherished for its permanence, but often feels out of reach for everyday style. Gold-plated silver brings the same timeless look with the ease and affordability to make elegance part of daily life.</p>
@@ -392,6 +411,31 @@ function Home() {
           </div>
         </div>
       </div>
+
+   <div className="before-after-section ">
+    <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
+
+      <h1 className="font-atteron section-heading text-[40px] sm:text-[64px] text-center text-[#5C0A1F] leading-tight mb-10">
+        Enhance Your Look With <br/> Tarangi
+      </h1>
+
+      <div className= "container">
+        <div className="image-container ">
+          <img className="image-before slider-image"
+          src={before_img}
+          alt="before_img"/>
+         <img className="image-after slider-image"
+          src={after_img} 
+          alt="after_img"/>
+        </div>
+        <input type="range" min={0} max={100} value={0} className="slider"  />
+        <div className="slider-line "></div>
+        <div className="slider-button w-30 h-30 " aria-hidden="true ">
+          <img src={slider_button} alt="slider button" />
+        </div>
+      </div>
+    </div>
+  </div>
 
       {/* Modal */}
       <Modal modal={modalToggle} active={toggle} productName={selectedType} />

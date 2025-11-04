@@ -5,7 +5,8 @@ import * as Yup from "yup";
 // Import product images
 import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
-
+import truck_icon from "../assets/truck_icon.png";
+import LineImg from "../assets/line1.png";
 function Paymentpage() {
   const [useDifferentBilling, setUseDifferentBilling] = useState(false);
 
@@ -32,6 +33,7 @@ function Paymentpage() {
       price: 0,
       free: true,
     },
+
   ];
 
   const subTotal = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -81,7 +83,7 @@ function Paymentpage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#F6ECE6] text-[#6E0027] font-poppins overflow-x-hidden px-3 sm:px-6">
+    <div className="min-h-screen bg-[#FFF5E8] text-[#979797] text-sm font-poppins overflow-x-hidden px-3 sm:px-6">
       <div className="max-w-[1110px] mx-auto py-10 space-y-10">
         {/* Header */}
         <div className="flex items-center justify-between relative px-4 sm:px-6 md:px-8 lg:px-12 py-2">
@@ -96,8 +98,11 @@ function Paymentpage() {
             <span className="font-medium text-[#6E0027] pb-1">
             Address
             </span>
-            <div className="w-20 sm:w-18 md:w-16 h-[1px] bg-[#6E0027]" />
-            <div className="w-2 h-2 sm:w-2 sm:h-2 rounded-full bg-[#6E0027]" />
+            <img
+              src={LineImg}
+              alt="progress line"
+              className="w-10 sm:w-14 md:w-16 object-contain"
+            />
             <span className="font-medium text-[#6E0027]   pb-1">Payment</span>
         </div>
         </div>
@@ -110,23 +115,22 @@ function Paymentpage() {
           <div className="col-span-12 lg:col-span-8">
             <form
               onSubmit={formik.handleSubmit}
-              className="bg-transparent rounded-xl border border-[#f3e7e7] p-4 sm:p-6 space-y-6"
+              className="bg-#FFF5E8] rounded-xl  p-4 sm:p-6 space-y-6"
             >
               {/* === CONTACT DETAILS === */}
               <section className="space-y-4">
-                <h2 className="text-lg font-semibold">Contact Details</h2>
+                <h2 className="text-lg font-semibold text-[#6E0027]">Contact Details</h2>
 
 
                 {/* First and Last Name */}
                 <div className="flex flex-col sm:flex-row gap-3">
                   <div className="flex-1">
-                    <label className="text-sm block mb-1">First Name</label>
                     <input
                       name="firstName"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.firstName}
-                      className={`w-full h-[44px] px-3 border rounded-md text-sm ${
+                      className={`w-full h-[44px] px-3 border rounded-md text-sm placeholder-[#979797] ${
                         formik.errors.firstName && formik.touched.firstName
                           ? "border-red-500"
                           : "border-[#efe6e6]"
@@ -138,13 +142,12 @@ function Paymentpage() {
                     )}
                   </div>
                   <div className="flex-1">
-                    <label className="text-sm block mb-1">Last Name</label>
                     <input
                       name="lastName"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.lastName}
-                      className={`w-full h-[44px] px-3 border rounded-md text-sm ${
+                      className={`w-full h-[44px] px-3 border rounded-md text-sm placeholder-[#979797] ${
                         formik.errors.lastName && formik.touched.lastName
                           ? "border-red-500"
                           : "border-[#efe6e6]"
@@ -159,7 +162,6 @@ function Paymentpage() {
 
                 {/* Mobile Number */}
                 <div>
-                  <label className="text-sm block mb-1">Mobile Number</label>
                   <div
                     className={`flex items-center w-full h-[44px] px-3 border rounded-md text-sm bg-white ${
                       formik.errors.mobile && formik.touched.mobile
@@ -178,7 +180,7 @@ function Paymentpage() {
                       onBlur={formik.handleBlur}
                       value={formik.values.mobile}
                       placeholder="Mobile Number"
-                      className="flex-1 bg-transparent focus:outline-none placeholder-gray-400"
+                      className="flex-1 bg-transparent focus:outline-none placeholder-[#979797]"
                     />
                   </div>
                   {formik.touched.mobile && formik.errors.mobile && (
@@ -189,17 +191,16 @@ function Paymentpage() {
 
               {/* === SHIPPING ADDRESS === */}
               <section className="space-y-4">
-                <h3 className="text-lg font-semibold">Shipping Address</h3>
+                <h3 className="text-lg font-semibold text-[#6E0027]">Shipping Address</h3>
 
                 {/* Address */}
                 <div>
-                  <label className="text-sm block mb-1">Address</label>
                   <input
                     name="address"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.address}
-                    className={`w-full h-[44px] px-3 border rounded-md text-sm ${
+                    className={`w-full h-[44px] px-3 border rounded-md text-sm placeholder-[#979797] ${
                       formik.errors.address && formik.touched.address
                         ? "border-red-500"
                         : "border-[#efe6e6]"
@@ -213,13 +214,12 @@ function Paymentpage() {
 
                 {/* Landmark */}
                 <div>
-                  <label className="text-sm block mb-1">Landmark</label>
                   <input
                     name="landmark"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.landmark}
-                    className="w-full h-[44px] px-3 border border-[#efe6e6] rounded-md text-sm"
+                    className="w-full h-[44px] px-3 border border-[#efe6e6] rounded-md text-sm placeholder-[#979797]"
                     placeholder="Landmark (Optional)"
                   />
                 </div>
@@ -227,13 +227,12 @@ function Paymentpage() {
                 {/* City, PIN, State, Country */}
                 <div className="flex flex-col sm:flex-wrap sm:flex-row gap-3">
                   <div className="flex-1 min-w-[45%]">
-                    <label className="text-sm block mb-1">City</label>
                     <input
                       name="city"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.city}
-                      className={`w-full h-[44px] px-3 border rounded-md text-sm ${
+                      className={`w-full h-[44px] px-3 border rounded-md text-sm placeholder-[#979797] ${
                         formik.errors.city && formik.touched.city
                           ? "border-red-500"
                           : "border-[#efe6e6]"
@@ -246,13 +245,12 @@ function Paymentpage() {
                   </div>
 
                   <div className="flex-1 min-w-[45%]">
-                    <label className="text-sm block mb-1">Pincode</label>
                     <input
                       name="pincode"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.pincode}
-                      className={`w-full h-[44px] px-3 border rounded-md text-sm ${
+                      className={`w-full h-[44px] px-3 border rounded-md text-sm placeholder-[#979797] ${
                         formik.errors.pincode && formik.touched.pincode
                           ? "border-red-500"
                           : "border-[#efe6e6]"
@@ -265,7 +263,6 @@ function Paymentpage() {
                   </div>
 
                   <div className="flex-1 min-w-[45%]">
-                    <label className="text-sm block mb-1">State</label>
                     <select
                       name="state"
                       onChange={formik.handleChange}
@@ -288,7 +285,6 @@ function Paymentpage() {
                   </div>
 
                   <div className="flex-1 min-w-[45%]">
-                    <label className="text-sm block mb-1">Country</label>
                     <select
                       name="country"
                       onChange={formik.handleChange}
@@ -304,22 +300,27 @@ function Paymentpage() {
               {/* === Gift wrap + Note + Terms === */} 
               <section className="space-y-4">
                  <div className="flex items-start gap-3">
-                     <input type="checkbox" className="w-4 h-4 accent-[#6E0027]" /> 
-                     <p className="text-sm">Add gift wrap for ₹50</p> 
+                     <input type="checkbox" className="w-4 h-4 accent-[#6E0027] " /> 
+                     <p className="text-sm text-[#313131]">Add gift wrap for ₹50</p> 
                      </div> 
                      <div> 
-                        <label className="text-sm block mb-1">Order Note</label>
+                        <label className="text-sm block mb-1 text-[#6E0027]">Order Note</label>
                          <textarea className="w-full min-h-[110px] p-3 border border-[#efe6e6] rounded-md text-sm" placeholder="Leave a note for special requests or instructions" /> 
                          </div>
 
-                <label className="flex items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4 accent-[#6E0027]"
-                    required
-                  />
-                  I agree to the Terms & Conditions.
-                </label>
+                        <div className="flex flex-col gap-1 bg-[#FFF5EE] p-3 rounded-md">
+                          <p className="text-xs text-[#6B6B6B] font-medium">T&C Checkbox</p>
+
+                          <label className="flex items-center gap-2 text-sm text-[#313131]">
+                            <input
+                              type="checkbox"
+                              className="w-4 h-4 accent-[#6E0027] cursor-pointer"
+                              required
+                            />
+                            <p>I agree to the Terms & Conditions and Jewel Care Instructions.</p>
+                          </label>
+                        </div>
+
 
                 <button
                   type="submit" 
@@ -331,39 +332,31 @@ function Paymentpage() {
             </form>
           </div>
 
-          {/* RIGHT SUMMARY */}
+          {/* Right Summary */}
           <div className="col-span-12 lg:col-span-4">
             <div className="w-full bg-white rounded-[10px] shadow-md border border-[#EDEDED] p-5">
-              <h3 className="font-semibold mb-4 text-base text-[#1E1E1E]">
-                Order Summary
-              </h3>
+              <h3 className="font-semibold mb-4 text-base text-[#313131]">Order Summary</h3>
 
-              {/* Items */}
               <div className="space-y-4">
                 {orderItems.map((item, i) => (
                   <div key={i} className="flex items-center gap-3">
                     <div className="w-16 h-16 rounded-md border border-[#f2eaea] overflow-hidden">
-                      <img
-                        src={item.product_img}
-                        alt={item.alt}
-                        className="w-full h-full object-cover"
-                      />
+                      <img src={item.product_img} alt={item.alt} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1">
-                      <div className="text-sm font-medium">{item.product_name}</div>
-                      <div className="text-xs text-gray-500">
-                        Qty: {item.quantity}
-                      </div>
+                      <div className="text-sm font-medium text-[#6F6F6F]">{item.product_name}</div>
+                      <div className="text-xs text-[#6F6F6F]">Qty: {item.quantity}</div>
                     </div>
-                    <div className="text-sm font-semibold">
+                    <div className="text-sm text-[#313131] font-semibold">
                       {item.free ? "Free" : `₹${item.price.toLocaleString()}`}
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="flex items-center gap-2 text-xs text-[#A84C32] bg-[#FDE7E7] rounded-md px-3 py-2 mt-5">
-                <span>🚚 Est. delivery by 10th Oct</span>
+              <div className="flex  max-w-[205px] max-h-[24px] items-center gap-2 text-xs  text-[#A84C32] bg-[#FDE7E7] rounded-md px-3 py-2 mt-5">
+                <img src={truck_icon} alt="truck icon" className="w-4 h-4 object-contain" />
+                <span>Est. delivery by 22 Oct</span>
               </div>
 
               <div className="border-t border-[#EDEDED] my-4" />
@@ -379,9 +372,7 @@ function Paymentpage() {
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
-                  <span className="text-[#F55A5A]">
-                    {shipping === 0 ? "Free" : `₹${shipping}`}
-                  </span>
+                  <span className="text-[#F55A5A]">{shipping === 0 ? "Free" : `₹${shipping}`}</span>
                 </div>
                 <div className="border-t border-[#EDEDED] my-3" />
                 <div className="flex justify-between text-base font-semibold text-[#1E1E1E]">
