@@ -172,8 +172,8 @@ function Home() {
 
                     <div className="flex flex-col sm:flex-row items-center sm:gap-x-12 gap-y-24 sm:flex-wrap justify-center mt-12 sm:mt-44 tracking-[1px]">
 
-                        <div className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110" onClick={toggle}>
-                            <img src={pink_collection} alt="tarangi_special_1" className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white" />
+                        <div className="flex flex-col items-center overflow-hidden" onClick={toggle}>
+                            <img src={pink_collection} alt="tarangi_special_1" className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white transform transition-transform duration-300 ease-out hover:scale-110" />
                             <h3 className="font-atteron text-[34px] font-normal leading-normal text-white mt-2">Pink Collection</h3>
                         </div>
 
