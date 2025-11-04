@@ -180,7 +180,8 @@ function Home() {
               <img src={men_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/3 ">Men</h2>
             </div>
-            <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 " onClick={() => { toggle() }}> <img src={women_design} alt="men-image" className="w-[359px] h-[465px] sm:w-[373px] sm:h-[430px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
+            <div className="border-2 border-white w-[360px] h-[374px] relative z-0 " onClick={() => { toggle() }}>
+              <img src={women_design} alt="men-image" className="w-[359px] h-[410px] sm:w-[373px] sm:h-[430px]  transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10" />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/4 ">Women</h2>
             </div>
             <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 overflow-hidden" onClick={() => { toggle() }}> <img src={couple_design} alt="men-image" className="w-[360px] h-[360px] sm:w-[374px] sm:h-[374px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute z-10" />
@@ -205,11 +206,14 @@ function Home() {
                     alt={type?.name}
                     className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] rounded-[16px]"
                   />
-                  <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">
+                  <h5 className="font-poppins text-[18px] sm:text-[28px] font-normal leading-normal text-white mt-6">
                     {type?.title}
                   </h5>
-                  <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">
-                    ₹ {type.variants[0]?.price || "N/A"}
+                  <h4 className="font-poppins text-[18px] sm:text-[28px] font-semibold leading-normal text-[#FCD99F]">
+                    ₹
+                    {Number(type.variants[0]?.price).toLocaleString("en-IN", {
+                      maximumFractionDigits: 0,
+                    })}
                   </h4>
                 </div>
               ))}
