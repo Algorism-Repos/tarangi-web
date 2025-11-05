@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import axios from "axios";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -44,14 +44,15 @@ import silver_jewel from "../assets/silver_jewel.jpg";
 import gold_jewel from "../assets/gold_jewel.jpg";
 import whatsapp_floating from "../assets/whatsapp_icon.svg";
 import { FetchAllProductFromShopify } from "../handler/api Handler";
-import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
+
+
+
 function Home() {
   const [animate, setAnimate] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
-  const { setProductListFromShopify, productListFromShopify } =
-    useContext(AppContext);
+  const { setProductListFromShopify, productListFromShopify } = useContext(AppContext); 
   function toggle(product) {
     setSelectedType(product);
     console.log(product);
