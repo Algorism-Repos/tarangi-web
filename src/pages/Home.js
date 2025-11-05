@@ -54,7 +54,7 @@ function Home() {
   const [animate, setAnimate] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
-  const { setProductListFromShopify, productListFromShopify } = useContext(AppContext); 
+  const { setProductListFromShopify, productListFromShopify } = useContext(AppContext);
   function toggle(product) {
     setSelectedType(product);
     console.log(product);
@@ -84,7 +84,7 @@ function Home() {
   useEffect(() => {
     productList();
   }, []);
-  
+
   const specials = [
     { img: pink_collection, title: "Pink Collection" },
     { img: statement_earrings, title: "Statement Earrings" },
@@ -93,64 +93,74 @@ function Home() {
     { img: watch_charms, title: "Watch Charms" },
   ];
 
-console.log(festiveFiltered)
+  console.log(festiveFiltered)
+
+
   return (
     <>
-      <a
-        href="https://wa.me/919003058300/?text=Hi,"
-        target="_blank"
-        className="fixed bottom-3 right-3 sm:bottom-9 sm:right-7 z-30 "
-      >
-        <img
-          src={whatsapp_floating}
-          alt="Whatsapp_Icon"
-          className={`w-[50px] sm:w-[70px] h-fit hover:scale-125 max-h-[70px] ${
-            animate
-              ? " animate-bounce duration-300 transition-transform will-change-transform transform-gpu"
-              : ""
-          }`}
-        />
-      </a>
+      {/* Floating Whatsapp icon */}
+      <a href="https://wa.me/919003058300/?text=Hi," target="_blank"><img src={whatsapp_floating} alt="Whatsapp_Icon" className="w-[50px] sm:w-[70px] h-fit fixed bottom-3 right-3 sm:bottom-9 sm:right-7 animate-bounce hover:scale-125 duration-300 transition-transform z-30" /></a>
+
+      {/* Silver price */}
+      {/* Mobile */}
+      <div className='w-full bg-[#FCE8CD] font-poppins lg:hidden'>
+        <p className='bg-[#CFA266] text-white font-medium text-center py-4 text-[18px]'>Silver Price Today</p>
+
+        <div className='flex justify-between p-3'>
+          <div className='flex items-center w-[161px] sm:w-[175px]'>
+            <p className='text-[#28040E] text-[15px] font-normal  sm:text-[16px]'><span className='font-semibold'>₹ 169.90</span> /g <br /> <span className='font-semibold'>₹ 1,69,900</span>/ kilogram.</p>
+          </div>
+
+          <div className='flex items-center gap-x-1 w-[155px] sm:w-[170px]'>
+            <img className='w-[15px] h-[15px]' src={refresh_icon} alt='Refresh icon' />
+            <p className='text-[14px] text-right sm:text-[16px]'>Last Updated 27 Oct 2025, 11:00 AM</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop */}
+      <div className='w-full bg-[#FCE8CD] font-poppins hidden lg:block'>
+
+        <div className='flex justify-between'>
+          <div className='flex items-center gap-x-[25px]'>
+            <p className='bg-[#CFA266] px-8 py-3 w-fit text-white font-medium'>Silver Price Today</p>
+            <p className='text-[#28040E] text-[18px] font-normal'><span className='font-semibold'>₹169.90</span> per gram and <span className='font-semibold'>₹1,69,900</span> per kilogram.</p>
+          </div>
+
+          <div className='flex items-center gap-x-2 mr-6'>
+            <img className='w-[15px] h-[15px]' src={refresh_icon} alt='Refresh icon' />
+            <p>Last Updated 27 Oct 2025, 11:00 AM</p>
+          </div>
+        </div>
+      </div>
 
       <Swiper
         spaceBetween={30}
         centeredSlides={true}
         autoplay={{
-          delay: 5000,
+          delay: 3500,
           disableOnInteraction: false,
         }}
+        // pagination={{
+        //     clickable: true,
+        // }}
         navigation={true}
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"
       >
         <SwiperSlide>
           <div className="festive-banner relative">
-            <a
-              href="#launchOffers"
-              className="hover:scale-110 transition duration-300 absolute bottom-8 sm:bottom-16 sm:left-[24%]  "
-            >
-              <button className="rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
-                View our Best Sellers
-              </button>
+            <a href="#launchOffers" className="hover:scale-110 transition duration-300 absolute bottom-8 sm:bottom-16 sm:left-[24%]  ">
+              <button className="rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">View our Best Sellers</button>
             </a>
           </div>
         </SwiperSlide>
         <SwiperSlide>
           <div className="banner-section">
-            <h1 className="font-atteron uppercase text-[52px] leading-[70px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px]">
-              Born from tradition Designed for today
-            </h1>
-            <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">
-              Because exculsive 925 silver jewelry should feel as unique as the
-              one who wears it.
-            </h4>
-            <a
-              href="#launchOffers"
-              className="w-fit hover:scale-110 transition duration-300"
-            >
-              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
-                View our Best Sellers
-              </button>
+            <h1 className="font-atteron uppercase text-[52px] leading-[70px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">Born from tradition Designed for today</h1>
+            <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">Because exculsive 925 silver jewelry should feel as unique as the one who wears it.</h4>
+            <a href="#launchOffers" className="w-fit hover:scale-110 transition duration-300">
+              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">View our Best Sellers</button>
             </a>
           </div>
         </SwiperSlide>
@@ -263,7 +273,7 @@ console.log(festiveFiltered)
                     ₹
                     {Number(type.variants[0]?.price).toLocaleString("en-IN", {
                       maximumFractionDigits: 0,
-                    })}                     
+                    })}
                   </h4>
                 </div>
               ))}
@@ -319,50 +329,52 @@ console.log(festiveFiltered)
                 ₹ 12,000
               </h2>
 
-              {/* <h2 className="max-w-[350px] font-atteron text-white text-center font-normal leading-normal text-[25px] sm:text-[24px] z-20 tracking-[2px] absolute bottom-0 sm:bottom-8 left-[20%]">Get the Look of Luxury At just<span className="text-[30px] font-bold"> ₹12,000</span></h2> */}
-              <p></p>
-            </div>
-          </div>
+              <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 " onClick={toggle}>
+                <img src={women_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[410px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute  bottom-[-0px] z-10" />
+                <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/4 ">Women</h2>
+              </div>
 
-          <div className="max-w-6xl mx-auto mt-8 sm:mt-28 px-4 py-12">
-            <h1 className="font-atteron text-[30px] font-bold text-[#5C0A1F] text-center tracking-[2px] sm:text-[48px]">
-              Why choose Tarangi’s
-              <br className="hidden md:block" /> silver jewelry?
-            </h1>
+              <div className="max-w-6xl mx-auto mt-8 sm:mt-28 px-4 py-12">
+                <h1 className="font-atteron text-[30px] font-bold text-[#5C0A1F] text-center tracking-[2px] sm:text-[48px]">
+                  Why choose Tarangi’s
+                  <br className="hidden md:block" /> silver jewelry?
+                </h1>
 
-            <div className="flex flex-col w-fit mx-auto gap-y-7 mt-16 px-4 sm:px-0">
-              <div className="flex flex-row items-center gap-x-4">
-                <img className="w-[28px]" src={bullet_icon} />
-                <p className="font-poppins text-left text-[18px] sm:text-[24px]">
-                  The luminous beauty of gold, made affordable.
-                </p>
-              </div>
-              <div className="flex flex-row items-center gap-x-4">
-                <img className="w-[28px]" src={bullet_icon} />
-                <p className="font-poppins text-left text-[18px] sm:text-[24px]">
-                  Lightweight and comfortable for everyday wear.
-                </p>
-              </div>
-              <div className="flex flex-row items-center gap-x-4">
-                <img className="w-[28px]" src={bullet_icon} />
-                <p className="font-poppins text-left text-[18px] sm:text-[24px]">
-                  Versatile, from casual looks to special occasions.
-                </p>
-              </div>
-              <div className="flex flex-row items-center gap-x-4">
-                <img className="w-[28px]" src={bullet_icon} />
-                <p className="font-poppins text-left text-[18px] sm:text-[24px]">
-                  Crafted with lasting artistry and care.
-                </p>
-              </div>
-            </div>
+                <div className="flex flex-col w-fit mx-auto gap-y-7 mt-16 px-4 sm:px-0">
+                  <div className="flex flex-row items-center gap-x-4">
+                    <img className="w-[28px]" src={bullet_icon} />
+                    <p className="font-poppins text-left text-[18px] sm:text-[24px]">
+                      The luminous beauty of gold, made affordable.
+                    </p>
+                  </div>
+                  <div className="flex flex-row items-center gap-x-4">
+                    <img className="w-[28px]" src={bullet_icon} />
+                    <p className="font-poppins text-left text-[18px] sm:text-[24px]">
+                      Lightweight and comfortable for everyday wear.
+                    </p>
+                  </div>
+                  <div className="flex flex-row items-center gap-x-4">
+                    <img className="w-[28px]" src={bullet_icon} />
+                    <p className="font-poppins text-left text-[18px] sm:text-[24px]">
+                      Versatile, from casual looks to special occasions.
+                    </p>
+                  </div>
+                  <div className="flex flex-row items-center gap-x-4">
+                    <img className="w-[28px]" src={bullet_icon} />
+                    <p className="font-poppins text-left text-[18px] sm:text-[24px]">
+                      Crafted with lasting artistry and care.
+                    </p>
+                  </div>
+                </div>
 
-            {/* <ul style={{ listStyleImage: `url(${bullet_icon})` }} className=" max-w-fit px-5 mx-auto space-y-6 mt-16 sm:text-[28px] flex-col items-center" >
+                {/* <ul style={{ listStyleImage: `url(${bullet_icon})` }} className=" max-w-fit px-5 mx-auto space-y-6 mt-16 sm:text-[28px] flex-col items-center" >
                             <li>&nbsp; &nbsp;The luminous beauty of gold, made affordable</li>
                             <li>&nbsp; &nbsp;Lightweight and comfortable for everyday wear</li>
                             <li>&nbsp; &nbsp;Versatile, from casual looks to special occasions</li>
                             <li>&nbsp; &nbsp;Crafted with lasting artistry and care</li>
                         </ul> */}
+              </div>
+            </div>
           </div>
         </div>
       </div>

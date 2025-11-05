@@ -368,7 +368,7 @@ input::placeholder {
 
   .whyus {
     background-image: url("./assets/backgrounds/whyus_background_mobile.png");
-    padding: 100px 0px;
+    /* padding: 100px 0px; */
   }
 
   .section-heading {
