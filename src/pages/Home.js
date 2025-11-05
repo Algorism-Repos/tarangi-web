@@ -8,12 +8,10 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-// import './styles.css';
 
 // import required modules
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { Link } from "react-router";
-
 import Modal from "../components/Modal";
 
 //asset import
@@ -43,6 +41,10 @@ import women_image from "../assets/women_image.jpg";
 import silver_jewel from "../assets/silver_jewel.jpg";
 import gold_jewel from "../assets/gold_jewel.jpg";
 import whatsapp_floating from "../assets/whatsapp_icon.svg";
+import before_img from "../assets/before.png";
+import after_img from "../assets/after.png";
+import slider_button from "../assets/slider_button.png";
+import { Container } from "postcss";
 import { FetchAllProductFromShopify } from "../handler/api Handler";
 import { AppContext } from "../context/AppContext";
 
@@ -511,6 +513,41 @@ console.log(festiveFiltered)
               <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">
                 ₹5,500.00
               </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="before-after-section ">
+        <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
+          <h1 className="font-atteron section-heading text-[26px]  sm:text-[64px] text-center text-[#5C0A1F] leading-tight mb-10">
+            <span className=""> Enhance Your Look With</span> <br />{" "}
+            Tarangi
+          </h1>
+
+          <div className="container">
+            <div className="image-container ">
+              <img
+                className="image-before slider-image"
+                src={before_img}
+                alt="before_img"
+              />
+              <img
+                className="image-after slider-image"
+                src={after_img}
+                alt="after_img"
+              />
+            </div>
+            <input
+              type="range"
+              min={2}
+              max={98}
+              value={0}
+              className="slider"
+            />
+            <div className="slider-line "></div>
+            <div className="slider-button w-30 h-30 " aria-hidden="true ">
+              <img src={slider_button} alt="slider button" />
             </div>
           </div>
         </div>

@@ -21,7 +21,7 @@ function Footer() {
         <>  
             {/* Coming Soon - Section */}
             <div className={pathname !="/products" ? "coming-soon" : "hidden"}>
-                <h1 className="font-atteron text-[32px] sm:text-[49px] font-normal leading-normal text-white w-[328px] text-center sm:w-full tracking-[1px] ">Our Happy Customers, the stars of Tarangi</h1>
+                <h1 className="font-atteron text-[32px] sm:text-[49px] font-normal leading-normal text-white w-[328px] text-center sm:w-full tracking-[1px]  ">Our Happy Customers, the stars of Tarangi</h1>
                 <a href="https://www.instagram.com/tarangistars" target="_blank"><button className="font-poppins text-white text-[24px] font-extralight leading-normal bg-[#4B001A] rounded-[93px] py-[16px] px-[26px] cursor-pointer mt-7 sm:mt-20 ">Explore More</button>
                 </a>
             </div>
