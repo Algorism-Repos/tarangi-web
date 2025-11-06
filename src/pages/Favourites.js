@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import Recently_Viewed from "../components/Recently_Viewed";
 import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
 import shoppingCart_red from "../assets/Products/shoppingcart_red.png";
 import shoppingCart_white from "../assets/Products/shoppingcart_white.png";
 import Filled_LikeIcon from "../assets/Products/Filled_likeIcon.png";
 import LikeIcon from "../assets/Products/Unfilled_likeIcon.png";
+
+import Recently_Viewed from "../components/Recently_Viewed";
 
 function Favourites() {
   const initialProducts = [
@@ -122,8 +123,8 @@ function Favourites() {
             )}
           </div>
         </div>
-
         <Recently_Viewed />
+
       </div>
     </>
   );
