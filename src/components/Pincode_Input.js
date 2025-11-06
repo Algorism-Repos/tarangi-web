@@ -1,20 +1,16 @@
 import React, { useState } from "react";
-
 // Image
 import location_icon from "../assets/Products/location.png";
-
 function Pincode_Input() {
   const [pincode, setPincode] = useState("");
   const [isEditable, setIsEditable] = useState(true);
   const [savedPincode, setSavedPincode] = useState("");
-
   const handleChange = (e) => {
     const value = e.target.value.replace(/\D/g, ""); // only digits
     if (value.length <= 6) {
       setPincode(value);
     }
   };
-
   const handlePincodeChange = () => {
     if (isEditable && pincode.length === 6) {
       setSavedPincode(pincode);
@@ -45,7 +41,6 @@ function Pincode_Input() {
             </p>
           )}
         </div>
-
         <button
           type="button"
           onClick={handlePincodeChange}
@@ -57,5 +52,4 @@ function Pincode_Input() {
     </div>
   );
 }
-
 export default Pincode_Input;

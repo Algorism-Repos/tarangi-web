@@ -16,6 +16,9 @@ import brown_ellipse from "../assets/Products/brown_ellipse.png";
 import shopping_cart from "../assets/Products/shopping_cart.png";
 import favorie_icon from "../assets/Products/favorite_icon.png";
 import { AppContext } from "../context/AppContext";
+import pure_silver from '../assets/pure_silver_icon.png'
+import shipping from '../assets/shipping_icon.png'
+import plating from '../assets/plating_icon.png'
 
 // components
 import PincodeInput from "../components/Pincode_Input";
@@ -24,7 +27,7 @@ import Recently_Viewed from "../components/Recently_Viewed";
 function Product_Description() {
   const location = useLocation();
   const { product } = location.state || {};
-  const { addToCart, filteredProducts, addToWishlist,addToRecentlyViewed  } = useContext(AppContext);
+  const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } = useContext(AppContext);
   const [quantity, setQuantity] = useState(1);
   // console.log(product)
   const handleAddToCart = () => {
@@ -55,10 +58,10 @@ function Product_Description() {
   useEffect(() => {
     if (product) {
       addToRecentlyViewed({
-      id: product.variants[0].id,
+        id: product.variants[0].id,
         title: product.title,
-      image: product.image.src,
-      price: parseInt(product.variants[0].price),
+        image: product.image.src,
+        price: parseInt(product.variants[0].price),
       });
     }
   }, []);
@@ -95,7 +98,7 @@ function Product_Description() {
               >
                 <SwiperSlide>
                   <img
-                    className="w-full sm:w-[388px] sm:h-[399px] mx-auto"
+                    className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
                     src={product?.image?.src}
                     alt=""
                   />
@@ -103,14 +106,14 @@ function Product_Description() {
 
                 <SwiperSlide>
                   <img
-                    className="w-full sm:w-[388px] sm:h-[399px] mx-auto"
+                    className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
                     src={product_1}
                     alt=""
                   />
                 </SwiperSlide>
                 <SwiperSlide>
                   <img
-                    className="w-full sm:w-[388px] sm:h-[399px] mx-auto"
+                    className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
                     src={product_1}
                     alt=""
                   />
@@ -125,7 +128,7 @@ function Product_Description() {
                   {product?.title}
                 </h1>
                 <h2 className="text-[26px] font-semibold sm:text-[32px]">
-                    ₹{parseInt(product.variants[0].price).toLocaleString("en-IN")}
+                  ₹{parseInt(product.variants[0].price).toLocaleString("en-IN")}
                 </h2>
                 <p className="text-[#878787] text-[14px]">
                   MRP Incl. of all taxes
@@ -143,6 +146,21 @@ function Product_Description() {
                   Handcrafted 22KT gold chain with a timeless design perfect for
                   daily wear and gifting.
                 </p>
+
+                <div className="max-w-[305px] flex flex-wrap justify-between  font-[poppins] text-center text-[#313131] my-5">
+                  <div className="max-w-[75px] ">
+                    <img className="w-[42px] h-[42px] mx-auto" src={pure_silver} alt="pure silver icon" />
+                    <p className="text-[14px] font-semibold ">92.5<br /> Pure Silver</p>
+                  </div>
+                  <div className="max-w-[75px] ">
+                    <img className="w-[42px] h-[42px] mx-auto" src={shipping} alt="pure silver icon" />
+                    <p className="text-[14px] font-semibold ">Pan India Shipping</p>
+                  </div>
+                  <div className="max-w-[75px] ">
+                    <img className="w-[42px] h-[42px] mx-auto" src={plating} alt="pure silver icon" />
+                    <p className="text-[14px] font-semibold ">Life long plating</p>
+                  </div>
+                </div>
               </div>
 
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
