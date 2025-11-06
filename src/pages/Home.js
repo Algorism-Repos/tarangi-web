@@ -44,6 +44,7 @@ import whatsapp_floating from "../assets/whatsapp_icon.svg";
 import before_img from "../assets/before.png";
 import after_img from "../assets/after.png";
 import slider_button from "../assets/slider_button.png";
+import refresh_icon from '../assets/Refresh_icon.png'
 import { Container } from "postcss";
 import { FetchAllProductFromShopify } from "../handler/api Handler";
 import { AppContext } from "../context/AppContext";
