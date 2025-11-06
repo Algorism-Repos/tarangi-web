@@ -62,45 +62,46 @@ const Profile = () => {
     },
   });
 
-const menuItems = [
-  { name: "Your Profile", icon: userIcon, activeIcon: userIconActive },
-  { name: "Saved Address", icon: addressIcon, activeIcon: addressIconActive },
-  { name: "Orders", icon: ordersIcon, activeIcon: ordersIconActive },
-  { name: "Favourites", icon: favIcon, activeIcon: favIconActive },
-];
+  const menuItems = [
+    { name: "Your Profile", icon: userIcon, activeIcon: userIconActive },
+    { name: "Saved Address", icon: addressIcon, activeIcon: addressIconActive },
+    { name: "Orders", icon: ordersIcon, activeIcon: ordersIconActive },
+    { name: "Favourites", icon: favIcon, activeIcon: favIconActive },
+  ];
 
   return (
     <div className="min-h-[972px] bg-[#FFF5E8]  py-16 px-4 sm:px-6 lg:px-16 xl:px-28">
       <div className="max-w-[1110px] mx-auto space-y-14 ">
-    <div className="md:flex flex-auto justify-items-center">
-        <h1 className=" font-atteron  text-[#5A0010] text-[28px] leading-[42px] ">
-          PROFILE
-        </h1>
-</div>
+        <div className="md:flex flex-auto justify-items-center">
+          <h1 className=" font-atteron  text-[#5A0010] text-[28px] leading-[42px] ">
+            PROFILE
+          </h1>
+        </div>
         {/* DESKTOP LAYOUT */}
         <div className="hidden md:flex flex-row gap-10 md:gap-16">
           <div className="w-[220px] flex flex-col gap-4">
-{menuItems.map((item) => {
-  const isActive = activeSection === item.name;
-  return (
-    <button
-      key={item.name}
-      onClick={() => setActiveSection(item.name)}
-      className={`flex items-center gap-3 px-5 py-3 rounded-md text-sm font-poppins transition-all w-full
-        ${isActive
-          ? "bg-[#5A0010] text-white"
-          : "text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010]"
+            {menuItems.map((item) => {
+              const isActive = activeSection === item.name;
+              return (
+                <button
+                  key={item.name}
+                  onClick={() => setActiveSection(item.name)}
+                  className={`flex items-center gap-3 px-5 py-3 rounded-md text-sm font-poppins transition-all w-full
+        ${
+          isActive
+            ? "bg-[#5A0010] text-white"
+            : "text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010]"
         }`}
-    >
-      <img
-        src={isActive ? item.activeIcon : item.icon}
-        alt={item.name}
-        className="w-[30px] h-[30px] transition-all"
-      />
-      {item.name}
-    </button>
-  );
-})}
+                >
+                  <img
+                    src={isActive ? item.activeIcon : item.icon}
+                    alt={item.name}
+                    className="w-[30px] h-[30px] transition-all"
+                  />
+                  {item.name}
+                </button>
+              );
+            })}
           </div>
 
           <div className="flex-1 bg-transparent">

@@ -19,7 +19,7 @@ import { AppContext } from "../context/AppContext";
 
 // components
 import PincodeInput from "../components/Pincode_Input";
-import Recently_Viewed from "../components/Recently-Viewed";
+import Recently_Viewed from "../components/Recently_Viewed";
 
 function Product_Description() {
   const location = useLocation();
