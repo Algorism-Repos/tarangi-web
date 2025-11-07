@@ -13,7 +13,6 @@ import addressIconActive from "../assets/addressIconActive.png";
 
 import editIcon from "../assets/editIcon.png";
 import deleteIcon from "../assets/deleteIcon.png";
-import cartIcon from "../assets/cart.png";
 import truck_icon from "../assets/truck_icon.png";
 import upArrow from "../assets/arrowup.png";
 import downArrow from "../assets/arrowDown.png";
@@ -21,6 +20,8 @@ import downArrow from "../assets/arrowDown.png";
 import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
 import circle from "../assets/Ellipse 12.png";
+
+import AddToCartButton from "../components/AddToCartButton";
 
 const Profile = () => {
   const [activeSection, setActiveSection] = useState("Your Profile");
@@ -532,10 +533,7 @@ const renderFavouritesSection = () => (
           </p>
           <p className="text-[#6D6D6D] text-[13px]">{product.name}</p>
         </div>
-        <button className="mt-3 w-full border border-[#5A0010] rounded-full py-2 text-[#5A0010] text-sm font-semibold flex items-center justify-center gap-2 hover:bg-[#5A0010] hover:text-white transition-all">
-          <img src={cartIcon} alt="Cart" className="w-[24px] h-[24px]" />
-          Add to Cart
-        </button>
+        <AddToCartButton />
       </div>
     ))}
   </div>

@@ -13,21 +13,22 @@ import shopping_bag from "../assets/Products/shopping_bag.png";
 import gold_ellipse from "../assets/Products/gold_ellipse.png";
 import silver_ellipse from "../assets/Products/silver_ellipse.png";
 import brown_ellipse from "../assets/Products/brown_ellipse.png";
-import shopping_cart from "../assets/Products/shopping_cart.png";
 import favorie_icon from "../assets/Products/favorite_icon.png";
 import { AppContext } from "../context/AppContext";
-import pure_silver from '../assets/pure_silver_icon.png'
-import shipping from '../assets/shipping_icon.png'
-import plating from '../assets/plating_icon.png'
+import pure_silver from "../assets/pure_silver_icon.png";
+import shipping from "../assets/shipping_icon.png";
+import plating from "../assets/plating_icon.png";
 
 // components
 import PincodeInput from "../components/Pincode_Input";
 import Recently_Viewed from "../components/Recently_Viewed";
+import AddToCartButton from "../components/AddToCartButton";
 
 function Product_Description() {
   const location = useLocation();
   const { product } = location.state || {};
-  const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } = useContext(AppContext);
+  const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } =
+    useContext(AppContext);
   const [quantity, setQuantity] = useState(1);
   // console.log(product)
   const handleAddToCart = () => {
@@ -149,16 +150,35 @@ function Product_Description() {
 
                 <div className="max-w-[305px] flex flex-wrap justify-between  font-[poppins] text-center text-[#313131] my-5">
                   <div className="max-w-[75px] ">
-                    <img className="w-[42px] h-[42px] mx-auto" src={pure_silver} alt="pure silver icon" />
-                    <p className="text-[14px] font-semibold ">92.5<br /> Pure Silver</p>
+                    <img
+                      className="w-[42px] h-[42px] mx-auto"
+                      src={pure_silver}
+                      alt="pure silver icon"
+                    />
+                    <p className="text-[14px] font-semibold ">
+                      92.5
+                      <br /> Pure Silver
+                    </p>
                   </div>
                   <div className="max-w-[75px] ">
-                    <img className="w-[42px] h-[42px] mx-auto" src={shipping} alt="pure silver icon" />
-                    <p className="text-[14px] font-semibold ">Pan India Shipping</p>
+                    <img
+                      className="w-[42px] h-[42px] mx-auto"
+                      src={shipping}
+                      alt="pure silver icon"
+                    />
+                    <p className="text-[14px] font-semibold ">
+                      Pan India Shipping
+                    </p>
                   </div>
                   <div className="max-w-[75px] ">
-                    <img className="w-[42px] h-[42px] mx-auto" src={plating} alt="pure silver icon" />
-                    <p className="text-[14px] font-semibold ">Life long plating</p>
+                    <img
+                      className="w-[42px] h-[42px] mx-auto"
+                      src={plating}
+                      alt="pure silver icon"
+                    />
+                    <p className="text-[14px] font-semibold ">
+                      Life long plating
+                    </p>
                   </div>
                 </div>
               </div>
@@ -216,24 +236,13 @@ function Product_Description() {
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
               {/* Buttons */}
-              <div className="flex flex-col sm:flex-row items-center gap-[16px]">
-                <Link to="/cart">
-                  <button
-                    className="flex items-center justify-center gap-x-[8px] bg-[#4B001A] w-full h-[56px] rounded-full text-white text-[18px] font-medium sm:w-[210px]"
-                    onClick={handleAddToCart}
-                  >
-                    <img
-                      className="w-[32px] h-[32px]"
-                      src={shopping_cart}
-                      alt="cart_icon"
-                    />
-                    Add to cart
-                  </button>
-                </Link>
+              <div className="max-w-[397px] ">
+              <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
+                <AddToCartButton />
 
                 <Link to="/favourites" state={{ product }}>
                   <button
-                    className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[56px] rounded-full text-primary text-[18px] font-medium sm:w-[210px]"
+                    className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[56px] rounded-full text-primary text-[18px] font-medium sm:w-[176px]"
                     onClick={handleAddToWish}
                   >
                     <img
@@ -244,6 +253,7 @@ function Product_Description() {
                     Wishlist
                   </button>
                 </Link>
+              </div>
               </div>
             </div>
           </div>

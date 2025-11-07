@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
-import shoppingCart_red from "../assets/Products/shoppingcart_red.png";
-import shoppingCart_white from "../assets/Products/shoppingcart_white.png";
+import AddToCartButton from "../components/AddToCartButton";
 import Filled_LikeIcon from "../assets/Products/Filled_likeIcon.png";
 import LikeIcon from "../assets/Products/Unfilled_likeIcon.png";
 
@@ -95,27 +94,7 @@ function Favourites() {
                       </div>
 
                       {/* Add to Cart Button */}
-                      <button
-                        className="cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] 
-                                   w-full h-[50px] rounded-full text-primary text-[16px] font-medium mt-2 
-                                   sm:text-[18px] sm:h-[54px] transition-all duration-300 ease-in-out 
-                                   hover:bg-[#4B001A] hover:text-white"
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.querySelector("img").src =
-                            shoppingCart_white)
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.querySelector("img").src =
-                            shoppingCart_red)
-                        }
-                      >
-                        <img
-                          className="w-[32px] h-[32px] transition-all duration-300 ease-in-out"
-                          src={shoppingCart_red}
-                          alt="cart_icon"
-                        />
-                        Add to cart
-                      </button>
+                    <AddToCartButton  />
                     </div>
                   </div>
                 ))}
