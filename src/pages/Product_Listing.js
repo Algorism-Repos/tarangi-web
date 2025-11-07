@@ -20,7 +20,6 @@ function Product_Listing({ productCatergory }) {
     setSelectedType(product);
   };
 
-  // ✅ Update products once productCatergory is loaded
   useEffect(() => {
     if (productCatergory && productCatergory.length > 0) {
       setProducts(productCatergory.map((item) => ({ ...item, liked: false })));
@@ -39,8 +38,6 @@ function Product_Listing({ productCatergory }) {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   };
 
-
-
   if (products.length === 0) {
     return (
       <p className="text-center w-full text-[18px] font-poppins text-[#747474]">
@@ -52,7 +49,7 @@ function Product_Listing({ productCatergory }) {
   return (
     <>
       <div
-        className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-y-10 sm:gap-x-[30px] px-3.5"
+        className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-y-10 sm:gap-x-[30px] px-1.5"
         onClick={ScrollToTop}
       >
         {products.map((item) => {
@@ -73,36 +70,38 @@ function Product_Listing({ productCatergory }) {
                 alt={item?.alt || item?.title}
               />
 
-              {/*  Like Button */}
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  toggleLike(item.id);
-                }}
-                className="absolute right-3 top-3 w-[40px] h-[40px] opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out focus:outline-none"
-              >
-                <img
-                  src={item.liked ? Filled_LikeIcon : LikeIcon}
-                  alt={item.liked ? "Liked" : "Unliked"}
-                  className="w-full h-full transition-transform duration-200 hover:scale-110"
-                />
-              </button>
+              {/*  Like Button  */}
+              {!isOutOfStock && (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleLike(item.id);
+                  }}
+                  className="absolute right-3 top-3 w-[40px] h-[40px] opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out focus:outline-none"
+                >
+                  <img
+                    src={item.liked ? Filled_LikeIcon : LikeIcon}
+                    alt={item.liked ? "Liked" : "Unliked"}
+                    className="w-full h-full transition-transform duration-200 hover:scale-110"
+                  />
+                </button>
+              )}
+
+              {isOutOfStock && (
+                <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
+                  Sold Out
+                </p>
+              )}
 
               <div className="mt-2 flex justify-between sm:mt-4">
                 <div>
-                  <h3 className="text-[16px] font-semibold sm:text-[20px]">
+                  <h3 className="text-[13px] font-semibold sm:text-[20px]">
                     ₹{parseInt(item.variants[0].price).toLocaleString("en-IN")}
                   </h3>
-                  <p className="text-[14px] font-semibold text-[#6F6F6F] sm:text-[14px]">
+                  <p className="text-[11px] font-semibold text-[#6F6F6F] sm:text-[14px]">
                     {item?.title}
                   </p>
                 </div>
-
-                {isOutOfStock && (
-                  <p className="text-primary font-semibold text-[14px] md:text-[20px]">
-                    Sold Out
-                  </p>
-                )}
               </div>
             </Link>
           );

@@ -184,10 +184,9 @@ function Product_Filter({ productCatergory }) {
             </label>
 
             <div className="relative">
-              <select
-                className="appearance-none border  border-[#B9B9B9] rounded-md py-2.5 px-6  bg-white text-font-grey text-[14px] cursor-pointer outline-none"
-                onChange={(e) => handleSortChange(e.target.value)}
-              >
+              <select className="appearance-none border border-[#B9B9B9] rounded-md py-2.5 pl-3 w-[155px] bg-white text-font-grey text-[14px] cursor-pointer outline-none"
+              onChange={(e) => handleSortChange(e.target.value)}
+>
                 {SortOptions.map((option) => (
                   <option key={option} value={option}>
                     {option}
