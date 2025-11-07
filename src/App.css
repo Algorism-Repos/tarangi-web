@@ -133,6 +133,11 @@ html {
   background-size: cover;
   background-repeat: no-repeat;
 }
+.login-background {
+  background-image: url("./assets/backgrounds/login_backgroundpng.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 .before-after-section {
   background-image: url("./assets/backgrounds/slider_background.png");
   background-size: cover;

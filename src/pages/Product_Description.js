@@ -66,6 +66,15 @@ function Product_Description() {
     }
   }, []);
 
+  // Color active state
+  const [activeColor ,  setActiveColor ] = useState(null);
+
+  const Colors = [
+    { id:"gold" , img:gold_ellipse },
+    { id:"silver" , img:silver_ellipse},
+    { id:"brown" , img:brown_ellipse},
+  ];
+
   return (
     <>
       {/* Backgound */}
@@ -194,23 +203,32 @@ function Product_Description() {
               <div className="">
                 <p className="text-[14px] text-[#6F6F6F]">Colors Available</p>
 
-                <div className="mt-2 flex justify-start gap-x-3">
+                {/* <div className="mt-2 flex justify-start gap-x-3">
                   <img
-                    className="w-[45px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                    className="w-[45px] bg-white rounded-full border-primary hover:border-[3px] hover:p-[2px]"
                     src={gold_ellipse}
                     alt="gold ellipse"
                   />
                   <img
-                    className="w-[45px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                    className="w-[45px] bg-white rounded-full border-primary hover:border-[3px] hover:p-[2px]"
                     src={silver_ellipse}
                     alt="Silver ellipse"
                   />
                   <img
-                    className="w-[45px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                    className="w-[45px] bg-white rounded-full border-primary hover:border-[3px] hover:p-[2px]"
                     src={brown_ellipse}
                     alt="brown ellipse"
                   />
+                </div> */}
+                <div className="mt-2 flex justify-start gap-x-4">
+                  {Colors.map((color)=>(
+                    <img key={color.id} onClick={()=> setActiveColor(color.id)}
+                      className={`w-[45px] rounded-full bg-white border-primary cursor-pointer tranition-all ${activeColor === color.id ? "border-[3px] p-[2px]" : "border-none" }`}
+                      src={color.img} alt={color.id}
+                    />
+                  ))}
                 </div>
+
               </div>
 
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />

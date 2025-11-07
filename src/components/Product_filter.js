@@ -143,7 +143,7 @@ function Product_Filter({ productCatergory }) {
             </label>
 
             <div className="relative">
-              <select className="appearance-none border border-[#B9B9B9] rounded-md p-2.5 bg-white text-font-grey text-[14px] cursor-pointer outline-none"
+              <select className="appearance-none border border-[#B9B9B9] rounded-md py-2.5 pl-3 w-[155px] bg-white text-font-grey text-[14px] cursor-pointer outline-none"
               onChange={(e) => handleSortChange(e.target.value)}
 >
                 {SortOptions.map((option) => (
@@ -152,7 +152,7 @@ function Product_Filter({ productCatergory }) {
                   </option>
                 ))}
               </select>
-              <div className=" absolute right-2 top-2.5">
+              <div className=" absolute right-1 top-2.5">
                 <img src={down_arrow} alt="Down Arrow" />
               </div>
             </div>
