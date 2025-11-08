@@ -15,7 +15,7 @@ function Product_Filter({ productCatergory }) {
   const [showSort, setShowSort] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [tab, setTab] = useState("productCatergory");
-  const { productListFromShopify ,filteredProducts, setFilteredProducts } = useContext(AppContext);
+  const { productListFromShopify, filteredProducts, setFilteredProducts } = useContext(AppContext);
   const SortOptions = ["Price High to Low", "Price Low to High"];
   const priceRanges = [
     { label: "₹10,000 – ₹15,000" },
@@ -102,8 +102,8 @@ function Product_Filter({ productCatergory }) {
         (p) => p.min === range.min && p.max === range.max
       )
         ? selectedPrices.filter(
-            (p) => p.min !== range.min || p.max !== range.max
-          )
+          (p) => p.min !== range.min || p.max !== range.max
+        )
         : [...selectedPrices, range];
       setSelectedPrices(updated);
       handleFilterChange(selectedCategories, updated);
@@ -121,7 +121,7 @@ function Product_Filter({ productCatergory }) {
   }, [productListFromShopify, sortOption]);
 
 
-   console.log(productCatergory)
+  console.log(productCatergory)
   return (
     <>
       <div>
@@ -129,7 +129,7 @@ function Product_Filter({ productCatergory }) {
         <div className="max-w-[1350px] mx-auto flex flex-wrap justify-between px-4">
           <div className="lg:flex flex-wrap items-center gap-x-[18px]">
             <h2 className="font-atteron text-[26px] text-primary tracking-[1px] sm:text-[36px]">
-               Collections
+              Collections
             </h2>
             <p className="font-poppins text-font-grey text-[14px] sm:mt-3 sm:text-[16px]">
               180 Designs
@@ -144,15 +144,15 @@ function Product_Filter({ productCatergory }) {
 
             <div className="relative">
               <select className="appearance-none border border-[#B9B9B9] rounded-md py-2.5 pl-3 w-[155px] bg-white text-font-grey text-[14px] cursor-pointer outline-none"
-              onChange={(e) => handleSortChange(e.target.value)}
->
+                onChange={(e) => handleSortChange(e.target.value)}
+              >
                 {SortOptions.map((option) => (
                   <option key={option} value={option}>
                     {option}
                   </option>
                 ))}
               </select>
-              <div className=" absolute right-1 top-2.5">
+              <div className="absolute right-1 top-2.5 pointer-events-none">
                 <img src={down_arrow} alt="Down Arrow" />
               </div>
             </div>
