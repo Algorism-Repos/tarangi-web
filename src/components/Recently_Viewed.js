@@ -14,6 +14,11 @@ function Recently_Viewed() {
       alt: "Necklace",
       price: "₹10,000",
       product_name: "Stone Necklace",
+      colors: [
+        { id: "gold", img: gold_ellipse, name: "Gold", available: true },
+        { id: "silver", img: silver_ellipse, name: "Silver", available: true },
+        { id: "brown", img: brown_ellipse, name: "Brown", available: false },
+      ],
     },
     {
       id: 2,
@@ -21,6 +26,10 @@ function Recently_Viewed() {
       alt: "Silver Kada",
       price: "₹4,000",
       product_name: "Silver Kada",
+      colors: [
+        { id: "gold", img: gold_ellipse, name: "Gold", available: false },
+        { id: "silver", img: silver_ellipse, name: "Silver", available: true },
+      ],
     },
     {
       id: 3,
@@ -28,6 +37,11 @@ function Recently_Viewed() {
       alt: "Necklace",
       price: "₹10,000",
       product_name: "Stone Necklace",
+      colors: [
+        { id: "gold", img: gold_ellipse, name: "Gold", available: true },
+        { id: "silver", img: silver_ellipse, name: "Silver", available: false },
+        { id: "brown", img: brown_ellipse, name: "Brown", available: true },
+      ],
     },
     {
       id: 4,
@@ -35,26 +49,37 @@ function Recently_Viewed() {
       alt: "Silver Kada",
       price: "₹4,000",
       product_name: "Silver Kada",
+      colors: [
+        { id: "gold", img: gold_ellipse, name: "Gold", available: true },
+        { id: "silver", img: silver_ellipse, name: "Silver", available: true },
+      ],
     },
   ];
 
-  // ✅ State for liked products
+  // State for liked products
   const [likedProducts, setLikedProducts] = useState([]);
 
-  // ✅ Toggle like/unlike
+  // State for active color per product
+  const [activeColors, setActiveColors] = useState({});
+
+  //  Toggle like/unlike
   const handleLikeToggle = (product) => {
-    let updatedLikes;
-
-    if (likedProducts.some((item) => item.id === product.id)) {
-      updatedLikes = likedProducts.filter((item) => item.id !== product.id);
-    } else {
-      updatedLikes = [...likedProducts, product];
-    }
-
-    setLikedProducts(updatedLikes);
+    setLikedProducts((prev) =>
+      prev.some((item) => item.id === product.id)
+        ? prev.filter((item) => item.id !== product.id)
+        : [...prev, product]
+    );
   };
 
-  // ✅ Check if product is liked
+  //  Set active color for a product
+  const handleColorSelect = (productId, colorId) => {
+    setActiveColors((prev) => ({
+      ...prev,
+      [productId]: colorId,
+    }));
+  };
+
+  //  Check if product is liked
   const isLiked = (id) => likedProducts.some((item) => item.id === id);
 
   return (
@@ -71,7 +96,7 @@ function Recently_Viewed() {
             key={item.id}
             className="relative font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0 group hover:scale-105 transition-transform duration-300 ease-in-out"
           >
-            {/* Image Container */}
+            {/* Image */}
             <div className="overflow-hidden rounded-2xl relative">
               <img
                 className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] object-cover rounded-[16px] transform transition-all duration-300 ease-in-out group-hover:shadow-lg"
@@ -79,7 +104,7 @@ function Recently_Viewed() {
                 alt={item.alt}
               />
 
-              {/* ✅ Reusable Like Button */}
+              {/* Like Button */}
               <LikeButton
                 liked={isLiked(item.id)}
                 isOutOfStock={false}
@@ -100,23 +125,25 @@ function Recently_Viewed() {
 
               {/* Color Options */}
               <div className="hidden sm:block">
-                <p className="text-[15px] text-[#6F6F6F]">Colors Available</p>
+                {/* <p className="text-[15px] text-[#6F6F6F] ">Colors Available</p> */}
                 <div className="mt-1 flex justify-end gap-x-3">
-                  <img
-                    className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px] transition-all duration-200"
-                    src={gold_ellipse}
-                    alt="gold ellipse"
-                  />
-                  <img
-                    className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px] transition-all duration-200"
-                    src={silver_ellipse}
-                    alt="Silver ellipse"
-                  />
-                  <img
-                    className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px] transition-all duration-200"
-                    src={brown_ellipse}
-                    alt="brown ellipse"
-                  />
+                  {item.colors.map((color) => (
+                    <img
+                      key={color.id}
+                      src={color.img}
+                      alt={color.name}
+                      onClick={() =>
+                        color.available && handleColorSelect(item.id, color.id)
+                      }
+                      className={`w-[26px] rounded-full bg-white cursor-pointer border transition-all duration-200 ${
+                        color.available
+                          ? activeColors[item.id] === color.id
+                            ? "border-[2px] border-primary p-[2px]"
+                            : "border-gray-300 hover:border-primary hover:p-[2px]"
+                          : "opacity-40 cursor-not-allowed"
+                      }`}
+                    />
+                  ))}
                 </div>
               </div>
             </div>

@@ -68,13 +68,15 @@ function Product_Description() {
   }, []);
 
   // Color active state
-  const [activeColor ,  setActiveColor ] = useState(null);
+  const [activeColor, setActiveColor] = useState(null);
 
   const Colors = [
-    { id:"gold" , img:gold_ellipse },
-    { id:"silver" , img:silver_ellipse},
-    { id:"brown" , img:brown_ellipse},
+    { id: "gold", img: gold_ellipse },
+    { id: "silver", img: silver_ellipse },
+    { id: "brown", img: brown_ellipse },
   ];
+  // const isAvailable = product?.availableColors?.includes(color.id);
+
 
   return (
     <>
@@ -240,38 +242,59 @@ function Product_Description() {
                     alt="brown ellipse"
                   />
                 </div> */}
-                <div className="mt-2 flex justify-start gap-x-4">
-                  {Colors.map((color)=>(
-                    <img key={color.id} onClick={()=> setActiveColor(color.id)}
-                      className={`w-[45px] rounded-full bg-white border-primary cursor-pointer tranition-all ${activeColor === color.id ? "border-[3px] p-[2px]" : "border-none" }`}
-                      src={color.img} alt={color.id}
-                    />
-                  ))}
-                </div>
+                {/* Color Options */}
+                {/* Color Options */}
+                <div className="">
 
+                  <div className="mt-2 flex justify-start gap-x-4">
+                    {Colors.map((color) => {
+                      // Check if color is available in product data
+                      const isAvailable =
+                        product?.availableColors?.includes(color.id) ?? true; // fallback: all true if field missing
+
+                      return (
+                        <img
+                          key={color.id}
+                          onClick={() =>
+                            isAvailable && setActiveColor(color.id)
+                          }
+                          className={`w-[45px] rounded-full bg-white border-primary cursor-pointer transition-all ${
+                            activeColor === color.id
+                              ? "border-[3px] p-[2px]"
+                              : "border-none"
+                          } ${
+                            !isAvailable ? "opacity-40 cursor-not-allowed" : ""
+                          }`}
+                          src={color.img}
+                          alt={color.id}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
 
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
               {/* Buttons */}
-              <div className="max-w-[397px] ">
-              <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
-                <AddToCartButton />
+              <div className="max-w-[397px] m  ">
+                <div className="flex flex-col  w-full sm:flex-row items-center gap-[16px]">
+                  <AddToCartButton />
 
-                <Link to="/favourites" state={{ product }}>
-                  <button
-                    className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[56px] rounded-full text-primary text-[18px] font-medium sm:w-[176px]"
-                    onClick={handleAddToWish}
-                  >
-                    <img
-                      className="w-[32px] h-[32px]"
-                      src={favorie_icon}
-                      alt="like_icon"
-                    />
-                    Wishlist
-                  </button>
-                </Link>
-              </div>
+                  <Link to="/favourites" state={{ product }}>
+                    <button
+                      className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-[361px] h-[56px] rounded-full text-primary text-[18px] font-medium sm:w-[176px]"
+                      onClick={handleAddToWish}
+                    >
+                      <img
+                        className="w-[32px] h-[32px]"
+                        src={favorie_icon}
+                        alt="like_icon"
+                      />
+                      Wishlist
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
