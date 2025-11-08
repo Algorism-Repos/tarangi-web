@@ -60,36 +60,13 @@ function Navbar() {
 
         {/* Right Side Icons */}
         <div className="flex flex-row items-center gap-x-[20px]">
-          {/* ✅ Show Sign Up & Login only when user is NOT logged in */}
-          {!isLoggedIn ? (
-            <>
-              <button
-                className="rounded-[32px] border border-[#CFA266] w-[137px] font-poppins text-[16px] text-white py-[10px] px-[16px] cursor-pointer"
-                onClick={() => navigate("/signup")}
-              >
-                Sign Up
-              </button>
-              <button
-                className="rounded-[32px] bg-[#CFA266] w-[137px] font-poppins text-[16px] text-white py-[10px] px-[16px] cursor-pointer"
-                onClick={() => navigate("/login")}
-              >
-                Log In
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to="/profile">
-                <img
-                  className="w-[50px] h-[50px] rounded-[8px] hover:bg-[#D6A76F4F]"
-                  src={profile_icon}
-                  alt="profile icon"
-                />
-              </Link>
-
-            </>
-          )}
-
-          {/* Favourites always visible */}
+          {/* <buttonclassName="rounded-[32px] bg-[#CFA266] w-[137px] font-poppins text-[16px] font-normal text-white py-[10px] px-[16px] cursor-pointer">Get in Touch</button> */}
+          <Link to="/login" >
+            <button className="rounded-[32px] border border-[#CFA266] w-[137px] font-poppins text-[16px] font-normal text-white py-[10px] px-[16px] cursor-pointer">Sign Up</button>
+          </Link>
+          <Link to="/login">
+            <button className="rounded-[32px] bg-[#CFA266] w-[137px] font-poppins text-[16px] font-normal text-white py-[10px] px-[16px] cursor-pointer">Log In</button>
+          </Link>
           <Link to="/favourites">
             <img
               className="w-[42px] h-[42px] rounded-[8px] hover:bg-[#D6A76F4F]"

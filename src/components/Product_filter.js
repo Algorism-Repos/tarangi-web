@@ -16,8 +16,7 @@ function Product_Filter({ productCatergory }) {
   const [showSort, setShowSort] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [tab, setTab] = useState("productCatergory");
-  const { productListFromShopify, filteredProducts, setFilteredProducts } =
-    useContext(AppContext);
+  const { productListFromShopify, filteredProducts, setFilteredProducts } = useContext(AppContext);
   const SortOptions = ["Price High to Low", "Price Low to High"];
   const priceRanges = [
     { label: "₹10,000 – ₹15,000" },
@@ -142,8 +141,8 @@ function Product_Filter({ productCatergory }) {
         (p) => p.min === range.min && p.max === range.max
       )
         ? selectedPrices.filter(
-            (p) => p.min !== range.min || p.max !== range.max
-          )
+          (p) => p.min !== range.min || p.max !== range.max
+        )
         : [...selectedPrices, range];
       setSelectedPrices(updated);
       handleFilterChange(selectedCategories, updated);
@@ -164,7 +163,7 @@ function Product_Filter({ productCatergory }) {
     window.location.reload(false);
   };
 
-  console.log(productCatergory);
+  console.log(productCatergory)
   return (
     <>
       <div>
@@ -186,8 +185,7 @@ function Product_Filter({ productCatergory }) {
             </label>
 
             <div className="relative">
-              <select
-                className="appearance-none border border-[#B9B9B9] rounded-md py-2.5 pl-3 w-[155px] bg-white text-font-grey text-[14px] cursor-pointer outline-none"
+              <select className="appearance-none border border-[#B9B9B9] rounded-md py-2.5 pl-3 w-[155px] bg-white text-font-grey text-[14px] cursor-pointer outline-none"
                 onChange={(e) => handleSortChange(e.target.value)}
               >
                 {SortOptions.map((option) => (
@@ -196,7 +194,7 @@ function Product_Filter({ productCatergory }) {
                   </option>
                 ))}
               </select>
-              <div className=" absolute right-1 top-2.5">
+              <div className="absolute right-1 top-2.5 pointer-events-none">
                 <img src={down_arrow} alt="Down Arrow" />
               </div>
             </div>

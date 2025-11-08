@@ -62,7 +62,7 @@ function Product_Listing({ productCatergory }) {
               className="font-poppins w-[170px] sm:w-[310px] mx-auto  relative hover:scale-105 transition duration-300 ease-in-out group "
             >
               <img
-                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] hover:bg-gradient-to-r from-white to-black  ${
+                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${
                   item.variants[0].inventory_quantity === 0 ? "grayscale" : ""
                 }`}
                 src={item?.image?.src}
@@ -85,7 +85,7 @@ function Product_Listing({ productCatergory }) {
                   <h3 className="text-[13px] font-semibold sm:text-[20px]">
                     ₹{parseInt(item.variants[0].price).toLocaleString("en-IN")}
                   </h3>
-                  <p className="text-[11px] font-semibold text-[#6F6F6F] sm:text-[14px]">
+                  <p className="text-[11px] font-medium text-[#6F6F6F] sm:text-[14px]">
                     {item?.title}
                   </p>
                 </div>
