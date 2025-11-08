@@ -42,6 +42,8 @@ function Product_Filter({ productCatergory }) {
 
   const [showMoreCategory, setShowMoreCategory] = useState(false);
 
+  const [showMorePrice, setShowMorePrice] = useState(false);
+
   // Convert productCatergory object keys to array
   const categories = Object.keys(productCatergory);
 
@@ -184,9 +186,10 @@ function Product_Filter({ productCatergory }) {
             </label>
 
             <div className="relative">
-              <select className="appearance-none border border-[#B9B9B9] rounded-md py-2.5 pl-3 w-[155px] bg-white text-font-grey text-[14px] cursor-pointer outline-none"
-              onChange={(e) => handleSortChange(e.target.value)}
->
+              <select
+                className="appearance-none border border-[#B9B9B9] rounded-md py-2.5 pl-3 w-[155px] bg-white text-font-grey text-[14px] cursor-pointer outline-none"
+                onChange={(e) => handleSortChange(e.target.value)}
+              >
                 {SortOptions.map((option) => (
                   <option key={option} value={option}>
                     {option}
@@ -381,12 +384,12 @@ function Product_Filter({ productCatergory }) {
                     setShowFilter((prev) => {
                       const newState = !prev;
 
-                      // 🔹 If Filter is opening → close Sort
                       if (newState) {
+                        // Opening → close sort, lock scroll
                         setShowSort(false);
+                        setShowMoreCategory(false); // reset category show more
+                        setShowMorePrice(false);
                         document.body.style.overflow = "hidden";
-                      } else {
-                        document.body.style.overflow = "auto";
                       }
 
                       return newState;
@@ -452,35 +455,42 @@ function Product_Filter({ productCatergory }) {
             <div
               className={
                 showFilter === true
-                  ? "font-poppins bg-light-sandal w-full h-[469px] fixed inset-0 right-0 z-20 p-6 overflow-y-scroll lg:hidden"
+                  ? "font-poppins bg-light-sandal w-full h-[470px] fixed inset-0 right-0 z-20 p-6 overflow-y-scroll lg:hidden"
                   : "hidden"
               }
             >
-              <div className="flex justify-between my-4 ">
-                <h2 className="text-[18px] font-semibold text-[#434343]">
-                  Filter
-                </h2>
+              <div className="flex items-center justify-start gap-[16px]">
                 <img
-                  className="w-[32px] h-[32px]"
+                  className="w-[22px] h-[22px] cursor-pointer"
                   src={close_icon}
                   alt="Close icon"
                   onClick={() => {
                     setShowFilter(false);
+                    setShowMoreCategory(false); // reset category show more
+                    setShowMorePrice(false);
+                    document.body.style.overflow = "auto";
                     ScrollToTop();
                   }}
                 />
+                <h2 className="text-[16px] font-semibold text-center flex-col">
+                  Filter
+                </h2>
               </div>
 
-              <div className="flex gap-x-16 justify-start mt-10  ">
+              <div className="flex gap-x-16 justify-start mt-11  ">
                 {/* Tabs */}
-                <div className="flex flex-col items-start text-[16px] space-y-6 text-[#747474]">
+                <div className="flex flex-col items-start text-[14px] space-y-6 text-[#747474]">
                   <button
-                    className=" focus:text-primary"
+                    className={`${
+                      tab === "productCatergory"
+                        ? "text-primary font-medium"
+                        : ""
+                    }`}
                     onClick={() => setTab("productCatergory")}
                   >
-                    Catergory
+                    Category
                   </button>
-                  <hr className="border border-t-[#D9D9D9] w-full" />
+                  <hr className="border border-t-[#D9D9D9] w-full " />
                   <button
                     className=" focus:text-primary"
                     onClick={() => setTab("priceRange")}
@@ -495,30 +505,64 @@ function Product_Filter({ productCatergory }) {
                     Occasion
                   </button>
                   <hr className="border border-t-[#D9D9D9] w-full hidden" />
+                  <button
+                    className="text-primary text-[14px] font-medium uppercase "
+                    onClick={refreshpage}
+                  >
+                    Clear All
+                  </button>
                 </div>
 
-                {/* Catergory */}
+                {/* Category */}
                 {tab === "productCatergory" && (
                   <div>
-                    <div className="space-y-5 ">
-                      {Object.keys(productCatergory).map((type) => (
-                        <label className="flex items-center justify-between text-font-grey cursor-pointer">
-                          <div className="flex items-center space-x-2">
-                            {/* Checkbox */}
-                            <label className="custom-checkbox">
-                              <input
-                                type="checkbox"
-                                onChange={() =>
-                                  handleCheckbox(type, "category")
-                                }
-                              />
-                              <span class="checkmark"></span>
-                            </label>
-                            <span className="text-[15px]">{type}</span>
-                          </div>
-                        </label>
-                      ))}
+                    <div className="space-y-5">
+                      {Object.keys(productCatergory)
+                        .slice(
+                          0,
+                          showMoreCategory
+                            ? Object.keys(productCatergory).length
+                            : 5
+                        )
+                        .map((type) => (
+                          <label
+                            key={type}
+                            className="flex items-center justify-between text-font-grey cursor-pointer"
+                          >
+                            <div className="flex items-center space-x-2">
+                              <label className="custom-checkbox">
+                                <input
+                                  type="checkbox"
+                                  onChange={() =>
+                                    handleCheckbox(type, "category")
+                                  }
+                                />
+                                <span className="checkmark"></span>
+                              </label>
+                              <span className="text-[15px]">{type}</span>
+                            </div>
+                          </label>
+                        ))}
                     </div>
+
+                    {/* Show more/less button */}
+                    {Object.keys(productCatergory).length > 5 && (
+                      <div
+                        className="flex mt-4 cursor-pointer gap-x-[8px]"
+                        onClick={() => setShowMoreCategory(!showMoreCategory)}
+                      >
+                        <img
+                          className={`w-[26px] transform transition-transform duration-300 ${
+                            showMoreCategory ? "rotate-180" : ""
+                          }`}
+                          src={down_arrow_red}
+                          alt="toggle_arrow"
+                        />
+                        <p className="text-primary text-[14px] font-medium">
+                          {showMoreCategory ? "Show less" : "Show more"}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -526,24 +570,47 @@ function Product_Filter({ productCatergory }) {
                 {tab === "priceRange" && (
                   <div>
                     <div className="w-[170px] h-fit space-y-5">
-                      {priceRanges.map((items) => (
-                        <label className="flex items-center justify-between text-font-grey cursor-pointer">
-                          <div className="flex items-center space-x-2">
-                            {/* Checkbox */}
-                            <label className="custom-checkbox">
-                              <input
-                                type="checkbox"
-                                onChange={() =>
-                                  handleCheckbox(items.label, "price")
-                                }
-                              />
-                              <span class="checkmark"></span>
-                            </label>
-                            <span className="text-[14px]">{items.label}</span>
-                          </div>
-                        </label>
-                      ))}
+                      {priceRanges
+                        .slice(0, showMorePrice ? priceRanges.length : 5)
+                        .map((items) => (
+                          <label
+                            key={items.label}
+                            className="flex items-center justify-between text-font-grey cursor-pointer"
+                          >
+                            <div className="flex items-center space-x-2">
+                              <label className="custom-checkbox">
+                                <input
+                                  type="checkbox"
+                                  onChange={() =>
+                                    handleCheckbox(items.label, "price")
+                                  }
+                                />
+                                <span className="checkmark"></span>
+                              </label>
+                              <span className="text-[14px]">{items.label}</span>
+                            </div>
+                          </label>
+                        ))}
                     </div>
+
+                    {/* Show more/less button */}
+                    {priceRanges.length > 5 && (
+                      <div
+                        className="flex mt-4 cursor-pointer gap-x-[8px]"
+                        onClick={() => setShowMorePrice(!showMorePrice)}
+                      >
+                        <img
+                          className={`w-[26px] transform transition-transform duration-300 ${
+                            showMorePrice ? "rotate-180" : ""
+                          }`}
+                          src={down_arrow_red}
+                          alt="toggle_arrow"
+                        />
+                        <p className="text-primary text-[14px] font-medium">
+                          {showMorePrice ? "Show less" : "Show more"}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
 

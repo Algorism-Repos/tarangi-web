@@ -22,6 +22,7 @@ import product_2 from "../assets/Products/product_2.png";
 import circle from "../assets/Ellipse 12.png";
 
 import AddToCartButton from "../components/AddToCartButton";
+import LikeButton from "../components/LikeButton";
 
 const Profile = () => {
   const [activeSection, setActiveSection] = useState("Your Profile");
@@ -32,6 +33,36 @@ const Profile = () => {
     orders: false,
     favourites: false,
   });
+
+const [products, setProducts] = useState([
+  {
+    id: 1,
+    src: product_1,
+    price: "₹10,000",
+    name: "Stone Necklace",
+    liked: true,
+    isOutOfStock: false,
+  },
+  {
+    id: 2,
+    src: product_2,
+    price: "₹4,000",
+    name: "Silver Kada",
+    liked: true,
+    isOutOfStock: false,
+  },
+]);
+
+
+  const toggleLike = (id) => {
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === id ? { ...product, liked: !product.liked } : product
+      )
+    );
+  };
+
+  const likedProducts = products.filter((p) => p.liked);
 
   const toggleSection = (key) => {
     setOpenSections((prev) => {
@@ -109,7 +140,8 @@ const Profile = () => {
             {activeSection === "Your Profile" && renderProfileSection(formik)}
             {activeSection === "Saved Address" && renderAddressSection()}
             {activeSection === "Orders" && renderOrdersSection()}
-            {activeSection === "Favourites" && renderFavouritesSection()}
+            {activeSection === "Favourites" &&
+              renderFavouritesSection(products, toggleLike, likedProducts)}
           </div>
         </div>
 
@@ -222,7 +254,7 @@ const Profile = () => {
             </button>
             {openSections.favourites && (
               <div className="border-t border-[#F6EFE6] px-4 py-4 bg-[#FFF5E8] transition-all duration-300">
-                {renderFavouritesSection()}
+                {renderFavouritesSection(products, toggleLike, likedProducts)}
               </div>
             )}
           </div>
@@ -512,31 +544,61 @@ const renderOrdersSection = () => (
   </div>
 );
 
-const renderFavouritesSection = () => (
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-[700px]">
-    {[
-      { src: product_1, price: "₹10,000", name: "Stone Necklace" },
-      { src: product_2, price: "₹4,000", name: "Silver Kada" },
-    ].map((product, index) => (
-      <div
-        key={index}
-        className="max-w-[304px] flex flex-wrap gap-x-10 mx-auto items-center"
-      >
-        <img
-          src={product.src}
-          alt={product.name}
-          className="w-full h-[307px] object-contain rounded-2xl"
-        />
-        <div className="w-full mt-2 text-left">
-          <p className="text-[#000000] font-semibold text-[14px]">
-            {product.price}
-          </p>
-          <p className="text-[#6D6D6D] text-[13px]">{product.name}</p>
-        </div>
-        <AddToCartButton />
+/* === Favourites Section with Like Button === */
+const renderFavouritesSection = (products, toggleLike, likedProducts) => (
+  <div>
+    {likedProducts.length === 0 ? (
+      <p className="text-center text-[18px] text-[#4B001A] mt-6 font-poppins">
+        No Products in the favourites page
+      </p>
+    ) : (
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-[700px]">
+        {products.map((product) => (
+          <div
+            key={product.id}
+            className="max-w-[304px] flex flex-wrap gap-x-10 mx-auto items-center group relative"
+          >
+            {/* Image Container */}
+            <div className="overflow-hidden rounded-2xl relative">
+              <img
+                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] object-cover rounded-[16px] ${
+                  product.isOutOfStock ? "grayscale" : ""
+                } transition-all duration-300 ease-in-out group-hover:shadow-lg`}
+                src={product.src}
+                alt={product.name}
+              />
+
+              {/* ✅ Like Button */}
+              <LikeButton
+                liked={product.liked}
+                isOutOfStock={product.isOutOfStock}
+                onToggle={() => toggleLike(product.id)}
+              />
+
+              {/* Sold Out Badge */}
+              {product.isOutOfStock && (
+                <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
+                  Sold Out
+                </p>
+              )}
+            </div>
+
+            {/* Product Info */}
+            <div className="w-full mt-2 text-left gap-x-2">
+              <p className="text-[#000000] font-semibold text-[18px]">
+                {product.price}
+              </p>
+              <p className="text-[#6D6D6D] text-[14px]">{product.name}</p>
+            </div>
+
+            {/* Add to Cart Button */}
+            <AddToCartButton />
+          </div>
+        ))}
       </div>
-    ))}
+    )}
   </div>
 );
+
 
 export default Profile;

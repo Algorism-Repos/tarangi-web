@@ -7,8 +7,8 @@ import silver_ellipse from "../assets/Products/silver_ellipse.png";
 import brown_ellipse from "../assets/Products/brown_ellipse.png";
 import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
-import Filled_LikeIcon from "../assets/Products/Filled_likeIcon.png";
-import LikeIcon from "../assets/Products/Unfilled_likeIcon.png";
+
+import LikeButton from "../components/LikeButton";
 
 function Product_Listing({ productCatergory }) {
   const [modalToggle, setModalToggle] = useState(false);
@@ -57,35 +57,22 @@ function Product_Listing({ productCatergory }) {
 
           return (
             <Link
-              key={item.id}
               to="/productdescription"
               state={{ product: item }}
-              className="font-poppins w-[170px] sm:w-[310px] mx-auto relative group"
+              className="font-poppins w-[170px] sm:w-[310px] mx-auto  relative hover:scale-105 transition duration-300 ease-in-out group "
             >
               <img
-                className={`w-full h-fit object-cover transform transition-all duration-300 ease-in-out group-hover:scale-105 group-hover:shadow-lg rounded-[16px] ${
-                  isOutOfStock ? "opacity-60" : ""
+                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] hover:bg-gradient-to-r from-white to-black  ${
+                  item.variants[0].inventory_quantity === 0 ? "grayscale" : ""
                 }`}
                 src={item?.image?.src}
                 alt={item?.alt || item?.title}
               />
-
-              {/*  Like Button  */}
-              {!isOutOfStock && (
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    toggleLike(item.id);
-                  }}
-                  className="absolute right-3 top-3 w-[40px] h-[40px] opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out focus:outline-none"
-                >
-                  <img
-                    src={item.liked ? Filled_LikeIcon : LikeIcon}
-                    alt={item.liked ? "Liked" : "Unliked"}
-                    className="w-full h-full transition-transform duration-200 hover:scale-110"
-                  />
-                </button>
-              )}
+              <LikeButton
+                liked={item.liked}
+                isOutOfStock={isOutOfStock}
+                onToggle={() => toggleLike(item.id)}
+              />
 
               {isOutOfStock && (
                 <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
