@@ -30,7 +30,15 @@ function Product_Description() {
   const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } =
     useContext(AppContext);
   const [quantity, setQuantity] = useState(1);
-  // console.log(product)
+  const [activeColor, setActiveColor] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(product?.image?.src);
+
+  const Colors = [
+    { id: "gold", img: gold_ellipse },
+    { id: "silver", img: silver_ellipse },
+    { id: "brown", img: brown_ellipse },
+  ];
+
   const handleAddToCart = () => {
     addToCart({
       id: product.variants[0].id,
@@ -40,12 +48,12 @@ function Product_Description() {
       quantity: quantity,
     });
   };
+
   const matchingProducts = filteredProducts?.filter(
     (item) =>
       item.product_type === product.product_type && item.id !== product.id
   );
 
-  //  console.log(product.variants[0].id)
   const handleAddToWish = () => {
     addToWishlist({
       id: product.variants[0].id,
@@ -66,17 +74,6 @@ function Product_Description() {
       });
     }
   }, []);
-
-  // Color active state
-  const [activeColor, setActiveColor] = useState(null);
-
-  const Colors = [
-    { id: "gold", img: gold_ellipse },
-    { id: "silver", img: silver_ellipse },
-    { id: "brown", img: brown_ellipse },
-  ];
-  // const isAvailable = product?.availableColors?.includes(color.id);
-
 
   return (
     <>
@@ -111,8 +108,8 @@ function Product_Description() {
                 <SwiperSlide>
                   <img
                     className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
-                    src={product?.image?.src}
-                    alt=""
+                    src={selectedImage}
+                    alt="Product"
                   />
                 </SwiperSlide>
 
@@ -126,7 +123,7 @@ function Product_Description() {
                 <SwiperSlide>
                   <img
                     className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
-                    src={product_1}
+                    src={product_2}
                     alt=""
                   />
                 </SwiperSlide>
@@ -225,52 +222,41 @@ function Product_Description() {
               <div className="">
                 <p className="text-[14px] text-[#6F6F6F]">Colors Available</p>
 
-                {/* <div className="mt-2 flex justify-start gap-x-3">
-                  <img
-                    className="w-[45px] bg-white rounded-full border-primary hover:border-[3px] hover:p-[2px]"
-                    src={gold_ellipse}
-                    alt="gold ellipse"
-                  />
-                  <img
-                    className="w-[45px] bg-white rounded-full border-primary hover:border-[3px] hover:p-[2px]"
-                    src={silver_ellipse}
-                    alt="Silver ellipse"
-                  />
-                  <img
-                    className="w-[45px] bg-white rounded-full border-primary hover:border-[3px] hover:p-[2px]"
-                    src={brown_ellipse}
-                    alt="brown ellipse"
-                  />
-                </div> */}
-                {/* Color Options */}
-                {/* Color Options */}
-                <div className="">
+                <div className="mt-2 flex justify-start gap-x-4">
+                  {Colors.map((color) => {
+                    const isAvailable =
+                      product?.availableColors?.includes(color.id) ?? true;
 
-                  <div className="mt-2 flex justify-start gap-x-4">
-                    {Colors.map((color) => {
-                      // Check if color is available in product data
-                      const isAvailable =
-                        product?.availableColors?.includes(color.id) ?? true; // fallback: all true if field missing
+                    return (
+                      <img
+                        key={color.id}
+                        onClick={() => {
+                          if (isAvailable) {
+                            setActiveColor(color.id);
+                            console.log("Selected color:", color.id);
 
-                      return (
-                        <img
-                          key={color.id}
-                          onClick={() =>
-                            isAvailable && setActiveColor(color.id)
+                            // Change product image based on color
+                            if (color.id === "gold")
+                              setSelectedImage(product_1);
+                            if (color.id === "silver")
+                              setSelectedImage(product_2);
+                            if (color.id === "brown")
+                              setSelectedImage(product?.image?.src);
                           }
-                          className={`w-[45px] rounded-full bg-white border-primary cursor-pointer transition-all ${
+                        }}
+                        className={`w-[45px] rounded-full bg-white transition-all duration-200 cursor-pointer
+                          ${
                             activeColor === color.id
-                              ? "border-[3px] p-[2px]"
-                              : "border-none"
-                          } ${
-                            !isAvailable ? "opacity-40 cursor-not-allowed" : ""
-                          }`}
-                          src={color.img}
-                          alt={color.id}
-                        />
-                      );
-                    })}
-                  </div>
+                              ? "border-[4px] border-primary p-[2px]"
+                              : "border-[2px] border-transparent  hover:border-[2px] hover:border-primary hover:p-[2px]"
+                          }
+                          ${!isAvailable ? "opacity-40 cursor-not-allowed" : ""}
+                        `}
+                        src={color.img}
+                        alt={color.id}
+                      />
+                    );
+                  })}
                 </div>
               </div>
 
@@ -309,7 +295,6 @@ function Product_Description() {
             </h1>
 
             <div className="flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
-              {/* Looping */}
               {matchingProducts.map((item) => {
                 return (
                   <div className="font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0">

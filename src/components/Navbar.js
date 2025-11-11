@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
 import Modal from "./Modal";
 
 // assets import
@@ -8,7 +7,8 @@ import logo from "../assets/logo.png";
 import menu from "../assets/menu_icon.png";
 import close from "../assets/close_iconwhite.png";
 import favourite_icon from "../assets/Favorites_icon.png";
-import cart_icon from "../assets/Cart_white.png";
+import cart_icon_empty from "../assets/Cart_white.png";
+import cart_icon_filled from "../assets/cart_filled.png";
 import profile_icon from "../assets/profile_icon.png";
 
 function Navbar() {
@@ -16,74 +16,123 @@ function Navbar() {
   const [modalToggle, setModalToggle] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+  const [activeIcon, setActiveIcon] = useState("");
 
   const location = useLocation();
   const navigate = useNavigate();
 
   const toggle = () => setModalToggle(!modalToggle);
 
- 
   useEffect(() => {
     const userStatus = localStorage.getItem("isLoggedIn") === "true";
-    const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
     setIsLoggedIn(userStatus);
+
+    const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
     setCartItems(storedCart);
+
+    //  update in real-time if cart changes elsewhere
+    const updateCart = () => {
+      const updatedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      setCartItems(updatedCart);
+    };
+    window.addEventListener("storage", updateCart);
+    return () => window.removeEventListener("storage", updateCart);
   }, []);
 
   const getLinkClass = (path) =>
-    location.pathname === path
-      ? "text-white"
-      : "text-white opacity-[0.5]";
+    location.pathname === path ? "text-white" : "text-white opacity-[0.5]";
 
-
+  const cartIcon = cartItems.length > 0 ? cart_icon_filled : cart_icon_empty;
 
   return (
     <>
       {/* Navbar - large screens */}
       <div className="bg-primary lg:flex flex-row justify-between items-center w-full py-5 px-7 hidden">
+        {/* Logo */}
         <Link to="/home">
           <img src={logo} alt="brand-logo" className="w-[106px] h-[71px]" />
         </Link>
 
         {/* Links */}
         <div className="font-poppins text-[16px] leading-normal flex flex-row gap-x-[20px] xl:gap-x-[50px] items-center">
-          <Link className="hover:bg-[#D6A76F4F] rounded-full py-2.5 px-4" to="/home">
+          <Link
+            className="hover:bg-[#D6A76F4F] rounded-full py-2.5 px-4"
+            to="/home"
+          >
             <p className={getLinkClass("/home")}>Home</p>
           </Link>
-          <Link className="hover:bg-[#D6A76F4F] rounded-full py-2.5 px-4" to="/about">
+          <Link
+            className="hover:bg-[#D6A76F4F] rounded-full py-2.5 px-4"
+            to="/about"
+          >
             <p className={getLinkClass("/about")}>About Us</p>
           </Link>
-          <Link className="hover:bg-[#D6A76F4F] rounded-full py-2.5 px-4" to="/products">
+          <Link
+            className="hover:bg-[#D6A76F4F] rounded-full py-2.5 px-4"
+            to="/products"
+          >
             <p className={getLinkClass("/products")}>Products</p>
           </Link>
         </div>
 
         {/* Right Side Icons */}
         <div className="flex flex-row items-center gap-x-[20px]">
-          {/* <buttonclassName="rounded-[32px] bg-[#CFA266] w-[137px] font-poppins text-[16px] font-normal text-white py-[10px] px-[16px] cursor-pointer">Get in Touch</button> */}
-          <Link to="/login" >
-            <button className="rounded-[32px] border border-[#CFA266] w-[137px] font-poppins text-[16px] font-normal text-white py-[10px] px-[16px] cursor-pointer">Sign Up</button>
-          </Link>
-          <Link to="/login">
-            <button className="rounded-[32px] bg-[#CFA266] w-[137px] font-poppins text-[16px] font-normal text-white py-[10px] px-[16px] cursor-pointer">Log In</button>
-          </Link>
-          <Link to="/favourites">
-            <img
-              className="w-[42px] h-[42px] rounded-[8px] hover:bg-[#D6A76F4F]"
-              src={favourite_icon}
-              alt="favourite icon"
-            />
-          </Link>
+          {/*  Logged in */}
+          {isLoggedIn ? (
+            <>
+              <Link
+                to="/favourites"
+                onClick={() => setActiveIcon("favourites")}
+              >
+                <div
+                  className={`w-[42px] h-[42px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${
+                    activeIcon === "favourites"
+                      ? "bg-[#CFA266]"
+                      : "hover:bg-[#D6A76F4F]"
+                  }`}
+                >
+                  <img src={favourite_icon} alt="favourite icon" />
+                </div>
+              </Link>
 
-          {/* ✅ Show cart only if it has items */}
-          {cartItems.length > 0 && (
-            <Link to="/cart">
-              <img
-                className="w-[42px] h-[42px] rounded-[8px] hover:bg-[#D6A76F4F]"
-                src={cart_icon}
-                alt="Cart icon"
-              />
-            </Link>
+              <Link to="/cart" onClick={() => setActiveIcon("cart")}>
+                <div
+                  className={`w-[42px] h-[42px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${
+                    activeIcon === "cart"
+                      ? "bg-[#CFA266]"
+                      : "hover:bg-[#D6A76F4F]"
+                  }`}
+                >
+                  <img src={cartIcon} alt="Cart icon" />
+                </div>
+              </Link>
+
+              <Link to="/profile" onClick={() => setActiveIcon("profile")}>
+                <div
+                  className={`w-[42px] h-[42px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${
+                    activeIcon === "profile"
+                      ? "bg-[#CFA266]"
+                      : "hover:bg-[#D6A76F4F]"
+                  }`}
+                >
+                  <img src={profile_icon} alt="profile" />
+                </div>
+              </Link>
+            </>
+          ) : (
+            //  Not logged in: show buttons
+            <>
+              <Link to="/signup">
+                <button className="rounded-[32px] border border-[#CFA266] w-[137px] font-poppins text-[16px] font-normal text-white py-[10px] px-[16px] cursor-pointer">
+                  Sign Up
+                </button>
+              </Link>
+              <Link to="/login">
+                <button className="rounded-[32px] bg-[#CFA266] w-[137px] font-poppins text-[16px] font-normal text-white py-[10px] px-[16px] cursor-pointer">
+                  Log In
+                </button>
+              </Link>
+            </>
           )}
         </div>
       </div>
@@ -104,21 +153,32 @@ function Navbar() {
         />
 
         <div className="flex gap-x-2">
-          <img
-            className="w-[34px] h-[34px] rounded-[8px]"
-            src={favourite_icon}
-            alt="favourite icon"
-          />
+          <Link to="/favourites">
+            <img
+              className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F]"
+              src={favourite_icon}
+              alt="favourite icon"
+            />
+          </Link>
 
-          {/* ✅ Cart icon hidden if empty */}
-          {cartItems.length > 0 && (
-            <Link to="/cart">
-              <img
-                className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F]"
-                src={cart_icon}
-                alt="Cart icon"
-              />
-            </Link>
+          {/*  Show all icons if logged in */}
+          {isLoggedIn && (
+            <>
+              <Link to="/cart">
+                <img
+                  className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F]"
+                  src={cartIcon}
+                  alt="Cart icon"
+                />
+              </Link>
+              <Link to="/profile">
+                <img
+                  src={profile_icon}
+                  className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F]"
+                  alt="profile"
+                />
+              </Link>
+            </>
           )}
         </div>
 
@@ -134,21 +194,51 @@ function Navbar() {
               <img src={logo} className="w-[85px] h-[55px] cursor-pointer" />
 
               <div className="flex gap-x-2">
-                <img
-                  className="w-[34px] h-[34px] rounded-[8px]"
-                  src={favourite_icon}
-                  alt="favourite icon"
-                />
+                {/*  Show all icons when logged in */}
+                {isLoggedIn && (
+                  <>
+                    <Link
+                      to="/favourites"
+                      onClick={() => setActiveIcon("favourites")}
+                    >
+                      <div
+                        className={`w-[32px] h-[32px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${
+                          activeIcon === "favourites"
+                            ? "bg-[#CFA266]"
+                            : "hover:bg-[#D6A76F4F]"
+                        }`}
+                      >
+                        <img src={favourite_icon} alt="favourite icon" />
+                      </div>
+                    </Link>
 
-                {/* ✅ Show cart only when items exist */}
-                {cartItems.length > 0 && (
-                  <Link to="/cart">
-                    <img
-                      className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F]"
-                      src={cart_icon}
-                      alt="Cart icon"
-                    />
-                  </Link>
+                    <Link to="/cart" onClick={() => setActiveIcon("cart")}>
+                      <div
+                        className={`w-[32px] h-[32px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${
+                          activeIcon === "cart"
+                            ? "bg-[#CFA266]"
+                            : "hover:bg-[#D6A76F4F]"
+                        }`}
+                      >
+                        <img src={cartIcon} alt="Cart icon" />
+                      </div>
+                    </Link>
+
+                    <Link
+                      to="/profile"
+                      onClick={() => setActiveIcon("profile")}
+                    >
+                      <div
+                        className={`w-[32px] h-[32px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${
+                          activeIcon === "profile"
+                            ? "bg-[#CFA266]"
+                            : "hover:bg-[#D6A76F4F]"
+                        }`}
+                      >
+                        <img src={profile_icon} alt="profile" />
+                      </div>
+                    </Link>
+                  </>
                 )}
               </div>
             </div>
@@ -173,36 +263,23 @@ function Navbar() {
                 </Link>
               ))}
 
-              {/* Auth buttons */}
-              <div className="flex flex-col items-center gap-y-[25px]">
-                {!isLoggedIn ? (
-                  <>
-                    <button
-                      onClick={() => navigate("/signup")}
-                      className="rounded-[32px] border border-[#CFA266] w-[319px] h-[52px] font-poppins text-[16px] text-white"
-                    >
-                      Sign Up
-                    </button>
-                    <button
-                      onClick={() => navigate("/login")}
-                      className="rounded-[32px] bg-[#CFA266] w-[319px] h-[52px] font-poppins text-[16px] text-white"
-                    >
-                      Log In
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link to="/profile">
-                      <img
-                        src={profile_icon}
-                        className="w-[60px] h-[60px] rounded-full"
-                        alt="profile"
-                      />
-                    </Link>
-
-                  </>
-                )}
-              </div>
+              {/* Auth buttons for mobile */}
+              {!isLoggedIn && (
+                <div className="flex flex-col items-center gap-y-[25px]">
+                  <button
+                    onClick={() => navigate("/signup")}
+                    className="rounded-[32px] border border-[#CFA266] w-[319px] h-[52px] font-poppins text-[16px] text-white"
+                  >
+                    Sign Up
+                  </button>
+                  <button
+                    onClick={() => navigate("/login")}
+                    className="rounded-[32px] bg-[#CFA266] w-[319px] h-[52px] font-poppins text-[16px] text-white"
+                  >
+                    Log In
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}

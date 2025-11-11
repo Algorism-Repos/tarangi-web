@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
 import AddToCartButton from "../components/AddToCartButton";
@@ -29,7 +29,6 @@ function Favourites() {
 
   const [products, setProducts] = useState(initialProducts);
 
-  // ✅ Toggle like/unlike
   const toggleLike = (id) => {
     setProducts((prevProducts) =>
       prevProducts.map((product) =>
@@ -38,18 +37,20 @@ function Favourites() {
     );
   };
 
-  // ✅ Filter only liked products
   const likedProducts = products.filter((p) => p.liked);
+
+  // ✅ Store if favourites exist in localStorage
+  useEffect(() => {
+    localStorage.setItem("hasFavourites", likedProducts.length > 0 ? "true" : "false");
+  }, [likedProducts]);
 
   return (
     <div className="bg-light-sandal py-[70px]">
       <div className="max-w-[1300px] mx-auto px-2">
-        {/* Heading */}
         <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
           Your Favourites
         </h1>
 
-        {/* Favourites */}
         {likedProducts.length === 0 ? (
           <p className="text-center text-[18px] text-[#4B001A] mt-6 font-poppins">
             No Products in the favourites page
@@ -61,7 +62,6 @@ function Favourites() {
                 key={item.id}
                 className="relative font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0 group hover:scale-105 transition-transform duration-300 ease-in-out"
               >
-                {/* Image container */}
                 <div className="overflow-hidden rounded-2xl relative">
                   <img
                     className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] object-cover rounded-[16px] ${
@@ -71,14 +71,12 @@ function Favourites() {
                     alt={item.alt}
                   />
 
-                  {/* ✅ Like Button (reusable component) */}
                   <LikeButton
                     liked={item.liked}
                     isOutOfStock={item.isOutOfStock}
                     onToggle={() => toggleLike(item.id)}
                   />
 
-                  {/* Optional: Sold Out Badge */}
                   {item.isOutOfStock && (
                     <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
                       Sold Out
@@ -86,7 +84,6 @@ function Favourites() {
                   )}
                 </div>
 
-                {/* Product Info */}
                 <div className="mt-2 sm:mt-4">
                   <div>
                     <h3 className="text-[16px] font-semibold sm:text-[20px]">
@@ -97,7 +94,6 @@ function Favourites() {
                     </p>
                   </div>
 
-                  {/* Add to Cart Button */}
                   <AddToCartButton />
                 </div>
               </div>
@@ -106,7 +102,6 @@ function Favourites() {
         )}
       </div>
 
-      {/* Recently Viewed Section */}
       <Recently_Viewed />
     </div>
   );

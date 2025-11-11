@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect } from "react";
 import { Link } from "react-router";
 import QuantitySelector from "../components/QuantitySelector";
 
@@ -17,29 +17,32 @@ function Cart() {
   };
 
   // Cart items data
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Stone Necklace",
-      price: 10000,
-      color: "Gold",
-      image: product_1,
-    },
-    {
-      id: 2,
-      name: "Silver Kada",
-      price: 4000,
-      color: "Silver",
-      image: product_2,
-    },
-  ]);
+const [cartItems, setCartItems] = useState([
+  {
+    id: 1,
+    name: "Stone Necklace",
+    price: 10000,
+    color: "Gold",
+    image: product_1,
+  },
+  {
+    id: 2,
+    name: "Silver Kada",
+    price: 4000,
+    color: "Silver",
+    image: product_2,
+  },
+]);
 
-  // Remove item function
+useEffect(() => {
+  localStorage.setItem("cartItems", JSON.stringify(cartItems));
+}, [cartItems]);
+
+
   const removeItem = (id) => {
     setCartItems(cartItems.filter((item) => item.id !== id));
   };
 
-  // Calculate subtotal and totals dynamically
   const subtotal = cartItems.reduce((acc, item) => acc + item.price, 0);
   const tax =  800; 
   const total = subtotal + tax;

@@ -1,12 +1,12 @@
 import React from "react";
-import logo from "../assets/logo.png";
-import desktop_flower from "../assets/login_flower.png";
-import mobile_flower from "../assets/login_flower_mobile.png";
+import logo from '../assets/logo.png'
+import desktop_flower from '../assets/login_flower.png'
+import mobile_flower from '../assets/login_flower_mobile.png'
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-function Login() {
+function Signup() {
   const formik = useFormik({
     initialValues: {
       contact: "",
@@ -22,8 +22,8 @@ function Login() {
         ),
     }),
     onSubmit: (values) => {
-      alert(`Login Successful!\nContact: ${values.contact}`);
-      // Handle login logic here (API call, redirect, etc.)
+      alert(`Sign Up Successful!\nContact: ${values.contact}`);
+      // You can handle signup logic here (API call, redirect, etc.)
     },
   });
 
@@ -32,14 +32,10 @@ function Login() {
       <div className="xl:min-h-screen w-full bg-[#6E0027] flex flex-col xl:flex-row font-[poppins]">
         {/* Left image */}
         <div className="hidden xl:flex xl:w-1/2">
-          <img
-            src={desktop_flower}
-            alt="floral design"
-            className="max-w-[90%]"
-          />
+          <img src={desktop_flower} alt="floral design" className="max-w-[90%]" />
         </div>
 
-        {/* Right section */}
+        {/* Form Section */}
         <div className="flex w-full xl:w-1/2 justify-center items-center px-6 pt-28 sm:py-10">
           <div className="w-full max-w-[628px]">
             <div className="flex flex-col items-center">
@@ -50,11 +46,11 @@ function Login() {
               />
             </div>
 
-            {/* Formik Form */}
+            {/* ✅ Formik Form */}
             <form onSubmit={formik.handleSubmit}>
               {/* Contact Input */}
               <p className="text-white text-[16px] font-medium mt-[30px]">
-                Login Using Mobile/Email
+                Sign Up Using Mobile/Email
               </p>
               <input
                 type="text"
@@ -75,7 +71,7 @@ function Login() {
                 </p>
               )}
 
-              {/* OTP Input (No Validation) */}
+              {/* OTP Input (no validation) */}
               <div className="mt-5">
                 <p className="text-white text-[16px] font-medium">Enter OTP</p>
                 <div className="flex gap-x-[8px] mt-2">
@@ -104,15 +100,15 @@ function Login() {
               </div>
             </form>
 
-            {/* Signup Redirect */}
+            {/* Login Redirect */}
             <p className="text-center text-white text-[18px] mt-6">
-              Don’t have an account?
-              <Link to="/signup">
+              Already have an account?
+              <Link to="/login">
                 <a
                   href="#"
-                  className="text-[#F8EEDC] ml-2 no-underline hover:underline hover:text-[#CFA266] transition-all duration-300"
+                  className="text-[#F8EEDC] ml-2 hover:underline hover:text-[#CFA266] transition-all duration-300"
                 >
-                  SIGN UP
+                  LOG IN
                 </a>
               </Link>
             </p>
@@ -132,4 +128,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Signup;
