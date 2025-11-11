@@ -20,7 +20,7 @@ function Login() {
                         </div>
 
                         {/* Input fields */}
-                        <p className="text-white text-[16px] font-medium mt-[30px]">Sign Up Using Mobile/Email</p>
+                        <p className="text-white text-[16px] font-medium mt-[30px]">Login Using Mobile/Email</p>
                         <input type="text"placeholder="Enter Mobile/Email" className="w-full bg-[#FFF8E4] p-3 rounded-[8px] mt-2 focus:outline-none placeholder:font-normal sm:p-4" />
 
                         <div className="mt-5">

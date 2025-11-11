@@ -37,7 +37,7 @@ html {
 
 .section-heading {
   font-family: "Atteron", serif;
-  font-size: 72px;
+  font-size: 64px;
   color: #5c0a1f;
   font-style: normal;
   font-weight: 400;
@@ -47,7 +47,7 @@ html {
 
 .section-content {
   font-family: "Poppins", sans-serif;
-  font-size: 24px;
+  font-size: 20px;
   color: #28040e;
   text-align: center;
   line-height: normal;

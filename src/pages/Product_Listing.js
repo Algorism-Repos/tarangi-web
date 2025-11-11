@@ -57,14 +57,16 @@ function Product_Listing({ productCatergory }) {
                 alt={item?.alt || item?.title}
               />
 
-              <div className="mt-2 flex justify-between sm:mt-4">
+              <div className="mt-2 fle flex-wrap gap-2 justify-between sm:mt-3">
                 <div>
-                  <h3 className="text-[13px] font-semibold sm:text-[20px]">
+                  <h1 className="text-[13px] font-semibold sm:text-[18px] text-[#313131]">{item?.title}</h1>
+
+                  {/* <h3 className="text-[13px] text-[#4E4E4E] font-medium sm:text-[17px] mt-1">
                     ₹{parseInt(item.variants[0].price).toLocaleString("en-IN")}
-                  </h3>
-                  <p className="text-[11px] font-medium text-[#6F6F6F] sm:text-[14px]">
+                  </h3> */}
+                  {/* <p className="text-[11px] font-medium text-[#6F6F6F] sm:text-[14px]">
                     {item?.title}
-                  </p>
+                  </p> */}
                 </div>
                 {item.variants[0].inventory_quantity === 0 && (
                   <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
@@ -72,22 +74,27 @@ function Product_Listing({ productCatergory }) {
                   </p>
                 )}
 
-                <div className="hidden">
-                  <p className="text-[15px] text-[#6F6F6F]">Colors Available</p>
+                <div className="mt-1.5 flex items-center justify-between">
 
-                  <div className="mt-1 flex justify-end gap-x-3">
+                  {/* <p className="text-[15px] text-[#6F6F6F]">Colors Available</p> */}
+                  
+                  <h3 className="text-[13px] text-[#4E4E4E] font-medium sm:text-[18px] mt-1">
+                    ₹{parseInt(item.variants[0].price).toLocaleString("en-IN")}
+                  </h3>
+
+                  <div className="flex justify-center gap-x-2.5 mr-1">
                     <img
-                      className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                      className=" w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
                       src={gold_ellipse}
                       alt="gold ellipse"
                     />
                     <img
-                      className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                      className=" w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
                       src={silver_ellipse}
                       alt="Silver ellipse"
                     />
                     <img
-                      className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                      className=" w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
                       src={brown_ellipse}
                       alt="brown ellipse"
                     />

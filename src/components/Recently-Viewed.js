@@ -26,7 +26,7 @@ function Recently_Viewed() {
             return (
               <div className="relative font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0">
                 <img
-                  className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px]"
+                  className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[24px]"
                   src={item.image}
                   alt={item.alt}
                 />
@@ -36,34 +36,40 @@ function Recently_Viewed() {
                   alt="Like Icon"
                 />
 
-                <div className="mt-2 flex justify-between sm:mt-4">
+                <div className="mt-2 flex-col items-center justify-between sm:mt-4">
                   <div>
-                    <h3 className="text-[16px] font-semibold sm:text-[20px]">
+                    <h1 className="text-[13px] font-semibold sm:text-[18px] text-[#313131]">{item?.title}</h1>
+
+                    {/* <h3 className="text-[16px] font-semibold sm:text-[20px]">
                       {item.price}
                     </h3>
                     <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">
                       {item.title}
-                    </p>
+                    </p> */}
                   </div>
 
-                  <div className="hidden sm:block">
-                    <p className="text-[15px] text-[#6F6F6F]">
+                  <div className="mt-1.5 flex items-center justify-between">
+                    {/* <p className="text-[15px] text-[#6F6F6F]">
                       Colors Available
-                    </p>
+                    </p> */}
 
-                    <div className="mt-1 flex justify-end gap-x-3">
+                    <h3 className="text-[13px] text-[#4E4E4E] font-medium sm:text-[18px] mt-1">
+                      ₹{item.price}
+                    </h3>
+
+                    <div className="flex justify-center gap-x-2.5 mr-1">
                       <img
-                        className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                        className=" w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
                         src={gold_ellipse}
                         alt="gold ellipse"
                       />
                       <img
-                        className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                        className=" w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
                         src={silver_ellipse}
                         alt="Silver ellipse"
                       />
                       <img
-                        className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                        className=" w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
                         src={brown_ellipse}
                         alt="brown ellipse"
                       />

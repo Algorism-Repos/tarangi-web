@@ -95,7 +95,7 @@ function Navbar() {
               onClick={() => setMenuVisible(false)}
             />
 
-            <img src={logo} className="w-[85px] h-[55px] cursor-pointer" />
+            <img src={logo} className="w-[85px] h-[55px] cursor-pointer absolute top-9 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
 
             <div className="flex">
               <img className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F] focus:bg-[#CFA266]" src={favourite_icon} alt="favourite icon" />
