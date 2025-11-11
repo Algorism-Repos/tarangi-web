@@ -14,7 +14,7 @@ function QuantitySelector() {
                 <option value="5">5</option>
             </select>
 
-            <div className=" absolute right-1 top-1.5">
+            <div className="absolute right-1 top-1.5 pointer-events-none">
                 <img src={down_arrow} alt="Down Arrow" />
             </div>
         </div>

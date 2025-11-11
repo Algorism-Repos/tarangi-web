@@ -299,12 +299,12 @@ function Product_Description() {
                 return (
                   <div className="font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0">
                     <img
-                      className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px]"
+                      className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[24px]"
                       src={item?.image?.src}
                       alt={item?.alt || item?.title}
                     />
 
-                    <div className="mt-2 flex justify-between sm:mt-4">
+                    <div className="mt-2 flex flex-wrap items-center justify-between sm:mt-4">
                       <div>
                         <h3 className="text-[16px] font-semibold sm:text-[20px]">
                           ₹{parseInt(item.variants[0].price)}
@@ -315,9 +315,9 @@ function Product_Description() {
                       </div>
 
                       <div className="hidden sm:block">
-                        <p className="text-[15px] text-[#6F6F6F]">
+                        {/* <p className="text-[15px] text-[#6F6F6F]">
                           Colors Available
-                        </p>
+                        </p> */}
 
                         <div className="mt-1 flex justify-end gap-x-3">
                           <img

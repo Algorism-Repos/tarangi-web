@@ -9,6 +9,7 @@ import close from "../assets/close_iconwhite.png";
 import favourite_icon from "../assets/Favorites_icon.png";
 import cart_icon_empty from "../assets/Cart_white.png";
 import cart_icon_filled from "../assets/cart_filled.png";
+import cart_icon from "../assets/Cart_white.png"
 import profile_icon from "../assets/profile_icon.png";
 
 function Navbar() {
@@ -161,25 +162,56 @@ function Navbar() {
             />
           </Link>
 
-          {/*  Show all icons if logged in */}
-          {isLoggedIn && (
-            <>
-              <Link to="/cart">
-                <img
-                  className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F]"
-                  src={cartIcon}
-                  alt="Cart icon"
-                />
-              </Link>
-              <Link to="/profile">
-                <img
-                  src={profile_icon}
-                  className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F]"
-                  alt="profile"
-                />
-              </Link>
-            </>
-          )}
+            <img src={logo} className="w-[85px] h-[55px] cursor-pointer absolute top-9 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+
+            <div className="flex">
+              <img className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F] focus:bg-[#CFA266]" src={favourite_icon} alt="favourite icon" />
+              <img className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F] focus:bg-[#CFA266]" src={cart_icon} alt="Cart icon" />
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center mt-10 gap-y-12">
+            <Link to="/home">
+              <h2
+                className={`font-poppins text-[16px] leading-normal text-center ${location.pathname === "/home"
+                  ? "text-white font-semibold"
+                  : "text-[#A0A0A0]"
+                  }`}
+                onClick={() => setMenuVisible(false)}
+              >
+                Home
+              </h2>
+            </Link>
+            <Link to="/about">
+              <h2
+                className={`font-poppins text-[16px] leading-normal text-center ${location.pathname === "/about"
+                  ? "text-white font-semibold"
+                  : "text-[#A0A0A0]"
+                  }`}
+                onClick={() => setMenuVisible(false)}
+              >
+                About Us
+              </h2>
+            </Link>
+            <Link to="/products">
+              <h2
+                className={`font-poppins text-[16px] leading-normal text-center ${location.pathname === "/products"
+                  ? "text-white font-semibold"
+                  : "text-[#A0A0A0]"
+                  }`}
+                onClick={() => setMenuVisible(false)}
+              >
+                Products
+              </h2>
+            </Link>
+            {/* buttons */}
+
+            <div className="flex flex-col items-center gap-y-[25px]">
+              <button className="rounded-[32px] border border-[#CFA266] w-[319px] h-[52px] font-poppins text-[16px] font-normal text-white">Sign Up</button>
+              <button className="rounded-[32px] bg-[#CFA266] w-[319px] h-[52px] font-poppins text-[16px] font-normal text-white">Log In</button>
+            </div>
+
+          </div>
         </div>
 
         {/* Mobile Menu */}
@@ -283,7 +315,7 @@ function Navbar() {
             </div>
           </div>
         )}
-      </div>
+      
 
       <Modal modal={modalToggle} active={toggle} />
     </>
