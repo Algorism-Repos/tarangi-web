@@ -91,6 +91,37 @@ function Home() {
     { img: jaguar_bracelet, title: "Jaguar Bracelets" },
     { img: watch_charms, title: "Watch Charms" },
   ];
+    const containerRef = useRef(null);
+  const sliderRef = useRef(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const slider = sliderRef.current;
+
+    if (!container || !slider) return;
+
+    const imageAfter = container.querySelector(".image-after");
+    const sliderLine = container.querySelector(".slider-line");
+    const sliderButton = container.querySelector(".slider-button");
+
+    const updateSlider = (value) => {
+      // Set the --position variable (controls the clipping width)
+      container.style.setProperty("--position", `${value}%`);
+    };
+
+    // Initial position (centered at 50%)
+    updateSlider(50);
+    slider.value = 50;
+
+    slider.addEventListener("input", (e) => {
+      const value = e.target.value;
+      updateSlider(value);
+    });
+
+    return () => {
+      slider.removeEventListener("input", updateSlider);
+    };
+  }, []);
 
   console.log(festiveFiltered);
 
@@ -263,7 +294,7 @@ function Home() {
               <img
                 src={women_design}
                 alt="men-image"
-                className="w-[359px] h-[465px] sm:w-[373px] sm:h-[430px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
+                className="w-[359px] h-[465px] sm:w-[373px] sm:h-[430px]  transform transition-transform duration-300 ease-out hover:scale-105 absolute bottom-[-0px] z-10 "
               />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/4 ">
                 Women
@@ -563,25 +594,32 @@ function Home() {
             <span className=""> Enhance Your Look With</span> <br /> Tarangi
           </h1>
 
-          <div className="container">
-            <div className="image-container ">
-              <img
-                className="image-before slider-image"
-                src={before_img}
-                alt="before_img"
-              />
-              <img
-                className="image-after slider-image"
-                src={after_img}
-                alt="after_img"
-              />
-            </div>
-            <input type="range" min={2} max={98} value={0} className="slider" />
-            <div className="slider-line "></div>
-            <div className="slider-button w-30 h-30 " aria-hidden="true ">
-              <img src={slider_button} alt="slider button" />
-            </div>
-          </div>
+    <div className="container" ref={containerRef}>
+      <div className="image-container">
+        <img
+          className="image-before slider-image"
+          src={before_img}
+          alt="before_img"
+        />
+        <img
+          className="image-after slider-image"
+          src={after_img}
+          alt="after_img"
+        />
+      </div>
+      <input
+        ref={sliderRef}
+        type="range"
+        min={2}
+        max={98}
+        defaultValue={50}
+        className="slider"
+      />
+      <div className="slider-line"></div>
+      <div className="slider-button" aria-hidden="true">
+        <img src={slider_button} alt="slider button" />
+      </div>
+    </div>
         </div>
       </div>
 

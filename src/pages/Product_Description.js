@@ -13,23 +13,32 @@ import shopping_bag from "../assets/Products/shopping_bag.png";
 import gold_ellipse from "../assets/Products/gold_ellipse.png";
 import silver_ellipse from "../assets/Products/silver_ellipse.png";
 import brown_ellipse from "../assets/Products/brown_ellipse.png";
-import shopping_cart from "../assets/Products/shopping_cart.png";
 import favorie_icon from "../assets/Products/favorite_icon.png";
 import { AppContext } from "../context/AppContext";
-import pure_silver from '../assets/pure_silver_icon.png'
-import shipping from '../assets/shipping_icon.png'
-import plating from '../assets/plating_icon.png'
+import pure_silver from "../assets/pure_silver_icon.png";
+import shipping from "../assets/shipping_icon.png";
+import plating from "../assets/plating_icon.png";
 
 // components
 import PincodeInput from "../components/Pincode_Input";
-import Recently_Viewed from "../components/Recently-Viewed";
+import Recently_Viewed from "../components/Recently_Viewed";
+import AddToCartButton from "../components/AddToCartButton";
 
 function Product_Description() {
   const location = useLocation();
   const { product } = location.state || {};
-  const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } = useContext(AppContext);
+  const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } =
+    useContext(AppContext);
   const [quantity, setQuantity] = useState(1);
-  // console.log(product)
+  const [activeColor, setActiveColor] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(product?.image?.src);
+
+  const Colors = [
+    { id: "gold", img: gold_ellipse },
+    { id: "silver", img: silver_ellipse },
+    { id: "brown", img: brown_ellipse },
+  ];
+
   const handleAddToCart = () => {
     addToCart({
       id: product.variants[0].id,
@@ -39,12 +48,12 @@ function Product_Description() {
       quantity: quantity,
     });
   };
+
   const matchingProducts = filteredProducts?.filter(
     (item) =>
       item.product_type === product.product_type && item.id !== product.id
   );
 
-  //  console.log(product.variants[0].id)
   const handleAddToWish = () => {
     addToWishlist({
       id: product.variants[0].id,
@@ -65,15 +74,6 @@ function Product_Description() {
       });
     }
   }, []);
-
-  // Color active state
-  const [activeColor ,  setActiveColor ] = useState(null);
-
-  const Colors = [
-    { id:"gold" , img:gold_ellipse },
-    { id:"silver" , img:silver_ellipse},
-    { id:"brown" , img:brown_ellipse},
-  ];
 
   return (
     <>
@@ -108,8 +108,8 @@ function Product_Description() {
                 <SwiperSlide>
                   <img
                     className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
-                    src={product?.image?.src}
-                    alt=""
+                    src={selectedImage}
+                    alt="Product"
                   />
                 </SwiperSlide>
 
@@ -123,7 +123,7 @@ function Product_Description() {
                 <SwiperSlide>
                   <img
                     className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
-                    src={product_1}
+                    src={product_2}
                     alt=""
                   />
                 </SwiperSlide>
@@ -158,16 +158,35 @@ function Product_Description() {
 
                 <div className="max-w-[305px] flex flex-wrap justify-between  font-[poppins] text-center text-[#313131] my-5">
                   <div className="max-w-[75px] ">
-                    <img className="w-[42px] h-[42px] mx-auto" src={pure_silver} alt="pure silver icon" />
-                    <p className="text-[14px] font-semibold ">92.5<br /> Pure Silver</p>
+                    <img
+                      className="w-[42px] h-[42px] mx-auto"
+                      src={pure_silver}
+                      alt="pure silver icon"
+                    />
+                    <p className="text-[14px] font-semibold ">
+                      92.5
+                      <br /> Pure Silver
+                    </p>
                   </div>
                   <div className="max-w-[75px] ">
-                    <img className="w-[42px] h-[42px] mx-auto" src={shipping} alt="pure silver icon" />
-                    <p className="text-[14px] font-semibold ">Pan India Shipping</p>
+                    <img
+                      className="w-[42px] h-[42px] mx-auto"
+                      src={shipping}
+                      alt="pure silver icon"
+                    />
+                    <p className="text-[14px] font-semibold ">
+                      Pan India Shipping
+                    </p>
                   </div>
                   <div className="max-w-[75px] ">
-                    <img className="w-[42px] h-[42px] mx-auto" src={plating} alt="pure silver icon" />
-                    <p className="text-[14px] font-semibold ">Life long plating</p>
+                    <img
+                      className="w-[42px] h-[42px] mx-auto"
+                      src={plating}
+                      alt="pure silver icon"
+                    />
+                    <p className="text-[14px] font-semibold ">
+                      Life long plating
+                    </p>
                   </div>
                 </div>
               </div>
@@ -203,65 +222,65 @@ function Product_Description() {
               <div className="">
                 <p className="text-[14px] text-[#6F6F6F]">Colors Available</p>
 
-                {/* <div className="mt-2 flex justify-start gap-x-3">
-                  <img
-                    className="w-[45px] bg-white rounded-full border-primary hover:border-[3px] hover:p-[2px]"
-                    src={gold_ellipse}
-                    alt="gold ellipse"
-                  />
-                  <img
-                    className="w-[45px] bg-white rounded-full border-primary hover:border-[3px] hover:p-[2px]"
-                    src={silver_ellipse}
-                    alt="Silver ellipse"
-                  />
-                  <img
-                    className="w-[45px] bg-white rounded-full border-primary hover:border-[3px] hover:p-[2px]"
-                    src={brown_ellipse}
-                    alt="brown ellipse"
-                  />
-                </div> */}
                 <div className="mt-2 flex justify-start gap-x-4">
-                  {Colors.map((color)=>(
-                    <img key={color.id} onClick={()=> setActiveColor(color.id)}
-                      className={`w-[45px] rounded-full bg-white border-primary cursor-pointer tranition-all ${activeColor === color.id ? "border-[3px] p-[2px]" : "border-none" }`}
-                      src={color.img} alt={color.id}
-                    />
-                  ))}
-                </div>
+                  {Colors.map((color) => {
+                    const isAvailable =
+                      product?.availableColors?.includes(color.id) ?? true;
 
+                    return (
+                      <img
+                        key={color.id}
+                        onClick={() => {
+                          if (isAvailable) {
+                            setActiveColor(color.id);
+                            console.log("Selected color:", color.id);
+
+                            // Change product image based on color
+                            if (color.id === "gold")
+                              setSelectedImage(product_1);
+                            if (color.id === "silver")
+                              setSelectedImage(product_2);
+                            if (color.id === "brown")
+                              setSelectedImage(product?.image?.src);
+                          }
+                        }}
+                        className={`w-[45px] rounded-full bg-white transition-all duration-200 cursor-pointer
+                          ${
+                            activeColor === color.id
+                              ? "border-[4px] border-primary p-[2px]"
+                              : "border-[2px] border-transparent  hover:border-[2px] hover:border-primary hover:p-[2px]"
+                          }
+                          ${!isAvailable ? "opacity-40 cursor-not-allowed" : ""}
+                        `}
+                        src={color.img}
+                        alt={color.id}
+                      />
+                    );
+                  })}
+                </div>
               </div>
 
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
               {/* Buttons */}
-              <div className="flex flex-col sm:flex-row items-center gap-[16px]">
-                <Link to="/cart">
-                  <button
-                    className="flex items-center justify-center gap-x-[8px] bg-[#4B001A] w-full h-[56px] rounded-full text-white text-[18px] font-medium sm:w-[210px]"
-                    onClick={handleAddToCart}
-                  >
-                    <img
-                      className="w-[32px] h-[32px]"
-                      src={shopping_cart}
-                      alt="cart_icon"
-                    />
-                    Add to cart
-                  </button>
-                </Link>
+              <div className="max-w-[397px] m  ">
+                <div className="flex flex-col  w-full sm:flex-row items-center gap-[16px]">
+                  <AddToCartButton />
 
-                <Link to="/favourites" state={{ product }}>
-                  <button
-                    className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[56px] rounded-full text-primary text-[18px] font-medium sm:w-[210px]"
-                    onClick={handleAddToWish}
-                  >
-                    <img
-                      className="w-[32px] h-[32px]"
-                      src={favorie_icon}
-                      alt="like_icon"
-                    />
-                    Wishlist
-                  </button>
-                </Link>
+                  <Link to="/favourites" state={{ product }}>
+                    <button
+                      className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-[361px] h-[56px] rounded-full text-primary text-[18px] font-medium sm:w-[176px]"
+                      onClick={handleAddToWish}
+                    >
+                      <img
+                        className="w-[32px] h-[32px]"
+                        src={favorie_icon}
+                        alt="like_icon"
+                      />
+                      Wishlist
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
@@ -276,7 +295,6 @@ function Product_Description() {
             </h1>
 
             <div className="flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
-              {/* Looping */}
               {matchingProducts.map((item) => {
                 return (
                   <div className="font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0">

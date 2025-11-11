@@ -13,7 +13,8 @@ import Checkout from './pages/Checkout.js'
 import Payment from './pages/payment.js';
 import Profile from './pages/Profile.js';
 import Error from './pages/Error.js';
-import Login from './pages/Login.js'
+import Login from './pages/Login.js';
+import Signup from './pages/Signup.js';
 
 
 import ThankYou from './pages/Thank_you.js';
@@ -38,6 +39,7 @@ function App() {
           <Route path='/profile' element={<Profile />} />
           <Route path="*" element={<Error />} />
           <Route path="login" element={<Login />}/>
+          <Route path="signup" element={<Signup/>}/>
         </Routes>
       <Footer />
     </>

@@ -6,6 +6,7 @@ import close_icon from "../assets/Products/close_icon.png";
 import down_arrow from "../assets/Products/down_arrow.png";
 import Product_Listing from "../pages/Product_Listing";
 import { AppContext } from "../context/AppContext";
+import { ref } from "yup";
 
 function Product_Filter({ productCatergory }) {
   const [product, setProduct] = useState([]);
@@ -23,6 +24,8 @@ function Product_Filter({ productCatergory }) {
     { label: "₹25,000 – ₹35,000" },
     { label: "₹35,000 – ₹50,000" },
     { label: "₹50,000 – ₹75,000" },
+    { label: "₹75,000 – ₹100,000" },
+    { label: "₹100,000 – ₹125,000" },
   ];
 
   const Occasion = [
@@ -32,6 +35,21 @@ function Product_Filter({ productCatergory }) {
     { label: "Casual" },
     { label: "Festival" },
   ];
+
+  const [showMore, setShowMore] = useState(false);
+  const visibleItems = showMore ? priceRanges : priceRanges.slice(0, 5);
+
+  const [showMoreCategory, setShowMoreCategory] = useState(false);
+
+  const [showMorePrice, setShowMorePrice] = useState(false);
+
+  // Convert productCatergory object keys to array
+  const categories = Object.keys(productCatergory);
+
+  // Limit display to 5 unless "show more" is active
+  const visibleCategories = showMoreCategory
+    ? categories
+    : categories.slice(0, 5);
 
   const ScrollToTop = () => {
     window.scrollTo({
@@ -66,6 +84,9 @@ function Product_Filter({ productCatergory }) {
     filtered = sortProducts(filtered, sortOption);
     setFilteredProducts(filtered);
   };
+
+  const [products, setProducts] = useState([]);
+
   const sortProducts = (products, sortBy) => {
     const sorted = [...products];
     if (sortBy === "Latest") {
@@ -86,6 +107,24 @@ function Product_Filter({ productCatergory }) {
     } else if (sortBy === "Featured") {
     }
     return sorted;
+  };
+
+  const handleSortSelection = (option) => {
+    setSortOption(option);
+
+    // choose the array you want to sort:
+    // If you want to sort currently filtered list:
+    setFilteredProducts((prev) => {
+      const base =
+        Array.isArray(prev) && prev.length
+          ? prev
+          : productListFromShopify || [];
+      return sortProducts(base, option);
+    });
+
+    setShowSort(false);
+    document.body.style.overflow = "auto";
+    ScrollToTop();
   };
 
   const handleCheckbox = (type, filterType) => {
@@ -120,6 +159,9 @@ function Product_Filter({ productCatergory }) {
     // setFilteredProducts(product);
   }, [productListFromShopify, sortOption]);
 
+  const refreshpage = () => {
+    window.location.reload(false);
+  };
 
   console.log(productCatergory)
   return (
@@ -166,7 +208,10 @@ function Product_Filter({ productCatergory }) {
             <div className="w-[275px] font-poppins text-font-grey hidden lg:block pl-6">
               <div className="flex justify-between">
                 <p className="text-[16px] font-semibold uppercase">Filters</p>
-                <button className="text-primary text-[16px] font-semibold uppercase focus:underline">
+                <button
+                  className="text-primary text-[16px] font-semibold uppercase focus:underline"
+                  onClick={refreshpage}
+                >
                   Clear All
                 </button>
               </div>
@@ -180,8 +225,11 @@ function Product_Filter({ productCatergory }) {
                 </h3>
 
                 <div className="mt-6 space-y-3">
-                  {priceRanges.map((items) => (
-                    <label className="flex items-center justify-between text-font-grey cursor-pointer">
+                  {visibleItems.map((items, index) => (
+                    <label
+                      key={index}
+                      className="flex items-center justify-between text-font-grey cursor-pointer"
+                    >
                       <div className="flex items-center space-x-3">
                         {/* Checkbox */}
                         <label className="custom-checkbox">
@@ -191,7 +239,7 @@ function Product_Filter({ productCatergory }) {
                               handleCheckbox(items.label, "price")
                             }
                           />
-                          <span class="checkmark"></span>
+                          <span className="checkmark"></span>
                         </label>
                         <span className="text-[18px]">{items.label}</span>
                       </div>
@@ -199,13 +247,24 @@ function Product_Filter({ productCatergory }) {
                   ))}
                 </div>
 
-                {/* Show more Button */}
-                <div className="flex mt-4 cursor-pointer gap-x-[8px]">
-                  <img className="w-[26px]" src={down_arrow_red} />
-                  <p className="text-primary text-[16px] font-semibold">
-                    Show more
-                  </p>
-                </div>
+                {/* Show More / Show Less Button */}
+                {priceRanges.length > 5 && (
+                  <div
+                    onClick={() => setShowMore(!showMore)}
+                    className="flex mt-4 cursor-pointer gap-x-[8px] items-center select-none"
+                  >
+                    <img
+                      className={`w-[26px] transform transition-transform duration-300 ${
+                        showMore ? "rotate-180" : ""
+                      }`}
+                      src={showMore ? down_arrow_red : down_arrow_red}
+                      alt="toggle_arrow"
+                    />
+                    <p className="text-primary text-[16px] font-semibold">
+                      {showMore ? "Show less" : "Show more"}
+                    </p>
+                  </div>
+                )}
 
                 <hr className="border border-[#C8C8C8] my-[25px]" />
               </div>
@@ -213,12 +272,15 @@ function Product_Filter({ productCatergory }) {
               {/* Product Catergory */}
               <div>
                 <h3 className="text-primary text-[20px] font-semibold">
-                  Product Catergory
+                  Product Category
                 </h3>
 
                 <div className="mt-6 space-y-3">
-                  {Object.keys(productCatergory).map((type) => (
-                    <label className="flex items-center justify-between text-font-grey cursor-pointer">
+                  {visibleCategories.map((type) => (
+                    <label
+                      key={type}
+                      className="flex items-center justify-between text-font-grey cursor-pointer"
+                    >
                       <div className="flex items-center space-x-3">
                         {/* Checkbox */}
                         <label className="custom-checkbox">
@@ -226,7 +288,7 @@ function Product_Filter({ productCatergory }) {
                             type="checkbox"
                             onChange={() => handleCheckbox(type, "category")}
                           />
-                          <span class="checkmark"></span>
+                          <span className="checkmark"></span>
                         </label>
                         <span className="text-[18px]">{type}</span>
                       </div>
@@ -234,13 +296,24 @@ function Product_Filter({ productCatergory }) {
                   ))}
                 </div>
 
-                {/* Show more Button */}
-                <div className="flex mt-4 cursor-pointer gap-x-[8px]">
-                  <img className="w-[26px]" src={down_arrow_red} />
-                  <p className="text-primary text-[16px] font-semibold">
-                    Show more
-                  </p>
-                </div>
+                {/* Show more / Show less button */}
+                {categories.length > 5 && (
+                  <div
+                    className="flex mt-4 cursor-pointer gap-x-[8px]"
+                    onClick={() => setShowMoreCategory(!showMoreCategory)}
+                  >
+                    <img
+                      className={`w-[26px] transform transition-transform duration-300 ${
+                        showMoreCategory ? "rotate-180" : ""
+                      }`}
+                      src={showMore ? down_arrow_red : down_arrow_red}
+                      alt="toggle_arrow"
+                    />
+                    <p className="text-primary text-[16px] font-semibold">
+                      {showMoreCategory ? "Show less" : "Show more"}
+                    </p>
+                  </div>
+                )}
 
                 <hr className="border border-[#C8C8C8] my-[25px]" />
               </div>
@@ -271,34 +344,60 @@ function Product_Filter({ productCatergory }) {
             </div>
 
             {/* Mobile Verion Filter */}
-            <div className="w-full bg-[#EBBB85] font-poppins absolute bottom-0 p-5 lg:hidden px-4">
+            <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden px-4 z-30 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
               <div className="flex justify-between">
+                {/* SORT BUTTON */}
                 <div
-                  className="group flex items-center gap-x-[8px]"
+                  className="group flex items-center gap-x-[8px] cursor-pointer"
                   onClick={() => {
-                    setShowSort(true);
+                    setShowSort((prev) => {
+                      const newState = !prev;
+
+                      // 🔹 If Sort is opening → close Filter
+                      if (newState) {
+                        setShowFilter(false);
+                        document.body.style.overflow = "hidden";
+                      } else {
+                        document.body.style.overflow = "auto";
+                      }
+
+                      return newState;
+                    });
                   }}
                 >
                   <img
                     className="w-[24px] h-[24px]"
                     src={sort_icon}
-                    alt="icons"
+                    alt="Sort Icon"
                   />
                   <button className="text-primary text-[18px] font-semibold">
                     Sort
                   </button>
                 </div>
 
+                {/* FILTER BUTTON */}
                 <div
                   className="group flex items-center gap-x-[8px] cursor-pointer"
                   onClick={() => {
-                    setShowFilter(true);
+                    setShowFilter((prev) => {
+                      const newState = !prev;
+
+                      if (newState) {
+                        // Opening → close sort, lock scroll
+                        setShowSort(false);
+                        setShowMoreCategory(false); // reset category show more
+                        setShowMorePrice(false);
+                        document.body.style.overflow = "hidden";
+                      }
+
+                      return newState;
+                    });
                   }}
                 >
                   <img
                     className="w-[24px] h-[24px]"
                     src={filter_icon}
-                    alt="icons"
+                    alt="Filter Icon"
                   />
                   <button className="text-primary text-[18px] font-semibold">
                     Filter
@@ -310,8 +409,8 @@ function Product_Filter({ productCatergory }) {
             {/* Sort popup  */}
             <div
               className={
-                showSort === true
-                  ? "font-poppins bg-light-sandal w-full h-[302px] fixed inset-0 right-0 z-20 p-7 rounded-t-8 transition-all duration-300 ease-in-out"
+                showSort
+                  ? "font-poppins bg-light-sandal w-full h-[302px] fixed inset-0 right-0 z-20 p-7 rounded-t-8 transition-all duration-300 ease-in-out lg:hidden"
                   : "hidden"
               }
             >
@@ -322,37 +421,28 @@ function Product_Filter({ productCatergory }) {
 
                 <button
                   className="text-[16px] font-medium text-left focus:text-primary"
-                  onClick={() => {
-                    setShowSort(false);
-                    ScrollToTop();
-                  }}
+                  onClick={() => handleSortSelection("Latest")}
                 >
                   Latest
                 </button>
+
                 <button
                   className="text-[16px] font-medium text-left focus:text-primary"
-                  onClick={() => {
-                    setShowSort(false);
-                    ScrollToTop();
-                  }}
+                  onClick={() => handleSortSelection("Featured")}
                 >
                   Featured
                 </button>
+
                 <button
                   className="text-[16px] font-medium text-left focus:text-primary"
-                  onClick={() => {
-                    setShowSort(false);
-                    ScrollToTop();
-                  }}
+                  onClick={() => handleSortSelection("Price High to Low")}
                 >
                   Price High to Low
                 </button>
+
                 <button
                   className="text-[16px] font-medium text-left focus:text-primary"
-                  onClick={() => {
-                    setShowSort(false);
-                    ScrollToTop();
-                  }}
+                  onClick={() => handleSortSelection("Price Low to High")}
                 >
                   Price Low to High
                 </button>
@@ -363,35 +453,42 @@ function Product_Filter({ productCatergory }) {
             <div
               className={
                 showFilter === true
-                  ? "font-poppins bg-light-sandal w-full h-[469px] fixed inset-0 right-0 z-20 p-6"
+                  ? "font-poppins bg-light-sandal w-full h-[470px] fixed inset-0 right-0 z-20 p-6 overflow-y-scroll lg:hidden"
                   : "hidden"
               }
             >
-              <div className="flex justify-between my-4">
-                <h2 className="text-[18px] font-semibold text-[#434343]">
-                  Filter
-                </h2>
+              <div className="flex items-center justify-start gap-[16px]">
                 <img
-                  className="w-[32px] h-[32px]"
+                  className="w-[22px] h-[22px] cursor-pointer"
                   src={close_icon}
                   alt="Close icon"
                   onClick={() => {
                     setShowFilter(false);
+                    setShowMoreCategory(false); // reset category show more
+                    setShowMorePrice(false);
+                    document.body.style.overflow = "auto";
                     ScrollToTop();
                   }}
                 />
+                <h2 className="text-[16px] font-semibold text-center flex-col">
+                  Filter
+                </h2>
               </div>
 
-              <div className="flex gap-x-16 justify-start mt-10">
+              <div className="flex gap-x-16 justify-start mt-11  ">
                 {/* Tabs */}
-                <div className="flex flex-col items-start text-[16px] space-y-6 text-[#747474]">
+                <div className="flex flex-col items-start text-[14px] space-y-6 text-[#747474]">
                   <button
-                    className=" focus:text-primary"
+                    className={`${
+                      tab === "productCatergory"
+                        ? "text-primary font-medium"
+                        : ""
+                    }`}
                     onClick={() => setTab("productCatergory")}
                   >
-                    Catergory
+                    Category
                   </button>
-                  <hr className="border border-t-[#D9D9D9] w-full" />
+                  <hr className="border border-t-[#D9D9D9] w-full " />
                   <button
                     className=" focus:text-primary"
                     onClick={() => setTab("priceRange")}
@@ -400,61 +497,118 @@ function Product_Filter({ productCatergory }) {
                   </button>
                   <hr className="border border-t-[#D9D9D9] w-full" />
                   <button
-                    className=" focus:text-primary hidden"
+                    className=" focus:text-primary "
                     onClick={() => setTab("occasion")}
                   >
                     Occasion
                   </button>
                   <hr className="border border-t-[#D9D9D9] w-full hidden" />
+                  <button
+                    className="text-primary text-[14px] font-medium uppercase "
+                    onClick={refreshpage}
+                  >
+                    Clear All
+                  </button>
                 </div>
 
-                {/* Catergory */}
+                {/* Category */}
                 {tab === "productCatergory" && (
                   <div>
                     <div className="space-y-5">
-                      {Object.keys(productCatergory).map((type) => (
-                        <label className="flex items-center justify-between text-font-grey cursor-pointer">
-                          <div className="flex items-center space-x-2">
-                            {/* Checkbox */}
-                            <label className="custom-checkbox">
-                              <input
-                                type="checkbox"
-                                onChange={() =>
-                                  handleCheckbox(type, "category")
-                                }
-                              />
-                              <span class="checkmark"></span>
-                            </label>
-                            <span className="text-[15px]">{type}</span>
-                          </div>
-                        </label>
-                      ))}
+                      {Object.keys(productCatergory)
+                        .slice(
+                          0,
+                          showMoreCategory
+                            ? Object.keys(productCatergory).length
+                            : 5
+                        )
+                        .map((type) => (
+                          <label
+                            key={type}
+                            className="flex items-center justify-between text-font-grey cursor-pointer"
+                          >
+                            <div className="flex items-center space-x-2">
+                              <label className="custom-checkbox">
+                                <input
+                                  type="checkbox"
+                                  onChange={() =>
+                                    handleCheckbox(type, "category")
+                                  }
+                                />
+                                <span className="checkmark"></span>
+                              </label>
+                              <span className="text-[15px]">{type}</span>
+                            </div>
+                          </label>
+                        ))}
                     </div>
+
+                    {/* Show more/less button */}
+                    {Object.keys(productCatergory).length > 5 && (
+                      <div
+                        className="flex mt-4 cursor-pointer gap-x-[8px]"
+                        onClick={() => setShowMoreCategory(!showMoreCategory)}
+                      >
+                        <img
+                          className={`w-[26px] transform transition-transform duration-300 ${
+                            showMoreCategory ? "rotate-180" : ""
+                          }`}
+                          src={down_arrow_red}
+                          alt="toggle_arrow"
+                        />
+                        <p className="text-primary text-[14px] font-medium">
+                          {showMoreCategory ? "Show less" : "Show more"}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {/* Price Filter */}
                 {tab === "priceRange" && (
                   <div>
-                    <div className="w-[160px] space-y-5">
-                      {priceRanges.map((items) => (
-                        <label className="flex items-center justify-between text-font-grey cursor-pointer">
-                          <div className="flex items-center space-x-2">
-                            {/* Checkbox */}
-                            <label className="custom-checkbox">
-                              <input
-                                type="checkbox"
-                                onChange={() =>
-                                  handleCheckbox(items.label, "price")
-                                }
-                              />
-                              <span class="checkmark"></span>
-                            </label>
-                            <span className="text-[14px]">{items.label}</span>
-                          </div>
-                        </label>
-                      ))}
+                    <div className="w-[170px] h-fit space-y-5">
+                      {priceRanges
+                        .slice(0, showMorePrice ? priceRanges.length : 5)
+                        .map((items) => (
+                          <label
+                            key={items.label}
+                            className="flex items-center justify-between text-font-grey cursor-pointer"
+                          >
+                            <div className="flex items-center space-x-2">
+                              <label className="custom-checkbox">
+                                <input
+                                  type="checkbox"
+                                  onChange={() =>
+                                    handleCheckbox(items.label, "price")
+                                  }
+                                />
+                                <span className="checkmark"></span>
+                              </label>
+                              <span className="text-[14px]">{items.label}</span>
+                            </div>
+                          </label>
+                        ))}
                     </div>
+
+                    {/* Show more/less button */}
+                    {priceRanges.length > 5 && (
+                      <div
+                        className="flex mt-4 cursor-pointer gap-x-[8px]"
+                        onClick={() => setShowMorePrice(!showMorePrice)}
+                      >
+                        <img
+                          className={`w-[26px] transform transition-transform duration-300 ${
+                            showMorePrice ? "rotate-180" : ""
+                          }`}
+                          src={down_arrow_red}
+                          alt="toggle_arrow"
+                        />
+                        <p className="text-primary text-[14px] font-medium">
+                          {showMorePrice ? "Show less" : "Show more"}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
 

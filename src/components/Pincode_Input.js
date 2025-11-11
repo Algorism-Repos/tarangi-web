@@ -19,11 +19,13 @@ function Pincode_Input() {
       setIsEditable(true);
     }
   };
+
   return (
-    <div className="w-full bg-[#FFFAF3] border-2 border-transparent shadow mt-2 rounded-xl">
+    <div className="w-full bg-[#FFFAF3] border-2 border-[#F6EFE6] shadow-2xl mt-2 rounded-xl">
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-2">
           <img className="w-[24px] h-[24px] " src={location_icon} alt="location_icon" />
+
           {isEditable ? (
             <input
               type="text"
@@ -31,7 +33,7 @@ function Pincode_Input() {
               maxLength="6"
               value={pincode}
               onChange={handleChange}
-              className="bg-transparent focus:outline-none text-[#333333] placeholder-[#333333] placeholder:font-medium text-[16px]"
+              className="bg-transparent focus:outline-none text-[#333333] placeholder-[#979797] placeholder:font-semibold text-[16px]"
             />
           ) : (
             <p className="text-[#333333] text-[14px]">
