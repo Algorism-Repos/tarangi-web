@@ -21,7 +21,7 @@ import plating from "../assets/plating_icon.png";
 
 // components
 import PincodeInput from "../components/Pincode_Input";
-import Recently_Viewed from "../components/Recently_Viewed";
+import Recently_Viewed from "../components/Recently-Viewed";
 import AddToCartButton from "../components/AddToCartButton";
 
 function Product_Description() {

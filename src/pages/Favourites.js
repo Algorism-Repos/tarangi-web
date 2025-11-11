@@ -3,7 +3,7 @@ import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
 import AddToCartButton from "../components/AddToCartButton";
 import LikeButton from "../components/LikeButton";
-import Recently_Viewed from "../components/Recently_Viewed";
+import Recently_Viewed from "../components/Recently-Viewed";
 
 function Favourites() {
   const initialProducts = [

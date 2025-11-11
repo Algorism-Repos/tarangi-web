@@ -20,7 +20,7 @@ function Recently_Viewed() {
           Recently Viewed
         </h1>
 
-        <div className="flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
+        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
           {/* Looping */}
           {recentlyViewed.map((item) => {
             return (
