@@ -558,7 +558,7 @@ const renderAddressSection = (
         onClick={handleAddNew}
         className="bg-[#5A0010] text-white px-4 py-2 rounded-md text-[14px] mb-4"
       >
-        + New Slot
+        + Add Address
       </button>
     </div>
 
@@ -838,11 +838,11 @@ const renderFavouritesSection = (products, toggleLike, likedProducts) => (
         No Products in the favourites page
       </p>
     ) : (
-      <div className="grid grid-cols-2 sm:grid-cols-2 gap-6 w-full sm:max-w-[700px]">
+      <div className="grid grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 gap-6 w-full sm:max-w-[700px]">
         {products.map((product) => (
           <div
             key={product.id}
-            className="max-w-[304px] flex flex-wrap gap-x-10 mx-auto items-center group relative"
+            className="max-w-[304px] flex flex-wrap gap-x-10 mx-auto items-center group relative "
           >
             <div className="overflow-hidden rounded-2xl relative">
               <img
@@ -857,11 +857,7 @@ const renderFavouritesSection = (products, toggleLike, likedProducts) => (
                 isOutOfStock={product.isOutOfStock}
                 onToggle={() => toggleLike(product.id)}
               />
-              {product.isOutOfStock && (
-                <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
-                  Sold Out
-                </p>
-              )}
+
             </div>
             <div className="w-full mt-2 text-left gap-x-2">
               <p className="text-[#000000] font-semibold text-[14px]">

@@ -105,7 +105,7 @@ export function AppProvider({ children }) {
         clearWishlist,
         recentlyViewed,
          addToRecentlyViewed, 
-         setRecentlyViewed
+         setRecentlyViewed,
         
       }}
     >
