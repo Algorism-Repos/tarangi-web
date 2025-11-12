@@ -163,6 +163,8 @@ function Product_Filter({ productCatergory }) {
     window.location.reload(false);
   };
 
+    const filterToggleCount = selectedCategories.length + selectedPrices.length;
+
   console.log(productCatergory)
   return (
     <>
@@ -207,7 +209,14 @@ function Product_Filter({ productCatergory }) {
             {/* Laptop Filter */}
             <div className="w-[275px] font-poppins text-font-grey hidden lg:block pl-6">
               <div className="flex justify-between">
-                <p className="text-[16px] font-semibold uppercase">Filters</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-[16px] font-semibold uppercase">Filters</p>
+                  {filterToggleCount > 0 && (
+                    <span className="bg-[#D6A76F] text-white text-[13px] items-center justify-center font-medium px-3  w-[29px] h-[19px] rounded-full">
+                      {filterToggleCount}
+                    </span>
+                  )}
+                </div>
                 <button
                   className="text-primary text-[16px] font-semibold uppercase focus:underline"
                   onClick={refreshpage}

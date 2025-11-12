@@ -15,28 +15,47 @@ function Navbar() {
   const [menuVisible, setMenuVisible] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    localStorage.setItem("isLoggedIn", "true");
+    setIsLoggedIn(true);
+  }, []);
+
+  const [cartItems, setCartItems] = useState(true);
 
   const location = useLocation();
+
+  const isActive = (path) => location.pathname === path;
+
   const navigate = useNavigate();
 
   const toggle = () => setModalToggle(!modalToggle);
 
+  // ✅ Sync login and cart state from localStorage
   useEffect(() => {
-    const userStatus = localStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(userStatus);
+    const storedStatus = localStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(storedStatus);
 
     const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
     setCartItems(storedCart);
 
-    // ✅ update in real-time if cart changes elsewhere
-    const updateCart = () => {
+    // ✅ Update cart if localStorage changes elsewhere
+    const updateStorage = () => {
       const updatedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
       setCartItems(updatedCart);
+
+      const updatedLogin = localStorage.getItem("isLoggedIn") === "true";
+      setIsLoggedIn(updatedLogin);
     };
-    window.addEventListener("storage", updateCart);
-    return () => window.removeEventListener("storage", updateCart);
+
+    window.addEventListener("storage", updateStorage);
+    return () => window.removeEventListener("storage", updateStorage);
   }, []);
+
+  const handleLoginToggle = (status) => {
+    setIsLoggedIn(status);
+    localStorage.setItem("isLoggedIn", status ? "true" : "false");
+  };
 
   const getLinkClass = (path) =>
     location.pathname === path ? "text-white" : "text-white opacity-[0.5]";
@@ -76,12 +95,15 @@ function Navbar() {
 
         {/* Right Side Icons */}
         <div className="flex flex-row items-center gap-x-[20px]">
-          {/* ✅ Logged in: show all three icons */}
           {isLoggedIn ? (
             <>
               <Link to="/favourites">
                 <img
-                  className="w-[42px] h-[42px] rounded-[8px] hover:bg-[#D6A76F4F]"
+                  className={`w-[42px] h-[42px] rounded-[8px] transition ${
+                    isActive("/favourites")
+                      ? "bg-[#CFA266]"
+                      : "hover:bg-[#D6A76F4F]"
+                  }`}
                   src={favourite_icon}
                   alt="favourite icon"
                 />
@@ -89,7 +111,9 @@ function Navbar() {
 
               <Link to="/cart">
                 <img
-                  className="w-[42px] h-[42px] rounded-[8px] hover:bg-[#D6A76F4F]"
+                  className={`w-[42px] h-[42px] rounded-[8px] transition ${
+                    isActive("/cart") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+                  }`}
                   src={cartIcon}
                   alt="Cart icon"
                 />
@@ -97,8 +121,12 @@ function Navbar() {
 
               <Link to="/profile">
                 <img
+                  className={`w-[42px] h-[42px] rounded-[8px] transition ${
+                    isActive("/profile")
+                      ? "bg-[#CFA266]"
+                      : "hover:bg-[#D6A76F4F]"
+                  }`}
                   src={profile_icon}
-                  className="w-[42px] h-[42px] rounded-[8px] hover:bg-[#D6A76F4F]"
                   alt="profile"
                 />
               </Link>
@@ -137,28 +165,39 @@ function Navbar() {
         />
 
         <div className="flex gap-x-2">
-          <Link to="/favourites">
-            <img
-              className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F]"
-              src={favourite_icon}
-              alt="favourite icon"
-            />
-          </Link>
-
           {/* ✅ Show all icons if logged in */}
           {isLoggedIn && (
             <>
+              <Link to="/favourites">
+                <img
+                  className={`w-[32px] h-[32px] rounded-[8px] transition ${
+                    isActive("/favourites")
+                      ? "bg-[#CFA266]"
+                      : "hover:bg-[#D6A76F4F]"
+                  }`}
+                  src={favourite_icon}
+                  alt="favourite icon"
+                />
+              </Link>
+
               <Link to="/cart">
                 <img
-                  className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F]"
+                  className={`w-[32px] h-[32px] rounded-[8px] transition ${
+                    isActive("/cart") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+                  }`}
                   src={cartIcon}
                   alt="Cart icon"
                 />
               </Link>
+
               <Link to="/profile">
                 <img
+                  className={`w-[32px] h-[32px] rounded-[8px] transition ${
+                    isActive("/profile")
+                      ? "bg-[#CFA266]"
+                      : "hover:bg-[#D6A76F4F]"
+                  }`}
                   src={profile_icon}
-                  className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F]"
                   alt="profile"
                 />
               </Link>
@@ -175,34 +214,49 @@ function Navbar() {
                 className="w-[30px] h-[30px] cursor-pointer"
                 onClick={() => setMenuVisible(false)}
               />
-              <img src={logo} className="w-[85px] h-[55px] cursor-pointer" />
-
+              <img
+                src={logo}
+                className="w-[85px] h-[55px] cursor-pointer absolute top-9 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              />
               <div className="flex gap-x-2">
-                <Link to="/favourites">
-                  <img
-                    className="w-[34px] h-[34px] rounded-[8px]"
-                    src={favourite_icon}
-                    alt="favourite icon"
-                  />
-                </Link>
-
                 {/* ✅ Show all icons when logged in */}
                 {isLoggedIn && (
                   <>
+                    <Link to="/favourites">
+                      <img
+                        className={`w-[32px] h-[32px] rounded-[8px] transition ${
+                          isActive("/favourites")
+                            ? "bg-[#CFA266]"
+                            : "hover:bg-[#D6A76F4F]"
+                        }`}
+                        src={favourite_icon}
+                        alt="favourite icon"
+                      />
+                    </Link>
+
                     <Link to="/cart">
                       <img
-                        className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F]"
+                        className={`w-[32px] h-[32px] rounded-[8px] transition ${
+                          isActive("/cart")
+                            ? "bg-[#CFA266]"
+                            : "hover:bg-[#D6A76F4F]"
+                        }`}
                         src={cartIcon}
                         alt="Cart icon"
                       />
                     </Link>
-                    <Link to="/profile">
-                      <img
-                        src={profile_icon}
-                        className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F]"
-                        alt="profile"
-                      />
-                    </Link>
+                    
+              {/* <Link to="/profile">
+                <img
+                  className={`w-[32px] h-[32px] rounded-[8px] transition ${
+                    isActive("/profile")
+                      ? "bg-[#CFA266]"
+                      : "hover:bg-[#D6A76F4F]"
+                  }`}
+                  src={profile_icon}
+                  alt="profile"
+                />
+              </Link> */}
                   </>
                 )}
               </div>

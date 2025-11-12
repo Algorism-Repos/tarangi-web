@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useFormik, Formik } from "formik";
+import { useFormik } from "formik";
+import { Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 import userIcon from "../assets/user.png";
@@ -24,9 +25,66 @@ import circle from "../assets/Ellipse 12.png";
 import AddToCartButton from "../components/AddToCartButton";
 import LikeButton from "../components/LikeButton";
 
+// ✅ Move schema definition here so it’s in scope
+const addressValidationSchema = Yup.object({
+  id: Yup.number().nullable(),
+  name: Yup.string().required("Name is required"),
+  address: Yup.string().required("Address is required"),
+  details: Yup.string(),
+  city: Yup.string().required("City is required"),
+  pin: Yup.string()
+    .matches(/^[0-9]{6}$/, "Enter a valid 6-digit PIN")
+    .required("PIN code is required"),
+  state: Yup.string().required("State is required"),
+  country: Yup.string().required("Country is required"),
+});
+
 const Profile = () => {
   const [activeSection, setActiveSection] = useState("Your Profile");
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(true);
+  const [hasSavedOnce, setHasSavedOnce] = useState(false);
+
+  const formik = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      mobile: "",
+      email: "",
+    },
+    validationSchema: Yup.object({
+      firstName: Yup.string().required("First name is required"),
+      lastName: Yup.string().required("Last name is required"),
+      mobile: Yup.string()
+        .matches(/^[0-9]{10}$/, "Enter a valid 10-digit number")
+        .required("Mobile number is required"),
+      email: Yup.string().email("Invalid email").required("Email is required"),
+    }),
+    onSubmit: (values) => {
+      console.log("✅ Form Submitted:", values);
+    },
+  });
+
+  const handleEdit = () => setIsEditing(true);
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
+  const handleSave = async () => {
+    const errors = await formik.validateForm();
+    formik.setTouched({
+      firstName: true,
+      lastName: true,
+      mobile: true,
+      email: true,
+    });
+
+    if (Object.keys(errors).length === 0) {
+      formik.handleSubmit();
+      setHasSavedOnce(true);
+      setIsEditing(false);
+    } else {
+      setIsEditing(true);
+    }
+  };
 
   const [openSections, setOpenSections] = useState({
     profile: false,
@@ -54,13 +112,10 @@ const Profile = () => {
     },
   ]);
 
-  const toggleLike = (id) => {
-    setProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === id ? { ...product, liked: !product.liked } : product
-      )
+  const toggleLike = (id) =>
+    setProducts((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, liked: !p.liked } : p))
     );
-  };
 
   const likedProducts = products.filter((p) => p.liked);
 
@@ -74,7 +129,7 @@ const Profile = () => {
     });
   };
 
-  // ---------------- Address state & handlers ----------------
+  // Address logic
   const [addresses, setAddresses] = useState([
     {
       id: 1,
@@ -99,16 +154,10 @@ const Profile = () => {
     },
   ]);
 
-  // id of address currently being edited (null if none)
-  const [editingAddressId, setEditingAddressId] = useState(
-    addresses[0]?.id ?? null
-  );
 
-  // Helper to generate next id
-  const nextAddressId = () => {
-    if (addresses.length === 0) return 1;
-    return Math.max(...addresses.map((a) => a.id)) + 1;
-  };
+  const [editingAddressId, setEditingAddressId] = useState(null);
+  const nextAddressId = () =>
+    addresses.length === 0 ? 1 : Math.max(...addresses.map((a) => a.id)) + 1;
 
   const handleAddNew = () => {
     const newId = nextAddressId();
@@ -121,32 +170,29 @@ const Profile = () => {
       pin: "",
       state: "",
       country: "",
-      isNew: true, 
+      isNew: true,
     };
     setAddresses((prev) => [newAddr, ...prev]);
     setEditingAddressId(newId);
   };
 
-  const handleAddressEditClick = (addressId) => {
-    setEditingAddressId(addressId);
-  };
+  const handleAddressEditClick = (id) => setEditingAddressId(id);
 
   const handleAddressSave = (values, { setSubmitting }) => {
     setAddresses((prev) =>
-      prev.map((addr) =>
-        addr.id === values.id ? { ...values, isNew: false } : addr
+      prev.map((a) =>
+        a.id === values.id ? { ...values, isNew: false } : a
       )
     );
     setEditingAddressId(null);
-    setSubmitting(true);
+    setSubmitting(false);
+    console.log("✅ Address Saved:", values);
   };
 
-  const handleAddressCancel = (addrId) => {
-    const addr = addresses.find((a) => a.id === addrId);
-    if (addr && addr.isNew) {
-      // remove if it was a new slot
-      setAddresses((prev) => prev.filter((a) => a.id !== addrId));
-    }
+  const handleAddressCancel = (id) => {
+    const addr = addresses.find((a) => a.id === id);
+    if (addr && addr.isNew)
+      setAddresses((prev) => prev.filter((a) => a.id !== id));
     setEditingAddressId(null);
   };
 
@@ -154,37 +200,6 @@ const Profile = () => {
     setAddresses((prev) => prev.filter((a) => a.id !== id));
     if (editingAddressId === id) setEditingAddressId(null);
   };
-
-  // Profile form (Formik) & handlers 
-  const handleEdit = () => setIsEditing(true);
-  const handleCancel = () => {
-    formik.resetForm();
-    setIsEditing(false);
-  };
-  const handleSave = () => {
-    formik.handleSubmit();
-    setIsEditing(false);
-  };
-
-  const formik = useFormik({
-    initialValues: {
-      firstName: "",
-      lastName: "",
-      mobile: "",
-      email: "",
-    },
-    validationSchema: Yup.object({
-      firstName: Yup.string().required("First name is required"),
-      lastName: Yup.string().required("Last name is required"),
-      mobile: Yup.string()
-        .matches(/^[0-9]{10}$/, "Enter a valid 10-digit number")
-        .required("Mobile number is required"),
-      email: Yup.string().email("Invalid email").required("Email is required"),
-    }),
-    onSubmit: (values) => {
-      console.log(values);
-    },
-  });
 
   const menuItems = [
     { name: "Your Profile", icon: userIcon, activeIcon: userIconActive },
@@ -236,8 +251,10 @@ const Profile = () => {
                 isEditing,
                 handleEdit,
                 handleSave,
-                handleCancel
+                handleCancel,
+                hasSavedOnce
               )}
+
             {activeSection === "Saved Address" &&
               renderAddressSection(
                 addresses,
@@ -248,6 +265,7 @@ const Profile = () => {
                 handleAddressCancel,
                 handleAddressDelete
               )}
+
             {activeSection === "Orders" && renderOrdersSection()}
             {activeSection === "Favourites" &&
               renderFavouritesSection(products, toggleLike, likedProducts)}
@@ -284,7 +302,8 @@ const Profile = () => {
                   isEditing,
                   handleEdit,
                   handleSave,
-                  handleCancel
+                  handleCancel,
+                  hasSavedOnce
                 )}
               </div>
             )}
@@ -394,7 +413,8 @@ const renderProfileSection = (
   isEditing,
   handleEdit,
   handleSave,
-  handleCancel
+  handleCancel,
+  hasSavedOnce
 ) => (
   <div className="max-w-[633px] w-full space-y-6">
     <h2 className="text-[#5A0010] text-sm font-semibold mb-[4px]">
@@ -410,11 +430,11 @@ const renderProfileSection = (
             type="text"
             disabled={!isEditing}
             name="firstName"
-            placeholder="John"
+            placeholder="First Name"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.firstName}
-            className="w-full border border-[#D9D9D9] rounded-md px-4 py-3.5 text-sm focus:outline-none placeholder:text-[#2A2A2A] placeholder:font-medium bg-white disabled:cursor-not-allowed"
+            className="w-full border border-[#D9D9D9] rounded-md px-4 py-3.5 text-sm focus:outline-none  placeholder-[#979797] placeholder:font-normal  bg-white disabled:cursor-not-allowed"
           />
           {formik.touched.firstName && formik.errors.firstName && (
             <p className="text-red-500 text-xs mt-1">
@@ -427,11 +447,11 @@ const renderProfileSection = (
             type="text"
             disabled={!isEditing}
             name="lastName"
-            placeholder="Doe"
+            placeholder="Last Name"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.lastName}
-            className="w-full border border-[#D9D9D9] rounded-md px-4 py-3.5 text-sm focus:outline-none placeholder:text-[#2A2A2A] placeholder:font-medium bg-white disabled:cursor-not-allowed"
+            className="w-full border border-[#D9D9D9] rounded-md px-4 py-3.5 text-sm focus:outline-none  placeholder-[#979797] placeholder:font-normal bg-white disabled:cursor-not-allowed"
           />
           {formik.touched.lastName && formik.errors.lastName && (
             <p className="text-red-500 text-xs mt-1">
@@ -451,11 +471,11 @@ const renderProfileSection = (
             type="text"
             disabled={!isEditing}
             name="mobile"
-            placeholder="00000 00000"
+            placeholder="Phone Number"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.mobile}
-            className="flex-1 bg-transparent font-light focus:outline-none placeholder-[#2A2A2A]"
+            className="flex-1 bg-transparent font-light focus:outline-none  placeholder-[#979797] placeholder:font-normal"
           />
         </div>
         {formik.touched.mobile && formik.errors.mobile && (
@@ -468,11 +488,11 @@ const renderProfileSection = (
           type="email"
           disabled={!isEditing}
           name="email"
-          placeholder="johndoe@gmail.com"
+          placeholder="Email ID"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.email}
-          className="w-full border border-[#D9D9D9] rounded-md px-4 py-3.5 text-sm focus:outline-none placeholder:text-[#2A2A2A] placeholder:font-medium bg-white disabled:cursor-not-allowed"
+          className="w-full border border-[#D9D9D9] rounded-md px-4 py-3.5 text-sm focus:outline-none  placeholder-[#979797] placeholder:font-normal bg-white disabled:cursor-not-allowed"
         />
         {formik.touched.email && formik.errors.email && (
           <p className="text-red-500 text-xs mt-1">{formik.errors.email}</p>
@@ -480,7 +500,27 @@ const renderProfileSection = (
       </div>
 
       <div className="flex gap-3 mt-4 justify-end">
-        {isEditing ? (
+        {!hasSavedOnce && isEditing && (
+          <button
+            type="button"
+            onClick={handleSave}
+            className="bg-[#5A0010] text-white px-6 py-2 rounded-lg font-medium text-[14px]"
+          >
+            Save
+          </button>
+        )}
+
+        {hasSavedOnce && !isEditing && (
+          <button
+            type="button"
+            onClick={handleEdit}
+            className="bg-[#5A0010] text-white px-6 py-2 rounded-lg font-medium text-[14px]"
+          >
+            Edit
+          </button>
+        )}
+
+        {hasSavedOnce && isEditing && (
           <>
             <button
               type="button"
@@ -497,32 +537,11 @@ const renderProfileSection = (
               Cancel
             </button>
           </>
-        ) : (
-          <button
-            type="button"
-            onClick={handleEdit}
-            className="bg-[#5A0010] text-white px-6 py-2 rounded-lg font-medium text-[14px]"
-          >
-            Edit
-          </button>
         )}
       </div>
     </form>
   </div>
 );
-
-const addressValidationSchema = Yup.object({
-  id: Yup.number().required(),
-  name: Yup.string().required("Name is required"),
-  address: Yup.string().required("Address is required"),
-  details: Yup.string().nullable(),
-  city: Yup.string().required("City is required"),
-  pin: Yup.string()
-    .matches(/^[0-9]{6}$/, "Enter a valid 6-digit pin")
-    .required("Pin code is required"),
-  state: Yup.string().required("State is required"),
-  country: Yup.string().required("Country is required"),
-});
 
 const renderAddressSection = (
   addresses,
@@ -546,9 +565,8 @@ const renderAddressSection = (
     {addresses.map((addr) => (
       <div
         key={addr.id}
-        className="relative border border-[#D9D9D9] rounded-md p-4 bg-white shadow-[14px]"
+        className="relative border border-[#D9D9D9] rounded-md p-4 bg-white"
       >
-        {/* hide icons while this card is being edited */}
         {editingAddressId !== addr.id && (
           <div className="absolute top-3 right-3 flex gap-3">
             <img
@@ -569,127 +587,94 @@ const renderAddressSection = (
         {editingAddressId === addr.id ? (
           <Formik
             initialValues={{
-              name: addr.name ?? "",
-              address: addr.address ?? "",
-              city: addr.city ?? "",
-              pin: addr.pin ?? "",
-              state: addr.state ?? "",
-              country: addr.country ?? "",
-              isNew: addr.isNew ?? false,
+              id: addr.id,
+              name: addr.name || "",
+              address: addr.address || "",
+              details: addr.details || "",
+              city: addr.city || "",
+              pin: addr.pin || "",
+              state: addr.state || "",
+              country: addr.country || "",
+              isNew: addr.isNew || false,
             }}
             validationSchema={addressValidationSchema}
             onSubmit={handleSave}
             enableReinitialize
           >
-            {({
-              values,
-              handleChange,
-              handleSubmit,
-              errors,
-              touched,
-              isSubmitting,
-            }) => (
+            {({ values, handleChange, handleSubmit, errors, touched }) => (
               <form className="space-y-3" onSubmit={handleSubmit}>
                 <input
-                  type="text"
                   name="name"
                   value={values.name}
                   onChange={handleChange}
                   placeholder="Name"
-                  className="w-full border border-[#D9D9D9] rounded-md px-3 py-2 text-[14px] placeholder:text-[#595959]"
+                  className="w-full border px-3 py-2 rounded-md text-[14px]"
                 />
                 {touched.name && errors.name && (
                   <p className="text-red-500 text-xs">{errors.name}</p>
                 )}
 
                 <input
-                  type="text"
                   name="address"
                   value={values.address}
                   onChange={handleChange}
                   placeholder="Address Line"
-                  className="w-full border border-[#D9D9D9] rounded-md px-3 py-2 text-[14px] placeholder:text-[#595959]"
+                  className="w-full border px-3 py-2 rounded-md text-[14px]"
                 />
                 {touched.address && errors.address && (
                   <p className="text-red-500 text-xs">{errors.address}</p>
                 )}
+
                 <input
-                  type="text"
-                  name="detail"
-                  placeholder="Detail"
-                  className="w-full border border-[#D9D9D9] rounded-md px-3 py-2 text-[14px] placeholder:text-[#595959]"
+                  name="details"
+                  value={values.details}
+                  onChange={handleChange}
+                  placeholder="Details"
+                  className="w-full border px-3 py-2 rounded-md text-[14px]"
                 />
 
-                <div className="grid grid-cols-2 gap-2  ">
+                <div className="grid grid-cols-2 gap-2">
                   <input
-                    type="text"
                     name="city"
                     value={values.city}
                     onChange={handleChange}
                     placeholder="City"
-                    className="flex-1 border border-[#D9D9D9] rounded-md px-3 py-2 text-[14px] placeholder:text-[#595959]"
+                    className="border px-3 py-2 rounded-md text-[14px]"
                   />
-                  {touched.city && errors.city && (
-                    <p className="text-red-500 text-xs w-full mt-1">
-                      {errors.city}
-                    </p>
-                  )}
-
                   <input
-                    type="text"
                     name="pin"
                     value={values.pin}
                     onChange={handleChange}
                     placeholder="Pin Code"
-                    className="flex-1 border border-[#D9D9D9] rounded-md px-3 py-2 text-[14px] placeholder:text-[#595959]"
+                    className="border px-3 py-2 rounded-md text-[14px]"
                   />
-                  {touched.pin && errors.pin && (
-                    <p className="text-red-500 text-xs w-full mt-1">
-                      {errors.pin}
-                    </p>
-                  )}
-
                   <input
-                    type="text"
                     name="state"
                     value={values.state}
                     onChange={handleChange}
                     placeholder="State"
-                    className="flex-1 border border-[#D9D9D9] rounded-md px-3 py-2 text-[14px] placeholder:text-[#595959]"
+                    className="border px-3 py-2 rounded-md text-[14px]"
                   />
-                  {touched.state && errors.state && (
-                    <p className="text-red-500 text-xs w-full mt-1">
-                      {errors.state}
-                    </p>
-                  )}
-
                   <input
-                    type="text"
                     name="country"
                     value={values.country}
                     onChange={handleChange}
                     placeholder="Country"
-                    className="flex-1 border border-[#D9D9D9] rounded-md px-3 py-2 text-[14px] placeholder:text-[#595959]"
+                    className="border px-3 py-2 rounded-md text-[14px]"
                   />
-                  {touched.country && errors.country && (
-                    <p className="text-red-500 text-xs w-full mt-1">
-                      {errors.country}
-                    </p>
-                  )}
                 </div>
 
                 <div className="flex gap-3 mt-2">
                   <button
                     type="submit"
-                    disabled={isSubmitting}
-                    className="bg-[#5A0010] text-white px-4 py-2 rounded-md text-[14px] placeholder:text-[#595959]"
+                    className="bg-[#5A0010] text-white px-6 py-2 rounded-lg text-[14px]"
                   >
                     Save
                   </button>
                   <button
                     type="button"
                     onClick={() => handleCancel(values.id)}
-                    className="border border-[#5A0010] text-[#5A0010] px-4 py-2 rounded-md text-[14px] placeholder:text-[#595959]"
+                    className="border border-[#5A0010] text-[#5A0010] px-6 py-2 rounded-md text-[14px]"
                   >
                     Cancel
                   </button>
@@ -698,17 +683,12 @@ const renderAddressSection = (
             )}
           </Formik>
         ) : (
-          <div className="space-y-1">
-            <p className="text-[#000000] font-semibold text-[14px]">
-              {addr.name || "—"}
-            </p>
-            <p className="text-[#000000] text-[13px]">{addr.address || "—"}</p>
-            <p className="text-[#555555] text-[13px] leading-relaxed">
-              {addr.details || ""}
-            </p>
-            <p className="text-[#000000] text-[13px] font-medium">
-              {addr.city || "—"} • {addr.state || "—"} • {addr.country || "—"} •
-              Pin: {addr.pin || "—"}
+          <div>
+            <p className="font-semibold">{addr.name}</p>
+            <p>{addr.address}</p>
+            <p>{addr.details}</p>
+            <p>
+              {addr.city}, {addr.state}, {addr.country} - {addr.pin}
             </p>
           </div>
         )}
