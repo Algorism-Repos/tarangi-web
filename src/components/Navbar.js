@@ -5,6 +5,7 @@ import Modal from "./Modal";
 import Trending_up from "../assets/Trending_up.png";
 import Search_icon from "../assets/search_icon.png";
 import Search_icon_white from "../assets/search_icon_white.png";
+import Back_Arrow from "../assets/close_iconwhite.png";
 
 // Assets
 import logo from "../assets/logo.png";
@@ -146,7 +147,7 @@ function Navbar() {
               </Link>
             </>
           )}
-                    <div
+          <div
             onClick={() => setShowSearch((prev) => !prev)}
             className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] hover:bg-[#D6A76F4F] transition search-icon
                       ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"}
@@ -188,18 +189,31 @@ function Navbar() {
               transition={{ duration: 0.3 }}
               className="absolute top-[100px] left-0 w-full bg-[#680F26] px-10 py-8 shadow-lg z-30 search-dropdown"
             >
-              <div className="max-w-[1100px] mx-auto">
+              <div className="max-w-[1100px] mx-auto relative ">
                 {/* Search Input */}
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search for Products"
-                    className="w-full rounded-[12px] py-4 pl-5 pr-12 font-poppins text-[16px] placeholder:font-medium placeholder:text-[#ABABAB] outline-none"
-                  />
+                <div className="flex items-center gap-6 w-full">
+                 
+
+                  {/* Search Bar Container */}
+                  <div className="relative w-full">
+                    <input
+                      type="text"
+                      placeholder="Search for Products"
+                      className="w-full bg-white rounded-[12px] py-4 pl-5 pr-12 font-poppins text-[16px] placeholder:font-medium placeholder:text-[#ABABAB] outline-none"
+                    />
+
+                    {/* Search Icon */}
+                    <img
+                      src={Search_icon}
+                      alt="search icon"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 w-[42px] h-[42px]"
+                    />
+                  </div>
+                   {/* Back Arrow */}
                   <img
-                    src={Search_icon}
-                    alt="search icon"
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 w-[42px] h-[42px]"
+                    src={Back_Arrow}
+                    className="w-[42px] h-[42px] cursor-pointer hover:scale-110 duration-300 bg-[#D6A76F4F] p-1 hover:bg-[#CFA266] rounded-full"
+                    onClick={() => setShowSearch(false)}
                   />
                 </div>
 
