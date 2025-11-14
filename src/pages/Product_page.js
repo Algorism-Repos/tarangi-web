@@ -3,6 +3,9 @@ import React, {  useContext } from "react";
 import Product_Filter from "../components/Product_filter";
 import Product_Listing from "./Product_Listing";
 import { AppContext } from "../context/AppContext";
+import cartIcon from "../assets/Products/Check.png"; 
+import closeIcon from "../assets/Close.png"; 
+import flowerBg from "../assets/backgrounds/flower_bg.png"; 
 
 function Product_page() {
   const { productListFromShopify } = useContext(AppContext);
@@ -19,11 +22,13 @@ function Product_page() {
     });
     return acc;
   }, {});
+  
   return (
     <>
       <div className="bg-[#FFF5E8] py-[50px]  relative">
         <div className="max-w-[1350px] mx-auto lg:fle gap-x-[40px] my-[50px]">
           <Product_Filter productCatergory={categorizedProducts} />
+
         </div>
       </div>
     </>

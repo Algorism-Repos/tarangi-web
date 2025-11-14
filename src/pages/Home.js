@@ -44,6 +44,8 @@ import before_img from "../assets/before.png";
 import after_img from "../assets/after.png";
 import slider_button from "../assets/slider_button.png";
 import refresh_icon from "../assets/Refresh_icon.png";
+import right_arrow from "../assets/right_arrow.png";
+import left_arrow from "../assets/left_arrow.png";
 import { Container } from "postcss";
 import { FetchAllProductFromShopify } from "../handler/api Handler";
 import { AppContext } from "../context/AppContext";
@@ -52,6 +54,7 @@ function Home() {
   const [animate, setAnimate] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
+
   const { setProductListFromShopify, productListFromShopify } =
     useContext(AppContext);
   function toggle(product) {
@@ -67,13 +70,20 @@ function Home() {
       console.log(error);
     }
   };
-  const festiveFiltered = productListFromShopify.filter((product) =>
-    product.tags
-      ?.toLowerCase()
-      .split(",")
-      .map((tag) => tag.trim())
-      .includes("festive collection")
-  );
+  const festiveFiltered =
+    productListFromShopify?.filter((product) =>
+      product?.tags
+        ?.toLowerCase()
+        ?.split(",")
+        ?.map((tag) => tag.trim())
+        ?.includes("festive collection")
+    ) || [];
+
+  const prevRef = useRef(null);
+  const nextRef = useRef(null);
+
+  const showNavigation = festiveFiltered.length > 1;
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setAnimate(true);
@@ -91,7 +101,7 @@ function Home() {
     { img: jaguar_bracelet, title: "Jaguar Bracelets" },
     { img: watch_charms, title: "Watch Charms" },
   ];
-    const containerRef = useRef(null);
+  const containerRef = useRef(null);
   const sliderRef = useRef(null);
 
   useEffect(() => {
@@ -318,11 +328,11 @@ function Home() {
           </div>
 
           {/* Best Sellers */}
-          <div id="launchOffers">
-            <h1 className="section-heading !text-white tracking-[1px]">
+          <div id="launchOffers" className="max-w-full">
+            <h1 className="section-heading !text-white tracking-[1px] text-center">
               Best Sellers
             </h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-10 lg:gap-14 mt-20 sm:mt-36 px-4 lg:px-0">
+            <div className="sm:grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-10 lg:gap-14 mt-20 sm:mt-36 px-4 lg:px-0 hidden">
               {festiveFiltered.map((type) => (
                 <div
                   className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
@@ -333,7 +343,7 @@ function Home() {
                   <img
                     src={type?.image?.src}
                     alt={type?.name}
-                    className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px]"
+                    className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] "
                   />
                   <h5 className="font-poppins text-[22px] font-normal leading-normal text-white mt-6">
                     {type?.title}
@@ -346,6 +356,97 @@ function Home() {
                   </h4>
                 </div>
               ))}
+            </div>
+
+            {/* Mobile View slider */}
+            <div className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden">
+              {/* Custom navigation buttons */}
+              {showNavigation && (
+                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
+                  <div className="">
+                    <button
+                      ref={prevRef}
+                      className="swiper-button-prev-custom bg-[#D9B16F70] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                    >
+                      <img
+                        src={left_arrow}
+                        alt="Previous"
+                        className="w-[28px] h-[28px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                      />
+                    </button>
+                  </div>
+                  <div className="">
+                    <button
+                      ref={nextRef}
+                      className="swiper-button-next-custom bg-[#D9B16F70] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                    >
+                      <img
+                        src={right_arrow}
+                        alt="Next"
+                        className="w-[28px] h-[28px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                      />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <Swiper
+                modules={[Navigation]}
+                spaceBetween={12}
+                slidesPerView={1.1}
+                breakpoints={{
+                  320: { slidesPerView: 1, spaceBetween: 12 },
+                  480: { slidesPerView: 1, spaceBetween: 16 },
+                  640: { slidesPerView: 1, spaceBetween: 20 },
+                  768: { slidesPerView: 2, spaceBetween: 24 },
+                  1024: { slidesPerView: 2, spaceBetween: 28 },
+                  1280: { slidesPerView: 3, spaceBetween: 32 },
+                  1536: { slidesPerView: 3, spaceBetween: 36 },
+                  1920: { slidesPerView: 3, spaceBetween: 40 },
+                }}
+                onBeforeInit={(swiper) => {
+                  if (showNavigation) {
+                    swiper.params.navigation.prevEl = prevRef.current;
+                    swiper.params.navigation.nextEl = nextRef.current;
+                    swiper.navigation.init();
+                    swiper.navigation.update();
+                  }
+                }}
+                className="!overflow-hidden  !h-[515px]"
+              >
+                {festiveFiltered.length > 0 ? (
+                  festiveFiltered.map((type, index) => (
+                    <SwiperSlide key={index}>
+                      <div
+                        className="w-[360px] h-[450px] mx-auto flex flex-col items-center gap-y-2 transform transition-transform duration-300 ease-out hover:scale-105 cursor-pointer"
+                        onClick={() => toggle(type?.title)}
+                      >
+                        <img
+                          src={type?.image?.src}
+                          alt={type?.name}
+                          className="px-2 sm:px-0 w-[360px] h-[460px]"
+                        />
+                        <h5 className="font-poppins text-[18px] sm:text-[20px] md:text-[22px] font-normal leading-normal text-white mt-4 sm:mt-6">
+                          {type?.title}
+                        </h5>
+                        <h4 className="font-poppins text-[16px] sm:text-[18px] md:text-[20px] font-semibold leading-normal text-[#FCD99F]">
+                          ₹
+                          {Number(type.variants[0]?.price).toLocaleString(
+                            "en-IN",
+                            {
+                              maximumFractionDigits: 0,
+                            }
+                          )}
+                        </h4>
+                      </div>
+                    </SwiperSlide>
+                  ))
+                ) : (
+                  <div className="text-white text-center py-10">
+                    No products available
+                  </div>
+                )}
+              </Swiper>
             </div>
           </div>
         </div>
@@ -440,11 +541,11 @@ function Home() {
       {/* Tarangi Specials */}
       <div className="newproducts-section tracking-[1px]">
         <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
-          <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-32 sm:mt-0 overflow-x-hidden">
+          <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-30 sm:mt-0 overflow-x-hidden">
             Tarangi Specials
           </h1>
 
-          <div className="flex flex-col sm:flex-row items-center sm:gap-x-12 gap-y-24 sm:flex-wrap justify-center mt-12 sm:mt-44">
+          <div className="hidden sm:flex flex-col sm:flex-row items-center sm:gap-x-12 gap-y-24 sm:flex-wrap justify-center mt-10 sm:mt-44">
             {specials.map((item, index) => (
               <div
                 key={index}
@@ -465,6 +566,85 @@ function Home() {
               </div>
             ))}
           </div>
+        </div>
+        {/* ----------- MOBILE VIEW (Swiper) ----------- */}
+        <div className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0 sm:hidden">
+          {/* Custom navigation buttons */}
+          {showNavigation && (
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
+              <div>
+                <button
+                  ref={prevRef}
+                  className="swiper-button-prev-custom bg-[#D9B16F70] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                >
+                  <img
+                    src={left_arrow}
+                    alt="Previous"
+                    className="w-[28px] h-[28px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                  />
+                </button>
+              </div>
+              <div>
+                <button
+                  ref={nextRef}
+                  className="swiper-button-next-custom bg-[#D9B16F70] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                >
+                  <img
+                    src={right_arrow}
+                    alt="Next"
+                    className="w-[28px] h-[28px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                  />
+                </button>
+              </div>
+            </div>
+          )}
+
+          <Swiper
+            modules={[Navigation]}
+            spaceBetween={12}
+            slidesPerView={1.1}
+            breakpoints={{
+              320: { slidesPerView: 1, spaceBetween: 12 },
+              480: { slidesPerView: 1, spaceBetween: 16 },
+              640: { slidesPerView: 1, spaceBetween: 20 },
+            }}
+            onBeforeInit={(swiper) => {
+              if (showNavigation) {
+                swiper.params.navigation.prevEl = prevRef.current;
+                swiper.params.navigation.nextEl = nextRef.current;
+                swiper.navigation.init();
+                swiper.navigation.update();
+              }
+            }}
+            className="!overflow-hidden !h-[520px]"
+          >
+            {specials.length > 0 ? (
+              specials.map((item, index) => (
+                <SwiperSlide key={index}>
+                  <div
+                    className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-105 cursor-pointer"
+                    onClick={() => {
+                      setSelectedType(item.title);
+                      toggle();
+                    }}
+                  >
+                    <img
+                      src={item.img}
+                      alt={item.title}
+                      className="w-[357px] h-[380px] border-[2px] border-white"
+                    />
+                    <h3 className="font-atteron text-[30px] font-normal leading-normal text-white mt-2">
+                      {item.title}
+                    </h3>
+                  </div>
+                </SwiperSlide>
+              ))
+            ) : (
+              <div className="text-white text-center py-10">
+                No specials available
+              </div>
+            )}
+          </Swiper>
         </div>
       </div>
 
@@ -594,32 +774,32 @@ function Home() {
             <span className=""> Enhance Your Look With</span> <br /> Tarangi
           </h1>
 
-    <div className="container" ref={containerRef}>
-      <div className="image-container">
-        <img
-          className="image-before slider-image"
-          src={before_img}
-          alt="before_img"
-        />
-        <img
-          className="image-after slider-image"
-          src={after_img}
-          alt="after_img"
-        />
-      </div>
-      <input
-        ref={sliderRef}
-        type="range"
-        min={2}
-        max={98}
-        defaultValue={50}
-        className="slider"
-      />
-      <div className="slider-line"></div>
-      <div className="slider-button" aria-hidden="true">
-        <img src={slider_button} alt="slider button" />
-      </div>
-    </div>
+          <div className="container" ref={containerRef}>
+            <div className="image-container">
+              <img
+                className="image-before slider-image"
+                src={before_img}
+                alt="before_img"
+              />
+              <img
+                className="image-after slider-image"
+                src={after_img}
+                alt="after_img"
+              />
+            </div>
+            <input
+              ref={sliderRef}
+              type="range"
+              min={2}
+              max={98}
+              defaultValue={50}
+              className="slider"
+            />
+            <div className="slider-line"></div>
+            <div className="slider-button" aria-hidden="true">
+              <img src={slider_button} alt="slider button" />
+            </div>
+          </div>
         </div>
       </div>
 

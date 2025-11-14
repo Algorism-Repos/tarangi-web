@@ -1,49 +1,53 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import Modal from "./Modal";
+import Trending_up from "../assets/Trending_up.png";
+import Search_icon from "../assets/search_icon.png";
+import Search_icon_white from "../assets/search_icon_white.png";
 
-// assets import
+// Assets
 import logo from "../assets/logo.png";
 import menu from "../assets/menu_icon.png";
 import close from "../assets/close_iconwhite.png";
 import favourite_icon from "../assets/Favorites_icon.png";
-import cart_icon_empty from "../assets/Cart_white.png"; // 🆕 empty cart icon
-import cart_icon_filled from "../assets/cart_filled.png"; // 🆕 filled cart icon
+import cart_icon_empty from "../assets/Cart_white.png";
+import cart_icon_filled from "../assets/cart_filled.png";
 import profile_icon from "../assets/profile_icon.png";
+import new_product_1 from "../assets/Frame 29.png";
 
 function Navbar() {
   const [menuVisible, setMenuVisible] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [cartItems, setCartItems] = useState(true);
+  const [showSearch, setShowSearch] = useState(false);
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const isActive = (path) => location.pathname === path;
+  const getLinkClass = (path) =>
+    isActive(path) ? "text-white" : "text-white opacity-[0.5]";
+  const cartIcon = cartItems.length > 0 ? cart_icon_filled : cart_icon_empty;
+
+  // ✅ Initial state setup
   useEffect(() => {
     localStorage.setItem("isLoggedIn", "true");
     setIsLoggedIn(true);
   }, []);
 
-  const [cartItems, setCartItems] = useState(true);
-
-  const location = useLocation();
-
-  const isActive = (path) => location.pathname === path;
-
-  const navigate = useNavigate();
-
-  const toggle = () => setModalToggle(!modalToggle);
-
-  // ✅ Sync login and cart state from localStorage
   useEffect(() => {
-    const storedStatus = localStorage.getItem("isLoggedIn") === "true";
+    const storedStatus = localStorage.getItem("isLoggedIn") === "false";
     setIsLoggedIn(storedStatus);
 
     const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
     setCartItems(storedCart);
 
-    // ✅ Update cart if localStorage changes elsewhere
     const updateStorage = () => {
       const updatedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
       setCartItems(updatedCart);
-
       const updatedLogin = localStorage.getItem("isLoggedIn") === "true";
       setIsLoggedIn(updatedLogin);
     };
@@ -52,27 +56,44 @@ function Navbar() {
     return () => window.removeEventListener("storage", updateStorage);
   }, []);
 
-  const handleLoginToggle = (status) => {
-    setIsLoggedIn(status);
-    localStorage.setItem("isLoggedIn", status ? "true" : "false");
-  };
+  // ✅ Close search when clicking outside
+  useEffect(() => {
+    const closeSearch = (e) => {
+      if (
+        !e.target.closest(".search-dropdown") &&
+        !e.target.closest(".search-icon")
+      ) {
+        setShowSearch(false);
+      }
+    };
+    document.addEventListener("click", closeSearch);
+    return () => document.removeEventListener("click", closeSearch);
+  }, []);
+  const dropdownRef = useRef(null);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowSearchDropdown(false); // CLOSE DROPDOWN
+      }
+    }
 
-  const getLinkClass = (path) =>
-    location.pathname === path ? "text-white" : "text-white opacity-[0.5]";
-
-  const cartIcon = cartItems.length > 0 ? cart_icon_filled : cart_icon_empty;
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
-      {/* Navbar - large screens */}
-      <div className="bg-primary lg:flex flex-row justify-between items-center w-full py-5 px-7 hidden">
+      {/* Navbar - Large Screens */}
+      <div className="bg-primary lg:flex flex-row justify-between items-center w-full py-5 px-7 hidden relative">
         {/* Logo */}
         <Link to="/home">
           <img src={logo} alt="brand-logo" className="w-[106px] h-[71px]" />
         </Link>
 
-        {/* Links */}
-        <div className="font-poppins text-[16px] leading-normal flex flex-row gap-x-[40px] ml-[70px] xl:gap-x-[77px] items-center xl:ml-[170px] ">
+        {/* Nav Links */}
+        <div className="font-poppins text-[16px] flex flex-row gap-x-[40px] ml-[70px] xl:gap-x-[77px] items-center xl:ml-[170px] ">
           <Link
             className="hover:bg-[#D6A76F4F] rounded-full py-2.5 px-4"
             to="/home"
@@ -95,30 +116,10 @@ function Navbar() {
 
         {/* Right Side Icons */}
         <div className="flex flex-row items-center gap-x-[20px]">
+          {/* 🔍 Search Button */}
+
           {isLoggedIn ? (
             <>
-              <Link to="/favourites">
-                <img
-                  className={`w-[42px] h-[42px] rounded-[8px] transition ${
-                    isActive("/favourites")
-                      ? "bg-[#CFA266]"
-                      : "hover:bg-[#D6A76F4F]"
-                  }`}
-                  src={favourite_icon}
-                  alt="favourite icon"
-                />
-              </Link>
-
-              <Link to="/cart">
-                <img
-                  className={`w-[42px] h-[42px] rounded-[8px] transition ${
-                    isActive("/cart") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
-                  }`}
-                  src={cartIcon}
-                  alt="Cart icon"
-                />
-              </Link>
-
               <Link to="/profile">
                 <img
                   className={`w-[42px] h-[42px] rounded-[8px] transition ${
@@ -132,7 +133,6 @@ function Navbar() {
               </Link>
             </>
           ) : (
-            // ✅ Not logged in: show buttons
             <>
               <Link to="/signup">
                 <button className="rounded-[32px] border border-[#CFA266] w-[137px] font-poppins text-[16px] font-normal text-white py-[10px] px-[16px] cursor-pointer">
@@ -146,10 +146,111 @@ function Navbar() {
               </Link>
             </>
           )}
+                    <div
+            onClick={() => setShowSearch((prev) => !prev)}
+            className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] hover:bg-[#D6A76F4F] transition search-icon
+                      ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"}
+        `}
+          >
+            <img src={Search_icon_white} className="w-[42px] h-[42px]" />
+          </div>
+
+          <Link to="/favourites">
+            <img
+              className={`w-[42px] h-[42px] rounded-[8px] transition ${
+                isActive("/favourites")
+                  ? "bg-[#CFA266]"
+                  : "hover:bg-[#D6A76F4F]"
+              }`}
+              src={favourite_icon}
+              alt="favourite icon"
+            />
+          </Link>
+
+          <Link to="/cart">
+            <img
+              className={`w-[42px] h-[42px] rounded-[8px] transition ${
+                isActive("/cart") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+              }`}
+              src={cartIcon}
+              alt="cart"
+            />
+          </Link>
         </div>
+
+        {/* Search Dropdown */}
+        <AnimatePresence>
+          {showSearch && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="absolute top-[100px] left-0 w-full bg-[#680F26] px-10 py-8 shadow-lg z-30 search-dropdown"
+            >
+              <div className="max-w-[1100px] mx-auto">
+                {/* Search Input */}
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search for Products"
+                    className="w-full rounded-[12px] py-4 pl-5 pr-12 font-poppins text-[16px] placeholder:font-medium placeholder:text-[#ABABAB] outline-none"
+                  />
+                  <img
+                    src={Search_icon}
+                    alt="search icon"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 w-[42px] h-[42px]"
+                  />
+                </div>
+
+                {/* Popular Searches */}
+                <div className="mt-6">
+                  <h3 className="text-white font-poppins text-[16px] mb-3">
+                    Popular Searches
+                  </h3>
+                  <div className="flex gap-3 flex-wrap">
+                    <button className="flex items-center gap-2 bg-white text-[#4B001A] px-4 py-2 rounded-[10px] font-poppins">
+                      <img src={Trending_up} className="w-[20px] h-[20px]" />
+                      Diwali Jewelry
+                    </button>
+                    <button className="flex items-center gap-2 bg-white text-[#4B001A] px-4 py-2 rounded-[10px] font-poppins">
+                      <img src={Trending_up} className="w-[20px] h-[20px]" />
+                      Pendants
+                    </button>
+                  </div>
+                </div>
+
+                {/* Trending Products */}
+                <div className="mt-8">
+                  <h3 className="text-white font-poppins text-[16px] mb-3">
+                    Trending Products
+                  </h3>
+                  <div className="flex gap-6 overflow-x-auto text-white text-[14px] items-center object-contain">
+                    {[
+                      { img: new_product_1, name: "Emerald Pendant" },
+                      { img: new_product_1, name: "Diamond Necklace" },
+                      { img: new_product_1, name: "Tulip Brooch" },
+                    ].map((item, index) => (
+                      <div key={index} className="flex flex-col items-center">
+                        <img
+                          src={item.img}
+                          alt={item.name}
+                          className="w-[121px] h-[78px] object-contain"
+                        />
+                        <span className="mt-2 text-[14px] font-poppins">
+                          {item.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* Navbar - small screens */}
+      {/* Navbar - Mobile  */}
       <div className="relative bg-[#680F26] flex flex-row justify-between w-full px-[20px] py-[30px] lg:hidden">
         <img
           src={menu}
@@ -165,7 +266,6 @@ function Navbar() {
         />
 
         <div className="flex gap-x-2">
-          {/* ✅ Show all icons if logged in */}
           {isLoggedIn && (
             <>
               <Link to="/favourites">
@@ -218,51 +318,93 @@ function Navbar() {
                 src={logo}
                 className="w-[85px] h-[55px] cursor-pointer absolute top-9 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
               />
-              <div className="flex gap-x-2">
-                {/* ✅ Show all icons when logged in */}
-                {isLoggedIn && (
-                  <>
-                    <Link to="/favourites">
-                      <img
-                        className={`w-[32px] h-[32px] rounded-[8px] transition ${
-                          isActive("/favourites")
-                            ? "bg-[#CFA266]"
-                            : "hover:bg-[#D6A76F4F]"
-                        }`}
-                        src={favourite_icon}
-                        alt="favourite icon"
-                      />
-                    </Link>
-
-                    <Link to="/cart">
-                      <img
-                        className={`w-[32px] h-[32px] rounded-[8px] transition ${
-                          isActive("/cart")
-                            ? "bg-[#CFA266]"
-                            : "hover:bg-[#D6A76F4F]"
-                        }`}
-                        src={cartIcon}
-                        alt="Cart icon"
-                      />
-                    </Link>
-                    
-              {/* <Link to="/profile">
-                <img
-                  className={`w-[32px] h-[32px] rounded-[8px] transition ${
-                    isActive("/profile")
-                      ? "bg-[#CFA266]"
-                      : "hover:bg-[#D6A76F4F]"
-                  }`}
-                  src={profile_icon}
-                  alt="profile"
-                />
-              </Link> */}
-                  </>
-                )}
-              </div>
             </div>
 
-            <div className="flex flex-col items-center mt-10 gap-y-12">
+            <div className="flex flex-col items-center mt-10 gap-y-12 ">
+              {/* Search Input */}
+              <div className="w-full px-0 py-2 mx-auto">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search for Products"
+                    onClick={() => setShowSearchDropdown(true)}
+                    className="w-full h-[48px] py-4 pl-5 pr-12 font-poppins text-[16px] outline-none placeholder:text-[#B0B0B0] placeholder:font-normal rounded-[12px]"
+                  />
+                  <img
+                    src={Search_icon}
+                    alt="Search"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 w-[42px] h-[42px]"
+                  />
+                </div>
+
+                {/* Search Dropdown */}
+                <div ref={dropdownRef} className="relative w-full">
+                  <AnimatePresence>
+                    {showSearchDropdown && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.25 }}
+                        className="w-full py-6 rounded-[12px] shadow-lg"
+                      >
+                        {/* Popular Searches */}
+                        <h3 className="text-white font-poppins text-[16px] mb-3">
+                          Popular Searches
+                        </h3>
+
+                        <div className="flex gap-3 flex-wrap mb-6">
+                          <button
+                            className="flex items-center gap-2 bg-white text-[#4B001A]
+                                   px-4 py-2 rounded-[10px] font-poppins text-[14px]"
+                          >
+                            <img src={Trending_up} className="w-[16px]" />
+                            Diwali Jewelry
+                          </button>
+
+                          <button
+                            className="flex items-center gap-2 bg-white text-[#4B001A]
+                                   px-4 py-2 rounded-[10px] font-poppins text-[14px]"
+                          >
+                            <img src={Trending_up} className="w-[16px]" />
+                            Pendants
+                          </button>
+                        </div>
+
+                        {/* Trending Products */}
+                        <h3 className="text-white font-poppins text-[16px] mb-3">
+                          Trending Products
+                        </h3>
+
+                        <div className="flex gap-6 overflow-visible">
+                          {[
+                            { img: new_product_1, name: "Emerald Pendant" },
+                            { img: new_product_1, name: "Diamond Necklace" },
+                            { img: new_product_1, name: "Tulip Brooch" },
+                          ].map((item, index) => (
+                            <div
+                              key={index}
+                              className="flex flex-col items-center min-w-[120px]"
+                            >
+                              <img
+                                src={item.img}
+                                alt={item.name}
+                                className="w-[121px] h-[109px] object-contain rounded-[12px] shadow-md"
+                              />
+
+                              <span className="mt-2 text-white text-[14px] font-poppins font-normal">
+                                {item.name}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+
+              {/* PAGE LINKS */}
               {["/home", "/about", "/products"].map((path) => (
                 <Link to={path} key={path}>
                   <h2
@@ -282,7 +424,7 @@ function Navbar() {
                 </Link>
               ))}
 
-              {/* Auth buttons for mobile */}
+              {/* LOGIN / SIGNUP */}
               {!isLoggedIn && (
                 <div className="flex flex-col items-center gap-y-[25px]">
                   <button
@@ -304,7 +446,7 @@ function Navbar() {
         )}
       </div>
 
-      <Modal modal={modalToggle} active={toggle} />
+      <Modal modal={modalToggle} active={() => setModalToggle(!modalToggle)} />
     </>
   );
 }

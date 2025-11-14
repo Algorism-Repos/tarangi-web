@@ -24,6 +24,11 @@ import circle from "../assets/Ellipse 12.png";
 
 import AddToCartButton from "../components/AddToCartButton";
 import LikeButton from "../components/LikeButton";
+import logout_icon from "../assets/logout_icon.png";
+
+import gold_ellipse from "../assets/Products/gold_ellipse.png";
+import silver_ellipse from "../assets/Products/silver_ellipse.png";
+import brown_ellipse from "../assets/Products/brown_ellipse.png";
 
 // ✅ Move schema definition here so it’s in scope
 const addressValidationSchema = Yup.object({
@@ -110,6 +115,14 @@ const Profile = () => {
       liked: true,
       isOutOfStock: false,
     },
+    {
+      id: 3,
+      src: product_2,
+      price: "₹4,000",
+      name: "Silver Kada",
+      liked: true,
+      isOutOfStock: false,
+    },
   ]);
 
   const toggleLike = (id) =>
@@ -154,7 +167,6 @@ const Profile = () => {
     },
   ]);
 
-
   const [editingAddressId, setEditingAddressId] = useState(null);
   const nextAddressId = () =>
     addresses.length === 0 ? 1 : Math.max(...addresses.map((a) => a.id)) + 1;
@@ -180,9 +192,7 @@ const Profile = () => {
 
   const handleAddressSave = (values, { setSubmitting }) => {
     setAddresses((prev) =>
-      prev.map((a) =>
-        a.id === values.id ? { ...values, isNew: false } : a
-      )
+      prev.map((a) => (a.id === values.id ? { ...values, isNew: false } : a))
     );
     setEditingAddressId(null);
     setSubmitting(false);
@@ -210,7 +220,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-[972px] bg-[#FFF5E8] py-16 px-4 sm:px-6 lg:px-16 xl:px-28">
-      <div className="max-w-[1110px] mx-auto space-y-14 ">
+      <div className="max-w-[1280px] mx-auto space-y-20  ">
         <div className="md:flex flex-auto justify-items-center">
           <h1 className=" font-atteron  text-[#5A0010] text-[28px] leading-[42px] ">
             PROFILE
@@ -219,14 +229,14 @@ const Profile = () => {
 
         {/* DESKTOP LAYOUT */}
         <div className="hidden md:flex flex-row gap-10 md:gap-16">
-          <div className="w-[220px] flex flex-col gap-4">
+          <div className="w-[220px] flex flex-col gap-8">
             {menuItems.map((item) => {
               const isActive = activeSection === item.name;
               return (
                 <button
                   key={item.name}
                   onClick={() => setActiveSection(item.name)}
-                  className={`flex items-center gap-3 px-5 py-3 rounded-md text-sm font-poppins transition-all w-full
+                  className={`flex items-center gap-3 px-5 py-3 rounded-[8px] text-[16px] font-poppins transition-all w-full
             ${
               isActive
                 ? "bg-[#5A0010] text-white"
@@ -242,6 +252,18 @@ const Profile = () => {
                 </button>
               );
             })}
+
+            <button
+              onClick={() => console.log("Logout clicked")}
+              className="flex items-center gap-3 px-5 py-3  mt-[275px] text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
+            >
+              <img
+                src={logout_icon}
+                alt="Logout"
+                className="w-[30px] h-[30px] object-contain"
+              />
+              Logout
+            </button>
           </div>
 
           <div className="flex-1 bg-transparent">
@@ -416,8 +438,8 @@ const renderProfileSection = (
   handleCancel,
   hasSavedOnce
 ) => (
-  <div className="max-w-[633px] w-full space-y-6">
-    <h2 className="text-[#5A0010] text-sm font-semibold mb-[4px]">
+  <div className="max-w-[633px] w-full space-y-1.5">
+    <h2 className="text-[#6E0027] text-[14px] font-semibold font-poppins mb-[4px]">
       Contact Details
     </h2>
     <form
@@ -434,7 +456,7 @@ const renderProfileSection = (
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.firstName}
-            className="w-full border border-[#D9D9D9] rounded-md px-4 py-3.5 text-sm focus:outline-none  placeholder-[#979797] placeholder:font-normal  bg-white disabled:cursor-not-allowed"
+            className="w-full border border-[#ADADAD] rounded-[8px] px-4 py-3.5 text-sm focus:outline-none  placeholder-[#979797] placeholder:font-normal  bg-white disabled:cursor-not-allowed"
           />
           {formik.touched.firstName && formik.errors.firstName && (
             <p className="text-red-500 text-xs mt-1">
@@ -451,7 +473,7 @@ const renderProfileSection = (
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.lastName}
-            className="w-full border border-[#D9D9D9] rounded-md px-4 py-3.5 text-sm focus:outline-none  placeholder-[#979797] placeholder:font-normal bg-white disabled:cursor-not-allowed"
+            className="w-full border border-[#ADADAD] rounded-[8px] px-4 py-3.5 text-sm focus:outline-none  placeholder-[#979797] placeholder:font-normal bg-white disabled:cursor-not-allowed"
           />
           {formik.touched.lastName && formik.errors.lastName && (
             <p className="text-red-500 text-xs mt-1">
@@ -462,11 +484,11 @@ const renderProfileSection = (
       </div>
 
       <div>
-        <div className="flex items-center w-full py-3.5 px-3 border border-[#efe6e6] rounded-md text-sm bg-white disabled:cursor-not-allowed">
+        <div className="flex items-center w-full py-3.5 px-3 border border-[#ADADAD] rounded-[8px] text-sm bg-white disabled:cursor-not-allowed">
           <span className="text-[#800020] font-semibold mr-2 whitespace-nowrap">
             IN +91
           </span>
-          <span className="h-5 w-px bg-gray-300 mr-2"></span>
+          <span className="h-5 w-px bg-[#ADADAD] mr-2"></span>
           <input
             type="text"
             disabled={!isEditing}
@@ -475,7 +497,7 @@ const renderProfileSection = (
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.mobile}
-            className="flex-1 bg-transparent font-light focus:outline-none  placeholder-[#979797] placeholder:font-normal"
+            className="flex-1 bg-white font-light focus:outline-none  placeholder-[#979797] placeholder:font-normal"
           />
         </div>
         {formik.touched.mobile && formik.errors.mobile && (
@@ -492,7 +514,7 @@ const renderProfileSection = (
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.email}
-          className="w-full border border-[#D9D9D9] rounded-md px-4 py-3.5 text-sm focus:outline-none  placeholder-[#979797] placeholder:font-normal bg-white disabled:cursor-not-allowed"
+          className="w-full border border-[#ADADAD] rounded-[8px] px-4 py-3.5 text-sm focus:outline-none  placeholder-[#979797] placeholder:font-normal bg-white disabled:cursor-not-allowed"
         />
         {formik.touched.email && formik.errors.email && (
           <p className="text-red-500 text-xs mt-1">{formik.errors.email}</p>
@@ -532,7 +554,7 @@ const renderProfileSection = (
             <button
               type="button"
               onClick={handleCancel}
-              className="border border-[#5A0010] text-[#5A0010] px-6 py-2 rounded-md font-medium text-[14px]"
+              className="border border-[#5A0010] text-[#5A0010] px-6 py-2 rounded-[8px] font-medium text-[14px]"
             >
               Cancel
             </button>
@@ -556,7 +578,7 @@ const renderAddressSection = (
     <div className="flex justify-end">
       <button
         onClick={handleAddNew}
-        className="bg-[#5A0010] text-white px-4 py-2 rounded-md text-[14px] mb-4"
+        className="bg-[#5A0010] text-white px-4 py-2 rounded-[8px] text-[14px] mb-4"
       >
         + Add Address
       </button>
@@ -565,7 +587,7 @@ const renderAddressSection = (
     {addresses.map((addr) => (
       <div
         key={addr.id}
-        className="relative border border-[#D9D9D9] rounded-md p-4 bg-white"
+        className="relative border border-[#ADADAD] rounded-[8px] p-4 bg-white"
       >
         {editingAddressId !== addr.id && (
           <div className="absolute top-3 right-3 flex gap-3">
@@ -608,7 +630,7 @@ const renderAddressSection = (
                   value={values.name}
                   onChange={handleChange}
                   placeholder="Name"
-                  className="w-full border px-3 py-2 rounded-md text-[14px]"
+                  className="w-full border  border-[#ADADAD] px-3 py-2 rounded-[8px] text-[14px]  placeholder-[#979797] placeholder:font-normal"
                 />
                 {touched.name && errors.name && (
                   <p className="text-red-500 text-xs">{errors.name}</p>
@@ -619,7 +641,7 @@ const renderAddressSection = (
                   value={values.address}
                   onChange={handleChange}
                   placeholder="Address Line"
-                  className="w-full border px-3 py-2 rounded-md text-[14px]"
+                  className="w-full border  border-[#ADADAD] px-3 py-2 rounded-[8px] text-[14px]  placeholder-[#979797] placeholder:font-normal"
                 />
                 {touched.address && errors.address && (
                   <p className="text-red-500 text-xs">{errors.address}</p>
@@ -630,7 +652,7 @@ const renderAddressSection = (
                   value={values.details}
                   onChange={handleChange}
                   placeholder="Details"
-                  className="w-full border px-3 py-2 rounded-md text-[14px]"
+                  className="w-full border  border-[#ADADAD] px-3 py-2 rounded-[8px] text-[14px]  placeholder-[#979797] placeholder:font-normal"
                 />
 
                 <div className="grid grid-cols-2 gap-2">
@@ -639,28 +661,28 @@ const renderAddressSection = (
                     value={values.city}
                     onChange={handleChange}
                     placeholder="City"
-                    className="border px-3 py-2 rounded-md text-[14px]"
+                    className="border  border-[#ADADAD] px-3 py-2 rounded-[8px] text-[14px]  placeholder-[#979797] placeholder:font-normal"
                   />
                   <input
                     name="pin"
                     value={values.pin}
                     onChange={handleChange}
                     placeholder="Pin Code"
-                    className="border px-3 py-2 rounded-md text-[14px]"
+                    className="border  border-[#ADADAD] px-3 py-2 rounded-[8px] text-[14px]  placeholder-[#979797] placeholder:font-normal"
                   />
                   <input
                     name="state"
                     value={values.state}
                     onChange={handleChange}
                     placeholder="State"
-                    className="border px-3 py-2 rounded-md text-[14px]"
+                    className="border  border-[#ADADAD] px-3 py-2 rounded-[8px] text-[14px]  placeholder-[#979797] placeholder:font-normal"
                   />
                   <input
                     name="country"
                     value={values.country}
                     onChange={handleChange}
                     placeholder="Country"
-                    className="border px-3 py-2 rounded-md text-[14px]"
+                    className="border  border-[#ADADAD] px-3 py-2 rounded-[8px] text-[14px]  placeholder-[#979797] placeholder:font-normal"
                   />
                 </div>
 
@@ -674,7 +696,7 @@ const renderAddressSection = (
                   <button
                     type="button"
                     onClick={() => handleCancel(values.id)}
-                    className="border border-[#5A0010] text-[#5A0010] px-6 py-2 rounded-md text-[14px]"
+                    className="border border-[#5A0010] text-[#5A0010] px-6 py-2 rounded-[8px] text-[14px]"
                   >
                     Cancel
                   </button>
@@ -697,139 +719,195 @@ const renderAddressSection = (
   </div>
 );
 
-const renderOrdersSection = () => (
-  <div className="space-y-10 max-w-[634px]">
-    {/* Upcoming Orders */}
-    <div>
-      <h2 className="text-[#2A2A2A] text-[13px] font-semibold mb-2">
-        Upcoming Orders
-      </h2>
-      <div className="border border-[#E0E0E0] rounded-lg bg-white p-5 shadow-sm">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center border-b border-[#E0E0E0] pb-3 mb-4 w-full">
-          <div className="flex gap-6 p-1">
-            {/* Order Date */}
-            <div className="flex flex-col">
-              <span className="text-[14px] text-[#4B4B4B] font-medium">
-                Order Date
-              </span>
-              <span className="text-[16px] text-[#2A2A2A] font-semibold mt-1">
-                12 Oct 2025
-              </span>
+const renderOrdersSection = () => {
+  // Example data — you can replace this with real API data later
+  const upcomingOrders = [
+    {
+      id: 1,
+      date: "12 Oct 2025",
+      number: "#123456",
+      status: "Shipped",
+      delivery: "20th Oct",
+      products: [product_1, product_2],
+    },
+    {
+      id: 2,
+      date: "15 Oct 2025",
+      number: "#654321",
+      status: "Processing",
+      delivery: "25th Oct",
+      products: [product_2, product_1],
+    },
+  ];
+
+  const deliveredOrders = [
+    {
+      id: 1,
+      date: "05 Sep 2025",
+      number: "#789012",
+      deliveredOn: "10 Sep",
+      products: [product_1, product_2],
+    },
+    {
+      id: 2,
+      date: "01 Aug 2025",
+      number: "#890123",
+      deliveredOn: "06 Aug",
+      products: [product_2, product_1],
+    },
+  ];
+
+  return (
+    <div className="space-y-10 max-w-[634px]">
+      {/* Upcoming Orders */}
+      <div>
+        <h2 className="text-[#2A2A2A] text-[16px] font-semibold font-poppins mb-2">
+          Upcoming Orders
+        </h2>
+
+        {upcomingOrders.map((order) => (
+          <div
+            key={order.id}
+            className="border border-[#E0E0E0] rounded-lg bg-white p-5 shadow-sm mb-6"
+          >
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center border-b border-[#E0E0E0] pb-3 mb-4 w-full">
+              <div className="flex gap-6 p-1">
+                {/* Order Date */}
+                <div className="flex flex-col">
+                  <span className="text-[14px] text-[#4B4B4B] font-medium">
+                    Order Date
+                  </span>
+                  <span className="text-[16px] text-[#2A2A2A] font-semibold mt-1">
+                    {order.date}
+                  </span>
+                </div>
+                {/* Order Number */}
+                <div className="flex flex-col gap-x-2 text-start">
+                  <span className="text-[14px] text-[#4B4B4B] font-medium">
+                    Order Number
+                  </span>
+                  <span className="text-[16px] text-[#2A2A2A] font-semibold mt-1">
+                    {order.number}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:items-end gap-[6px] mt-2 sm:mt-0">
+                <div className="flex items-center justify-center gap-1 text-[12px] font-medium text-[#5A0010] bg-[#FFF5E8] border border-[#5A0010] rounded-full px-3 py-[3px]">
+                  <img src={circle} alt="circle" className="w-[8px] h-[8px]" />
+                  <span>{order.status}</span>
+                </div>
+                <button className="text-[#5A0010] text-[12px] font-medium hover:underline">
+                  View Order Details
+                </button>
+              </div>
             </div>
-            {/* Order Number */}
-            <div className="flex flex-col gap-x-2 text-start">
-              <span className="text-[14px] text-[#4B4B4B] font-medium">
-                Order Number
-              </span>
-              <span className="text-[16px] text-[#2A2A2A] font-semibold mt-1">
-                #123456
-              </span>
+
+            {/* Product Images */}
+            <div className="flex gap-3 sm:gap-4 items-center flex-wrap">
+              {order.products.map((img, idx) => (
+                <img
+                  key={idx}
+                  src={img}
+                  alt="Product"
+                  className="w-[90px] h-[90px] rounded-[8px] object-cover"
+                />
+              ))}
+            </div>
+
+            {/* Delivery Info */}
+            <div className="flex items-center gap-2 text-[12px] text-[#A84C32] bg-gradient-to-r from-[#F6D7E0] to-[#FFFFFF] px-3 py-2 mt-4 rounded-[8px] max-w-[230px]">
+              <img src={truck_icon} alt="truck" className="w-4 h-4" />
+              <span>Est. delivery by {order.delivery}</span>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 mt-5">
+              <button className="flex-1 bg-[#4B001A] text-white text-[14px] font-semibold py-2.5 rounded-full">
+                Track Order
+              </button>
+              <button className="flex-1 border border-[#4B001A] text-[#4B001A] text-[14px] font-semibold py-2.5 rounded-full">
+                Cancel Order
+              </button>
             </div>
           </div>
-          <div className="flex flex-col sm:items-end gap-[6px] mt-2 sm:mt-0">
-            <div className="flex items-center justify-center gap-1 text-[12px] font-medium text-[#5A0010] bg-[#FFF5E8] border border-[#5A0010] rounded-full px-3 py-[3px]">
-              <img src={circle} alt="circle" className="w-[8px] h-[8px]" />
-              <span>Shipped</span>
+        ))}
+      </div>
+
+      {/* Delivered Orders */}
+      <div>
+        <h2 className="text-[#2A2A2A] text-[16px] font-semibold font-poppins mb-2">
+          Delivered
+        </h2>
+
+        {deliveredOrders.map((order) => (
+          <div
+            key={order.id}
+            className="border border-[#E0E0E0] rounded-lg bg-white p-5 shadow-sm mb-6"
+          >
+            {/* Header */}
+            <div className="flex justify-between items-center border-b border-[#E0E0E0] pb-3 mb-4">
+              <div className="flex gap-6 p-1">
+                {/* Order Date */}
+                <div className="flex flex-col">
+                  <span className="text-[14px] text-[#4B4B4B] font-medium">
+                    Order Date
+                  </span>
+                  <span className="text-[16px] text-[#2A2A2A] font-semibold mt-1">
+                    {order.date}
+                  </span>
+                </div>
+                {/* Order Number */}
+                <div className="flex flex-col text-start">
+                  <span className="text-[14px] text-[#4B4B4B] font-medium">
+                    Order Number
+                  </span>
+                  <span className="text-[16px] text-[#2A2A2A] font-semibold mt-1">
+                    {order.number}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:items-end gap-[6px] mt-2 sm:mt-0">
+                <button className="text-[#4B001A] text-[12px] font-medium hover:underline">
+                  View Order Details
+                </button>
+              </div>
             </div>
-            <button className="text-[#5A0010] text-[12px] font-medium hover:underline">
-              View Order Details
-            </button>
+
+            {/* Delivery Status */}
+            <p className="text-[14px] font-semibold text-[#2A2A2A] mb-3">
+              Delivered on {order.deliveredOn}
+            </p>
+
+            {/* Product Images */}
+            <div className="flex gap-3 sm:gap-4 items-center flex-wrap">
+              {order.products.map((img, idx) => (
+                <img
+                  key={idx}
+                  src={img}
+                  alt="Product"
+                  className="w-[90px] h-[90px] rounded-[8px] object-cover"
+                />
+              ))}
+            </div>
+
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 mt-5">
+              <button className="flex-1 bg-[#4B001A] text-white text-[14px] font-semibold py-2.5 rounded-full">
+                Track Order
+              </button>
+              <button className="flex-1 border border-[#4B001A] text-[#4B001A] text-[14px] font-semibold py-2.5 rounded-full">
+                Return Order
+              </button>
+            </div>
           </div>
-        </div>
-        {/* Product Images */}
-        <div className="flex gap-3 sm:gap-4 items-center flex-wrap">
-          <img
-            src={product_1}
-            alt="Product"
-            className="w-[90px] h-[90px] rounded-md object-cover"
-          />
-          <img
-            src={product_2}
-            alt="Product"
-            className="w-[90px] h-[90px] rounded-md object-cover"
-          />
-        </div>
-        {/* Delivery Info */}
-        <div className="flex items-center gap-2 text-[12px] text-[#A84C32] bg-gradient-to-r from-[#F6D7E0] to-[#FFFFFF] px-3 py-2 mt-4 rounded-md max-w-[230px]">
-          <img src={truck_icon} alt="truck" className="w-4 h-4" />
-          <span>Est. delivery by 20th Oct</span>
-        </div>
-        {/* Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 mt-5">
-          <button className="flex-1 bg-[#4B001A] text-white text-[14px] font-semibold py-2.5 rounded-full">
-            Track Order
-          </button>
-          <button className="flex-1 border border-[#4B001A] text-[#4B001A] text-[14px] font-semibold py-2.5 rounded-full">
-            Cancel Order
-          </button>
-        </div>
+        ))}
       </div>
     </div>
-    {/* Delivered Orders */}
-    <div>
-      <h2 className="text-[#2A2A2A] text-[13px] font-semibold mb-2">
-        Delivered
-      </h2>
-      <div className="border border-[#E0E0E0] rounded-lg bg-white p-5 shadow-sm">
-        {/* Header */}
-        <div className="flex justify-between items-center border-b border-[#E0E0E0] pb-3 mb-4">
-          <div className="flex gap-6 p-1">
-            {/* Order Date */}
-            <div className="flex flex-col">
-              <span className="text-[14px] text-[#4B4B4B] font-medium">
-                Order Date
-              </span>
-              <span className="text-[16px] text-[#2A2A2A] font-semibold mt-1">
-                12 Oct 2025
-              </span>
-            </div>
-            {/* Order Number */}
-            <div className="flex flex-col text-start">
-              <span className="text-[14px] text-[#4B4B4B] font-medium">
-                Order Number
-              </span>
-              <span className="text-[16px] text-[#2A2A2A] font-semibold mt-1">
-                #123456
-              </span>
-            </div>
-          </div>
-          <div className="flex flex-col sm:items-end gap-[6px] mt-2 sm:mt-0">
-            <button className="text-[#4B001A] text-[12px] font-medium hover:underline">
-              View Order Details
-            </button>
-          </div>
-        </div>
-        {/* Delivery Status */}
-        <p className="text-[14px] font-semibold text-[#2A2A2A] mb-3">
-          Delivered on 20 Oct
-        </p>
-        {/* Product Images */}
-        <div className="flex gap-3 sm:gap-4 items-center flex-wrap">
-          <img
-            src={product_1}
-            alt="Product"
-            className="w-[90px] h-[90px] rounded-md object-cover"
-          />
-          <img
-            src={product_2}
-            alt="Product"
-            className="w-[90px] h-[90px] rounded-md object-cover"
-          />
-        </div>
-        {/* Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 mt-5">
-          <button className="flex-1 bg-[#4B001A] text-white text-[14px] font-semibold py-2.5 rounded-full">
-            Track Order
-          </button>
-          <button className="flex-1 border border-[#4B001A] text-[#4B001A] text-[14px] font-semibold py-2.5 rounded-full">
-            Return Order
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+  );
+};
 
 const renderFavouritesSection = (products, toggleLike, likedProducts) => (
   <div>
@@ -838,7 +916,7 @@ const renderFavouritesSection = (products, toggleLike, likedProducts) => (
         No Products in the favourites page
       </p>
     ) : (
-      <div className="grid grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 gap-6 w-full sm:max-w-[700px]">
+      <div className="grid grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 gap-6 w-full overflow-visible relative">
         {products.map((product) => (
           <div
             key={product.id}
@@ -857,13 +935,36 @@ const renderFavouritesSection = (products, toggleLike, likedProducts) => (
                 isOutOfStock={product.isOutOfStock}
                 onToggle={() => toggleLike(product.id)}
               />
-
             </div>
-            <div className="w-full mt-2 text-left gap-x-2">
-              <p className="text-[#000000] font-semibold text-[14px]">
-                {product.price}
-              </p>
-              <p className="text-[#6D6D6D] text-[14px]">{product.name}</p>
+            <div className="flex justify-between items-center w-full my-3 gap-x-2">
+              <div>
+                <p className="text-[13px] font-semibold sm:text-[18px] text-[#313131]">
+                  {product.name}
+                </p>
+                <p className="text-[#4E4E4E] font-semibold text-[16px]">
+                  {product.price}
+                </p>
+              </div>
+              {/* Ellipse */}
+              <div className="mt-1.5 flex items-center justify-between">
+                <div className="flex justify-center gap-x-2.5 mr-1">
+                  <img
+                    className=" w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                    src={gold_ellipse}
+                    alt="gold ellipse"
+                  />
+                  <img
+                    className=" w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                    src={silver_ellipse}
+                    alt="Silver ellipse"
+                  />
+                  <img
+                    className=" w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                    src={brown_ellipse}
+                    alt="brown ellipse"
+                  />
+                </div>
+              </div>
             </div>
             <AddToCartButton />
           </div>
