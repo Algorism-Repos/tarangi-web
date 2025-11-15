@@ -721,19 +721,19 @@ const renderOrdersSection = () => (
   <div className="space-y-10 max-w-[634px]">
     {/* Upcoming Orders */}
     <div>
-      <h2 className="text-[#2A2A2A] text-[13px] font-semibold mb-2">
+      <h2 className="text-[#2A2A2A] text-[16px] font-semibold mb-2">
         Upcoming Orders
       </h2>
-      <div className="border border-[#E0E0E0] rounded-lg bg-white p-5 shadow-sm">
+      <div className="border border-[#E0E0E0] rounded-lg bg-white p-4 shadow-sm">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center border-b border-[#E0E0E0] pb-3 mb-4 w-full">
-          <div className="flex gap-6 p-1">
+        <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center border-b border-[#ADADAD] pb-3 mb-4 w-full">
+          <div className="flex gap-8 p-1">
             {/* Order Date */}
             <div className="flex flex-col">
-              <span className="text-[14px] text-[#4B4B4B] font-medium">
+              <span className="text-[14px] text-[#595959] font-medium">
                 Order Date
               </span>
-              <span className="text-[16px] text-[#2A2A2A] font-semibold mt-1">
+              <span className="text-[16px] text-[##2A2A2A] font-semibold mt-1">
                 12 Oct 2025
               </span>
             </div>
@@ -748,11 +748,11 @@ const renderOrdersSection = () => (
             </div>
           </div>
           <div className="flex flex-col sm:items-end gap-[6px] mt-2 sm:mt-0">
-            <div className="flex items-center justify-center gap-1 text-[12px] font-medium text-[#5A0010] bg-[#FFF5E8] border border-[#5A0010] rounded-full px-3 py-[3px]">
-              <img src={circle} alt="circle" className="w-[8px] h-[8px]" />
+            <div className="flex items-center justify-center gap-2 text-[13px] font-medium text-[#5A0010] bg-[#FFF5E8] border border-[#5A0010] rounded-full px-3 py-[3px]">
+              <img src={circle} alt="circle" className="w-[10px] h-[10px]" />
               <span>Shipped</span>
             </div>
-            <button className="text-[#5A0010] text-[12px] font-medium hover:underline">
+            <button className="text-[#6E0027] text-[13px] font-medium hover:underline">
               View Order Details
             </button>
           </div>
@@ -771,12 +771,12 @@ const renderOrdersSection = () => (
           />
         </div>
         {/* Delivery Info */}
-        <div className="flex items-center gap-2 text-[12px] text-[#A84C32] bg-gradient-to-r from-[#F6D7E0] to-[#FFFFFF] px-3 py-2 mt-4 rounded-md max-w-[230px]">
+        <div className="flex items-center gap-2 text-[12px] text-[#A84C32] bg-gradient-to-r from-[#F6D7E0] to-[#FFFFFF] px-3 py-2 mt-3 rounded-md max-w-[230px]">
           <img src={truck_icon} alt="truck" className="w-4 h-4" />
           <span>Est. delivery by 20th Oct</span>
         </div>
         {/* Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 mt-5">
+        <div className="flex flex-col sm:flex-row gap-3 mt-4">
           <button className="flex-1 bg-[#4B001A] text-white text-[14px] font-semibold py-2.5 rounded-full">
             Track Order
           </button>
@@ -788,13 +788,13 @@ const renderOrdersSection = () => (
     </div>
     {/* Delivered Orders */}
     <div>
-      <h2 className="text-[#2A2A2A] text-[13px] font-semibold mb-2">
-        Delivered
+      <h2 className="text-[#2A2A2A] text-[16px] font-semibold mb-2">
+       Delivered
       </h2>
-      <div className="border border-[#E0E0E0] rounded-lg bg-white p-5 shadow-sm">
+      <div className="border border-[#E0E0E0] rounded-lg bg-white p-4 shadow-sm">
         {/* Header */}
-        <div className="flex justify-between items-center border-b border-[#E0E0E0] pb-3 mb-4">
-          <div className="flex gap-6 p-1">
+        <div className="flex justify-between items-center border-b border-[#ADADAD] pb-3 mb-3">
+          <div className="flex gap-8 p-1">
             {/* Order Date */}
             <div className="flex flex-col">
               <span className="text-[14px] text-[#4B4B4B] font-medium">
@@ -815,13 +815,13 @@ const renderOrdersSection = () => (
             </div>
           </div>
           <div className="flex flex-col sm:items-end gap-[6px] mt-2 sm:mt-0">
-            <button className="text-[#4B001A] text-[12px] font-medium hover:underline">
+            <button className="text-[#4B001A] text-[14px] font-medium hover:underline">
               View Order Details
             </button>
           </div>
         </div>
         {/* Delivery Status */}
-        <p className="text-[14px] font-semibold text-[#2A2A2A] mb-3">
+        <p className="text-[18px] font-semibold text-[#2A2A2A] mb-2">
           Delivered on 20 Oct
         </p>
         {/* Product Images */}

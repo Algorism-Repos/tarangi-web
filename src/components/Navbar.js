@@ -47,7 +47,7 @@ function Navbar() {
   return (
     <>
       {/* Navbar - large screens */}
-      <div className="bg-primary lg:flex flex-row justify-between items-center w-full py-5 px-7 hidden">
+      <div className="bg-[#6E0027] lg:flex flex-row justify-between items-center w-full py-5 px-7 hidden">
         {/* Logo */}
         <Link to="/home">
           <img src={logo} alt="brand-logo" className="w-[106px] h-[71px]" />
@@ -73,6 +73,12 @@ function Navbar() {
           >
             <p className={getLinkClass("/products")}>Products</p>
           </Link>
+           <Link
+            className="hover:bg-[#D6A76F4F] rounded-full py-2.5 px-4"
+            to="/blog"
+          >
+            <p className={getLinkClass("/blog")}>Blog</p>
+          </Link>
         </div>
 
         {/* Right Side Icons */}
@@ -85,11 +91,10 @@ function Navbar() {
                 onClick={() => setActiveIcon("favourites")}
               >
                 <div
-                  className={`w-[42px] h-[42px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${
-                    activeIcon === "favourites"
+                  className={`w-[42px] h-[42px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${activeIcon === "favourites"
                       ? "bg-[#CFA266]"
                       : "hover:bg-[#D6A76F4F]"
-                  }`}
+                    }`}
                 >
                   <img src={favourite_icon} alt="favourite icon" />
                 </div>
@@ -97,11 +102,10 @@ function Navbar() {
 
               <Link to="/cart" onClick={() => setActiveIcon("cart")}>
                 <div
-                  className={`w-[42px] h-[42px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${
-                    activeIcon === "cart"
+                  className={`w-[42px] h-[42px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${activeIcon === "cart"
                       ? "bg-[#CFA266]"
                       : "hover:bg-[#D6A76F4F]"
-                  }`}
+                    }`}
                 >
                   <img src={cartIcon} alt="Cart icon" />
                 </div>
@@ -109,15 +113,15 @@ function Navbar() {
 
               <Link to="/profile" onClick={() => setActiveIcon("profile")}>
                 <div
-                  className={`w-[42px] h-[42px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${
-                    activeIcon === "profile"
+                  className={`w-[42px] h-[42px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${activeIcon === "profile"
                       ? "bg-[#CFA266]"
                       : "hover:bg-[#D6A76F4F]"
-                  }`}
+                    }`}
                 >
                   <img src={profile_icon} alt="profile" />
                 </div>
               </Link>
+              
             </>
           ) : (
             //  Not logged in: show buttons
@@ -153,17 +157,18 @@ function Navbar() {
         />
 
         <div className="flex gap-x-2">
-          <Link to="/favourites">
-            <img
-              className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F]"
-              src={favourite_icon}
-              alt="favourite icon"
-            />
-          </Link>
+
 
           {/*  Show all icons if logged in */}
           {isLoggedIn && (
             <>
+              <Link to="/favourites">
+                <img
+                  className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F]"
+                  src={favourite_icon}
+                  alt="favourite icon"
+                />
+              </Link>
               <Link to="/cart">
                 <img
                   className="w-[34px] h-[34px] rounded-[8px] hover:bg-[#D6A76F4F]"
@@ -188,12 +193,12 @@ function Navbar() {
             <div className="flex flex-row items-center justify-between w-full">
               <img
                 src={close}
-                className="w-[30px] h-[30px] cursor-pointer"
+                className="w-[30px] h-[30px] cursor-pointer "
                 onClick={() => setMenuVisible(false)}
               />
-              <img src={logo} className="w-[85px] h-[55px] cursor-pointer" />
+              <img src={logo} className="w-[85px] h-[55px] cursor-pointer absolute top-9 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
 
-              <div className="flex gap-x-2">
+              <div className="flex gap-x-2 mt-10">
                 {/*  Show all icons when logged in */}
                 {isLoggedIn && (
                   <>
@@ -202,11 +207,10 @@ function Navbar() {
                       onClick={() => setActiveIcon("favourites")}
                     >
                       <div
-                        className={`w-[32px] h-[32px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${
-                          activeIcon === "favourites"
+                        className={`w-[32px] h-[32px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${activeIcon === "favourites"
                             ? "bg-[#CFA266]"
                             : "hover:bg-[#D6A76F4F]"
-                        }`}
+                          }`}
                       >
                         <img src={favourite_icon} alt="favourite icon" />
                       </div>
@@ -214,11 +218,10 @@ function Navbar() {
 
                     <Link to="/cart" onClick={() => setActiveIcon("cart")}>
                       <div
-                        className={`w-[32px] h-[32px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${
-                          activeIcon === "cart"
+                        className={`w-[32px] h-[32px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${activeIcon === "cart"
                             ? "bg-[#CFA266]"
                             : "hover:bg-[#D6A76F4F]"
-                        }`}
+                          }`}
                       >
                         <img src={cartIcon} alt="Cart icon" />
                       </div>
@@ -229,11 +232,10 @@ function Navbar() {
                       onClick={() => setActiveIcon("profile")}
                     >
                       <div
-                        className={`w-[32px] h-[32px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${
-                          activeIcon === "profile"
+                        className={`w-[32px] h-[32px] rounded-[8px] flex items-center justify-center transition-all duration-200 ${activeIcon === "profile"
                             ? "bg-[#CFA266]"
                             : "hover:bg-[#D6A76F4F]"
-                        }`}
+                          }`}
                       >
                         <img src={profile_icon} alt="profile" />
                       </div>
@@ -247,18 +249,17 @@ function Navbar() {
               {["/home", "/about", "/products"].map((path) => (
                 <Link to={path} key={path}>
                   <h2
-                    className={`font-poppins text-[16px] leading-normal text-center ${
-                      location.pathname === path
+                    className={`font-poppins text-[16px] leading-normal text-center ${location.pathname === path
                         ? "text-white font-semibold"
                         : "text-[#A0A0A0]"
-                    }`}
+                      }`}
                     onClick={() => setMenuVisible(false)}
                   >
                     {path === "/home"
                       ? "Home"
                       : path === "/about"
-                      ? "About Us"
-                      : "Products"}
+                        ? "About Us"
+                        : "Products"}
                   </h2>
                 </Link>
               ))}
