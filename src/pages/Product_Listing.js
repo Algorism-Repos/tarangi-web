@@ -49,7 +49,7 @@ function Product_Listing({ productCatergory }) {
   return (
     <>
       <div
-        className="w-full  mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-y-10 sm:gap-x-[30px] px-1.5"
+        className="w-full  mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-y-10 sm:gap-x-[30px] px-1.5 "
         onClick={ScrollToTop}
       >
         {products.map((item) => {

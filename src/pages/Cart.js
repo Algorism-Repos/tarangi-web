@@ -1,4 +1,4 @@
-import React, { useState ,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router";
 import QuantitySelector from "../components/QuantitySelector";
 
@@ -17,34 +17,33 @@ function Cart() {
   };
 
   // Cart items data
-const [cartItems, setCartItems] = useState([
-  {
-    id: 1,
-    name: "Stone Necklace",
-    price: 10000,
-    color: "Gold",
-    image: product_1,
-  },
-  {
-    id: 2,
-    name: "Silver Kada",
-    price: 4000,
-    color: "Silver",
-    image: product_2,
-  },
-]);
+  const [cartItems, setCartItems] = useState([
+    {
+      id: 1,
+      name: "Stone Necklace",
+      price: 10000,
+      color: "Gold",
+      image: product_1,
+    },
+    {
+      id: 2,
+      name: "Silver Kada",
+      price: 4000,
+      color: "Silver",
+      image: product_2,
+    },
+  ]);
 
-useEffect(() => {
-  localStorage.setItem("cartItems", JSON.stringify(cartItems));
-}, [cartItems]);
-
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const removeItem = (id) => {
     setCartItems(cartItems.filter((item) => item.id !== id));
   };
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price, 0);
-  const tax =  800; 
+  const tax = 800;
   const total = subtotal + tax;
 
   return (
@@ -63,10 +62,9 @@ useEffect(() => {
             {/* Selected Productlist */}
             <div className="w-[694px] mx-auto xl:mx-0 max-[425px]:w-full max-[375px]:w-full ">
               {cartItems.length === 0 ? (
-                  <h3 className="text-center text-[18px] text-[#4B001A] mt-6 font-poppins">
-                    No Products in the Cart
-                  </h3>
-                
+                <h3 className="text-center text-[18px] text-[#4B001A] mt-6 font-poppins">
+                  No Products in the Cart
+                </h3>
               ) : (
                 cartItems.map((item) => (
                   <div
@@ -206,7 +204,7 @@ useEffect(() => {
             )}
           </div>
 
-                    {/* Recommended products */}
+          {/* Recommended products */}
           <div className="my-[100px] px-5 md:px-0 max-[425px]:my-[60px]">
             <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left max-[425px]:text-[22px]">
               Frequently bought together
@@ -324,7 +322,6 @@ useEffect(() => {
                   </div>
                 </div>
               )}
-
               <Pincode_Input />
               <div className="w-full bg-[#FFFAF3] flex items-center justify-between px-5 py-3 z-50 bottom-0 left-0">
                 <div>

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import { useFormik, Formik } from "formik";
+import { useFormik } from "formik";
+import { Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
+
 
 import userIcon from "../assets/user.png";
 import addressIcon from "../assets/address.png";
@@ -23,10 +26,72 @@ import circle from "../assets/Ellipse 12.png";
 
 import AddToCartButton from "../components/AddToCartButton";
 import LikeButton from "../components/LikeButton";
+import logout_icon from "../assets/logout_icon.png";
+
+import gold_ellipse from "../assets/Products/gold_ellipse.png";
+import silver_ellipse from "../assets/Products/silver_ellipse.png";
+import brown_ellipse from "../assets/Products/brown_ellipse.png";
+
+// ✅ Move schema definition here so it’s in scope
+const addressValidationSchema = Yup.object({
+  id: Yup.number().nullable(),
+  name: Yup.string().required("Name is required"),
+  address: Yup.string().required("Address is required"),
+  details: Yup.string(),
+  city: Yup.string().required("City is required"),
+  pin: Yup.string()
+    .matches(/^[0-9]{6}$/, "Enter a valid 6-digit PIN")
+    .required("PIN code is required"),
+  state: Yup.string().required("State is required"),
+  country: Yup.string().required("Country is required"),
+});
 
 const Profile = () => {
   const [activeSection, setActiveSection] = useState("Your Profile");
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(true);
+  const [hasSavedOnce, setHasSavedOnce] = useState(false);
+
+  const formik = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      mobile: "",
+      email: "",
+    },
+    validationSchema: Yup.object({
+      firstName: Yup.string().required("First name is required"),
+      lastName: Yup.string().required("Last name is required"),
+      mobile: Yup.string()
+        .matches(/^[0-9]{10}$/, "Enter a valid 10-digit number")
+        .required("Mobile number is required"),
+      email: Yup.string().email("Invalid email").required("Email is required"),
+    }),
+    onSubmit: (values) => {
+      console.log("✅ Form Submitted:", values);
+    },
+  });
+
+  const handleEdit = () => setIsEditing(true);
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
+  const handleSave = async () => {
+    const errors = await formik.validateForm();
+    formik.setTouched({
+      firstName: true,
+      lastName: true,
+      mobile: true,
+      email: true,
+    });
+
+    if (Object.keys(errors).length === 0) {
+      formik.handleSubmit();
+      setHasSavedOnce(true);
+      setIsEditing(false);
+    } else {
+      setIsEditing(true);
+    }
+  };
 
   const [openSections, setOpenSections] = useState({
     profile: false,
@@ -52,15 +117,20 @@ const Profile = () => {
       liked: true,
       isOutOfStock: false,
     },
+    {
+      id: 3,
+      src: product_2,
+      price: "₹4,000",
+      name: "Silver Kada",
+      liked: true,
+      isOutOfStock: false,
+    },
   ]);
 
-  const toggleLike = (id) => {
-    setProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === id ? { ...product, liked: !product.liked } : product
-      )
+  const toggleLike = (id) =>
+    setProducts((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, liked: !p.liked } : p))
     );
-  };
 
   const likedProducts = products.filter((p) => p.liked);
 
@@ -74,7 +144,7 @@ const Profile = () => {
     });
   };
 
-  // ---------------- Address state & handlers ----------------
+  // Address logic
   const [addresses, setAddresses] = useState([
     {
       id: 1,
@@ -99,16 +169,9 @@ const Profile = () => {
     },
   ]);
 
-  // id of address currently being edited (null if none)
-  const [editingAddressId, setEditingAddressId] = useState(
-    addresses[0]?.id ?? null
-  );
-
-  // Helper to generate next id
-  const nextAddressId = () => {
-    if (addresses.length === 0) return 1;
-    return Math.max(...addresses.map((a) => a.id)) + 1;
-  };
+  const [editingAddressId, setEditingAddressId] = useState(null);
+  const nextAddressId = () =>
+    addresses.length === 0 ? 1 : Math.max(...addresses.map((a) => a.id)) + 1;
 
   const handleAddNew = () => {
     const newId = nextAddressId();
@@ -121,32 +184,27 @@ const Profile = () => {
       pin: "",
       state: "",
       country: "",
-      isNew: true, 
+      isNew: true,
     };
     setAddresses((prev) => [newAddr, ...prev]);
     setEditingAddressId(newId);
   };
 
-  const handleAddressEditClick = (addressId) => {
-    setEditingAddressId(addressId);
-  };
+  const handleAddressEditClick = (id) => setEditingAddressId(id);
 
   const handleAddressSave = (values, { setSubmitting }) => {
     setAddresses((prev) =>
-      prev.map((addr) =>
-        addr.id === values.id ? { ...values, isNew: false } : addr
-      )
+      prev.map((a) => (a.id === values.id ? { ...values, isNew: false } : a))
     );
     setEditingAddressId(null);
-    setSubmitting(true);
+    setSubmitting(false);
+    console.log("✅ Address Saved:", values);
   };
 
-  const handleAddressCancel = (addrId) => {
-    const addr = addresses.find((a) => a.id === addrId);
-    if (addr && addr.isNew) {
-      // remove if it was a new slot
-      setAddresses((prev) => prev.filter((a) => a.id !== addrId));
-    }
+  const handleAddressCancel = (id) => {
+    const addr = addresses.find((a) => a.id === id);
+    if (addr && addr.isNew)
+      setAddresses((prev) => prev.filter((a) => a.id !== id));
     setEditingAddressId(null);
   };
 
@@ -155,47 +213,36 @@ const Profile = () => {
     if (editingAddressId === id) setEditingAddressId(null);
   };
 
-  // Profile form (Formik) & handlers 
-  const handleEdit = () => setIsEditing(true);
-  const handleCancel = () => {
-    formik.resetForm();
-    setIsEditing(false);
-  };
-  const handleSave = () => {
-    formik.handleSubmit();
-    setIsEditing(false);
-  };
-
-  const formik = useFormik({
-    initialValues: {
-      firstName: "",
-      lastName: "",
-      mobile: "",
-      email: "",
-    },
-    validationSchema: Yup.object({
-      firstName: Yup.string().required("First name is required"),
-      lastName: Yup.string().required("Last name is required"),
-      mobile: Yup.string()
-        .matches(/^[0-9]{10}$/, "Enter a valid 10-digit number")
-        .required("Mobile number is required"),
-      email: Yup.string().email("Invalid email").required("Email is required"),
-    }),
-    onSubmit: (values) => {
-      console.log(values);
-    },
-  });
-
   const menuItems = [
     { name: "Your Profile", icon: userIcon, activeIcon: userIconActive },
     { name: "Saved Address", icon: addressIcon, activeIcon: addressIconActive },
     { name: "Orders", icon: ordersIcon, activeIcon: ordersIconActive },
     { name: "Favourites", icon: favIcon, activeIcon: favIconActive },
   ];
+  // logout function
+const navigate = useNavigate();
+
+const handleLogout = () => {
+  // Update login status
+  localStorage.setItem("isLoggedIn", "false");
+
+  // Clear user-related data
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("userData");
+
+  // This triggers your useEffect’s storage event
+  window.dispatchEvent(new Event("storage"));
+
+  // Navigate to login page
+  navigate("/login");
+};
+
+
+
 
   return (
     <div className="min-h-[972px] bg-[#FFF5E8] py-16 px-4 sm:px-6 lg:px-16 xl:px-28">
-      <div className="max-w-[1110px] mx-auto space-y-14 ">
+      <div className="max-w-[1280px] mx-auto space-y-20  ">
         <div className="md:flex flex-auto justify-items-center">
           <h1 className=" font-atteron  text-[#5A0010] text-[28px] leading-[42px] ">
             PROFILE
@@ -204,19 +251,18 @@ const Profile = () => {
 
         {/* DESKTOP LAYOUT */}
         <div className="hidden md:flex flex-row gap-10 md:gap-16">
-          <div className="w-[220px] flex flex-col gap-4">
+          <div className="w-[220px] flex flex-col gap-8">
             {menuItems.map((item) => {
               const isActive = activeSection === item.name;
               return (
                 <button
                   key={item.name}
                   onClick={() => setActiveSection(item.name)}
-                  className={`flex items-center gap-3 px-5 py-3 rounded-md text-sm font-poppins transition-all w-full
-            ${
-              isActive
-                ? "bg-[#5A0010] text-white"
-                : "text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010]"
-            }`}
+                  className={`flex items-center gap-3 px-5 py-3 rounded-[8px] text-[16px] font-poppins transition-all w-full
+            ${isActive
+                      ? "bg-[#5A0010] text-white"
+                      : "text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010]"
+                    }`}
                 >
                   <img
                     src={isActive ? item.activeIcon : item.icon}
@@ -227,6 +273,17 @@ const Profile = () => {
                 </button>
               );
             })}
+
+            <button
+              onClick={handleLogout} className="flex items-center gap-3 px-5 py-3  mt-[275px] text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
+            >
+              <img
+                src={logout_icon}
+                alt="Logout"
+                className="w-[30px] h-[30px] object-contain"
+              />
+              Logout
+            </button>
           </div>
 
           <div className="flex-1 bg-transparent">
@@ -236,8 +293,10 @@ const Profile = () => {
                 isEditing,
                 handleEdit,
                 handleSave,
-                handleCancel
+                handleCancel,
+                hasSavedOnce
               )}
+
             {activeSection === "Saved Address" &&
               renderAddressSection(
                 addresses,
@@ -248,6 +307,7 @@ const Profile = () => {
                 handleAddressCancel,
                 handleAddressDelete
               )}
+
             {activeSection === "Orders" && renderOrdersSection()}
             {activeSection === "Favourites" &&
               renderFavouritesSection(products, toggleLike, likedProducts)}
@@ -284,7 +344,8 @@ const Profile = () => {
                   isEditing,
                   handleEdit,
                   handleSave,
-                  handleCancel
+                  handleCancel,
+                  hasSavedOnce
                 )}
               </div>
             )}
@@ -381,6 +442,16 @@ const Profile = () => {
               </div>
             )}
           </div>
+          <button
+            onClick={handleLogout} className="flex items-center gap-3 px-5 py-3  mt-[275px] text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
+          >
+            <img
+              src={logout_icon}
+              alt="Logout"
+              className="w-[30px] h-[30px] object-contain"
+            />
+            Logout
+          </button>
         </div>
       </div>
     </div>
@@ -394,10 +465,11 @@ const renderProfileSection = (
   isEditing,
   handleEdit,
   handleSave,
-  handleCancel
+  handleCancel,
+  hasSavedOnce
 ) => (
-  <div className="max-w-[633px] w-full space-y-6">
-    <h2 className="text-[#5A0010] text-sm font-semibold mb-[4px]">
+  <div className="max-w-[633px] w-full space-y-1.5">
+    <h2 className="text-[#6E0027] text-[14px] font-semibold font-poppins mb-[4px]">
       Contact Details
     </h2>
     <form
@@ -410,11 +482,11 @@ const renderProfileSection = (
             type="text"
             disabled={!isEditing}
             name="firstName"
-            placeholder="John"
+            placeholder="First Name"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.firstName}
-            className="w-full border border-[#D9D9D9] rounded-md px-4 py-3.5 text-sm focus:outline-none placeholder:text-[#2A2A2A] placeholder:font-medium bg-white disabled:cursor-not-allowed"
+            className="w-full border border-[#ADADAD] rounded-[8px] px-4 py-3.5 text-sm focus:outline-none  placeholder-[#979797] placeholder:font-normal  bg-white disabled:cursor-not-allowed"
           />
           {formik.touched.firstName && formik.errors.firstName && (
             <p className="text-red-500 text-xs mt-1">
@@ -427,11 +499,11 @@ const renderProfileSection = (
             type="text"
             disabled={!isEditing}
             name="lastName"
-            placeholder="Doe"
+            placeholder="Last Name"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.lastName}
-            className="w-full border border-[#D9D9D9] rounded-md px-4 py-3.5 text-sm focus:outline-none placeholder:text-[#2A2A2A] placeholder:font-medium bg-white disabled:cursor-not-allowed"
+            className="w-full border border-[#ADADAD] rounded-[8px] px-4 py-3.5 text-sm focus:outline-none  placeholder-[#979797] placeholder:font-normal bg-white disabled:cursor-not-allowed"
           />
           {formik.touched.lastName && formik.errors.lastName && (
             <p className="text-red-500 text-xs mt-1">
@@ -442,20 +514,20 @@ const renderProfileSection = (
       </div>
 
       <div>
-        <div className="flex items-center w-full py-3.5 px-3 border border-[#efe6e6] rounded-md text-sm bg-white disabled:cursor-not-allowed">
+        <div className="flex items-center w-full py-3.5 px-3 border border-[#ADADAD] rounded-[8px] text-sm bg-white disabled:cursor-not-allowed">
           <span className="text-[#800020] font-semibold mr-2 whitespace-nowrap">
             IN +91
           </span>
-          <span className="h-5 w-px bg-gray-300 mr-2"></span>
+          <span className="h-5 w-px bg-[#ADADAD] mr-2"></span>
           <input
             type="text"
             disabled={!isEditing}
             name="mobile"
-            placeholder="00000 00000"
+            placeholder="Phone Number"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.mobile}
-            className="flex-1 bg-transparent font-light focus:outline-none placeholder-[#2A2A2A]"
+            className="flex-1 bg-white font-light focus:outline-none  placeholder-[#979797] placeholder:font-normal"
           />
         </div>
         {formik.touched.mobile && formik.errors.mobile && (
@@ -468,11 +540,11 @@ const renderProfileSection = (
           type="email"
           disabled={!isEditing}
           name="email"
-          placeholder="johndoe@gmail.com"
+          placeholder="Email ID"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.email}
-          className="w-full border border-[#D9D9D9] rounded-md px-4 py-3.5 text-sm focus:outline-none placeholder:text-[#2A2A2A] placeholder:font-medium bg-white disabled:cursor-not-allowed"
+          className="w-full border border-[#ADADAD] rounded-[8px] px-4 py-3.5 text-sm focus:outline-none  placeholder-[#979797] placeholder:font-normal bg-white disabled:cursor-not-allowed"
         />
         {formik.touched.email && formik.errors.email && (
           <p className="text-red-500 text-xs mt-1">{formik.errors.email}</p>
@@ -480,7 +552,27 @@ const renderProfileSection = (
       </div>
 
       <div className="flex gap-3 mt-4 justify-end">
-        {isEditing ? (
+        {!hasSavedOnce && isEditing && (
+          <button
+            type="button"
+            onClick={handleSave}
+            className="bg-[#5A0010] text-white px-6 py-2 rounded-lg font-medium text-[14px]"
+          >
+            Save
+          </button>
+        )}
+
+        {hasSavedOnce && !isEditing && (
+          <button
+            type="button"
+            onClick={handleEdit}
+            className="bg-[#5A0010] text-white px-6 py-2 rounded-lg font-medium text-[14px]"
+          >
+            Edit
+          </button>
+        )}
+
+        {hasSavedOnce && isEditing && (
           <>
             <button
               type="button"
@@ -492,37 +584,16 @@ const renderProfileSection = (
             <button
               type="button"
               onClick={handleCancel}
-              className="border border-[#5A0010] text-[#5A0010] px-6 py-2 rounded-md font-medium text-[14px]"
+              className="border border-[#5A0010] text-[#5A0010] px-6 py-2 rounded-[8px] font-medium text-[14px]"
             >
               Cancel
             </button>
           </>
-        ) : (
-          <button
-            type="button"
-            onClick={handleEdit}
-            className="bg-[#5A0010] text-white px-6 py-2 rounded-lg font-medium text-[14px]"
-          >
-            Edit
-          </button>
         )}
       </div>
     </form>
   </div>
 );
-
-const addressValidationSchema = Yup.object({
-  id: Yup.number().required(),
-  name: Yup.string().required("Name is required"),
-  address: Yup.string().required("Address is required"),
-  details: Yup.string().nullable(),
-  city: Yup.string().required("City is required"),
-  pin: Yup.string()
-    .matches(/^[0-9]{6}$/, "Enter a valid 6-digit pin")
-    .required("Pin code is required"),
-  state: Yup.string().required("State is required"),
-  country: Yup.string().required("Country is required"),
-});
 
 const renderAddressSection = (
   addresses,
@@ -537,18 +608,17 @@ const renderAddressSection = (
     <div className="flex justify-end">
       <button
         onClick={handleAddNew}
-        className="bg-[#5A0010] text-white px-4 py-2 rounded-md text-[14px] mb-4"
+        className="bg-[#5A0010] text-white px-4 py-2 rounded-[8px] text-[14px] mb-4"
       >
-        + New Slot
+        + Add Address
       </button>
     </div>
 
     {addresses.map((addr) => (
       <div
         key={addr.id}
-        className="relative border border-[#D9D9D9] rounded-md p-4 bg-white shadow-[14px]"
+        className="relative border border-[#ADADAD] rounded-[8px] p-4 bg-white"
       >
-        {/* hide icons while this card is being edited */}
         {editingAddressId !== addr.id && (
           <div className="absolute top-3 right-3 flex gap-3">
             <img
@@ -569,127 +639,94 @@ const renderAddressSection = (
         {editingAddressId === addr.id ? (
           <Formik
             initialValues={{
-              name: addr.name ?? "",
-              address: addr.address ?? "",
-              city: addr.city ?? "",
-              pin: addr.pin ?? "",
-              state: addr.state ?? "",
-              country: addr.country ?? "",
-              isNew: addr.isNew ?? false,
+              id: addr.id,
+              name: addr.name || "",
+              address: addr.address || "",
+              details: addr.details || "",
+              city: addr.city || "",
+              pin: addr.pin || "",
+              state: addr.state || "",
+              country: addr.country || "",
+              isNew: addr.isNew || false,
             }}
             validationSchema={addressValidationSchema}
             onSubmit={handleSave}
             enableReinitialize
           >
-            {({
-              values,
-              handleChange,
-              handleSubmit,
-              errors,
-              touched,
-              isSubmitting,
-            }) => (
+            {({ values, handleChange, handleSubmit, errors, touched }) => (
               <form className="space-y-3" onSubmit={handleSubmit}>
                 <input
-                  type="text"
                   name="name"
                   value={values.name}
                   onChange={handleChange}
                   placeholder="Name"
-                  className="w-full border border-[#D9D9D9] rounded-md px-3 py-2 text-[14px] placeholder:text-[#595959]"
+                  className="w-full border  border-[#ADADAD] px-3 py-2 rounded-[8px] text-[14px]  placeholder-[#979797] placeholder:font-normal"
                 />
                 {touched.name && errors.name && (
                   <p className="text-red-500 text-xs">{errors.name}</p>
                 )}
 
                 <input
-                  type="text"
                   name="address"
                   value={values.address}
                   onChange={handleChange}
                   placeholder="Address Line"
-                  className="w-full border border-[#D9D9D9] rounded-md px-3 py-2 text-[14px] placeholder:text-[#595959]"
+                  className="w-full border  border-[#ADADAD] px-3 py-2 rounded-[8px] text-[14px]  placeholder-[#979797] placeholder:font-normal"
                 />
                 {touched.address && errors.address && (
                   <p className="text-red-500 text-xs">{errors.address}</p>
                 )}
+
                 <input
-                  type="text"
-                  name="detail"
-                  placeholder="Detail"
-                  className="w-full border border-[#D9D9D9] rounded-md px-3 py-2 text-[14px] placeholder:text-[#595959]"
+                  name="details"
+                  value={values.details}
+                  onChange={handleChange}
+                  placeholder="Details"
+                  className="w-full border  border-[#ADADAD] px-3 py-2 rounded-[8px] text-[14px]  placeholder-[#979797] placeholder:font-normal"
                 />
 
-                <div className="grid grid-cols-2 gap-2  ">
+                <div className="grid grid-cols-2 gap-2">
                   <input
-                    type="text"
                     name="city"
                     value={values.city}
                     onChange={handleChange}
                     placeholder="City"
-                    className="flex-1 border border-[#D9D9D9] rounded-md px-3 py-2 text-[14px] placeholder:text-[#595959]"
+                    className="border  border-[#ADADAD] px-3 py-2 rounded-[8px] text-[14px]  placeholder-[#979797] placeholder:font-normal"
                   />
-                  {touched.city && errors.city && (
-                    <p className="text-red-500 text-xs w-full mt-1">
-                      {errors.city}
-                    </p>
-                  )}
-
                   <input
-                    type="text"
                     name="pin"
                     value={values.pin}
                     onChange={handleChange}
                     placeholder="Pin Code"
-                    className="flex-1 border border-[#D9D9D9] rounded-md px-3 py-2 text-[14px] placeholder:text-[#595959]"
+                    className="border  border-[#ADADAD] px-3 py-2 rounded-[8px] text-[14px]  placeholder-[#979797] placeholder:font-normal"
                   />
-                  {touched.pin && errors.pin && (
-                    <p className="text-red-500 text-xs w-full mt-1">
-                      {errors.pin}
-                    </p>
-                  )}
-
                   <input
-                    type="text"
                     name="state"
                     value={values.state}
                     onChange={handleChange}
                     placeholder="State"
-                    className="flex-1 border border-[#D9D9D9] rounded-md px-3 py-2 text-[14px] placeholder:text-[#595959]"
+                    className="border  border-[#ADADAD] px-3 py-2 rounded-[8px] text-[14px]  placeholder-[#979797] placeholder:font-normal"
                   />
-                  {touched.state && errors.state && (
-                    <p className="text-red-500 text-xs w-full mt-1">
-                      {errors.state}
-                    </p>
-                  )}
-
                   <input
-                    type="text"
                     name="country"
                     value={values.country}
                     onChange={handleChange}
                     placeholder="Country"
-                    className="flex-1 border border-[#D9D9D9] rounded-md px-3 py-2 text-[14px] placeholder:text-[#595959]"
+                    className="border  border-[#ADADAD] px-3 py-2 rounded-[8px] text-[14px]  placeholder-[#979797] placeholder:font-normal"
                   />
-                  {touched.country && errors.country && (
-                    <p className="text-red-500 text-xs w-full mt-1">
-                      {errors.country}
-                    </p>
-                  )}
                 </div>
 
                 <div className="flex gap-3 mt-2">
                   <button
                     type="submit"
-                    disabled={isSubmitting}
-                    className="bg-[#5A0010] text-white px-4 py-2 rounded-md text-[14px] placeholder:text-[#595959]"
+                    className="bg-[#5A0010] text-white px-6 py-2 rounded-lg text-[14px]"
                   >
                     Save
                   </button>
                   <button
                     type="button"
                     onClick={() => handleCancel(values.id)}
-                    className="border border-[#5A0010] text-[#5A0010] px-4 py-2 rounded-md text-[14px] placeholder:text-[#595959]"
+                    className="border border-[#5A0010] text-[#5A0010] px-6 py-2 rounded-[8px] text-[14px]"
                   >
                     Cancel
                   </button>
@@ -698,17 +735,12 @@ const renderAddressSection = (
             )}
           </Formik>
         ) : (
-          <div className="space-y-1">
-            <p className="text-[#000000] font-semibold text-[14px]">
-              {addr.name || "—"}
-            </p>
-            <p className="text-[#000000] text-[13px]">{addr.address || "—"}</p>
-            <p className="text-[#555555] text-[13px] leading-relaxed">
-              {addr.details || ""}
-            </p>
-            <p className="text-[#000000] text-[13px] font-medium">
-              {addr.city || "—"} • {addr.state || "—"} • {addr.country || "—"} •
-              Pin: {addr.pin || "—"}
+          <div>
+            <p className="font-semibold">{addr.name}</p>
+            <p>{addr.address}</p>
+            <p>{addr.details}</p>
+            <p>
+              {addr.city}, {addr.state}, {addr.country} - {addr.pin}
             </p>
           </div>
         )}
@@ -717,139 +749,195 @@ const renderAddressSection = (
   </div>
 );
 
-const renderOrdersSection = () => (
-  <div className="space-y-10 max-w-[634px]">
-    {/* Upcoming Orders */}
-    <div>
-      <h2 className="text-[#2A2A2A] text-[16px] font-semibold mb-2">
-        Upcoming Orders
-      </h2>
-      <div className="border border-[#E0E0E0] rounded-lg bg-white p-4 shadow-sm">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center border-b border-[#ADADAD] pb-3 mb-4 w-full">
-          <div className="flex gap-8 p-1">
-            {/* Order Date */}
-            <div className="flex flex-col">
-              <span className="text-[14px] text-[#595959] font-medium">
-                Order Date
-              </span>
-              <span className="text-[16px] text-[##2A2A2A] font-semibold mt-1">
-                12 Oct 2025
-              </span>
+const renderOrdersSection = () => {
+  // Example data — you can replace this with real API data later
+  const upcomingOrders = [
+    {
+      id: 1,
+      date: "12 Oct 2025",
+      number: "#123456",
+      status: "Shipped",
+      delivery: "20th Oct",
+      products: [product_1, product_2],
+    },
+    {
+      id: 2,
+      date: "15 Oct 2025",
+      number: "#654321",
+      status: "Processing",
+      delivery: "25th Oct",
+      products: [product_2, product_1],
+    },
+  ];
+
+  const deliveredOrders = [
+    {
+      id: 1,
+      date: "05 Sep 2025",
+      number: "#789012",
+      deliveredOn: "10 Sep",
+      products: [product_1, product_2],
+    },
+    {
+      id: 2,
+      date: "01 Aug 2025",
+      number: "#890123",
+      deliveredOn: "06 Aug",
+      products: [product_2, product_1],
+    },
+  ];
+
+  return (
+    <div className="space-y-10 max-w-[634px]">
+      {/* Upcoming Orders */}
+      <div>
+        <h2 className="text-[#2A2A2A] text-[16px] font-semibold font-poppins mb-2">
+          Upcoming Orders
+        </h2>
+
+        {upcomingOrders.map((order) => (
+          <div
+            key={order.id}
+            className="border border-[#E0E0E0] rounded-lg bg-white p-5 shadow-sm mb-6"
+          >
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center border-b border-[#E0E0E0] pb-3 mb-4 w-full">
+              <div className="flex gap-6 p-1">
+                {/* Order Date */}
+                <div className="flex flex-col">
+                  <span className="text-[14px] text-[#4B4B4B] font-medium">
+                    Order Date
+                  </span>
+                  <span className="text-[16px] text-[#2A2A2A] font-semibold mt-1">
+                    {order.date}
+                  </span>
+                </div>
+                {/* Order Number */}
+                <div className="flex flex-col gap-x-2 text-start">
+                  <span className="text-[14px] text-[#4B4B4B] font-medium">
+                    Order Number
+                  </span>
+                  <span className="text-[16px] text-[#2A2A2A] font-semibold mt-1">
+                    {order.number}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:items-end gap-[6px] mt-2 sm:mt-0">
+                <div className="flex items-center justify-center gap-1 text-[12px] font-medium text-[#5A0010] bg-[#FFF5E8] border border-[#5A0010] rounded-full px-3 py-[3px]">
+                  <img src={circle} alt="circle" className="w-[8px] h-[8px]" />
+                  <span>{order.status}</span>
+                </div>
+                <button className="text-[#5A0010] text-[12px] font-medium hover:underline">
+                  View Order Details
+                </button>
+              </div>
             </div>
-            {/* Order Number */}
-            <div className="flex flex-col gap-x-2 text-start">
-              <span className="text-[14px] text-[#4B4B4B] font-medium">
-                Order Number
-              </span>
-              <span className="text-[16px] text-[#2A2A2A] font-semibold mt-1">
-                #123456
-              </span>
+
+            {/* Product Images */}
+            <div className="flex gap-3 sm:gap-4 items-center flex-wrap">
+              {order.products.map((img, idx) => (
+                <img
+                  key={idx}
+                  src={img}
+                  alt="Product"
+                  className="w-[90px] h-[90px] rounded-[8px] object-cover"
+                />
+              ))}
+            </div>
+
+            {/* Delivery Info */}
+            <div className="flex items-center gap-2 text-[12px] text-[#A84C32] bg-gradient-to-r from-[#F6D7E0] to-[#FFFFFF] px-3 py-2 mt-4 rounded-[8px] max-w-[230px]">
+              <img src={truck_icon} alt="truck" className="w-4 h-4" />
+              <span>Est. delivery by {order.delivery}</span>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 mt-5">
+              <button className="flex-1 bg-[#4B001A] text-white text-[14px] font-semibold py-2.5 rounded-full">
+                Track Order
+              </button>
+              <button className="flex-1 border border-[#4B001A] text-[#4B001A] text-[14px] font-semibold py-2.5 rounded-full">
+                Cancel Order
+              </button>
             </div>
           </div>
-          <div className="flex flex-col sm:items-end gap-[6px] mt-2 sm:mt-0">
-            <div className="flex items-center justify-center gap-2 text-[13px] font-medium text-[#5A0010] bg-[#FFF5E8] border border-[#5A0010] rounded-full px-3 py-[3px]">
-              <img src={circle} alt="circle" className="w-[10px] h-[10px]" />
-              <span>Shipped</span>
+        ))}
+      </div>
+
+      {/* Delivered Orders */}
+      <div>
+        <h2 className="text-[#2A2A2A] text-[16px] font-semibold font-poppins mb-2">
+          Delivered
+        </h2>
+
+        {deliveredOrders.map((order) => (
+          <div
+            key={order.id}
+            className="border border-[#E0E0E0] rounded-lg bg-white p-5 shadow-sm mb-6"
+          >
+            {/* Header */}
+            <div className="flex justify-between items-center border-b border-[#E0E0E0] pb-3 mb-4">
+              <div className="flex gap-6 p-1">
+                {/* Order Date */}
+                <div className="flex flex-col">
+                  <span className="text-[14px] text-[#4B4B4B] font-medium">
+                    Order Date
+                  </span>
+                  <span className="text-[16px] text-[#2A2A2A] font-semibold mt-1">
+                    {order.date}
+                  </span>
+                </div>
+                {/* Order Number */}
+                <div className="flex flex-col text-start">
+                  <span className="text-[14px] text-[#4B4B4B] font-medium">
+                    Order Number
+                  </span>
+                  <span className="text-[16px] text-[#2A2A2A] font-semibold mt-1">
+                    {order.number}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:items-end gap-[6px] mt-2 sm:mt-0">
+                <button className="text-[#4B001A] text-[12px] font-medium hover:underline">
+                  View Order Details
+                </button>
+              </div>
             </div>
-            <button className="text-[#6E0027] text-[13px] font-medium hover:underline">
-              View Order Details
-            </button>
+
+            {/* Delivery Status */}
+            <p className="text-[14px] font-semibold text-[#2A2A2A] mb-3">
+              Delivered on {order.deliveredOn}
+            </p>
+
+            {/* Product Images */}
+            <div className="flex gap-3 sm:gap-4 items-center flex-wrap">
+              {order.products.map((img, idx) => (
+                <img
+                  key={idx}
+                  src={img}
+                  alt="Product"
+                  className="w-[90px] h-[90px] rounded-[8px] object-cover"
+                />
+              ))}
+            </div>
+
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 mt-5">
+              <button className="flex-1 bg-[#4B001A] text-white text-[14px] font-semibold py-2.5 rounded-full">
+                Track Order
+              </button>
+              <button className="flex-1 border border-[#4B001A] text-[#4B001A] text-[14px] font-semibold py-2.5 rounded-full">
+                Return Order
+              </button>
+            </div>
           </div>
-        </div>
-        {/* Product Images */}
-        <div className="flex gap-3 sm:gap-4 items-center flex-wrap">
-          <img
-            src={product_1}
-            alt="Product"
-            className="w-[90px] h-[90px] rounded-md object-cover"
-          />
-          <img
-            src={product_2}
-            alt="Product"
-            className="w-[90px] h-[90px] rounded-md object-cover"
-          />
-        </div>
-        {/* Delivery Info */}
-        <div className="flex items-center gap-2 text-[12px] text-[#A84C32] bg-gradient-to-r from-[#F6D7E0] to-[#FFFFFF] px-3 py-2 mt-3 rounded-md max-w-[230px]">
-          <img src={truck_icon} alt="truck" className="w-4 h-4" />
-          <span>Est. delivery by 20th Oct</span>
-        </div>
-        {/* Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 mt-4">
-          <button className="flex-1 bg-[#4B001A] text-white text-[14px] font-semibold py-2.5 rounded-full">
-            Track Order
-          </button>
-          <button className="flex-1 border border-[#4B001A] text-[#4B001A] text-[14px] font-semibold py-2.5 rounded-full">
-            Cancel Order
-          </button>
-        </div>
+        ))}
       </div>
     </div>
-    {/* Delivered Orders */}
-    <div>
-      <h2 className="text-[#2A2A2A] text-[16px] font-semibold mb-2">
-       Delivered
-      </h2>
-      <div className="border border-[#E0E0E0] rounded-lg bg-white p-4 shadow-sm">
-        {/* Header */}
-        <div className="flex justify-between items-center border-b border-[#ADADAD] pb-3 mb-3">
-          <div className="flex gap-8 p-1">
-            {/* Order Date */}
-            <div className="flex flex-col">
-              <span className="text-[14px] text-[#4B4B4B] font-medium">
-                Order Date
-              </span>
-              <span className="text-[16px] text-[#2A2A2A] font-semibold mt-1">
-                12 Oct 2025
-              </span>
-            </div>
-            {/* Order Number */}
-            <div className="flex flex-col text-start">
-              <span className="text-[14px] text-[#4B4B4B] font-medium">
-                Order Number
-              </span>
-              <span className="text-[16px] text-[#2A2A2A] font-semibold mt-1">
-                #123456
-              </span>
-            </div>
-          </div>
-          <div className="flex flex-col sm:items-end gap-[6px] mt-2 sm:mt-0">
-            <button className="text-[#4B001A] text-[14px] font-medium hover:underline">
-              View Order Details
-            </button>
-          </div>
-        </div>
-        {/* Delivery Status */}
-        <p className="text-[18px] font-semibold text-[#2A2A2A] mb-2">
-          Delivered on 20 Oct
-        </p>
-        {/* Product Images */}
-        <div className="flex gap-3 sm:gap-4 items-center flex-wrap">
-          <img
-            src={product_1}
-            alt="Product"
-            className="w-[90px] h-[90px] rounded-md object-cover"
-          />
-          <img
-            src={product_2}
-            alt="Product"
-            className="w-[90px] h-[90px] rounded-md object-cover"
-          />
-        </div>
-        {/* Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 mt-5">
-          <button className="flex-1 bg-[#4B001A] text-white text-[14px] font-semibold py-2.5 rounded-full">
-            Track Order
-          </button>
-          <button className="flex-1 border border-[#4B001A] text-[#4B001A] text-[14px] font-semibold py-2.5 rounded-full">
-            Return Order
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+  );
+};
 
 const renderFavouritesSection = (products, toggleLike, likedProducts) => (
   <div>
@@ -858,17 +946,16 @@ const renderFavouritesSection = (products, toggleLike, likedProducts) => (
         No Products in the favourites page
       </p>
     ) : (
-      <div className="grid grid-cols-2 sm:grid-cols-2 gap-6 w-full sm:max-w-[700px]">
+      <div className="grid grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 gap-6 w-full overflow-visible relative">
         {products.map((product) => (
           <div
             key={product.id}
-            className="max-w-[304px] flex flex-wrap gap-x-10 mx-auto items-center group relative"
+            className="max-w-[304px] flex flex-wrap gap-x-10 mx-auto items-center group relative "
           >
             <div className="overflow-hidden rounded-2xl relative">
               <img
-                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] object-cover rounded-[16px] ${
-                  product.isOutOfStock ? "grayscale" : ""
-                } transition-all duration-300 ease-in-out group-hover:shadow-lg`}
+                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] object-cover rounded-[16px] ${product.isOutOfStock ? "grayscale" : ""
+                  } transition-all duration-300 ease-in-out group-hover:shadow-lg`}
                 src={product.src}
                 alt={product.name}
               />
@@ -877,17 +964,36 @@ const renderFavouritesSection = (products, toggleLike, likedProducts) => (
                 isOutOfStock={product.isOutOfStock}
                 onToggle={() => toggleLike(product.id)}
               />
-              {product.isOutOfStock && (
-                <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
-                  Sold Out
-                </p>
-              )}
             </div>
-            <div className="w-full mt-2 text-left gap-x-2">
-              <p className="text-[#000000] font-semibold text-[14px]">
-                {product.price}
-              </p>
-              <p className="text-[#6D6D6D] text-[14px]">{product.name}</p>
+            <div className="flex justify-between items-center w-full my-3 gap-x-2">
+              <div>
+                <p className="text-[13px] font-semibold sm:text-[18px] text-[#313131]">
+                  {product.name}
+                </p>
+                <p className="text-[#4E4E4E] font-semibold text-[16px]">
+                  {product.price}
+                </p>
+              </div>
+              {/* Ellipse */}
+              <div className="mt-1.5 flex items-center justify-between">
+                <div className="flex justify-center gap-x-2.5 mr-1">
+                  <img
+                    className=" w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                    src={gold_ellipse}
+                    alt="gold ellipse"
+                  />
+                  <img
+                    className=" w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                    src={silver_ellipse}
+                    alt="Silver ellipse"
+                  />
+                  <img
+                    className=" w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                    src={brown_ellipse}
+                    alt="brown ellipse"
+                  />
+                </div>
+              </div>
             </div>
             <AddToCartButton />
           </div>

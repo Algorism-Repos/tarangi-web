@@ -16,7 +16,8 @@ function Product_Filter({ productCatergory }) {
   const [showSort, setShowSort] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [tab, setTab] = useState("productCatergory");
-  const { productListFromShopify, filteredProducts, setFilteredProducts } = useContext(AppContext);
+  const { productListFromShopify, filteredProducts, setFilteredProducts } =
+    useContext(AppContext);
   const SortOptions = ["Price High to Low", "Price Low to High"];
   const priceRanges = [
     { label: "₹10,000 – ₹15,000" },
@@ -141,8 +142,8 @@ function Product_Filter({ productCatergory }) {
         (p) => p.min === range.min && p.max === range.max
       )
         ? selectedPrices.filter(
-          (p) => p.min !== range.min || p.max !== range.max
-        )
+            (p) => p.min !== range.min || p.max !== range.max
+          )
         : [...selectedPrices, range];
       setSelectedPrices(updated);
       handleFilterChange(selectedCategories, updated);
@@ -163,7 +164,9 @@ function Product_Filter({ productCatergory }) {
     window.location.reload(false);
   };
 
-  console.log(productCatergory)
+  const filterToggleCount = selectedCategories.length + selectedPrices.length;
+
+  console.log(productCatergory);
   return (
     <>
       <div>
@@ -185,7 +188,8 @@ function Product_Filter({ productCatergory }) {
             </label>
 
             <div className="relative">
-              <select className="appearance-none border border-[#B9B9B9] rounded-md py-2.5 pl-3 w-[155px] bg-white text-font-grey text-[14px] cursor-pointer outline-none"
+              <select
+                className="appearance-none border border-[#B9B9B9] rounded-md py-2.5 pl-3 w-[155px] bg-white text-font-grey text-[14px] cursor-pointer outline-none"
                 onChange={(e) => handleSortChange(e.target.value)}
               >
                 {SortOptions.map((option) => (
@@ -207,7 +211,14 @@ function Product_Filter({ productCatergory }) {
             {/* Laptop Filter */}
             <div className="w-[275px] font-poppins text-font-grey hidden lg:block pl-6">
               <div className="flex justify-between">
-                <p className="text-[16px] font-semibold uppercase">Filters</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-[16px] font-semibold uppercase">Filters</p>
+                  {filterToggleCount > 0 && (
+                    <span className="bg-[#D6A76F] text-white text-[13px] items-center justify-center font-medium px-3  w-[29px] h-[19px] rounded-full">
+                      {filterToggleCount}
+                    </span>
+                  )}
+                </div>
                 <button
                   className="text-primary text-[16px] font-semibold uppercase focus:underline"
                   onClick={refreshpage}
@@ -473,6 +484,11 @@ function Product_Filter({ productCatergory }) {
                 <h2 className="text-[16px] font-semibold text-center flex-col">
                   Filter
                 </h2>
+                {filterToggleCount > 0 && (
+                  <span className="bg-[#D6A76F] text-white text-[13px] items-center justify-center font-medium px-3  w-[29px] h-[19px] rounded-full">
+                    {filterToggleCount}
+                  </span>
+                )}
               </div>
 
               <div className="flex gap-x-16 justify-start mt-11  ">
