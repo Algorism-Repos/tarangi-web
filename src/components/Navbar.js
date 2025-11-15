@@ -87,8 +87,8 @@ useEffect(() => {
 
   return (
     <>
-      {/* Navbar - Large Screens */}
-      <div className="bg-primary lg:flex flex-row justify-between items-center w-full py-5 px-7 hidden relative">
+      {/* Navbar - large screens */}
+      <div className="bg-[#6E0027] lg:flex flex-row justify-between items-center w-full py-5 px-7 hidden">
         {/* Logo */}
         <Link to="/home">
           <img src={logo} alt="brand-logo" className="w-[106px] h-[71px]" />
@@ -113,6 +113,12 @@ useEffect(() => {
             to="/products"
           >
             <p className={getLinkClass("/products")}>Products</p>
+          </Link>
+           <Link
+            className="hover:bg-[#D6A76F4F] rounded-full py-2.5 px-4"
+            to="/blog"
+          >
+            <p className={getLinkClass("/blog")}>Blog</p>
           </Link>
         </div>
 
@@ -161,6 +167,7 @@ useEffect(() => {
                   alt="profile"
                 />
               </Link>
+              
             </>
           ) : (
             <>
@@ -322,7 +329,7 @@ useEffect(() => {
             <div className="flex flex-row items-center justify-between w-full">
               <img
                 src={close}
-                className="w-[30px] h-[30px] cursor-pointer"
+                className="w-[30px] h-[30px] cursor-pointer "
                 onClick={() => setMenuVisible(false)}
               />
               <img

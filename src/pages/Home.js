@@ -468,7 +468,7 @@ function Home() {
 
           {/* Images */}
 
-          <h1 className="max-w-[340px] sm:max-w-[680px] mx-auto text-center font-atteron text-[#5C0A1F] text-[20px] sm:text-[40px] font-semibold tracking-[1px] sm:tracking-[1px] mt-16 sm:mt-20">
+          <h1 className="max-w-[340px] sm:max-w-[680px] mx-auto text-center font-atteron text-[#5C0A1F] text-[26px] sm:text-[40px] font-semibold tracking-[1px] sm:tracking-[1px] mt-16 sm:mt-20">
             Enjoy stunning designs without the heavy price tag
           </h1>
 
@@ -560,7 +560,7 @@ function Home() {
                   alt={item.title}
                   className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white"
                 />
-                <h3 className="font-atteron text-[34px] font-normal leading-normal text-white mt-2">
+                <h3 className="font-atteron text-[32px] font-normal leading-normal text-white mt-2 sm:text-[34px]">
                   {item.title}
                 </h3>
               </div>
@@ -767,11 +767,12 @@ function Home() {
           </div>
         </div>
       </div>
-
+      
+      {/* Before After Slider */}
       <div className="before-after-section ">
         <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
-          <h1 className="font-atteron section-heading text-[26px]  sm:text-[64px] text-center text-[#5C0A1F] leading-tight mb-10">
-            <span className=""> Enhance Your Look With</span> <br /> Tarangi
+          <h1 className="font-atteron section-heading text-[26px]  sm:text-[64px] text-center text-[#5C0A1F] mb-16">
+            <span className="text-[28px]"> Enhance Your Look With</span> <br /> Tarangi
           </h1>
 
           <div className="container" ref={containerRef}>

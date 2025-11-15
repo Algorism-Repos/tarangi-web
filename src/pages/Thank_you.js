@@ -5,20 +5,23 @@ import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 
 // Images 
-import craftedby from '../assets/craftedby.png'
+// import craftedby from '../assets/craftedby.png'
 import sandalflower from '../assets/sandalflower.png'
+import muthukrishan from '../assets/muthukrishan_artist.jpeg'
+import ramesh from '../assets/ramesh_artist.jpeg'
+import product from '../assets/Products/product_1.png'
 
 function ThankYou() {
 
     const data = [
         {
-            img: craftedby,
-            name: "Ramakrishana",
+            img: muthukrishan,
+            name: "Muthukrishnan",
             content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
         },
-         {
-            img: craftedby,
-            name: "Ramakrishana",
+        {
+            img: ramesh,
+            name: "Ramesh",
             content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
         }
     ]
@@ -77,7 +80,14 @@ function ThankYou() {
                                     return (
                                         <SwiperSlide>
                                             <div className="w-full sm:w-[472px] h-fit mx-auto bg-[#FFFAF3] rounded-[24px] shadow-2xl p-[25px] sm:p-[35px] z-10">
-                                                <img className="w-[399px] sm:h-[420px] " src={items.img} alt='Handcrafeted' />
+
+                                                <div className="relative">
+                                                    <img className="w-[399px] sm:h-[420px] rounded-[24px] object-cover relative" src={items.img} alt='Handcrafeted' />
+                                                    {/* <img className="w-[130px] h-[130px] object-cover absolute bottom-0 right-0 rounded-[14px] border-white border-[16px]" src={product} alt="product_image" /> */}
+                                                    <div className="w-[130px] h-[130px] absolute bottom-0 right-0 rounded-[14px] border-[16px] border-white overflow-hidden">
+                                                        <img className="w-full h-full object-cover rounded-[14px]" src={product} alt="product_image" />
+                                                    </div>
+                                                </div>
 
                                                 <div className="space-y-[3px] mt-[20px]">
                                                     <p className="text-[#6E6E6E] text-[16px]">This piece was handcrafted by</p>
@@ -89,9 +99,6 @@ function ThankYou() {
                                     )
                                 })
                             }
-
-
-
                         </Swiper>
                     </div>
 

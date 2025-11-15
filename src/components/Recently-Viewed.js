@@ -77,5 +77,19 @@ function Recently_Viewed() {
     </div>
   );
 }
-
 export default Recently_Viewed;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
