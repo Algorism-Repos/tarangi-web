@@ -21,8 +21,8 @@ function Pincode_Input() {
   };
 
   return (
-    <div className="w-full bg-[#FFFAF3] border-2 border-[#F6EFE6]   shadow-2xl mt-2 rounded-xl">
-      <div className="flex items-center justify-between px-1 py-3">
+    <div className="w-full bg-[#FFFAF3] border-2 border-[#F6EFE6] mx-auto shadow-2xl mt-2 rounded-xl">
+      <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-2">
           <img className="w-[24px] h-[24px] " src={location_icon} alt="location_icon" />
 
