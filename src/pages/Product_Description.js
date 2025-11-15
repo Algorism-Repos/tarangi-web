@@ -14,6 +14,7 @@ import gold_ellipse from "../assets/Products/gold_ellipse.png";
 import silver_ellipse from "../assets/Products/silver_ellipse.png";
 import brown_ellipse from "../assets/Products/brown_ellipse.png";
 import favorie_icon from "../assets/Products/favorite_icon.png";
+import favorie_icon_white from "../assets/Products/Unfilled_likeIcon.png";
 import { AppContext } from "../context/AppContext";
 import pure_silver from "../assets/pure_silver_icon.png";
 import shipping from "../assets/shipping_icon.png";
@@ -74,6 +75,7 @@ function Product_Description() {
       });
     }
   }, []);
+  const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
 
   return (
     <>
@@ -245,10 +247,9 @@ function Product_Description() {
                           }
                         }}
                         className={`w-[45px] rounded-full bg-white transition-all duration-200 cursor-pointer
-                          ${
-                            activeColor === color.id
-                              ? "border-[4px] border-primary p-[2px]"
-                              : "border-[2px] border-transparent  hover:border-[2px] hover:border-primary hover:p-[2px]"
+                          ${activeColor === color.id
+                            ? "border-[4px] border-primary p-[2px]"
+                            : "border-[2px] border-transparent  hover:border-[2px] hover:border-primary hover:p-[2px]"
                           }
                           ${!isAvailable ? "opacity-40 cursor-not-allowed" : ""}
                         `}
@@ -263,18 +264,21 @@ function Product_Description() {
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
               {/* Buttons */}
-              <div className="max-w-[397px] m  ">
-                <div className="flex flex-col  w-full sm:flex-row items-center gap-[16px]">
+              <div className="max-w-[397px] ">
+                <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
                   <AddToCartButton />
 
                   <Link to="/favourites" state={{ product }}>
                     <button
-                      className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-[361px] h-[56px] rounded-full text-primary text-[18px] font-medium sm:w-[176px]"
+                      className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-[361px] h-[56px] rounded-full text-primary text-[18px] font-medium sm:w-[176px]
+  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
+                      onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
+                      onMouseLeave={() => setWishIconSrc(favorie_icon)}
                       onClick={handleAddToWish}
                     >
                       <img
                         className="w-[32px] h-[32px]"
-                        src={favorie_icon}
+                        src={wishIconSrc}
                         alt="like_icon"
                       />
                       Wishlist

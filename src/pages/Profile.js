@@ -443,7 +443,7 @@ const handleLogout = () => {
             )}
           </div>
           <button
-            onClick={handleLogout} className="flex items-center gap-3 px-5 py-3  mt-[275px] text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
+            onClick={handleLogout} className="flex items-center gap-3 mt-3 px-5 py-3  mt-[275px] text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
           >
             <img
               src={logout_icon}

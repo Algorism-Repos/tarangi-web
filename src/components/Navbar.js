@@ -31,31 +31,31 @@ function Navbar() {
   const isActive = (path) => location.pathname === path;
   const getLinkClass = (path) =>
     isActive(path) ? "text-white" : "text-white opacity-[0.5]";
-  const cartIcon = cartItems.length > 0 ? cart_icon_filled : cart_icon_empty;
+  const cartIcon = cartItems.length > 0 ? cart_icon_empty : cart_icon_filled;
 
   // ✅ Initial state setup
   useEffect(() => {
     localStorage.setItem("isLoggedIn", "false");
     setIsLoggedIn(true);
   }, []);
-useEffect(() => {
-  const storedStatus = localStorage.getItem("isLoggedIn") === "false";
-  setIsLoggedIn(storedStatus);
+  useEffect(() => {
+    const storedStatus = localStorage.getItem("isLoggedIn") === "false";
+    setIsLoggedIn(storedStatus);
 
-  const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-  setCartItems(storedCart);
+    const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    setCartItems(storedCart);
 
-  const updateStorage = () => {
-    const updatedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-    setCartItems(updatedCart);
+    const updateStorage = () => {
+      const updatedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      setCartItems(updatedCart);
 
-    const updatedLogin = localStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(updatedLogin);
-  };
+      const updatedLogin = localStorage.getItem("isLoggedIn") === "true";
+      setIsLoggedIn(updatedLogin);
+    };
 
-  window.addEventListener("storage", updateStorage);
-  return () => window.removeEventListener("storage", updateStorage);
-}, []);
+    window.addEventListener("storage", updateStorage);
+    return () => window.removeEventListener("storage", updateStorage);
+  }, []);
 
 
   // ✅ Close search when clicking outside
@@ -114,7 +114,7 @@ useEffect(() => {
           >
             <p className={getLinkClass("/products")}>Products</p>
           </Link>
-           <Link
+          <Link
             className="hover:bg-[#D6A76F4F] rounded-full py-2.5 px-4"
             to="/blog"
           >
@@ -129,7 +129,7 @@ useEffect(() => {
 
           <div
             onClick={() => setShowSearch((prev) => !prev)}
-            className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] hover:bg-[#D6A76F4F] transition search-icon
+            className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] transition search-icon
                       ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"}
         `}
           >
@@ -139,8 +139,8 @@ useEffect(() => {
           <Link to="/favourites">
             <img
               className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/favourites")
-                  ? "bg-[#CFA266]"
-                  : "hover:bg-[#D6A76F4F]"
+                ? "bg-[#CFA266]"
+                : "hover:bg-[#D6A76F4F]"
                 }`}
               src={favourite_icon}
               alt="favourite icon"
@@ -155,19 +155,19 @@ useEffect(() => {
               alt="cart"
             />
           </Link>
-                    {isLoggedIn ? (
+          {isLoggedIn ? (
             <>
               <Link to="/profile">
                 <img
                   className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/profile")
-                      ? "bg-[#CFA266]"
-                      : "hover:bg-[#D6A76F4F]"
+                    ? "bg-[#CFA266]"
+                    : "hover:bg-[#D6A76F4F]"
                     }`}
                   src={profile_icon}
                   alt="profile"
                 />
               </Link>
-              
+
             </>
           ) : (
             <>
@@ -289,8 +289,8 @@ useEffect(() => {
           <Link to="/favourites">
             <img
               className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites")
-                  ? "bg-[#CFA266]"
-                  : "hover:bg-[#D6A76F4F]"
+                ? "bg-[#CFA266]"
+                : "hover:bg-[#D6A76F4F]"
                 }`}
               src={favourite_icon}
               alt="favourite icon"
@@ -312,8 +312,8 @@ useEffect(() => {
               <Link to="/profile">
                 <img
                   className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/profile")
-                      ? "bg-[#CFA266]"
-                      : "hover:bg-[#D6A76F4F]"
+                    ? "bg-[#CFA266]"
+                    : "hover:bg-[#D6A76F4F]"
                     }`}
                   src={profile_icon}
                   alt="profile"
@@ -423,7 +423,7 @@ useEffect(() => {
               </div>
 
               {/* PAGE LINKS */}
-              {["/home", "/about", "/products"].map((path) => (
+              {["/home", "/about", "/products", "/blog"].map((path) => (
                 <Link to={path} key={path}>
                   <h2
                     className={`font-poppins text-[16px] leading-normal text-center ${location.pathname === path
@@ -436,10 +436,13 @@ useEffect(() => {
                       ? "Home"
                       : path === "/about"
                         ? "About Us"
-                        : "Products"}
+                        : path === "/products"
+                          ? "Products"
+                          : "Blog"}
                   </h2>
                 </Link>
               ))}
+
 
               {/* LOGIN / SIGNUP */}
               {!isLoggedIn && (

@@ -29,7 +29,7 @@ const handleClick = () => {
       {/* Add to Cart Button */}
       <button
         className="cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]
-        w-full h-[50px] rounded-full text-primary text-[16px] font-medium mt-2 
+        w-full h-[56px] rounded-full text-primary text-[16px] font-medium mt-2 
         transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
         onMouseEnter={() => setCartIconSrc(shoppingCart_white)}
         onMouseLeave={() => setCartIconSrc(shoppingCart_red)}
