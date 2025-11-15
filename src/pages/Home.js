@@ -8,7 +8,6 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-
 // import required modules
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { Link } from "react-router";
@@ -44,48 +43,71 @@ import whatsapp_floating from "../assets/whatsapp_icon.svg";
 import before_img from "../assets/before.png";
 import after_img from "../assets/after.png";
 import slider_button from "../assets/slider_button.png";
-import refresh_icon from '../assets/Refresh_icon.png'
+import refresh_icon from "../assets/Refresh_icon.png";
 import { Container } from "postcss";
-import { FetchAllProductFromShopify } from "../handler/api Handler";
+import {
+  FetchAllCollectionsFromShopify,
+  FetchAllProductByCollections,
+  FetchAllProductFromShopify,
+} from "../handler/api Handler";
 import { AppContext } from "../context/AppContext";
-
-
 
 function Home() {
   const [animate, setAnimate] = useState(false);
+  const [collection, setCollections] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
-  const { setProductListFromShopify, productListFromShopify } = useContext(AppContext);
+  const [FestiveFiltered, setFestiveFiltered] = useState([]);
   function toggle(product) {
     setSelectedType(product);
-    console.log(product);
     setModalToggle(!modalToggle);
   }
-  const productList = async () => {
+  const collectionsList = async () => {
     try {
-      const response = await FetchAllProductFromShopify();
-      setProductListFromShopify(response);
+      const response = await FetchAllCollectionsFromShopify();
+      setCollections(response);
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
   };
-  const festiveFiltered = productListFromShopify.filter((product) =>
-    product.tags
-      ?.toLowerCase()
-      .split(",")
-      .map((tag) => tag.trim())
-      .includes("festive collection")
-  );
   useEffect(() => {
     const timer = setTimeout(() => {
       setAnimate(true);
     }, 100);
     return () => clearTimeout(timer);
   }, []);
-  useEffect(() => {
-    productList();
-  }, []);
 
+  useEffect(() => {
+    if (!collection) return;
+    const bestSeller = collection.find((item) => item.handle === "best_seller");
+    if (!bestSeller) return;
+    const fetchBestSellerProducts = async () => {
+      try {
+        const response = await FetchAllProductByCollections(bestSeller.id);
+
+        const edges = response?.data?.collection?.products?.edges || [];
+
+        const formattedProducts = edges.map(({ node }) => ({
+          title: node.title,
+          image: { src: node.featuredImage?.url },
+          variants: node.variants.edges.map((v) => ({
+            price: v.node.price,
+          })),
+        }));
+
+        setFestiveFiltered(formattedProducts);
+        console.log(formattedProducts);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchBestSellerProducts();
+  }, [collection]);
+
+  useEffect(() => {
+    collectionsList();
+  }, []);
   const specials = [
     { img: pink_collection, title: "Pink Collection" },
     { img: statement_earrings, title: "Statement Earrings" },
@@ -93,7 +115,7 @@ function Home() {
     { img: jaguar_bracelet, title: "Jaguar Bracelets" },
     { img: watch_charms, title: "Watch Charms" },
   ];
-    const containerRef = useRef(null);
+  const containerRef = useRef(null);
   const sliderRef = useRef(null);
 
   useEffect(() => {
@@ -125,41 +147,64 @@ function Home() {
     };
   }, []);
 
-
-
   return (
     <>
       {/* Floating Whatsapp icon */}
-      <a href="https://wa.me/919003058300/?text=Hi," target="_blank"><img src={whatsapp_floating} alt="Whatsapp_Icon" className="w-[50px] sm:w-[70px] h-fit fixed bottom-3 right-3 sm:bottom-9 sm:right-7 animate-bounce hover:scale-125 duration-300 transition-transform z-30" /></a>
+      <a href="https://wa.me/919003058300/?text=Hi," target="_blank">
+        <img
+          src={whatsapp_floating}
+          alt="Whatsapp_Icon"
+          className="w-[50px] sm:w-[70px] h-fit fixed bottom-3 right-3 sm:bottom-9 sm:right-7 animate-bounce hover:scale-125 duration-300 transition-transform z-30"
+        />
+      </a>
 
       {/* Silver price */}
       {/* Mobile */}
-      <div className='w-full bg-[#FCE8CD] font-poppins lg:hidden'>
-        <p className='bg-[#CFA266] text-white font-medium text-center py-4 text-[18px]'>Silver Price Today</p>
+      <div className="w-full bg-[#FCE8CD] font-poppins lg:hidden">
+        <p className="bg-[#CFA266] text-white font-medium text-center py-4 text-[18px]">
+          Silver Price Today
+        </p>
 
-        <div className='flex justify-between p-3'>
-          <div className='flex items-center w-[161px] sm:w-[175px]'>
-            <p className='text-[#28040E] text-[15px] font-normal  sm:text-[16px]'><span className='font-semibold'>₹ 169.90</span> /g <br /> <span className='font-semibold'>₹ 1,69,900</span>/ kilogram.</p>
+        <div className="flex justify-between p-3">
+          <div className="flex items-center w-[161px] sm:w-[175px]">
+            <p className="text-[#28040E] text-[15px] font-normal  sm:text-[16px]">
+              <span className="font-semibold">₹ 169.90</span> /g <br />{" "}
+              <span className="font-semibold">₹ 1,69,900</span>/ kilogram.
+            </p>
           </div>
 
-          <div className='flex items-center gap-x-1 w-[155px] sm:w-[170px]'>
-            <img className='w-[15px] h-[15px]' src={refresh_icon} alt='Refresh icon' />
-            <p className='text-[14px] text-right sm:text-[16px]'>Last Updated 27 Oct 2025, 11:00 AM</p>
+          <div className="flex items-center gap-x-1 w-[155px] sm:w-[170px]">
+            <img
+              className="w-[15px] h-[15px]"
+              src={refresh_icon}
+              alt="Refresh icon"
+            />
+            <p className="text-[14px] text-right sm:text-[16px]">
+              Last Updated 27 Oct 2025, 11:00 AM
+            </p>
           </div>
         </div>
       </div>
 
       {/* Desktop */}
-      <div className='w-full bg-[#FCE8CD] font-poppins hidden lg:block'>
-
-        <div className='flex justify-between'>
-          <div className='flex items-center gap-x-[25px]'>
-            <p className='bg-[#CFA266] px-8 py-3 w-fit text-white font-medium'>Silver Price Today</p>
-            <p className='text-[#28040E] text-[18px] font-normal'><span className='font-semibold'>₹169.90</span> per gram and <span className='font-semibold'>₹1,69,900</span> per kilogram.</p>
+      <div className="w-full bg-[#FCE8CD] font-poppins hidden lg:block">
+        <div className="flex justify-between">
+          <div className="flex items-center gap-x-[25px]">
+            <p className="bg-[#CFA266] px-8 py-3 w-fit text-white font-medium">
+              Silver Price Today
+            </p>
+            <p className="text-[#28040E] text-[18px] font-normal">
+              <span className="font-semibold">₹169.90</span> per gram and{" "}
+              <span className="font-semibold">₹1,69,900</span> per kilogram.
+            </p>
           </div>
 
-          <div className='flex items-center gap-x-2 mr-6'>
-            <img className='w-[15px] h-[15px]' src={refresh_icon} alt='Refresh icon' />
+          <div className="flex items-center gap-x-2 mr-6">
+            <img
+              className="w-[15px] h-[15px]"
+              src={refresh_icon}
+              alt="Refresh icon"
+            />
             <p>Last Updated 27 Oct 2025, 11:00 AM</p>
           </div>
         </div>
@@ -181,17 +226,32 @@ function Home() {
       >
         <SwiperSlide>
           <div className="festive-banner relative">
-            <a href="#launchOffers" className="hover:scale-110 transition duration-300 absolute bottom-8 sm:bottom-16 sm:left-[24%]  ">
-              <button className="rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">View our Best Sellers</button>
+            <a
+              href="#launchOffers"
+              className="hover:scale-110 transition duration-300 absolute bottom-8 sm:bottom-16 sm:left-[24%]  "
+            >
+              <button className="rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
+                View our Best Sellers
+              </button>
             </a>
           </div>
         </SwiperSlide>
         <SwiperSlide>
           <div className="banner-section">
-            <h1 className="font-atteron uppercase text-[52px] leading-[70px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">Born from tradition Designed for today</h1>
-            <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">Because exculsive 925 silver jewelry should feel as unique as the one who wears it.</h4>
-            <a href="#launchOffers" className="w-fit hover:scale-110 transition duration-300">
-              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">View our Best Sellers</button>
+            <h1 className="font-atteron uppercase text-[52px] leading-[70px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
+              Born from tradition Designed for today
+            </h1>
+            <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">
+              Because exculsive 925 silver jewelry should feel as unique as the
+              one who wears it.
+            </h4>
+            <a
+              href="#launchOffers"
+              className="w-fit hover:scale-110 transition duration-300"
+            >
+              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
+                View our Best Sellers
+              </button>
             </a>
           </div>
         </SwiperSlide>
@@ -230,53 +290,33 @@ function Home() {
           <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white ">
             Our Curations
           </h1>
+
           <div className="flex flex-col gap-y-[160px] sm:gap-y-0 sm:flex-row items-center justify-center gap-x-12 relative my-36 sm:my-56">
-            <div
-              className="border-2 border-white w-[360px] h-[374px] relative z-0 overflow-hidden"
-              onClick={() => {
-                toggle();
-              }}
-            >
-              <img
-                src={men_design}
-                alt="men-image"
-                className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
-              />
-              <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/3 ">
-                Men
-              </h2>
-            </div>
-            <div
-              className="border-2 border-white w-[360px] h-[374.15px] relative z-0 "
-              onClick={() => {
-                toggle();
-              }}
-            >
-              {" "}
-              <img
-                src={women_design}
-                alt="men-image"
-                className="w-[359px] h-[465px] sm:w-[373px] sm:h-[430px]  transform transition-transform duration-300 ease-out hover:scale-105 absolute bottom-[-0px] z-10 "
-              />
-              <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/4 ">
-                Women
-              </h2>
-            </div>
-            <div
-              className="border-2 border-white w-[360px] h-[374.15px] relative z-0 overflow-hidden"
-              onClick={() => {
-                toggle();
-              }}
-            >
-              <img
-                src={couple_design}
-                alt="men-image"
-                className="w-[360px] h-[360px] sm:w-[374px] sm:h-[374px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute z-10"
-              />
-              <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-[-15px] left-1/4 ">
-                Couples
-              </h2>
-            </div>
+            {collection &&
+              collection
+                .filter(
+                  (type) =>
+                    type.handle?.toLowerCase().includes("men") ||
+                    type.handle?.toLowerCase().includes("women") ||
+                    type.handle?.toLowerCase().includes("gifts")
+                )
+                .map((type) => (
+                  <Link
+                    to="/products"
+                    state={{ category: type.handle, collectionId: type.id }}
+                  >
+                    <div className="border-2 border-white w-[360px] h-[374px] relative z-0 overflow-hidden">
+                      <img
+                        src={type.image?.src}
+                        alt="men-image"
+                        className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
+                      />
+                      <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/3 ">
+                        {type.handle}
+                      </h2>
+                    </div>
+                  </Link>
+                ))}
           </div>
 
           {/* Best Sellers */}
@@ -285,7 +325,7 @@ function Home() {
               Best Sellers
             </h1>
             <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-between mt-20 sm:mt-36">
-              {festiveFiltered.map((type) => (
+              {FestiveFiltered.map((type) => (
                 <div
                   className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
                   onClick={() => {
@@ -360,9 +400,18 @@ function Home() {
                 ₹ 12,000
               </h2>
 
-              <div className="border-2 border-white w-[360px] h-[374.15px] relative z-0 " onClick={toggle}>
-                <img src={women_design} alt="men-image" className="w-[359px] h-[539px] sm:w-[373px] sm:h-[410px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute  bottom-[-0px] z-10" />
-                <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/4 ">Women</h2>
+              <div
+                className="border-2 border-white w-[360px] h-[374.15px] relative z-0 "
+                onClick={toggle}
+              >
+                <img
+                  src={women_design}
+                  alt="men-image"
+                  className="w-[359px] h-[539px] sm:w-[373px] sm:h-[410px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute  bottom-[-0px] z-10"
+                />
+                <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/4 ">
+                  Women
+                </h2>
               </div>
 
               <div className="max-w-6xl mx-auto mt-8 sm:mt-28 px-4 py-12">
@@ -564,36 +613,35 @@ function Home() {
       <div className="before-after-section ">
         <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
           <h1 className="font-atteron section-heading text-[26px]  sm:text-[64px] text-center text-[#5C0A1F] leading-tight mb-10">
-            <span className=""> Enhance Your Look With</span> <br />{" "}
-            Tarangi
+            <span className=""> Enhance Your Look With</span> <br /> Tarangi
           </h1>
 
-    <div className="container" ref={containerRef}>
-      <div className="image-container">
-        <img
-          className="image-before slider-image"
-          src={before_img}
-          alt="before_img"
-        />
-        <img
-          className="image-after slider-image"
-          src={after_img}
-          alt="after_img"
-        />
-      </div>
-      <input
-        ref={sliderRef}
-        type="range"
-        min={2}
-        max={98}
-        defaultValue={50}
-        className="slider"
-      />
-      <div className="slider-line"></div>
-      <div className="slider-button" aria-hidden="true">
-        <img src={slider_button} alt="slider button" />
-      </div>
-    </div>
+          <div className="container" ref={containerRef}>
+            <div className="image-container">
+              <img
+                className="image-before slider-image"
+                src={before_img}
+                alt="before_img"
+              />
+              <img
+                className="image-after slider-image"
+                src={after_img}
+                alt="after_img"
+              />
+            </div>
+            <input
+              ref={sliderRef}
+              type="range"
+              min={2}
+              max={98}
+              defaultValue={50}
+              className="slider"
+            />
+            <div className="slider-line"></div>
+            <div className="slider-button" aria-hidden="true">
+              <img src={slider_button} alt="slider button" />
+            </div>
+          </div>
         </div>
       </div>
 

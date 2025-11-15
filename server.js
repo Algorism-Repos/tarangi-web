@@ -5,6 +5,7 @@ const path = require ("path");
 
 const shopifyRouter = require("./src/routes/shopify"); // path to your router
 const app = express();
+app.use(express.json());
 app.use(cors());
 
 // Make sure this matches your frontend call

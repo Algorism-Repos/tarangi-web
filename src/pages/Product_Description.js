@@ -38,39 +38,27 @@ function Product_Description() {
     { id: "silver", img: silver_ellipse },
     { id: "brown", img: brown_ellipse },
   ];
-
-  const handleAddToCart = () => {
-    addToCart({
-      id: product.variants[0].id,
-      title: product.title,
-      price: parseInt(product.variants[0].price),
-      image: product.image.src,
-      quantity: quantity,
-    });
-  };
-
-  const matchingProducts = filteredProducts?.filter(
-    (item) =>
-      item.product_type === product.product_type && item.id !== product.id
-  );
-
+  //  console.log(product.variants[0].id)
   const handleAddToWish = () => {
     addToWishlist({
       id: product.variants[0].id,
       title: product.title,
-      price: parseInt(product.variants[0].price),
+      price: parseInt(product.variants[0]?.price),
       image: product.image.src,
       quantity: quantity,
     });
   };
-
+  const matchingProducts = filteredProducts?.filter(
+    (item) =>
+      item.product_type === product.product_type && item.id !== product.id
+  );
   useEffect(() => {
     if (product) {
       addToRecentlyViewed({
-        id: product.variants[0].id,
+      id: product.variants[0].id,
         title: product.title,
-        image: product.image.src,
-        price: parseInt(product.variants[0].price),
+      image: product.image.src,
+      price: parseInt(product.variants[0]?.price),
       });
     }
   }, []);
@@ -265,7 +253,7 @@ function Product_Description() {
               {/* Buttons */}
               <div className="max-w-[397px] m  ">
                 <div className="flex flex-col  w-full sm:flex-row items-center gap-[16px]">
-                  <AddToCartButton />
+                  <AddToCartButton  product={product} quantity={quantity} />
 
                   <Link to="/favourites" state={{ product }}>
                     <button
@@ -295,7 +283,7 @@ function Product_Description() {
             </h1>
 
             <div className="flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
-              {matchingProducts.map((item) => {
+              {matchingProducts.slice(0,8).map((item) => {
                 return (
                   <div className="font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0">
                     <img

@@ -1,4 +1,4 @@
-import React, { useState ,useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router";
 import QuantitySelector from "../components/QuantitySelector";
 
@@ -8,6 +8,7 @@ import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
 import close_icon from "../assets/Products/cart-close_icon.png";
 import Pincode_Input from "../components/Pincode_Input";
+import { AppContext } from "../context/AppContext";
 
 function Cart() {
   const [showSummary, setShowSummary] = useState(false);
@@ -15,37 +16,19 @@ function Cart() {
   const toggleSummary = () => {
     setShowSummary(!showSummary);
   };
+  const { cartItems, removeFromCart, updateCartItemQuantity } =
+    useContext(AppContext);
+  const [quantity, setQuantity] = useState(1);
 
-  // Cart items data
-const [cartItems, setCartItems] = useState([
-  {
-    id: 1,
-    name: "Stone Necklace",
-    price: 10000,
-    color: "Gold",
-    image: product_1,
-  },
-  {
-    id: 2,
-    name: "Silver Kada",
-    price: 4000,
-    color: "Silver",
-    image: product_2,
-  },
-]);
+  const subtotal = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+  const tax = subtotal * 0.03;
+  const shipping = 40;
+  const total = subtotal + tax + shipping;
 
-useEffect(() => {
-  localStorage.setItem("cartItems", JSON.stringify(cartItems));
-}, [cartItems]);
-
-
-  const removeItem = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
-  };
-
-  const subtotal = cartItems.reduce((acc, item) => acc + item.price, 0);
-  const tax =  800; 
-  const total = subtotal + tax;
+  console.log("Selected Quantity:", quantity);
 
   return (
     <>
@@ -63,10 +46,9 @@ useEffect(() => {
             {/* Selected Productlist */}
             <div className="w-[694px] mx-auto xl:mx-0 max-[425px]:w-full max-[375px]:w-full ">
               {cartItems.length === 0 ? (
-                  <h3 className="text-center text-[18px] text-[#4B001A] mt-6 font-poppins">
-                    No Products in the Cart
-                  </h3>
-                
+                <h3 className="text-center text-[18px] text-[#4B001A] mt-6 font-poppins">
+                  No Products in the Cart
+                </h3>
               ) : (
                 cartItems.map((item) => (
                   <div
@@ -77,7 +59,7 @@ useEffect(() => {
                       className="float-right w-[29px] h-[29px] cursor-pointer max-[425px]:w-[22px] max-[425px]:h-[22px]"
                       src={close_icon}
                       alt="close icon"
-                      onClick={() => removeItem(item.id)}
+                      onClick={() => removeFromCart(item.id)}
                     />
 
                     <div className="flex gap-x-[15px] sm:gap-x-[50px] items-center max-[425px]:gap-x-[12px]">
@@ -112,7 +94,13 @@ useEffect(() => {
                           <h3 className="text-[13px] text-[#6F6F6F] sm:text-[14px]">
                             Quantity
                           </h3>
-                          <QuantitySelector />
+                          <QuantitySelector
+                            maxQuantity={50}
+                            value={item.quantity}
+                            onChange={(newQty) =>
+                              updateCartItemQuantity(item.id, newQty)
+                            }
+                          />
                         </div>
 
                         <h3 className="text-[13px] text-primary sm:text-[16px] max-[425px]:text-[12px]">
@@ -183,7 +171,7 @@ useEffect(() => {
                         Shipping
                       </h3>
                       <h3 className="text-[16px] text-primary font-medium max-[425px]:text-[14px]">
-                        Free
+                        {shipping === 0 ? "Free" : `₹ ${shipping}`}
                       </h3>
                     </div>
 
@@ -197,16 +185,26 @@ useEffect(() => {
                         ₹{total.toFixed(0)}
                       </h3>
                     </div>
+                     <Link
+                    to="/checkout"
+                    state={{
+                      subtotal: subtotal,
+                      shipping: shipping,
+                      tax: tax,
+                      total: total,
+                    }}
+                  >
                     <button className="bg-[#4B001A] text-white w-full h-[51px] rounded-full max-[425px]:h-[46px] max-[425px]:text-[15px]">
                       Place Order
                     </button>
+                    </Link>
                   </div>
                 </div>
               </div>
             )}
           </div>
 
-                    {/* Recommended products */}
+          {/* Recommended products */}
           <div className="my-[100px] px-5 md:px-0 max-[425px]:my-[60px]">
             <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left max-[425px]:text-[22px]">
               Frequently bought together

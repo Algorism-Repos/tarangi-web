@@ -22,6 +22,18 @@ export function AppProvider({ children }) {
     const saved = localStorage.getItem("recentlyViewed");
     return saved ? JSON.parse(saved) : [];
   });
+
+
+  
+  const updateCartItemQuantity = (id, newQty) => {
+  setCartItems((prev) =>
+    prev.map((item) =>
+      item.id === id ? { ...item, quantity: newQty } : item
+    )
+  );
+};
+
+
   useEffect(() => {
     if (productListFromShopify && productListFromShopify.length > 0) {
       localStorage.setItem(
@@ -104,7 +116,7 @@ export function AppProvider({ children }) {
         removeFromWishlist,
         clearWishlist,
         recentlyViewed,
-         addToRecentlyViewed 
+         addToRecentlyViewed ,updateCartItemQuantity 
         
       }}
     >

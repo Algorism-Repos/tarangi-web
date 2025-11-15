@@ -72,7 +72,7 @@ function Product_Filter({ productCatergory }) {
     let filtered = productListFromShopify;
     if (categories.length > 0) {
       filtered = filtered.filter((p) =>
-        categories.includes(p.product_type || "Uncateg  orized")
+        categories.includes(p.product_type || "Uncategorized")
       );
     }
     if (prices.length > 0) {
@@ -84,9 +84,6 @@ function Product_Filter({ productCatergory }) {
     filtered = sortProducts(filtered, sortOption);
     setFilteredProducts(filtered);
   };
-
-  const [products, setProducts] = useState([]);
-
   const sortProducts = (products, sortBy) => {
     const sorted = [...products];
     if (sortBy === "Latest") {
@@ -155,15 +152,12 @@ function Product_Filter({ productCatergory }) {
   };
   useEffect(() => {
     const sorted = sortProducts(productListFromShopify, sortOption);
-    setFilteredProducts(sorted);
-    // setFilteredProducts(product);
+     setFilteredProducts(sorted);
   }, [productListFromShopify, sortOption]);
-
+//  console.log(productListFromShopify)
   const refreshpage = () => {
     window.location.reload(false);
   };
-
-  console.log(productCatergory)
   return (
     <>
       <div>
@@ -315,20 +309,19 @@ function Product_Filter({ productCatergory }) {
                   </div>
                 )}
 
-                <hr className="border border-[#C8C8C8] my-[25px]" />
+                <hr className="border border-[#C8C8C8] my-[25px]" /> 
               </div>
 
               {/* occasion */}
               <div>
-                <h3 className="text-primary text-[20px] font-semibold">
+                 <h3 className="text-primary text-[20px] font-semibold">
                   Occasion
-                </h3>
-
+                </h3>  
                 <div className="mt-6 space-y-3">
                   {Occasion.map((items) => (
                     <label className="flex items-center justify-between text-font-grey cursor-pointer">
                       <div className="flex items-center space-x-3">
-                        {/* Checkbox */}
+                       
                         <label className="custom-checkbox">
                           <input type="checkbox" />
                           <span class="checkmark"></span>
@@ -635,7 +628,6 @@ function Product_Filter({ productCatergory }) {
             </div>
           </div>
 
-          {/*  */}
           <Product_Listing productCatergory={filteredProducts} />
         </div>
       </div>

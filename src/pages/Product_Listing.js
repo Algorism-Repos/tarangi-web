@@ -13,7 +13,7 @@ import LikeButton from "../components/LikeButton";
 function Product_Listing({ productCatergory }) {
   const [modalToggle, setModalToggle] = useState(false);
   const [selectedType, setSelectedType] = useState("");
-  const [products, setProducts] = useState([]); // ✅ start empty
+  const [products, setProducts] = useState([]);
 
   const toggle = (product) => {
     setModalToggle(!modalToggle);
@@ -45,7 +45,7 @@ function Product_Listing({ productCatergory }) {
       </p>
     );
   }
-
+ console.log("products",products)
   return (
     <>
       <div
