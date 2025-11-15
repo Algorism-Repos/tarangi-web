@@ -38,24 +38,25 @@ function Navbar() {
     localStorage.setItem("isLoggedIn", "false");
     setIsLoggedIn(true);
   }, []);
+useEffect(() => {
+  const storedStatus = localStorage.getItem("isLoggedIn") === "false";
+  setIsLoggedIn(storedStatus);
 
-  useEffect(() => {
-    const storedStatus = localStorage.getItem("isLoggedIn") === "false";
-    setIsLoggedIn(storedStatus);
+  const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+  setCartItems(storedCart);
 
-    const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-    setCartItems(storedCart);
+  const updateStorage = () => {
+    const updatedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    setCartItems(updatedCart);
 
-    const updateStorage = () => {
-      const updatedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-      setCartItems(updatedCart);
-      const updatedLogin = localStorage.getItem("isLoggedIn") === "true";
-      setIsLoggedIn(updatedLogin);
-    };
+    const updatedLogin = localStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(updatedLogin);
+  };
 
-    window.addEventListener("storage", updateStorage);
-    return () => window.removeEventListener("storage", updateStorage);
-  }, []);
+  window.addEventListener("storage", updateStorage);
+  return () => window.removeEventListener("storage", updateStorage);
+}, []);
+
 
   // ✅ Close search when clicking outside
   useEffect(() => {
@@ -356,7 +357,7 @@ function Navbar() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.25 }}
-                        className="w-full py-6 rounded-[12px] shadow-lg"
+                        className="w-full py-6 "
                       >
                         {/* Popular Searches */}
                         <h3 className="text-white font-poppins text-[16px] mb-3">

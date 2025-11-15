@@ -220,16 +220,23 @@ const Profile = () => {
     { name: "Favourites", icon: favIcon, activeIcon: favIconActive },
   ];
   // logout function
-  const navigate = useNavigate();
+const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // Clear user data (optional)
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("userData");
+const handleLogout = () => {
+  // Update login status
+  localStorage.setItem("isLoggedIn", "false");
 
-    // Navigate to login page
-    navigate("/login");
-  };
+  // Clear user-related data
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("userData");
+
+  // This triggers your useEffect’s storage event
+  window.dispatchEvent(new Event("storage"));
+
+  // Navigate to login page
+  navigate("/login");
+};
+
 
 
 
