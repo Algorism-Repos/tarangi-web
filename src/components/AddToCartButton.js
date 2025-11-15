@@ -12,10 +12,17 @@ function AddToCartButton({ product }) {
   const [showToast, setShowToast] = useState(false);
   const [cartIconSrc, setCartIconSrc] = useState(shoppingCart_red);
 
-  const handleClick = () => {
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 4000);
-  };
+const handleClick = () => {
+  setShowToast(true);
+
+  // Disable page scroll
+  document.body.style.overflow = "hidden";
+
+  setTimeout(() => {
+    setShowToast(false);
+    document.body.style.overflow = "auto"; // Enable scroll again
+  }, 2000); // 2 seconds
+};
 
   return (
     <>
@@ -33,45 +40,51 @@ function AddToCartButton({ product }) {
       </button>
 
       {/* Toast */}
-      <AnimatePresence>
-        {showToast && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.7 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.7 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="absolute bottom-1 left-1/2 -translate-x-1/2 z-[9999]"
-          >
-            <div className="relative w-[90vw] max-w-[540px] h-[92px] bg-[#F9C892] 
-              rounded-[16px] shadow-lg flex items-center px-6 py-4 overflow-hidden">
+<AnimatePresence>
+  {showToast && (
+    <motion.div
+      initial={{ opacity: 0, y: -20, scale: 0.7 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -20, scale: 0.7 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-md bg-transparent"
+    >
+      <div className="relative w-[90vw] max-w-[540px] h-[92px] bg-[#F9C892] 
+        rounded-[16px] shadow-lg flex items-center px-6 py-4 overflow-hidden">
 
-              {/* Background Flower */}
-              <div className="absolute -left-1 z-0 ">
-                <img src={flowerBg} className="w-[100px] h-[100px]" />
-              </div>
+        {/* Background Flower */}
+        <div className="absolute left-0 z-0">
+          <img src={flowerBg} className="w-[100px] h-[100px]" />
+        </div>
 
-              {/* Check Icon */}
-              <div className="relative z-10 w-[46px] h-[46px] mr-3 flex items-center justify-center">
-                <img src={cartIcon} className="w-[52px] h-[52px]" />
-              </div>
+        {/* Check Icon */}
+        <div className="relative z-10 w-[52px] h-[52px] mr-3 flex items-center justify-center">
+          <img src={cartIcon} className="w-[52px] h-[52px]" />
+        </div>
 
-              {/* Text */}
-              <div className="relative z-10">
-                <h3 className="text-[#2B2B2B] text-[20px] font-semibold">Hooray!</h3>
-                <p className="text-[#502F07] text-[14px]">Added to your cart successfully</p>
-              </div>
+        {/* Text */}
+        <div className="relative z-10">
+          <h3 className="text-[#2B2B2B] text-[18px] font-poppins font-semibold">Hooray!</h3>
+          <p className="text-[#502F07] font-medium font-poppins text-[14px]">
+            Added to your cart successfully
+          </p>
+        </div>
 
-              {/* Close Button */}
-              <button
-                className="absolute top-3 right-3 z-10"
-                onClick={() => setShowToast(false)}
-              >
-                <img src={closeIcon} className="w-5 h-5" />
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        {/* Close Button */}
+        <button
+          className="absolute top-3 right-3 z-10"
+          onClick={() => {
+            setShowToast(false);
+            document.body.style.overflow = "unset"; // restore scroll
+          }}
+        >
+          <img src={closeIcon} className="w-[25px] h-[25px]" />
+        </button>
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
     </>
   );
 }

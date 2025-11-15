@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import { Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
+
 
 import userIcon from "../assets/user.png";
 import addressIcon from "../assets/address.png";
@@ -217,6 +219,19 @@ const Profile = () => {
     { name: "Orders", icon: ordersIcon, activeIcon: ordersIconActive },
     { name: "Favourites", icon: favIcon, activeIcon: favIconActive },
   ];
+  // logout function
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear user data (optional)
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userData");
+
+    // Navigate to login page
+    navigate("/login");
+  };
+
+
 
   return (
     <div className="min-h-[972px] bg-[#FFF5E8] py-16 px-4 sm:px-6 lg:px-16 xl:px-28">
@@ -237,11 +252,10 @@ const Profile = () => {
                   key={item.name}
                   onClick={() => setActiveSection(item.name)}
                   className={`flex items-center gap-3 px-5 py-3 rounded-[8px] text-[16px] font-poppins transition-all w-full
-            ${
-              isActive
-                ? "bg-[#5A0010] text-white"
-                : "text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010]"
-            }`}
+            ${isActive
+                      ? "bg-[#5A0010] text-white"
+                      : "text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010]"
+                    }`}
                 >
                   <img
                     src={isActive ? item.activeIcon : item.icon}
@@ -254,8 +268,7 @@ const Profile = () => {
             })}
 
             <button
-              onClick={() => console.log("Logout clicked")}
-              className="flex items-center gap-3 px-5 py-3  mt-[275px] text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
+              onClick={handleLogout} className="flex items-center gap-3 px-5 py-3  mt-[275px] text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
             >
               <img
                 src={logout_icon}
@@ -422,6 +435,16 @@ const Profile = () => {
               </div>
             )}
           </div>
+          <button
+            onClick={handleLogout} className="flex items-center gap-3 px-5 py-3  mt-[275px] text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
+          >
+            <img
+              src={logout_icon}
+              alt="Logout"
+              className="w-[30px] h-[30px] object-contain"
+            />
+            Logout
+          </button>
         </div>
       </div>
     </div>
@@ -924,9 +947,8 @@ const renderFavouritesSection = (products, toggleLike, likedProducts) => (
           >
             <div className="overflow-hidden rounded-2xl relative">
               <img
-                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] object-cover rounded-[16px] ${
-                  product.isOutOfStock ? "grayscale" : ""
-                } transition-all duration-300 ease-in-out group-hover:shadow-lg`}
+                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] object-cover rounded-[16px] ${product.isOutOfStock ? "grayscale" : ""
+                  } transition-all duration-300 ease-in-out group-hover:shadow-lg`}
                 src={product.src}
                 alt={product.name}
               />

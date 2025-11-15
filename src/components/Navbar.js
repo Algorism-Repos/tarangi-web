@@ -35,7 +35,7 @@ function Navbar() {
 
   // ✅ Initial state setup
   useEffect(() => {
-    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("isLoggedIn", "false");
     setIsLoggedIn(true);
   }, []);
 
@@ -119,15 +119,43 @@ function Navbar() {
         <div className="flex flex-row items-center gap-x-[20px]">
           {/* 🔍 Search Button */}
 
-          {isLoggedIn ? (
+
+          <div
+            onClick={() => setShowSearch((prev) => !prev)}
+            className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] hover:bg-[#D6A76F4F] transition search-icon
+                      ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"}
+        `}
+          >
+            <img src={Search_icon_white} className="w-[42px] h-[42px]" />
+          </div>
+
+          <Link to="/favourites">
+            <img
+              className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/favourites")
+                  ? "bg-[#CFA266]"
+                  : "hover:bg-[#D6A76F4F]"
+                }`}
+              src={favourite_icon}
+              alt="favourite icon"
+            />
+          </Link>
+
+          <Link to="/cart">
+            <img
+              className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/cart") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+                }`}
+              src={cartIcon}
+              alt="cart"
+            />
+          </Link>
+                    {isLoggedIn ? (
             <>
               <Link to="/profile">
                 <img
-                  className={`w-[42px] h-[42px] rounded-[8px] transition ${
-                    isActive("/profile")
+                  className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/profile")
                       ? "bg-[#CFA266]"
                       : "hover:bg-[#D6A76F4F]"
-                  }`}
+                    }`}
                   src={profile_icon}
                   alt="profile"
                 />
@@ -147,36 +175,6 @@ function Navbar() {
               </Link>
             </>
           )}
-          <div
-            onClick={() => setShowSearch((prev) => !prev)}
-            className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] hover:bg-[#D6A76F4F] transition search-icon
-                      ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"}
-        `}
-          >
-            <img src={Search_icon_white} className="w-[42px] h-[42px]" />
-          </div>
-
-          <Link to="/favourites">
-            <img
-              className={`w-[42px] h-[42px] rounded-[8px] transition ${
-                isActive("/favourites")
-                  ? "bg-[#CFA266]"
-                  : "hover:bg-[#D6A76F4F]"
-              }`}
-              src={favourite_icon}
-              alt="favourite icon"
-            />
-          </Link>
-
-          <Link to="/cart">
-            <img
-              className={`w-[42px] h-[42px] rounded-[8px] transition ${
-                isActive("/cart") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
-              }`}
-              src={cartIcon}
-              alt="cart"
-            />
-          </Link>
         </div>
 
         {/* Search Dropdown */}
@@ -192,7 +190,7 @@ function Navbar() {
               <div className="max-w-[1100px] mx-auto relative ">
                 {/* Search Input */}
                 <div className="flex items-center gap-6 w-full">
-                 
+
 
                   {/* Search Bar Container */}
                   <div className="relative w-full">
@@ -209,7 +207,7 @@ function Navbar() {
                       className="absolute right-4 top-1/2 -translate-y-1/2 w-[42px] h-[42px]"
                     />
                   </div>
-                   {/* Back Arrow */}
+                  {/* Back Arrow */}
                   <img
                     src={Back_Arrow}
                     className="w-[42px] h-[42px] cursor-pointer hover:scale-110 duration-300 bg-[#D6A76F4F] p-1 hover:bg-[#CFA266] rounded-full"
@@ -280,37 +278,35 @@ function Navbar() {
         />
 
         <div className="flex gap-x-2">
+          <Link to="/favourites">
+            <img
+              className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites")
+                  ? "bg-[#CFA266]"
+                  : "hover:bg-[#D6A76F4F]"
+                }`}
+              src={favourite_icon}
+              alt="favourite icon"
+            />
+          </Link>
+
+          <Link to="/cart">
+            <img
+              className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/cart") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+                }`}
+              src={cartIcon}
+              alt="Cart icon"
+            />
+          </Link>
           {isLoggedIn && (
             <>
-              <Link to="/favourites">
-                <img
-                  className={`w-[32px] h-[32px] rounded-[8px] transition ${
-                    isActive("/favourites")
-                      ? "bg-[#CFA266]"
-                      : "hover:bg-[#D6A76F4F]"
-                  }`}
-                  src={favourite_icon}
-                  alt="favourite icon"
-                />
-              </Link>
 
-              <Link to="/cart">
-                <img
-                  className={`w-[32px] h-[32px] rounded-[8px] transition ${
-                    isActive("/cart") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
-                  }`}
-                  src={cartIcon}
-                  alt="Cart icon"
-                />
-              </Link>
 
               <Link to="/profile">
                 <img
-                  className={`w-[32px] h-[32px] rounded-[8px] transition ${
-                    isActive("/profile")
+                  className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/profile")
                       ? "bg-[#CFA266]"
                       : "hover:bg-[#D6A76F4F]"
-                  }`}
+                    }`}
                   src={profile_icon}
                   alt="profile"
                 />
@@ -422,18 +418,17 @@ function Navbar() {
               {["/home", "/about", "/products"].map((path) => (
                 <Link to={path} key={path}>
                   <h2
-                    className={`font-poppins text-[16px] leading-normal text-center ${
-                      location.pathname === path
+                    className={`font-poppins text-[16px] leading-normal text-center ${location.pathname === path
                         ? "text-white font-semibold"
                         : "text-[#A0A0A0]"
-                    }`}
+                      }`}
                     onClick={() => setMenuVisible(false)}
                   >
                     {path === "/home"
                       ? "Home"
                       : path === "/about"
-                      ? "About Us"
-                      : "Products"}
+                        ? "About Us"
+                        : "Products"}
                   </h2>
                 </Link>
               ))}
