@@ -29,11 +29,10 @@ function About() {
         <img
           src={whatsapp_floating}
           alt="Whatsapp_Icon"
-          className={`w-[50px] sm:w-[70px] h-fit hover:scale-125 max-h-[70px] ${
-            animate
+          className={`w-[50px] sm:w-[70px] h-fit hover:scale-125 max-h-[70px] ${animate
               ? " animate-bounce duration-300 transition-transform will-change-transform transform-gpu"
               : ""
-          }`}
+            }`}
         />
       </a>
 

@@ -44,6 +44,8 @@ import before_img from "../assets/before.png";
 import after_img from "../assets/after.png";
 import slider_button from "../assets/slider_button.png";
 import refresh_icon from "../assets/Refresh_icon.png";
+import right_arrow from "../assets/right_arrow.png";
+import left_arrow from "../assets/left_arrow.png";
 import { Container } from "postcss";
 import {
   FetchAllCollectionsFromShopify,
@@ -271,7 +273,7 @@ function Home() {
           WHY US?
         </h1>
 
-        <div className="font-poppins text-center text-[16px] sm:text-[24px] font-medium sm:leading-[38px] text-[#28040E] max-w-[318px] sm:max-w-[1000px] mt-5 sm:mt-9 ">
+        <div className="font-poppins text-center text-[16px] sm:text-[20px] font-normal text-[#28040E] max-w-[318px] sm:max-w-[1035px] mt-5 sm:mt-9 ">
           <p>
             With nearly 60 years of heritage, Tarangi carries forward the
             craftsmanship and trust of their family's tradition, reimagined for
@@ -320,8 +322,8 @@ function Home() {
           </div>
 
           {/* Best Sellers */}
-          <div id="launchOffers">
-            <h1 className="section-heading !text-white tracking-[1px]">
+          <div id="launchOffers" className="max-w-full">
+            <h1 className="section-heading !text-white tracking-[1px] text-center">
               Best Sellers
             </h1>
             <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-between mt-20 sm:mt-36">
@@ -335,12 +337,12 @@ function Home() {
                   <img
                     src={type?.image?.src}
                     alt={type?.name}
-                    className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] rounded-[16px]"
+                    className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] "
                   />
-                  <h5 className="font-poppins text-[28px] font-normal leading-normal text-white mt-6">
+                  <h5 className="font-poppins text-[22px] font-normal leading-normal text-white mt-6">
                     {type?.title}
                   </h5>
-                  <h4 className="font-poppins text-[28px] font-semibold leading-normal text-[#FCD99F]">
+                  <h4 className="font-poppins text-[20px] font-semibold leading-normal text-[#FCD99F]">
                     ₹
                     {Number(type.variants[0]?.price).toLocaleString("en-IN", {
                       maximumFractionDigits: 0,
@@ -348,6 +350,97 @@ function Home() {
                   </h4>
                 </div>
               ))}
+            </div>
+
+            {/* Mobile View slider */}
+            <div className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden">
+              {/* Custom navigation buttons */}
+              {showNavigation && (
+                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
+                  <div className="">
+                    <button
+                      ref={prevRef}
+                      className="swiper-button-prev-custom bg-[#D9B16F70] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                    >
+                      <img
+                        src={left_arrow}
+                        alt="Previous"
+                        className="w-[28px] h-[28px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                      />
+                    </button>
+                  </div>
+                  <div className="">
+                    <button
+                      ref={nextRef}
+                      className="swiper-button-next-custom bg-[#D9B16F70] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                    >
+                      <img
+                        src={right_arrow}
+                        alt="Next"
+                        className="w-[28px] h-[28px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                      />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <Swiper
+                modules={[Navigation]}
+                spaceBetween={12}
+                slidesPerView={1.1}
+                breakpoints={{
+                  320: { slidesPerView: 1, spaceBetween: 12 },
+                  480: { slidesPerView: 1, spaceBetween: 16 },
+                  640: { slidesPerView: 1, spaceBetween: 20 },
+                  768: { slidesPerView: 2, spaceBetween: 24 },
+                  1024: { slidesPerView: 2, spaceBetween: 28 },
+                  1280: { slidesPerView: 3, spaceBetween: 32 },
+                  1536: { slidesPerView: 3, spaceBetween: 36 },
+                  1920: { slidesPerView: 3, spaceBetween: 40 },
+                }}
+                onBeforeInit={(swiper) => {
+                  if (showNavigation) {
+                    swiper.params.navigation.prevEl = prevRef.current;
+                    swiper.params.navigation.nextEl = nextRef.current;
+                    swiper.navigation.init();
+                    swiper.navigation.update();
+                  }
+                }}
+                className="!overflow-hidden  !h-[515px]"
+              >
+                {festiveFiltered.length > 0 ? (
+                  festiveFiltered.map((type, index) => (
+                    <SwiperSlide key={index}>
+                      <div
+                        className="w-[360px] h-[450px] mx-auto flex flex-col items-center gap-y-2 transform transition-transform duration-300 ease-out hover:scale-105 cursor-pointer"
+                        onClick={() => toggle(type?.title)}
+                      >
+                        <img
+                          src={type?.image?.src}
+                          alt={type?.name}
+                          className="px-2 sm:px-0 w-[360px] h-[460px]"
+                        />
+                        <h5 className="font-poppins text-[18px] sm:text-[20px] md:text-[22px] font-normal leading-normal text-white mt-4 sm:mt-6">
+                          {type?.title}
+                        </h5>
+                        <h4 className="font-poppins text-[16px] sm:text-[18px] md:text-[20px] font-semibold leading-normal text-[#FCD99F]">
+                          ₹
+                          {Number(type.variants[0]?.price).toLocaleString(
+                            "en-IN",
+                            {
+                              maximumFractionDigits: 0,
+                            }
+                          )}
+                        </h4>
+                      </div>
+                    </SwiperSlide>
+                  ))
+                ) : (
+                  <div className="text-white text-center py-10">
+                    No products available
+                  </div>
+                )}
+              </Swiper>
             </div>
           </div>
         </div>
@@ -369,9 +462,10 @@ function Home() {
 
           {/* Images */}
 
-          <h1 className="w-[340px] sm:w-[680px] mx-auto text-center font-atteron text-[#5C0A1F] text-[20px] sm:text-[40px] font-semibold tracking-[1px] sm:tracking-[1px] mt-16 sm:mt-20">
+          <h1 className="max-w-[340px] sm:max-w-[680px] mx-auto text-center font-atteron text-[#5C0A1F] text-[26px] sm:text-[40px] font-semibold tracking-[1px] sm:tracking-[1px] mt-16 sm:mt-20">
             Enjoy stunning designs without the heavy price tag
           </h1>
+
           <div className="flex flex-col sm:flex-row items-center justify-between gap-y-12 sm:gap-y-28 w-full mt-16 sm:mt-20">
             <div className="relative border">
               <img
@@ -399,60 +493,39 @@ function Home() {
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
                 ₹ 12,000
               </h2>
+            </div>
+          </div>
 
-              <div
-                className="border-2 border-white w-[360px] h-[374.15px] relative z-0 "
-                onClick={toggle}
-              >
-                <img
-                  src={women_design}
-                  alt="men-image"
-                  className="w-[359px] h-[539px] sm:w-[373px] sm:h-[410px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute  bottom-[-0px] z-10"
-                />
-                <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/4 ">
-                  Women
-                </h2>
+          <div className="max-w-6xl mx-auto mt-8 sm:mt-28 px-4 py-12">
+            <h1 className="font-atteron text-[30px] font-bold text-[#5C0A1F] text-center tracking-[2px] sm:text-[48px]">
+              Why choose Tarangi’s
+              <br className="hidden md:block" /> silver jewelry?
+            </h1>
+
+            <div className="flex flex-col w-fit mx-auto gap-y-7 mt-16 px-4 sm:px-0">
+              <div className="flex flex-row items-center gap-x-4">
+                <img className="w-[28px]" src={bullet_icon} />
+                <p className="font-poppins text-left text-[18px] sm:text-[22px]">
+                  The luminous beauty of gold, made affordable.
+                </p>
               </div>
-
-              <div className="max-w-6xl mx-auto mt-8 sm:mt-28 px-4 py-12">
-                <h1 className="font-atteron text-[30px] font-bold text-[#5C0A1F] text-center tracking-[2px] sm:text-[48px]">
-                  Why choose Tarangi’s
-                  <br className="hidden md:block" /> silver jewelry?
-                </h1>
-
-                <div className="flex flex-col w-fit mx-auto gap-y-7 mt-16 px-4 sm:px-0">
-                  <div className="flex flex-row items-center gap-x-4">
-                    <img className="w-[28px]" src={bullet_icon} />
-                    <p className="font-poppins text-left text-[18px] sm:text-[24px]">
-                      The luminous beauty of gold, made affordable.
-                    </p>
-                  </div>
-                  <div className="flex flex-row items-center gap-x-4">
-                    <img className="w-[28px]" src={bullet_icon} />
-                    <p className="font-poppins text-left text-[18px] sm:text-[24px]">
-                      Lightweight and comfortable for everyday wear.
-                    </p>
-                  </div>
-                  <div className="flex flex-row items-center gap-x-4">
-                    <img className="w-[28px]" src={bullet_icon} />
-                    <p className="font-poppins text-left text-[18px] sm:text-[24px]">
-                      Versatile, from casual looks to special occasions.
-                    </p>
-                  </div>
-                  <div className="flex flex-row items-center gap-x-4">
-                    <img className="w-[28px]" src={bullet_icon} />
-                    <p className="font-poppins text-left text-[18px] sm:text-[24px]">
-                      Crafted with lasting artistry and care.
-                    </p>
-                  </div>
-                </div>
-
-                {/* <ul style={{ listStyleImage: `url(${bullet_icon})` }} className=" max-w-fit px-5 mx-auto space-y-6 mt-16 sm:text-[28px] flex-col items-center" >
-                            <li>&nbsp; &nbsp;The luminous beauty of gold, made affordable</li>
-                            <li>&nbsp; &nbsp;Lightweight and comfortable for everyday wear</li>
-                            <li>&nbsp; &nbsp;Versatile, from casual looks to special occasions</li>
-                            <li>&nbsp; &nbsp;Crafted with lasting artistry and care</li>
-                        </ul> */}
+              <div className="flex flex-row items-center gap-x-4">
+                <img className="w-[28px]" src={bullet_icon} />
+                <p className="font-poppins text-left text-[18px] sm:text-[22px]">
+                  Lightweight and comfortable for everyday wear.
+                </p>
+              </div>
+              <div className="flex flex-row items-center gap-x-4">
+                <img className="w-[28px]" src={bullet_icon} />
+                <p className="font-poppins text-left text-[18px] sm:text-[22px]">
+                  Versatile, from casual looks to special occasions.
+                </p>
+              </div>
+              <div className="flex flex-row items-center gap-x-4">
+                <img className="w-[28px]" src={bullet_icon} />
+                <p className="font-poppins text-left text-[18px] sm:text-[22px]">
+                  Crafted with lasting artistry and care.
+                </p>
               </div>
             </div>
           </div>
@@ -462,11 +535,11 @@ function Home() {
       {/* Tarangi Specials */}
       <div className="newproducts-section tracking-[1px]">
         <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
-          <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-32 sm:mt-0 overflow-x-hidden">
+          <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-30 sm:mt-0 overflow-x-hidden">
             Tarangi Specials
           </h1>
 
-          <div className="flex flex-col sm:flex-row items-center sm:gap-x-12 gap-y-24 sm:flex-wrap justify-center mt-12 sm:mt-44">
+          <div className="hidden sm:flex flex-col sm:flex-row items-center sm:gap-x-12 gap-y-24 sm:flex-wrap justify-center mt-10 sm:mt-44">
             {specials.map((item, index) => (
               <div
                 key={index}
@@ -481,12 +554,91 @@ function Home() {
                   alt={item.title}
                   className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white"
                 />
-                <h3 className="font-atteron text-[34px] font-normal leading-normal text-white mt-2">
+                <h3 className="font-atteron text-[32px] font-normal leading-normal text-white mt-2 sm:text-[34px]">
                   {item.title}
                 </h3>
               </div>
             ))}
           </div>
+        </div>
+        {/* ----------- MOBILE VIEW (Swiper) ----------- */}
+        <div className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0 sm:hidden">
+          {/* Custom navigation buttons */}
+          {showNavigation && (
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
+              <div>
+                <button
+                  ref={prevRef}
+                  className="swiper-button-prev-custom bg-[#D9B16F70] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                >
+                  <img
+                    src={left_arrow}
+                    alt="Previous"
+                    className="w-[28px] h-[28px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                  />
+                </button>
+              </div>
+              <div>
+                <button
+                  ref={nextRef}
+                  className="swiper-button-next-custom bg-[#D9B16F70] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                >
+                  <img
+                    src={right_arrow}
+                    alt="Next"
+                    className="w-[28px] h-[28px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                  />
+                </button>
+              </div>
+            </div>
+          )}
+
+          <Swiper
+            modules={[Navigation]}
+            spaceBetween={12}
+            slidesPerView={1.1}
+            breakpoints={{
+              320: { slidesPerView: 1, spaceBetween: 12 },
+              480: { slidesPerView: 1, spaceBetween: 16 },
+              640: { slidesPerView: 1, spaceBetween: 20 },
+            }}
+            onBeforeInit={(swiper) => {
+              if (showNavigation) {
+                swiper.params.navigation.prevEl = prevRef.current;
+                swiper.params.navigation.nextEl = nextRef.current;
+                swiper.navigation.init();
+                swiper.navigation.update();
+              }
+            }}
+            className="!overflow-hidden !h-[520px]"
+          >
+            {specials.length > 0 ? (
+              specials.map((item, index) => (
+                <SwiperSlide key={index}>
+                  <div
+                    className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-105 cursor-pointer"
+                    onClick={() => {
+                      setSelectedType(item.title);
+                      toggle();
+                    }}
+                  >
+                    <img
+                      src={item.img}
+                      alt={item.title}
+                      className="w-[357px] h-[380px] border-[2px] border-white"
+                    />
+                    <h3 className="font-atteron text-[30px] font-normal leading-normal text-white mt-2">
+                      {item.title}
+                    </h3>
+                  </div>
+                </SwiperSlide>
+              ))
+            ) : (
+              <div className="text-white text-center py-10">
+                No specials available
+              </div>
+            )}
+          </Swiper>
         </div>
       </div>
 
@@ -609,11 +761,12 @@ function Home() {
           </div>
         </div>
       </div>
-
+      
+      {/* Before After Slider */}
       <div className="before-after-section ">
         <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
-          <h1 className="font-atteron section-heading text-[26px]  sm:text-[64px] text-center text-[#5C0A1F] leading-tight mb-10">
-            <span className=""> Enhance Your Look With</span> <br /> Tarangi
+          <h1 className="font-atteron section-heading text-[26px]  sm:text-[64px] text-center text-[#5C0A1F] mb-16">
+            <span className="text-[28px]"> Enhance Your Look With</span> <br /> Tarangi
           </h1>
 
           <div className="container" ref={containerRef}>

@@ -322,7 +322,6 @@ function Cart() {
                   </div>
                 </div>
               )}
-
               <Pincode_Input />
               <div className="w-full bg-[#FFFAF3] flex items-center justify-between px-5 py-3 z-50 bottom-0 left-0">
                 <div>

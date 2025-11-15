@@ -584,19 +584,123 @@ function CheckoutPage() {
                   <label className="text-[14px] font-Poppins text-[#6E0027] mb-2 block">
                     Billing Address
                   </label>
+ <div>
+                  <label className="text-sm block mb-1">Address</label>
                   <input
-                    name="billingaddress"
+                    name="address"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.billingaddress}
-                    className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${
-                      formik.errors.billingaddress &&
-                      formik.touched.billingaddress
+                    value={formik.values.address}
+                    className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${formik.errors.address && formik.touched.address
+                      ? "border-red-500"
+                      : "border-[#efe6e6]"
+                      }
+                     focus:outline-none focus:border-[#8C455E]`}
+                    placeholder="Address (Flat No./ House No./Street/Area))"
+                  />
+                  {formik.touched.address && formik.errors.address && (
+                    <p className="text-xs text-red-500 mt-1">
+                      {formik.errors.address}
+                    </p>
+                  )}
+                </div>
+
+                {/* Landmark */}
+                <div>
+                  <label className="text-sm block mb-1">Landmark</label>
+                  <input
+                    name="landmark"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.landmark}
+                    className="w-full h-[44px] px-3 border border-[#efe6e6] rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal focus:outline-none focus:border-[#8C455E]"
+                    placeholder="Landmark (Optional)"
+                  />
+                </div>
+
+                {/* City, PIN, State, Country */}
+                <div className="flex flex-col sm:flex-wrap sm:flex-row gap-3">
+                  <div className="flex-1 min-w-[45%]">
+                    <label className="text-sm block mb-1">City</label>
+                    <input
+                      name="city"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.city}
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.city && formik.touched.city
                         ? "border-red-500"
                         : "border-[#efe6e6]"
-                    } focus:outline-none focus:border-[#8C455E]`}
-                    placeholder="Billing Address"
-                  />
+                        }
+                       focus:outline-none focus:border-[#8C455E]`}
+                      placeholder="City"
+                    />
+                    {formik.touched.city && formik.errors.city && (
+                      <p className="text-xs text-red-500 mt-1">
+                        {formik.errors.city}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex-1 min-w-[45%]">
+                    <label className="text-sm block mb-1">Pincode</label>
+                    <input
+                      name="pincode"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.pincode}
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.pincode && formik.touched.pincode
+                        ? "border-red-500"
+                        : "border-[#efe6e6]"
+                        }
+                      focus:outline-none focus:border-[#8C455E]`}
+                      placeholder="Pincode"
+                    />
+                    {formik.touched.pincode && formik.errors.pincode && (
+                      <p className="text-xs text-red-500 mt-1">
+                        {formik.errors.pincode}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex-1 min-w-[45%]">
+                    <label className="text-sm block mb-1">State</label>
+                    <select
+                      name="state"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.state}
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${formik.errors.state && formik.touched.state
+                        ? "border-red-500"
+                        : "border-[#efe6e6]"
+                        }
+                     focus:outline-none focus:border-[#8C455E]`}
+                    >
+                      <option value="">Select State</option>
+                      <option value="Tamil Nadu">Tamil Nadu</option>
+                      <option value="Kerala">Kerala</option>
+                      <option value="Karnataka">Karnataka</option>
+                    </select>
+                    {formik.touched.state && formik.errors.state && (
+                      <p className="text-xs text-red-500 mt-1">
+                        {formik.errors.state}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex-1 min-w-[45%]">
+                    <label className="text-sm block mb-1">Country</label>
+                    <select
+                      name="country"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.country}
+                      className="w-full h-[44px] px-3 border border-[#efe6e6] focus:outline-none focus:border-[#8C455E] rounded-md text-[16px]"
+                    >
+                      <option value="India">India</option>
+                    </select>
+                  </div>
+                </div>
+              
                 </div>
               )}
 

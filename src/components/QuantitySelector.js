@@ -18,12 +18,12 @@ function QuantitySelector({ maxQuantity=10,value, onChange = () => {} }) {
         ))}
       </select>
 
-      <div className=" absolute right-1 top-1.5">
-        <img src={down_arrow} alt="Down Arrow" />
-      </div>
-    </div>
-  );
-}
+            <div className="absolute right-1 top-1.5 pointer-events-none">
+                <img src={down_arrow} alt="Down Arrow" />
+            </div>
+        </div>
+    );
+};
 
 export default QuantitySelector;
 

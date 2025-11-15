@@ -3,36 +3,33 @@ import { createContext, useEffect, useState } from "react";
 export const AppContext = createContext();
 
 export function AppProvider({ children }) {
-    const [filteredProducts, setFilteredProducts] = useState([]);
-  
+  const [filteredProducts, setFilteredProducts] = useState([]);
+
   const [productListFromShopify, setProductListFromShopify] = useState(() => {
     const saved = localStorage.getItem("productListFromShopify");
     return saved ? JSON.parse(saved) : [];
   });
-    const [wishlistItems, setWishlistItems] = useState(() => {
+  const [wishlistItems, setWishlistItems] = useState(() => {
     const saved = localStorage.getItem("wishlistItems");
     return saved ? JSON.parse(saved) : [];
   });
- const [cartItems, setCartItems] = useState(() => {
+  const [cartItems, setCartItems] = useState(() => {
     const saved = localStorage.getItem("cartItems");
     return saved ? JSON.parse(saved) : [];
   });
 
-   const [recentlyViewed, setRecentlyViewed] = useState(() => {
+  const [recentlyViewed, setRecentlyViewed] = useState(() => {
     const saved = localStorage.getItem("recentlyViewed");
     return saved ? JSON.parse(saved) : [];
   });
 
-
-  
   const updateCartItemQuantity = (id, newQty) => {
-  setCartItems((prev) =>
-    prev.map((item) =>
-      item.id === id ? { ...item, quantity: newQty } : item
-    )
-  );
-};
-
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, quantity: newQty } : item
+      )
+    );
+  };
 
   useEffect(() => {
     if (productListFromShopify && productListFromShopify.length > 0) {
@@ -42,10 +39,10 @@ export function AppProvider({ children }) {
       );
     }
   }, [productListFromShopify]);
-   useEffect(() => {
+  useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
-    useEffect(() => {
+  useEffect(() => {
     localStorage.setItem("wishlistItems", JSON.stringify(wishlistItems));
   }, [wishlistItems]);
   const addToCart = (product) => {
@@ -70,11 +67,7 @@ export function AppProvider({ children }) {
 
   const clearCart = () => setCartItems([]);
 
-
-
-
-
-    // Wishlist operations
+  // Wishlist operations
   const addToWishlist = (product) => {
     setWishlistItems((prev) => {
       const exists = prev.find((item) => item.id === product.id);
@@ -99,25 +92,25 @@ export function AppProvider({ children }) {
     });
   };
 
-
-    return (
+  return (
     <AppContext.Provider
       value={{
-       productListFromShopify,
+        productListFromShopify,
         setProductListFromShopify,
         cartItems,
         addToCart,
         removeFromCart,
         clearCart,
-        filteredProducts, 
+        filteredProducts,
         setFilteredProducts,
-          wishlistItems,
+        wishlistItems,
         addToWishlist,
         removeFromWishlist,
         clearWishlist,
         recentlyViewed,
-         addToRecentlyViewed ,updateCartItemQuantity 
-        
+        addToRecentlyViewed,
+        updateCartItemQuantity,
+        setRecentlyViewed,
       }}
     >
       {children}
@@ -129,4 +122,3 @@ export default AppProvider;
 AppProvider.propTypes = {
   children: PropTypes.node,
 };
-  
