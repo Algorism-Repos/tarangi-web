@@ -427,7 +427,6 @@ const renderAddressSection = (addresses, editingAddressId, handleAddNew, handleE
                 </div>
 
                 <div className="flex gap-3 mt-2">
-                  {successMessage && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">{successMessage}</div>}
                   <button type="submit" className="bg-[#5A0010] text-white px-6 py-2 rounded-lg text-[14px]">Save</button>
                   <button type="button" onClick={() => handleCancel(values.id)} className="border border-[#5A0010] text-[#5A0010] px-6 py-2 rounded-[8px] text-[14px]">Cancel</button>
                 </div>
