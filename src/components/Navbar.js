@@ -11,7 +11,8 @@ import Back_Arrow from "../assets/close_iconwhite.png";
 import logo from "../assets/logo.png";
 import menu from "../assets/menu_icon.png";
 import close from "../assets/close_iconwhite.png";
-import favourite_icon from "../assets/Favorites_icon.png";
+import favouriteFilled from "../assets/favourites_filled_icon.png";
+import favouriteUnfilled from "../assets/Favorites_icon.png";
 import cart_icon_empty from "../assets/Cart_white.png";
 import cart_icon_filled from "../assets/cart_filled.png";
 import profile_icon from "../assets/profile_icon.png";
@@ -24,6 +25,9 @@ function Navbar() {
   const [cartItems, setCartItems] = useState(true);
   const [showSearch, setShowSearch] = useState(false);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+  const favourites = JSON.parse(localStorage.getItem("favourites")) || [];
+  const hasFavourites = favourites.length > 0;
+
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -31,7 +35,7 @@ function Navbar() {
   const isActive = (path) => location.pathname === path;
   const getLinkClass = (path) =>
     isActive(path) ? "text-white" : "text-white opacity-[0.5]";
-  const cartIcon = cartItems.length > 0 ? cart_icon_filled : cart_icon_empty;
+  const cartIcon = cartItems.length > 0 ? cart_icon_empty : cart_icon_filled;
 
   // ✅ Initial state setup
   useEffect(() => {
@@ -58,7 +62,7 @@ function Navbar() {
   }, []);
 
 
-  // ✅ Close search when clicking outside
+  // Close search when clicking outside
   useEffect(() => {
     const closeSearch = (e) => {
       if (
@@ -75,7 +79,7 @@ function Navbar() {
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowSearchDropdown(false); // CLOSE DROPDOWN
+        setShowSearchDropdown(false);
       }
     }
 
@@ -129,23 +133,21 @@ function Navbar() {
 
           <div
             onClick={() => setShowSearch((prev) => !prev)}
-            className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] hover:bg-[#D6A76F4F] transition search-icon
+            className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] transition search-icon
                       ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"}
         `}
           >
             <img src={Search_icon_white} className="w-[42px] h-[42px]" />
           </div>
-
           <Link to="/favourites">
             <img
-              className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/favourites")
-                ? "bg-[#CFA266]"
-                : "hover:bg-[#D6A76F4F]"
+              className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/favourites") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
                 }`}
-              src={favourite_icon}
+              src={hasFavourites ? favouriteFilled : favouriteUnfilled}
               alt="favourite icon"
             />
           </Link>
+
 
           <Link to="/cart">
             <img
@@ -159,7 +161,7 @@ function Navbar() {
             <>
               <Link to="/profile">
                 <img
-                  className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/profile")
+                  className={`w-[48px] h-[48px] rounded-[8px] transition ${isActive("/profile")
                     ? "bg-[#CFA266]"
                     : "hover:bg-[#D6A76F4F]"
                     }`}
@@ -278,8 +280,7 @@ function Navbar() {
           className="w-[37px] h-[37px] cursor-pointer"
           onClick={() => setMenuVisible(true)}
         />
-
-        <Link to="/">
+        <Link to="/home">
           <img
             src={logo}
             alt="brand-logo"
@@ -287,17 +288,18 @@ function Navbar() {
           />
         </Link>
 
+
         <div className="flex gap-x-2">
           <Link to="/favourites">
             <img
-              className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites")
-                ? "bg-[#CFA266]"
-                : "hover:bg-[#D6A76F4F]"
+              className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
                 }`}
-              src={favourite_icon}
+              src={hasFavourites ? favouriteFilled : favouriteUnfilled}
               alt="favourite icon"
             />
           </Link>
+
+
 
           <Link to="/cart">
             <img
@@ -334,10 +336,11 @@ function Navbar() {
                 className="w-[30px] h-[30px] cursor-pointer "
                 onClick={() => setMenuVisible(false)}
               />
-              <Link to="/" onClick={() => setMenuVisible(false)}>
+              <Link to="/home">
                 <img
                   src={logo}
                   className="w-[85px] h-[55px] cursor-pointer absolute top-9 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                  onClick={() => setMenuVisible(false)}
                 />
               </Link>
             </div>
@@ -427,7 +430,7 @@ function Navbar() {
               </div>
 
               {/* PAGE LINKS */}
-              {["/home", "/about", "/products"].map((path) => (
+              {["/home", "/about", "/products", "/blog"].map((path) => (
                 <Link to={path} key={path}>
                   <h2
                     className={`font-poppins text-[16px] leading-normal text-center ${location.pathname === path
@@ -440,14 +443,18 @@ function Navbar() {
                       ? "Home"
                       : path === "/about"
                         ? "About Us"
-                        : "Products"}
+                        : path === "/products"
+                          ? "Products"
+                          : "Blog"}
                   </h2>
                 </Link>
               ))}
 
+
               {/* LOGIN / SIGNUP */}
               {!isLoggedIn && (
-                <div className="flex flex-col items-center gap-y-[25px]">
+                <div className="flex flex-col items-center gap-y-[25px]" onClick={() => setMenuVisible(false)}
+                >
                   <button
                     onClick={() => navigate("/signup")}
                     className="rounded-[32px] border border-[#CFA266] w-[319px] h-[52px] font-poppins text-[16px] text-white"

@@ -1,4 +1,4 @@
-import React, {  useContext } from "react";
+import React, {  useContext , useEffect} from "react";
 // Component
 import Product_Filter from "../components/Product_filter";
 import Product_Listing from "./Product_Listing";
@@ -19,6 +19,10 @@ function Product_page() {
     });
     return acc;
   }, {});
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
   return (
     <>
       <div className="bg-[#FFF5E8] py-[50px] relative">

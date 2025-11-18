@@ -14,6 +14,7 @@ import gold_ellipse from "../assets/Products/gold_ellipse.png";
 import silver_ellipse from "../assets/Products/silver_ellipse.png";
 import brown_ellipse from "../assets/Products/brown_ellipse.png";
 import favorie_icon from "../assets/Products/favorite_icon.png";
+import favorie_icon_white from "../assets/Products/Unfilled_likeIcon.png";
 import { AppContext } from "../context/AppContext";
 import pure_silver from "../assets/pure_silver_icon.png";
 import shipping from "../assets/shipping_icon.png";
@@ -23,6 +24,7 @@ import plating from "../assets/plating_icon.png";
 import PincodeInput from "../components/Pincode_Input";
 import Recently_Viewed from "../components/Recently-Viewed";
 import AddToCartButton from "../components/AddToCartButton";
+import Wishlist_Popup from "../components/Wishlist_Popup";
 
 function Product_Description() {
   const location = useLocation();
@@ -30,8 +32,11 @@ function Product_Description() {
   const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } =
     useContext(AppContext);
   const [quantity, setQuantity] = useState(1);
-  const [activeColor, setActiveColor] = useState(null);
+  const [activeColor, setActiveColor] = useState("gold");
   const [selectedImage, setSelectedImage] = useState(product?.image?.src);
+  const swiperRef = useRef(null);
+  const [showWishlistPopup, setShowWishlistPopup] = useState(false)
+
 
   const Colors = [
     { id: "gold", img: gold_ellipse },
@@ -74,6 +79,7 @@ function Product_Description() {
       });
     }
   }, []);
+  const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
 
   return (
     <>
@@ -98,17 +104,35 @@ function Product_Description() {
               <Swiper
                 spaceBetween={0}
                 slidesPerView={1}
-                pagination={{
-                  dynamicBullets: true,
-                }}
+                pagination={{ dynamicBullets: true }}
                 modules={[Pagination]}
-                onSlideChange={() => console.log("slide change")}
-                onSwiper={(swiper) => console.log(swiper)}
+                onSwiper={(swiper) => (swiperRef.current = swiper)}
+
+                // 🔥 Sync active color when user swipes
+                onSlideChange={(swiper) => {
+                  const index = swiper.activeIndex;
+
+                  if (index === 0) {
+                    setActiveColor("gold");
+                    setSelectedImage(product?.image?.src);
+                  }
+
+                  if (index === 1) {
+                    setActiveColor("silver");
+                    setSelectedImage(product_1);
+                  }
+
+                  if (index === 2) {
+                    setActiveColor("brown");
+                    setSelectedImage(product_2);
+                  }
+
+                }}
               >
                 <SwiperSlide>
                   <img
                     className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
-                    src={selectedImage}
+                    src={product?.image?.src}
                     alt="Product"
                   />
                 </SwiperSlide>
@@ -117,17 +141,20 @@ function Product_Description() {
                   <img
                     className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
                     src={product_1}
-                    alt=""
+                    alt="gold"
                   />
                 </SwiperSlide>
+
                 <SwiperSlide>
                   <img
                     className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
                     src={product_2}
-                    alt=""
+                    alt="silver"
                   />
                 </SwiperSlide>
               </Swiper>
+
+
             </div>
 
             {/* Product Detail */}
@@ -219,67 +246,94 @@ function Product_Description() {
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
               {/* Color Options */}
-              <div className="">
-                <p className="text-[14px] text-[#6F6F6F]">Colors Available</p>
+              <div className="mt-2 flex justify-start gap-x-4">
+                {Colors.map((color) => {
+                  const isAvailable =
+                    product?.availableColors?.includes(color.id) ?? true;
 
-                <div className="mt-2 flex justify-start gap-x-4">
-                  {Colors.map((color) => {
-                    const isAvailable =
-                      product?.availableColors?.includes(color.id) ?? true;
+                  const handleColorChange = () => {
+                    if (!isAvailable) return;
 
-                    return (
-                      <img
-                        key={color.id}
-                        onClick={() => {
-                          if (isAvailable) {
-                            setActiveColor(color.id);
-                            console.log("Selected color:", color.id);
+                    setActiveColor(color.id);
 
-                            // Change product image based on color
-                            if (color.id === "gold")
-                              setSelectedImage(product_1);
-                            if (color.id === "silver")
-                              setSelectedImage(product_2);
-                            if (color.id === "brown")
-                              setSelectedImage(product?.image?.src);
-                          }
-                        }}
-                        className={`w-[45px] rounded-full bg-white transition-all duration-200 cursor-pointer
-                          ${
-                            activeColor === color.id
-                              ? "border-[4px] border-primary p-[2px]"
-                              : "border-[2px] border-transparent  hover:border-[2px] hover:border-primary hover:p-[2px]"
-                          }
-                          ${!isAvailable ? "opacity-40 cursor-not-allowed" : ""}
-                        `}
-                        src={color.img}
-                        alt={color.id}
-                      />
-                    );
-                  })}
-                </div>
+                    // 🔥 Scroll & Update Image
+                    if (color.id === "gold") {
+                      setSelectedImage(product?.image?.src);
+                      swiperRef.current.slideTo(0);
+                    }
+
+                    if (color.id === "silver") {
+                      setSelectedImage(product_1);
+                      swiperRef.current.slideTo(1);
+                    }
+
+                    if (color.id === "brown") {
+                      setSelectedImage(product_2);
+                      swiperRef.current.slideTo(2);
+
+                    }
+                  };
+
+                  return (
+                    <img
+                      key={color.id}
+                      onClick={handleColorChange}
+                      className={`w-[45px] h-[45px] rounded-full bg-white transition-all duration-200 cursor-pointer
+          ${activeColor === color.id
+                          ? "border-[4px] border-primary p-[2px]"
+                          : "border-[2px] border-transparent hover:border-primary hover:p-[2px]"
+                        }
+          ${!isAvailable ? "opacity-40 cursor-not-allowed" : ""}`}
+                      src={color.img}
+                      alt={color.id}
+                    />
+                  );
+                })}
               </div>
+
 
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
               {/* Buttons */}
-              <div className="max-w-[397px] ">
-                <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
+              <div className="max-w-[500px] ">
+                {/* <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
                   <AddToCartButton />
 
                   <Link className="w-full" to="/favourites" state={{ product }}>
                     <button
-                      className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[50px] rounded-full text-primary text-[18px] font-medium mt-2 sm:w-[176px]"
+                      className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-[361px] h-[56px] rounded-full text-primary text-[18px] font-medium sm:w-[176px]
+  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
+                      onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
+                      onMouseLeave={() => setWishIconSrc(favorie_icon)}
                       onClick={handleAddToWish}
                     >
                       <img
                         className="w-[32px] h-[32px]"
-                        src={favorie_icon}
+                        src={wishIconSrc}
                         alt="like_icon"
                       />
                       Wishlist
                     </button>
                   </Link>
+                </div> */}
+
+                <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
+                  <AddToCartButton />
+
+                  <button
+                    className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[52px] rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
+                    onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
+                    onMouseLeave={() => setWishIconSrc(favorie_icon)}
+                    onClick={() => setShowWishlistPopup(true)}>
+                    <img
+                      className="w-[32px] h-[32px]"
+                      src={wishIconSrc}
+                      alt="like_icon"
+                    />
+                    Add to Wishlist
+                  </button>
+
+
                 </div>
               </div>
             </div>
@@ -347,6 +401,10 @@ function Product_Description() {
           <Recently_Viewed />
         </div>
       </div>
+      <Wishlist_Popup
+        show={showWishlistPopup}
+        onClose={() => setShowWishlistPopup(false)}
+      />
     </>
   );
 }

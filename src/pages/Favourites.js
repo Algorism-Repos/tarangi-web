@@ -4,6 +4,9 @@ import product_2 from "../assets/Products/product_2.png";
 import AddToCartButton from "../components/AddToCartButton";
 import LikeButton from "../components/LikeButton";
 import Recently_Viewed from "../components/Recently-Viewed";
+import gold_ellipse from "../assets/Products/gold_ellipse.png";
+import silver_ellipse from "../assets/Products/silver_ellipse.png";
+import brown_ellipse from "../assets/Products/brown_ellipse.png";
 
 function Favourites() {
   const initialProducts = [
@@ -18,6 +21,24 @@ function Favourites() {
     },
     {
       id: 2,
+      product_img: product_2,
+      alt: "Silver Kada",
+      price: "₹4,000",
+      product_name: "Stone Kada",
+      liked: true,
+      isOutOfStock: false,
+    },
+    {
+      id: 3,
+      product_img: product_2,
+      alt: "Silver Kada",
+      price: "₹4,000",
+      product_name: "Stone Kada",
+      liked: true,
+      isOutOfStock: false,
+    },
+        {
+      id: 4,
       product_img: product_2,
       alt: "Silver Kada",
       price: "₹4,000",
@@ -56,17 +77,16 @@ function Favourites() {
             No Products in the favourites page
           </p>
         ) : (
-          <div className="flex flex-wrap gap-x-[15px] gap-y-6 mt-[25px] sm:gap-x-[26px] justify-center xl:justify-start">
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px] ">
             {likedProducts.map((item) => (
               <div
                 key={item.id}
-                className="relative font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0 group hover:scale-105 transition-transform duration-300 ease-in-out"
+                className="max-w-[304px] items-center group relative mx-auto"
               >
                 <div className="overflow-hidden rounded-2xl relative">
                   <img
-                    className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] object-cover rounded-[16px] ${
-                      item.isOutOfStock ? "grayscale" : ""
-                    } transition-all duration-300 ease-in-out group-hover:shadow-lg`}
+                    className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px]  ${item.isOutOfStock ? "grayscale" : ""
+                      } transition-all duration-300 ease-in-out group-hover:scale-105`}
                     src={item.product_img}
                     alt={item.alt}
                   />
@@ -76,28 +96,29 @@ function Favourites() {
                     isOutOfStock={item.isOutOfStock}
                     onToggle={() => toggleLike(item.id)}
                   />
-
-                  {item.isOutOfStock && (
-                    <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
-                      Sold Out
-                    </p>
-                  )}
                 </div>
 
-                <div className="mt-2 sm:mt-4">
+                <div className="flex justify-between items-center w-full my-3 gap-x-2">
                   <div>
-                    <h3 className="text-[16px] font-semibold sm:text-[20px]">
-                      {item.price}
-                    </h3>
-                    <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">
+                    <p className="text-[13px] font-semibold sm:text-[18px] text-[#313131]">
                       {item.product_name}
                     </p>
+                    <p className="text-[#4E4E4E] font-semibold text-[16px]">{item.price}</p>
                   </div>
 
-                  <AddToCartButton />
+                  <div className="mt-1.5 flex items-center justify-between">
+                    <div className="flex justify-center gap-x-2.5 mr-1">
+                      <img className="w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]" src={gold_ellipse} />
+                      <img className="w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]" src={silver_ellipse} />
+                      <img className="w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]" src={brown_ellipse} />
+                    </div>
+                  </div>
                 </div>
+
+                <AddToCartButton />
               </div>
             ))}
+
           </div>
         )}
       </div>

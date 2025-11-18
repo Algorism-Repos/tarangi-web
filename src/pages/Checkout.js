@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState , useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, Link } from "react-router-dom";
@@ -158,6 +158,11 @@ function CheckoutPage() {
     }
   };
   console.log("formValues", formValues)
+  
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#FFF5E8] text-[#979797]  font-poppins overflow-x-hidden px-3 sm:px-6">
       <div className="max-w-[1440px] mx-auto py-10 space-y-10 ">

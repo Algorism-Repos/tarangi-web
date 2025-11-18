@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import logo from '../assets/logo.png'
 import desktop_flower from '../assets/login_flower.png'
 import mobile_flower from '../assets/login_flower_mobile.png'
@@ -26,6 +26,10 @@ function Signup() {
       // You can handle signup logic here (API call, redirect, etc.)
     },
   });
+useEffect(() => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}, []);
+
 
   return (
     <>
