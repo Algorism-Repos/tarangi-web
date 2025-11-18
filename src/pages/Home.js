@@ -135,6 +135,10 @@ function Home() {
 
   console.log(festiveFiltered);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
     <>
       {/* Floating Whatsapp icon */}
