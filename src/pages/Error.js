@@ -1,26 +1,32 @@
 import React from "react";
 import { Link } from "react-router";
+import error from '../assets/404_error.png'
 
 
 function Error() {
 
-    const scrollToTop = () =>{
+    const scrollToTop = () => {
         window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
+            top: 0,
+            behavior: 'smooth'
         });
     };
 
     return (
         <>
-            <div className="whyus bg-[#FFF5E8] text-center py-[120px] font-[poppins]">
-                <h1 className="font-atteron text-primary text-[100px] leading-[50px] md:leading-[140px] md:text-[200px]">404</h1>
-                <h2 className="text-[#404040] text-[22px] font-light my-10">Page Not Found</h2>
+            <div className="error-background bg-[#FFF5E8] text-center font-[poppins]">
+
+                <div className="relative">
+                    <img className="w-[523px] h-fit relative" src={error} alt="Error image" />
+                    <h1 className="font-atteron text-primary text-[61px] absolute inset-0">Error</h1>
+                </div>
+
+                <h2 className="text-[#404040] text-[32px] font-medium">Page Not Found</h2>
 
                 {/* Button */}
-                <Link to="/" className="mt-10" onClick={scrollToTop}>
-                    <button className="mx-auto border-2 border-[#4B001A] w-[210px] h-[56px] rounded-full text-primary text-[18px] font-medium hover:bg-primary hover:text-white">
-                        Back to Home
+                <Link to="/" className="mt-[40px]" onClick={scrollToTop}>
+                    <button className="mx-auto bg-primary w-[210px] h-[56px] rounded-full text-white text-[18px] hover:scale-110 duration-150 ">
+                        Go to Homepage
                     </button>
                 </Link>
 

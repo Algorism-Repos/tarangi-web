@@ -29,14 +29,14 @@ function Signup() {
 
   return (
     <>
-      <div className="xl:min-h-screen w-full bg-[#6E0027] flex flex-col xl:flex-row font-[poppins]">
+      <div className="xl:h-[800px] w-full bg-[#6E0027] flex flex-col xl:flex-row font-[poppins] 2xl:min-h-screen">
         {/* Left image */}
         <div className="hidden xl:flex xl:w-1/2">
           <img src={desktop_flower} alt="floral design" className="max-w-[90%]" />
         </div>
 
         {/* Form Section */}
-        <div className="flex w-full xl:w-1/2 justify-center items-center px-6 pt-28 sm:py-10">
+        <div className="flex w-full xl:w-1/2 justify-center items-center px-6 pt-28 sm:py-10 mr-[10px]">
           <div className="w-full max-w-[628px]">
             <div className="flex flex-col items-center">
               <img

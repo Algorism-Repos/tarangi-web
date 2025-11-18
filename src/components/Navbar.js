@@ -38,24 +38,24 @@ function Navbar() {
     localStorage.setItem("isLoggedIn", "false");
     setIsLoggedIn(true);
   }, []);
-useEffect(() => {
-  const storedStatus = localStorage.getItem("isLoggedIn") === "false";
-  setIsLoggedIn(storedStatus);
+  useEffect(() => {
+    const storedStatus = localStorage.getItem("isLoggedIn") === "false";
+    setIsLoggedIn(storedStatus);
 
-  const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-  setCartItems(storedCart);
+    const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    setCartItems(storedCart);
 
-  const updateStorage = () => {
-    const updatedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-    setCartItems(updatedCart);
+    const updateStorage = () => {
+      const updatedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      setCartItems(updatedCart);
 
-    const updatedLogin = localStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(updatedLogin);
-  };
+      const updatedLogin = localStorage.getItem("isLoggedIn") === "true";
+      setIsLoggedIn(updatedLogin);
+    };
 
-  window.addEventListener("storage", updateStorage);
-  return () => window.removeEventListener("storage", updateStorage);
-}, []);
+    window.addEventListener("storage", updateStorage);
+    return () => window.removeEventListener("storage", updateStorage);
+  }, []);
 
 
   // ✅ Close search when clicking outside
@@ -95,7 +95,7 @@ useEffect(() => {
         </Link>
 
         {/* Nav Links */}
-        <div className="font-poppins text-[16px] flex flex-row gap-x-[40px] ml-[70px] xl:gap-x-[77px] items-center xl:ml-[170px] ">
+        <div className="font-poppins text-[16px] flex flex-row gap-x-[40px] ml-[70px] xl:gap-x-[55px] items-center xl:ml-[170px] ">
           <Link
             className="hover:bg-[#D6A76F4F] rounded-full py-2.5 px-4"
             to="/home"
@@ -114,7 +114,7 @@ useEffect(() => {
           >
             <p className={getLinkClass("/products")}>Products</p>
           </Link>
-           <Link
+          <Link
             className="hover:bg-[#D6A76F4F] rounded-full py-2.5 px-4"
             to="/blog"
           >
@@ -139,8 +139,8 @@ useEffect(() => {
           <Link to="/favourites">
             <img
               className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/favourites")
-                  ? "bg-[#CFA266]"
-                  : "hover:bg-[#D6A76F4F]"
+                ? "bg-[#CFA266]"
+                : "hover:bg-[#D6A76F4F]"
                 }`}
               src={favourite_icon}
               alt="favourite icon"
@@ -155,19 +155,19 @@ useEffect(() => {
               alt="cart"
             />
           </Link>
-                    {isLoggedIn ? (
+          {isLoggedIn ? (
             <>
               <Link to="/profile">
                 <img
                   className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/profile")
-                      ? "bg-[#CFA266]"
-                      : "hover:bg-[#D6A76F4F]"
+                    ? "bg-[#CFA266]"
+                    : "hover:bg-[#D6A76F4F]"
                     }`}
                   src={profile_icon}
                   alt="profile"
                 />
               </Link>
-              
+
             </>
           ) : (
             <>
@@ -279,18 +279,20 @@ useEffect(() => {
           onClick={() => setMenuVisible(true)}
         />
 
-        <img
-          src={logo}
-          alt="brand-logo"
-          className="w-[85px] h-[55px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-        />
+        <Link to="/">
+          <img
+            src={logo}
+            alt="brand-logo"
+            className="w-[85px] h-[55px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          />
+        </Link>
 
         <div className="flex gap-x-2">
           <Link to="/favourites">
             <img
               className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites")
-                  ? "bg-[#CFA266]"
-                  : "hover:bg-[#D6A76F4F]"
+                ? "bg-[#CFA266]"
+                : "hover:bg-[#D6A76F4F]"
                 }`}
               src={favourite_icon}
               alt="favourite icon"
@@ -312,8 +314,8 @@ useEffect(() => {
               <Link to="/profile">
                 <img
                   className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/profile")
-                      ? "bg-[#CFA266]"
-                      : "hover:bg-[#D6A76F4F]"
+                    ? "bg-[#CFA266]"
+                    : "hover:bg-[#D6A76F4F]"
                     }`}
                   src={profile_icon}
                   alt="profile"
@@ -332,10 +334,12 @@ useEffect(() => {
                 className="w-[30px] h-[30px] cursor-pointer "
                 onClick={() => setMenuVisible(false)}
               />
-              <img
-                src={logo}
-                className="w-[85px] h-[55px] cursor-pointer absolute top-9 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-              />
+              <Link to="/" onClick={() => setMenuVisible(false)}>
+                <img
+                  src={logo}
+                  className="w-[85px] h-[55px] cursor-pointer absolute top-9 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                />
+              </Link>
             </div>
 
             <div className="flex flex-col items-center mt-10 gap-y-12 ">
@@ -427,8 +431,8 @@ useEffect(() => {
                 <Link to={path} key={path}>
                   <h2
                     className={`font-poppins text-[16px] leading-normal text-center ${location.pathname === path
-                        ? "text-white font-semibold"
-                        : "text-[#A0A0A0]"
+                      ? "text-white font-semibold"
+                      : "text-[#A0A0A0]"
                       }`}
                     onClick={() => setMenuVisible(false)}
                   >

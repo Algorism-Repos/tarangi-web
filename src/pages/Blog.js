@@ -52,9 +52,9 @@ function Blog() {
     return (
         <>
             {/* Banner */}
-            <div className="blog-banner text-white">
-                <h1 className="font-atteron text-[80px] font-normal ">Blog</h1>
-                <p className="font-[poppins] text-[20px] mt-[20px] text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
+            <div className="blog-banner text-white px-4">
+                <h1 className="font-atteron text-[52px] font-normal mt-[130px] sm:text-[80px] sm:mt-0">Blog</h1>
+                <p className="font-[poppins] text-[16px] mt-[6px] text-center sm:text-[20px] sm:mt-[20px]">Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
             </div>
 
             {/* Blogs */}
@@ -67,7 +67,7 @@ function Blog() {
                     <div className="relative w-full md:flex-1">
                         <input
                             type="text"
-                            placeholder="Search for Products"
+                            placeholder="Search blogs"
                             className="w-full rounded-[12px] py-4 pl-4 pr-12 font-poppins text-[16px] placeholder:font-light placeholder:text-[#ABABAB] border border-[#B0B0B0] outline-none"
                         />
 
@@ -99,7 +99,7 @@ function Blog() {
                         Blog.map((items) => {
                             return (
                                 <div className="max-w-[410px] mx-auto font-[poppins]">
-                                    <img className="w-full h-fit object-cover rounded-[18px]" src={items.src} alt="Blog image" />
+                                    <img className="w-[361px] h-fit sm:w-[414px] sm:h-[289px] object-cover rounded-[18px]" src={items.src} alt="Blog image" />
 
                                     <p className="text-[#6E6E6E] text-[14px] mt-[24px]">{items.date}</p>
                                     <h1 className="text-[#404040] text-[24px] mt-2">{items.heading}</h1>

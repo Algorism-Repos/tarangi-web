@@ -263,13 +263,13 @@ function Product_Description() {
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
               {/* Buttons */}
-              <div className="max-w-[397px] m  ">
-                <div className="flex flex-col  w-full sm:flex-row items-center gap-[16px]">
+              <div className="max-w-[397px] ">
+                <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
                   <AddToCartButton />
 
-                  <Link to="/favourites" state={{ product }}>
+                  <Link className="w-full" to="/favourites" state={{ product }}>
                     <button
-                      className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-[361px] h-[56px] rounded-full text-primary text-[18px] font-medium sm:w-[176px]"
+                      className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[50px] rounded-full text-primary text-[18px] font-medium mt-2 sm:w-[176px]"
                       onClick={handleAddToWish}
                     >
                       <img

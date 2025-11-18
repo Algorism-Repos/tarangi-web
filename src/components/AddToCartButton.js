@@ -21,7 +21,7 @@ const handleClick = () => {
   setTimeout(() => {
     setShowToast(false);
     document.body.style.overflow = "auto"; // Enable scroll again
-  }, 2000); // 2 seconds
+  }, 1000); // 2 seconds
 };
 
   return (
