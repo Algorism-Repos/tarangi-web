@@ -62,10 +62,10 @@ function Cart() {
               your cart
             </h2>
           </div>
-{/* <LoadingScreen/> */}
+          {/* <LoadingScreen/> */}
           {/* Main container */}
           <div className="flex flex-wrap justify-between gap-y-14 px-5 my-[60px] sm:px-0 sm:my-[80px] max-[425px]:my-[40px] max-[375px]:my-[30px] ">
-            
+
             {/* Selected Productlist */}
             <div className="w-[694px] mx-auto xl:mx-0 max-[425px]:w-full">
               {cartItems.length === 0 ? (
@@ -215,12 +215,35 @@ function Cart() {
           </div>
 
           {/* Recommended products */}
-          {/* (unchanged) */}
-          {/* ... */}
-
-          {/* Mobile Summary */}
-          {/* (unchanged) */}
-          {/* ... */}
+          <div className="my-[100px] px-5 md:px-0 max-[425px]:my-[60px]">
+            <h1 className="font-atteron  text-primary text-[26px] text-center sm:text-[30px] xl:text-left max-[425px]:text-[22px] mx-auto"> Frequently bought together </h1>
+            <div className="sm:max-w-fit mx-auto xl:mx-0 ">
+              <div className="bg-[#FFFAF3] max-w-[580px] p-[24px] rounded-[16px] shadow-2xl mt-[25px] max-[425px]:p-[16px] ">
+                <div className="flex gap-x-[15px] sm:gap-x-[50px] items-center justify-between max-[425px]:gap-x-[10px]">
+                  {/* Product 1 */}
+                  <div className="relative space-y-[10px]">
+                    {/* Checkbox */}
+                    <input type="checkbox" className="absolute top-5 right-3 w-[18px] h-[18px] accent-[#6E0027] border-2 border-[#6E0027] outline-[#6E0027] rounded-sm cursor-pointer" />
+                    <img className="w-[148px] sm:w-[233px] rounded-[12px]" src={product_1} alt="product image" /> <div>
+                      <h3 className="text-[14px] font-medium text-[#6F6F6F] sm:text-[16px] max-[425px]:text-[13px]"> Stone Necklace </h3>
+                      <h3 className="text-[16px] font-semibold sm:text-[20px] max-[425px]:text-[15px]"> ₹10,000 </h3>
+                    </div>
+                  </div>
+                  {/* <span className="text-[24px] font-semibold max-[425px]:text-[20px]">+</span> */}
+                  {/* Product 2 */}
+                  <div className="relative space-y-[10px]">
+                    {/* Checkbox */}
+                    <input type="checkbox" className="absolute top-5 right-3 w-[18px] h-[18px] accent-[#6E0027] border-2 border-[#6E0027] rounded-sm cursor-pointer" />
+                    <img className="w-[148px] sm:w-[233px] rounded-[12px]" src={product_2} alt="product image" />
+                    <div>
+                      <h3 className="text-[14px] font-medium text-[#6F6F6F] sm:text-[16px] max-[425px]:text-[13px]"> Tulip Brooch </h3>
+                      <h3 className="text-[16px] font-semibold sm:text-[20px] max-[425px]:text-[15px]"> ₹2,000 </h3>
+                    </div> </div> </div> {/* Total Price */} <div className="mt-[24px]">
+                  <button className="bg-[#4B001A] w-full h-[51px] rounded-full text-white mt-[24px] max-[425px]:h-[46px] max-[425px]:text-[15px]"> Add to cart : ₹12,000 </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

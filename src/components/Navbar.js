@@ -343,6 +343,52 @@ function Navbar() {
                   onClick={() => setMenuVisible(false)}
                 />
               </Link>
+
+
+
+              <div className="flex gap-x-2">
+                <Link to="/favourites">
+                  <img
+                    className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+                      }`}
+                    src={hasFavourites ? favouriteFilled : favouriteUnfilled}
+                    alt="favourite icon"
+                    onClick={() => setMenuVisible(false)}
+
+                  />
+                </Link>
+
+
+
+                <Link to="/cart">
+                  <img
+                    className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/cart") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+                      }`}
+                    src={cartIcon}
+                    alt="Cart icon"
+                    onClick={() => setMenuVisible(false)}
+
+                  />
+                </Link>
+                {isLoggedIn && (
+                  <>
+
+
+                    <Link to="/profile">
+                      <img
+                        className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/profile")
+                          ? "bg-[#CFA266]"
+                          : "hover:bg-[#D6A76F4F]"
+                          }`}
+                        src={profile_icon}
+                        alt="profile"
+                        onClick={() => setMenuVisible(false)}
+
+                      />
+                    </Link>
+                  </>
+                )}
+              </div>
             </div>
 
             <div className="flex flex-col items-center mt-10 gap-y-12 ">
