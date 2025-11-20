@@ -11,6 +11,11 @@ function Product_Listing({ productCatergory }) {
   const [products, setProducts] = useState([]);
   const [showOutStockModal, setShowOutStockModal] = useState(false);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+
   //  Add default selectedColor for every product
   useEffect(() => {
     if (productCatergory && productCatergory.length > 0) {
@@ -54,6 +59,7 @@ function Product_Listing({ productCatergory }) {
     );
   }
 
+
   return (
     <>
       <div className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-y-10 sm:gap-x-[30px] px-1.5 ">
@@ -77,9 +83,8 @@ function Product_Listing({ productCatergory }) {
             >
               {/* MAIN PRODUCT IMAGE */}
               <img
-                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${
-                  isOutOfStock ? "grayscale" : ""
-                }`}
+                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "grayscale" : ""
+                  }`}
                 src={colorImages[item.selectedColor]}
                 alt={item?.title}
               />
@@ -120,11 +125,10 @@ function Product_Listing({ productCatergory }) {
                         e.preventDefault();
                         handleColorChange(item.id, "gold");
                       }}
-                      className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all ${
-                        item.selectedColor === "gold"
+                      className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all ${item.selectedColor === "gold"
                           ? "border-2 border-[#D4AF37]"
                           : "border border-primary"
-                      }`}
+                        }`}
                       src={gold_ellipse}
                       alt="gold ellipse"
                     />
@@ -135,11 +139,10 @@ function Product_Listing({ productCatergory }) {
                         e.preventDefault();
                         handleColorChange(item.id, "silver");
                       }}
-                      className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all ${
-                        item.selectedColor === "silver"
+                      className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all ${item.selectedColor === "silver"
                           ? "border-2 border-gray-400"
                           : "border border-primary"
-                      }`}
+                        }`}
                       src={silver_ellipse}
                       alt="silver ellipse"
                     />
@@ -150,11 +153,10 @@ function Product_Listing({ productCatergory }) {
                         e.preventDefault();
                         handleColorChange(item.id, "brown");
                       }}
-                      className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all ${
-                        item.selectedColor === "brown"
+                      className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all ${item.selectedColor === "brown"
                           ? "border-2 border-[#8B4513]"
                           : "border border-primary"
-                      }`}
+                        }`}
                       src={brown_ellipse}
                       alt="brown ellipse"
                     />

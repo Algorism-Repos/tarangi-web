@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // Images
 import Search_icon from "../assets/search_icon_red.png";
@@ -35,6 +35,10 @@ function Blog() {
 
   const [showSort, setShowSort] = useState(false);
   const [selectedSort, setSelectedSort] = useState("Latest");
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
 
   return (
     <>
@@ -129,11 +133,10 @@ function Blog() {
                       setSelectedSort(option);
                       setShowSort(false);
                     }}
-                    className={`text-[16px] cursor-pointer ${
-                      selectedSort === option
+                    className={`text-[16px] cursor-pointer ${selectedSort === option
                         ? "text-[#6C001A] font-semibold"
                         : "text-[#4A2B17]"
-                    }`}
+                      }`}
                   >
                     {option}
                   </p>

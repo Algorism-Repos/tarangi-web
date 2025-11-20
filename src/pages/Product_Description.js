@@ -81,6 +81,11 @@ function Product_Description() {
   }, []);
   const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
 
+    useEffect(() => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}, []);
+
+
   return (
     <>
       {/* Backgound */}

@@ -37,7 +37,7 @@ function Favourites() {
       liked: true,
       isOutOfStock: false,
     },
-        {
+    {
       id: 4,
       product_img: product_2,
       alt: "Silver Kada",
@@ -64,6 +64,11 @@ function Favourites() {
   useEffect(() => {
     localStorage.setItem("hasFavourites", likedProducts.length > 0 ? "true" : "false");
   }, [likedProducts]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
 
   return (
     <div className="bg-light-sandal py-[70px]">

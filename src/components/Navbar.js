@@ -273,7 +273,7 @@ function Navbar() {
       </div>
 
       {/* Navbar - Mobile  */}
-      <div className="relative bg-[#680F26] flex flex-row justify-between w-full px-[20px] py-[30px] lg:hidden">
+      <div className="relative bg-[#680F26] flex flex-row justify-between w-full z-50 px-[20px] py-[30px] lg:hidden">
         <img
           src={menu}
           alt="menu_icon"
