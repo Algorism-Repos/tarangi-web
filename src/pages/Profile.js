@@ -1,5 +1,5 @@
 // src/pages/Profile.js
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { useFormik } from "formik";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -109,6 +109,7 @@ const Profile = () => {
     orders: false,
     favourites: false,
   });
+  
 
   const [products, setProducts] = useState([
     {
@@ -221,6 +222,11 @@ const Profile = () => {
     window.dispatchEvent(new Event("storage"));
     navigate("/login");
   };
+
+    useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+  
 
   return (
     <div className="min-h-fit bg-[#FFF5E8] py-16 px-4 sm:px-6 lg:px-16 xl:px-28">

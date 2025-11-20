@@ -108,7 +108,7 @@ function Product_Description() {
                 modules={[Pagination]}
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
 
-                // 🔥 Sync active color when user swipes
+                //  Sync active color when user swipes
                 onSlideChange={(swiper) => {
                   const index = swiper.activeIndex;
 
