@@ -4,7 +4,25 @@ export const AppContext = createContext();
 
 export function AppProvider({ children }) {
   const [filteredProducts, setFilteredProducts] = useState([]);
+const [loggedCustomerId, setLoggedCustomerId] = useState(() => {
+  return localStorage.getItem("loggedCustomerId") || null;
+});
 
+const [isLoggedIn, setIsLoggedIn] = useState(() => {
+  return localStorage.getItem("isLoggedIn") === "true";
+});
+
+useEffect(() => {
+  if (loggedCustomerId) {
+    localStorage.setItem("loggedCustomerId", loggedCustomerId);
+  }
+}, [loggedCustomerId]);
+
+useEffect(() => {
+  localStorage.setItem("isLoggedIn", isLoggedIn);
+}, [isLoggedIn]);
+
+ 
   const [productListFromShopify, setProductListFromShopify] = useState(() => {
     const saved = localStorage.getItem("productListFromShopify");
     return saved ? JSON.parse(saved) : [];
@@ -111,6 +129,8 @@ export function AppProvider({ children }) {
         addToRecentlyViewed,
         updateCartItemQuantity,
         setRecentlyViewed,
+        loggedCustomerId,
+        setLoggedCustomerId,isLoggedIn,setIsLoggedIn
       }}
     >
       {children}

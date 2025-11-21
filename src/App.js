@@ -16,8 +16,6 @@ import Error from './pages/Error.js';
 import Login from './pages/Login.js';
 import Signup from './pages/Signup.js';
 import Blog from './pages/Blog.js'
-
-
 import ThankYou from './pages/Thank_you.js';
 import Cart from './pages/Cart.js'
 
@@ -27,7 +25,6 @@ function App() {
       <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          
           <Route path='/home' element={<Home />} />
           <Route path='/about' element={<About />} />
           <Route path='/products' element={<Product_page />} />

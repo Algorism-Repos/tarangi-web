@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
-import React, { useState } from "react";
+import React, { useContext ,useState} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import shoppingCart_red from "../assets/Products/shoppingcart_red.png";
 import shoppingCart_white from "../assets/Products/shoppingcart_white.png";
 import { AppContext } from "../context/AppContext";
-
+import cartIcon from "../assets/Products/Check.png";
+import closeIcon from "../assets/Close.png";
+import flowerBg from "../assets/backgrounds/flower_bg.png";
 function AddToCartButton({ product, quantity }) {
   const [showToast, setShowToast] = useState(false);
   const [cartIconSrc, setCartIconSrc] = useState(shoppingCart_red);

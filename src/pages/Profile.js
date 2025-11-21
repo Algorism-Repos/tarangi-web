@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-
 
 import userIcon from "../assets/user.png";
 import addressIcon from "../assets/address.png";
@@ -31,8 +30,11 @@ import logout_icon from "../assets/logout_icon.png";
 import gold_ellipse from "../assets/Products/gold_ellipse.png";
 import silver_ellipse from "../assets/Products/silver_ellipse.png";
 import brown_ellipse from "../assets/Products/brown_ellipse.png";
+import { CustomersOrders, FetchOrderByMail } from "../handler/api Handler";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
-// ✅ Move schema definition here so it’s in scope
+// Move schema definition here so it’s in scope
 const addressValidationSchema = Yup.object({
   id: Yup.number().nullable(),
   name: Yup.string().required("Name is required"),
@@ -50,7 +52,9 @@ const Profile = () => {
   const [activeSection, setActiveSection] = useState("Your Profile");
   const [isEditing, setIsEditing] = useState(true);
   const [hasSavedOnce, setHasSavedOnce] = useState(false);
-
+  const { loggedCustomerId } = useContext(AppContext);
+  const [addresses, setAddresses] = useState([]);
+ const [orders, setorder]=useState([])
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -67,9 +71,48 @@ const Profile = () => {
       email: Yup.string().email("Invalid email").required("Email is required"),
     }),
     onSubmit: (values) => {
-      console.log("✅ Form Submitted:", values);
+      console.log(" Form Submitted:", values);
     },
   });
+
+useEffect(() => {
+  if (loggedCustomerId) {
+    setAddresses(loggedCustomerId?.customer?.addresses);
+  }
+}, [loggedCustomerId]);
+
+
+  
+  const CustomerOrders = async () => {
+    try {
+      const response = await CustomersOrders(loggedCustomerId?.customer?.id);
+      console.log(response.data);
+      setorder(response.data.orders)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+
+  // const orderByEmail = async () => {
+  //   try {
+  //     const response = await FetchOrderByMail("bob@example.com");
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  useEffect(() => {
+    CustomerOrders()
+    // orderByEmail();
+  }, []);
+
+
+
+
+
 
   const handleEdit = () => setIsEditing(true);
   const handleCancel = () => {
@@ -145,29 +188,6 @@ const Profile = () => {
   };
 
   // Address logic
-  const [addresses, setAddresses] = useState([
-    {
-      id: 1,
-      name: "John Doe",
-      address: "Address Line 1",
-      details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      city: "Coimbatore",
-      pin: "641001",
-      state: "Tamil Nadu",
-      country: "India",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      address: "Address Line 2",
-      details:
-        "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-      city: "Chennai",
-      pin: "641002",
-      state: "Tamil Nadu",
-      country: "India",
-    },
-  ]);
 
   const [editingAddressId, setEditingAddressId] = useState(null);
   const nextAddressId = () =>
@@ -198,7 +218,7 @@ const Profile = () => {
     );
     setEditingAddressId(null);
     setSubmitting(false);
-    console.log("✅ Address Saved:", values);
+    console.log("Address Saved:", values);
   };
 
   const handleAddressCancel = (id) => {
@@ -220,25 +240,22 @@ const Profile = () => {
     { name: "Favourites", icon: favIcon, activeIcon: favIconActive },
   ];
   // logout function
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const handleLogout = () => {
-  // Update login status
-  localStorage.setItem("isLoggedIn", "false");
+  const handleLogout = () => {
+    // Update login status
+    localStorage.setItem("isLoggedIn", "false");
 
-  // Clear user-related data
-  localStorage.removeItem("authToken");
-  localStorage.removeItem("userData");
+    // Clear user-related data
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userData");
 
-  // This triggers your useEffect’s storage event
-  window.dispatchEvent(new Event("storage"));
+    // This triggers your useEffect’s storage event
+    window.dispatchEvent(new Event("storage"));
 
-  // Navigate to login page
-  navigate("/login");
-};
-
-
-
+    // Navigate to login page
+    navigate("/login");
+  };
 
   return (
     <div className="min-h-[972px] bg-[#FFF5E8] py-16 px-4 sm:px-6 lg:px-16 xl:px-28">
@@ -259,10 +276,11 @@ const handleLogout = () => {
                   key={item.name}
                   onClick={() => setActiveSection(item.name)}
                   className={`flex items-center gap-3 px-5 py-3 rounded-[8px] text-[16px] font-poppins transition-all w-full
-            ${isActive
-                      ? "bg-[#5A0010] text-white"
-                      : "text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010]"
-                    }`}
+            ${
+              isActive
+                ? "bg-[#5A0010] text-white"
+                : "text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010]"
+            }`}
                 >
                   <img
                     src={isActive ? item.activeIcon : item.icon}
@@ -275,7 +293,8 @@ const handleLogout = () => {
             })}
 
             <button
-              onClick={handleLogout} className="flex items-center gap-3 px-5 py-3  mt-[275px] text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
+              onClick={handleLogout}
+              className="flex items-center gap-3 px-5 py-3  mt-[275px] text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
             >
               <img
                 src={logout_icon}
@@ -443,7 +462,8 @@ const handleLogout = () => {
             )}
           </div>
           <button
-            onClick={handleLogout} className="flex items-center gap-3 px-5 py-3  mt-[275px] text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
+            onClick={handleLogout}
+            className="flex items-center gap-3 px-5 py-3  mt-[275px] text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
           >
             <img
               src={logout_icon}
@@ -740,7 +760,7 @@ const renderAddressSection = (
             <p>{addr.address}</p>
             <p>{addr.details}</p>
             <p>
-              {addr.city}, {addr.state}, {addr.country} - {addr.pin}
+              {addr.province}, {addr.province_code}, {addr.country} - {addr.country_code}
             </p>
           </div>
         )}
@@ -954,8 +974,9 @@ const renderFavouritesSection = (products, toggleLike, likedProducts) => (
           >
             <div className="overflow-hidden rounded-2xl relative">
               <img
-                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] object-cover rounded-[16px] ${product.isOutOfStock ? "grayscale" : ""
-                  } transition-all duration-300 ease-in-out group-hover:shadow-lg`}
+                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] object-cover rounded-[16px] ${
+                  product.isOutOfStock ? "grayscale" : ""
+                } transition-all duration-300 ease-in-out group-hover:shadow-lg`}
                 src={product.src}
                 alt={product.name}
               />

@@ -2,41 +2,27 @@ import React, { useRef, useState, useEffect, useContext } from "react";
 import axios from "axios";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
-
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-
 // import required modules
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { Link } from "react-router";
 import Modal from "../components/Modal";
-
 //asset import
-import new_product_1 from "../assets/new_product_1.png";
-import new_product_2 from "../assets/new_product_2.png";
-import new_product_3 from "../assets/new_product_3.png";
-import new_product_4 from "../assets/Bold Black Stud.png";
-import new_product_5 from "../assets/Lord Shiva Kada.png";
-import new_product_6 from "../assets/Choco Hollow Braclet 1.png";
 import fast_selling_1 from "../assets/fast_selling_1.png";
 import fast_selling_2 from "../assets/fast_selling_2.png";
 import fast_selling_3 from "../assets/fast_selling_3.png";
 import offer_product_1 from "../assets/offer_product_1.png";
 import offer_product_2 from "../assets/offer_product_2.png";
 import offer_product_3 from "../assets/offer_product_3.png";
-import men_design from "../assets/men_design.png";
-import women_design from "../assets/women_1.png";
-import couple_design from "../assets/couple_design.png";
 import pink_collection from "../assets/pink_collection_design.png";
 import statement_earrings from "../assets/statement_earrings_design.png";
 import dangers from "../assets/dangers_design.png";
 import jaguar_bracelet from "../assets/jaguar_bracelets_design.png";
 import watch_charms from "../assets/watch_charms_design.png";
 import bullet_icon from "../assets/bullet_point.png";
-import men_image from "../assets/men_image.jpg";
-import women_image from "../assets/women_image.jpg";
 import silver_jewel from "../assets/silver_jewel.jpg";
 import gold_jewel from "../assets/gold_jewel.jpg";
 import whatsapp_floating from "../assets/whatsapp_icon.svg";
@@ -46,7 +32,7 @@ import slider_button from "../assets/slider_button.png";
 import refresh_icon from "../assets/Refresh_icon.png";
 import right_arrow from "../assets/right_arrow.png";
 import left_arrow from "../assets/left_arrow.png";
-import { Container } from "postcss";
+
 import {
   FetchAllCollectionsFromShopify,
   FetchAllProductByCollections,
@@ -55,6 +41,8 @@ import {
 import { AppContext } from "../context/AppContext";
 
 function Home() {
+  const [silverPrice, SetSilverPrice] = useState();
+  const [silverPriceUpdatedTime, setSilverPriceUpdatedTime] = useState();
   const [animate, setAnimate] = useState(false);
   const [collection, setCollections] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
@@ -64,11 +52,14 @@ function Home() {
     setSelectedType(product);
     setModalToggle(!modalToggle);
   }
+  const prevRef = useRef(null);
+  const nextRef = useRef(null);
+
+  const showNavigation = FestiveFiltered.length > 1;
   const collectionsList = async () => {
     try {
       const response = await FetchAllCollectionsFromShopify();
       setCollections(response);
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -99,7 +90,6 @@ function Home() {
         }));
 
         setFestiveFiltered(formattedProducts);
-        console.log(formattedProducts);
       } catch (err) {
         console.log(err);
       }
@@ -107,9 +97,36 @@ function Home() {
     fetchBestSellerProducts();
   }, [collection]);
 
-  useEffect(() => {
-    collectionsList();
-  }, []);
+  async function fetchMetalRates() {
+    const url =
+      "https://api.metals.dev/v1/latest?api_key=TNJIKPQ4AYPHZUDTT0BS619DTT0BS&currency=INR&unit=g&symbols=XAG-COIM";
+
+    const response = await fetch(url, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    const result = await response.json();
+    const date = new Date(result.timestamps.metal);
+    setSilverPriceUpdatedTime(
+      date.toLocaleString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+        timeZone: "Asia/kolkata",
+      })
+    );
+     
+    const price = result.metals.silver;
+    const silver_rate = price * 0.925;
+    console.log(silver_rate);
+    SetSilverPrice(silver_rate);
+  }
+
   const specials = [
     { img: pink_collection, title: "Pink Collection" },
     { img: statement_earrings, title: "Statement Earrings" },
@@ -148,7 +165,10 @@ function Home() {
       slider.removeEventListener("input", updateSlider);
     };
   }, []);
-
+  useEffect(() => {
+    collectionsList();
+    // fetchMetalRates();
+  }, []);
   return (
     <>
       {/* Floating Whatsapp icon */}
@@ -162,7 +182,7 @@ function Home() {
 
       {/* Silver price */}
       {/* Mobile */}
-      <div className="w-full bg-[#FCE8CD] font-poppins lg:hidden">
+      {/* <div className="w-full bg-[#FCE8CD] font-poppins lg:hidden">
         <p className="bg-[#CFA266] text-white font-medium text-center py-4 text-[18px]">
           Silver Price Today
         </p>
@@ -170,7 +190,7 @@ function Home() {
         <div className="flex justify-between p-3">
           <div className="flex items-center w-[161px] sm:w-[175px]">
             <p className="text-[#28040E] text-[15px] font-normal  sm:text-[16px]">
-              <span className="font-semibold">₹ 169.90</span> /g <br />{" "}
+              <span className="font-semibold">₹ {silverPrice}</span> /g <br />{" "}
               <span className="font-semibold">₹ 1,69,900</span>/ kilogram.
             </p>
           </div>
@@ -180,24 +200,29 @@ function Home() {
               className="w-[15px] h-[15px]"
               src={refresh_icon}
               alt="Refresh icon"
+              onClick={fetchMetalRates}
             />
             <p className="text-[14px] text-right sm:text-[16px]">
-              Last Updated 27 Oct 2025, 11:00 AM
+              Last Updated {silverPriceUpdatedTime}
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Desktop */}
-      <div className="w-full bg-[#FCE8CD] font-poppins hidden lg:block">
+      {/* <div className="w-full bg-[#FCE8CD] font-poppins hidden lg:block">
         <div className="flex justify-between">
           <div className="flex items-center gap-x-[25px]">
             <p className="bg-[#CFA266] px-8 py-3 w-fit text-white font-medium">
               Silver Price Today
             </p>
             <p className="text-[#28040E] text-[18px] font-normal">
-              <span className="font-semibold">₹169.90</span> per gram and{" "}
-              <span className="font-semibold">₹1,69,900</span> per kilogram.
+              <span className="font-semibold">₹ {silverPrice?.toFixed(2)}</span>{" "}
+              per gram and{" "}
+              <span className="font-semibold">
+                ₹{silverPrice?.toFixed(2) * 1000}
+              </span>{" "}
+              per kilogram.
             </p>
           </div>
 
@@ -206,11 +231,12 @@ function Home() {
               className="w-[15px] h-[15px]"
               src={refresh_icon}
               alt="Refresh icon"
+              onClick={fetchMetalRates}
             />
-            <p>Last Updated 27 Oct 2025, 11:00 AM</p>
+            <p>Last Updated {silverPriceUpdatedTime}</p>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <Swiper
         spaceBetween={30}
@@ -408,8 +434,8 @@ function Home() {
                 }}
                 className="!overflow-hidden  !h-[515px]"
               >
-                {festiveFiltered.length > 0 ? (
-                  festiveFiltered.map((type, index) => (
+                {FestiveFiltered.length > 0 ? (
+                  FestiveFiltered.map((type, index) => (
                     <SwiperSlide key={index}>
                       <div
                         className="w-[360px] h-[450px] mx-auto flex flex-col items-center gap-y-2 transform transition-transform duration-300 ease-out hover:scale-105 cursor-pointer"
@@ -761,12 +787,13 @@ function Home() {
           </div>
         </div>
       </div>
-      
+
       {/* Before After Slider */}
       <div className="before-after-section ">
         <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
           <h1 className="font-atteron section-heading text-[26px]  sm:text-[64px] text-center text-[#5C0A1F] mb-16">
-            <span className="text-[28px]"> Enhance Your Look With</span> <br /> Tarangi
+            <span className="text-[28px]"> Enhance Your Look With</span> <br />{" "}
+            Tarangi
           </h1>
 
           <div className="container" ref={containerRef}>

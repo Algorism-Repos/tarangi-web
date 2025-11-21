@@ -2,11 +2,17 @@ import React from "react";
 import logo from "../assets/logo.png";
 import desktop_flower from "../assets/login_flower.png";
 import mobile_flower from "../assets/login_flower_mobile.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { checkCustomer } from "../handler/api Handler";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 function Login() {
+  const navigate = useNavigate();
+  const { setLoggedCustomerId, loggedCustomerId, setIsLoggedIn } =
+    useContext(AppContext);
   const formik = useFormik({
     initialValues: {
       contact: "",
@@ -18,12 +24,21 @@ function Login() {
           "is-valid",
           "Enter a valid email or 10-digit mobile number",
           (value) =>
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^[0-9]{10}$/.test(value)
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ||
+            /^[0-9]{10}$/.test(value)
         ),
     }),
-    onSubmit: (values) => {
-      alert(`Login Successful!\nContact: ${values.contact}`);
-      // Handle login logic here (API call, redirect, etc.)
+    onSubmit: async (values) => {
+      const customerResult = await checkCustomer(values);
+             console.log(customerResult);
+
+      setLoggedCustomerId(customerResult.data);
+      if (customerResult) {
+        navigate("/home");
+        setIsLoggedIn(true);
+      } else {
+        navigate("/profile");
+      }
     },
   });
 
@@ -76,7 +91,8 @@ function Login() {
               )}
 
               {/* OTP Input (No Validation) */}
-              <div className="mt-5">
+
+              {/* <div className="mt-5">
                 <p className="text-white text-[16px] font-medium">Enter OTP</p>
                 <div className="flex gap-x-[8px] mt-2">
                   <input
@@ -91,7 +107,7 @@ function Login() {
                     Get OTP
                   </button>
                 </div>
-              </div>
+              </div> */}
 
               {/* Submit Button */}
               <div className="flex justify-center items-center">
@@ -107,13 +123,12 @@ function Login() {
             {/* Signup Redirect */}
             <p className="text-center text-white text-[18px] mt-6">
               Don’t have an account?
-              <Link to="/signup">
-                <a
-                  href="#"
-                  className="text-[#F8EEDC] ml-2 no-underline hover:underline hover:text-[#CFA266] transition-all duration-300"
-                >
-                  SIGN UP
-                </a>
+              <Link
+                to="/signup"
+                href="#"
+                className="text-[#F8EEDC] ml-2 no-underline hover:underline hover:text-[#CFA266] transition-all duration-300"
+              >
+                SIGN UP
               </Link>
             </p>
           </div>

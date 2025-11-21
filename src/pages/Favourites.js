@@ -39,7 +39,7 @@ function Favourites() {
 
   const likedProducts = products.filter((p) => p.liked);
 
-  // ✅ Store if favourites exist in localStorage
+  // Store if favourites exist in localStorage
   useEffect(() => {
     localStorage.setItem("hasFavourites", likedProducts.length > 0 ? "true" : "false");
   }, [likedProducts]);

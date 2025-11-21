@@ -3,10 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { OpenRazorpayService } from "../utils/OpenRazorpayService";
-
 // Import product images
-import product_1 from "../assets/Products/product_1.png";
-import product_2 from "../assets/Products/product_2.png";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import truck_icon from "../assets/truck_icon.png";
@@ -23,7 +20,6 @@ function CheckoutPage() {
   const { cartItems, removeFromCart } = useContext(AppContext);
   const [formValues, setFormValues] = useState({});
   const [showSummary, setShowSummary] = useState(false);
-
   // Yup validation schema
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email").required("Email is required"),
@@ -82,9 +78,7 @@ function CheckoutPage() {
       }
       try {
         const customerId = await checkOrCreateCustomer(values);
-
         console.log("Customer ID:", customerId);
-
         const paymentResponse = await OpenRazorpayService(formValues, total);
         if (paymentResponse.razorpay_payment_id) {
           await handlePlaceOrder(values, customerId);
