@@ -44,7 +44,7 @@ function Blog() {
     <>
       {/* Banner */}
       <div className="relative blog-banner text-white">
-        <h1 className="font-atteron text-[80px] font-normal">Blog</h1>
+        <h1 className="font-atteron text-[80px] font-normal mt-32 sm:mt-0">Blog</h1>
         <p className="font-[poppins] text-[20px] mt-[20px] text-center">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit,
         </p>

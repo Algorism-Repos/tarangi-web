@@ -6,10 +6,23 @@ import brown_ellipse from "../assets/Products/brown_ellipse.png";
 import { useEffect, useState } from "react";
 import OutOfStockModal from "../components/OutOfStockModal";
 import LikeButton from "../components/LikeButton";
+import RestockModal from "../components/RestockModal";
+import RestockSuccessModal from "../components/RestockSuccessModal";
 
 function Product_Listing({ productCatergory }) {
   const [products, setProducts] = useState([]);
   const [showOutStockModal, setShowOutStockModal] = useState(false);
+  const [showRestockSuccess, setShowRestockSuccess] = useState(false);
+  const [showRestockModal, setShowRestockModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // open Restock form
+
+  // after form success
+  const handleSuccess = () => {
+    setShowRestockModal(false);
+    setShowSuccessModal(true);
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -51,13 +64,36 @@ function Product_Listing({ productCatergory }) {
     setShowOutStockModal(true);
   };
 
+  const handleRestockClick = () => {
+    setShowRestockModal(true)
+  }
+
   if (products.length === 0) {
     return (
-      <p className="text-center w-full text-[18px] font-poppins text-[#747474]">
-        No products found
-      </p>
+      <>
+        <p className="text-center w-full text-[18px] font-poppins text-[#747474]">
+          No products found
+        </p>
+        {/* Modals must still exist here */}
+        <RestockModal
+          open={showRestockModal}
+          onClose={() => setShowRestockModal(false)}
+          onSuccess={() => {
+            setShowRestockModal(false);
+            setShowRestockSuccess(true);
+          }}
+        />
+
+        <RestockSuccessModal
+          open={showRestockSuccess}
+          onClose={() => setShowRestockSuccess(false)}
+        />
+      </>
     );
   }
+
+
+
 
 
   return (
@@ -66,6 +102,8 @@ function Product_Listing({ productCatergory }) {
 
         {products.map((item) => {
           const isOutOfStock = item.variants[0].inventory_quantity === 0;
+          const isRestocking = item.restock === true;
+
 
           const colorImages = {
             gold: item.image?.src,
@@ -76,15 +114,23 @@ function Product_Listing({ productCatergory }) {
           return (
             <Link
               key={item.id}
-              to={!isOutOfStock ? "/productdescription" : "#"}
-              state={!isOutOfStock ? { product: item } : {}}
-              onClick={isOutOfStock ? handleOutOfStockClick : undefined}
+              to={!isOutOfStock && !isRestocking ? "/productdescription" : "#"}
+              state={!isOutOfStock && !isRestocking ? { product: item } : {}}
+              onClick={
+                isOutOfStock
+                  ? handleOutOfStockClick
+                  : isRestocking
+                    ? handleRestockClick
+                    : undefined
+              }
               className="font-poppins w-[170px] sm:w-[310px] mx-auto relative hover:scale-105 transition duration-300 ease-in-out group"
             >
+
+
               {/* MAIN PRODUCT IMAGE */}
               <img
                 className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "grayscale" : ""
-                  }`}
+                  } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
                 src={colorImages[item.selectedColor]}
                 alt={item?.title}
               />
@@ -93,6 +139,7 @@ function Product_Listing({ productCatergory }) {
               <LikeButton
                 liked={item.liked}
                 isOutOfStock={isOutOfStock}
+                isRestocking={isRestocking}
                 onToggle={() => toggleLike(item.id)}
               />
 
@@ -102,6 +149,13 @@ function Product_Listing({ productCatergory }) {
                   Sold Out
                 </p>
               )}
+              {/* RESTOCK SOON LABEL */}
+              {!isOutOfStock && isRestocking && (
+                <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
+                  Restocking Soon
+                </p>
+              )}
+
 
               {/* PRODUCT DETAILS */}
               <div className="mt-2 flex flex-wrap gap-2 justify-between sm:mt-3">
@@ -116,7 +170,7 @@ function Product_Listing({ productCatergory }) {
                     ₹{parseInt(item.variants[0].price).toLocaleString("en-IN")}
                   </h3>
 
-                  {/* 🎨 COLOR TOGGLE BUTTONS */}
+                  {/*  COLOR TOGGLE BUTTONS */}
                   <div className="flex justify-center gap-x-2.5 mr-1">
 
                     {/* GOLD */}
@@ -126,8 +180,8 @@ function Product_Listing({ productCatergory }) {
                         handleColorChange(item.id, "gold");
                       }}
                       className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all ${item.selectedColor === "gold"
-                          ? "border-2 border-[#D4AF37]"
-                          : "border border-primary"
+                        ? "border-2 border-[#D4AF37]"
+                        : "border border-primary"
                         }`}
                       src={gold_ellipse}
                       alt="gold ellipse"
@@ -140,8 +194,8 @@ function Product_Listing({ productCatergory }) {
                         handleColorChange(item.id, "silver");
                       }}
                       className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all ${item.selectedColor === "silver"
-                          ? "border-2 border-gray-400"
-                          : "border border-primary"
+                        ? "border-2 border-gray-400"
+                        : "border border-primary"
                         }`}
                       src={silver_ellipse}
                       alt="silver ellipse"
@@ -154,8 +208,8 @@ function Product_Listing({ productCatergory }) {
                         handleColorChange(item.id, "brown");
                       }}
                       className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all ${item.selectedColor === "brown"
-                          ? "border-2 border-[#8B4513]"
-                          : "border border-primary"
+                        ? "border-2 border-[#8B4513]"
+                        : "border border-primary"
                         }`}
                       src={brown_ellipse}
                       alt="brown ellipse"
@@ -173,6 +227,19 @@ function Product_Listing({ productCatergory }) {
         open={showOutStockModal}
         onClose={() => setShowOutStockModal(false)}
       />
+
+      {/*Restock model*/}
+      <RestockModal
+        open={showRestockModal}
+        onClose={() => setShowRestockModal(false)}
+        onSuccess={handleSuccess}
+      />
+
+      <RestockSuccessModal
+        open={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+      />
+
     </>
   );
 }
