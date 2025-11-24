@@ -81,6 +81,11 @@ function Product_Description() {
   }, []);
   const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
 
+    useEffect(() => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}, []);
+
+
   return (
     <>
       {/* Backgound */}
@@ -108,7 +113,7 @@ function Product_Description() {
                 modules={[Pagination]}
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
 
-                // 🔥 Sync active color when user swipes
+                //  Sync active color when user swipes
                 onSlideChange={(swiper) => {
                   const index = swiper.activeIndex;
 

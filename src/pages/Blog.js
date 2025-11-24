@@ -8,8 +8,8 @@ import sort_icon from "../assets/Products/sort_icon.png"; // ← add your correc
 
 function Blog() {
   const SortOptions = ["Latest", "Featured", "Newest First", "Oldest First"];
-  const [showSort, setShowSort] = useState(false);
-  const [selectedSort, setSelectedSort] = useState("Latest");
+  // const [showSort, setShowSort] = useState(false);
+  // const [selectedSort, setSelectedSort] = useState("Latest");
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -39,7 +39,11 @@ function Blog() {
     },
   ];
 
-  
+  const [showSort, setShowSort] = useState(false);
+  const [selectedSort, setSelectedSort] = useState("Latest");
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
 
   return (
@@ -53,7 +57,7 @@ function Blog() {
       </div>
 
       {/* Main Section */}
-      <div className="bg-light-sandal pb-[75px] h-fit relative border">
+      <div className="bg-light-sandal py-[75px] h-fit relative border">
         {/* Search + Filters */}
         <div className="max-w-[1320px] mx-auto flex flex-col gap-10 md:flex-row md:items-center md:justify-between px-4 lg:gap-20">
 
@@ -139,11 +143,10 @@ function Blog() {
                       setSelectedSort(option);
                       setShowSort(false);
                     }}
-                    className={`text-[16px] cursor-pointer ${
-                      selectedSort === option
+                    className={`text-[16px] cursor-pointer ${selectedSort === option
                         ? "text-[#6C001A] font-semibold"
                         : "text-[#4A2B17]"
-                    }`}
+                      }`}
                   >
                     {option}
                   </p>
@@ -154,7 +157,7 @@ function Blog() {
         )}
 
         {/* BLOG LIST */}
-        <div className="max-w-[1320px] mx-auto px-4 my-[40px] flex flex-wrap gap-x-[15px] gap-y-[60px] justify-between">
+        <div className="max-w-[1320px] mx-auto px-4 my-[50px] flex flex-wrap gap-x-[15px] gap-y-[60px] justify-between">
           {blogData.map((items, i) => (
             <div key={i} className="max-w-[410px] mx-auto font-[poppins]">
               <img

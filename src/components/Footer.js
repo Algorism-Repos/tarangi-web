@@ -47,7 +47,7 @@ function Footer() {
     return (
         <>
             {/* Coming Soon - Section */}
-            <div className={isVisible ? "coming-soon py-[80px] sm:py-[100px]" : "hidden"}>
+            <div className={isVisible ? "coming-soon py-[80px]  sm:py-[100px]" : "hidden"}>
                 <h1 className="font-atteron text-[32px] sm:text-[49px] font-normal leading-normal text-white text-center tracking-[1px]">Our Happy Customers,<br className="hidden sm:block" /> the stars of Tarangi</h1>
 
                 {/* Clients */}
