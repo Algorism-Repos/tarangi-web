@@ -355,7 +355,7 @@ function Product_Filter({ productCatergory }) {
             </div>
 
             {/* Mobile Verion Filter */}
-            <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden px-4 z-30 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
+            <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden px-4 z-10 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
               <div className="flex justify-between">
                 {/* SORT BUTTON */}
                 <div

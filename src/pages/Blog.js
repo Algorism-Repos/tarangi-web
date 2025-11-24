@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 
 // Images
 import Search_icon from "../assets/search_icon_red.png";
@@ -8,6 +8,12 @@ import sort_icon from "../assets/Products/sort_icon.png"; // ← add your correc
 
 function Blog() {
   const SortOptions = ["Latest", "Featured", "Newest First", "Oldest First"];
+  const [showSort, setShowSort] = useState(false);
+  const [selectedSort, setSelectedSort] = useState("Latest");
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const blogData = [
     {
@@ -33,25 +39,26 @@ function Blog() {
     },
   ];
 
-  const [showSort, setShowSort] = useState(false);
-  const [selectedSort, setSelectedSort] = useState("Latest");
+  
+
 
   return (
     <>
       {/* Banner */}
       <div className="relative blog-banner text-white">
-        <h1 className="font-atteron text-[80px] font-normal">Blog</h1>
+        <h1 className="font-atteron text-[80px] font-normal mt-[150px] sm:mt-0">Blog</h1>
         <p className="font-[poppins] text-[20px] mt-[20px] text-center">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit,
         </p>
       </div>
 
       {/* Main Section */}
-      <div className="bg-light-sandal py-[75px]">
+      <div className="bg-light-sandal pb-[75px] h-fit relative border">
         {/* Search + Filters */}
         <div className="max-w-[1320px] mx-auto flex flex-col gap-10 md:flex-row md:items-center md:justify-between px-4 lg:gap-20">
+
           {/* Search */}
-          <div className="relative w-full md:flex-1">
+          <div className="relative w-full md:flex-1 hidden">
             <input
               type="text"
               placeholder="Search for Products"
@@ -63,6 +70,9 @@ function Blog() {
               alt="search icon"
             />
           </div>
+
+          {/*Empty div */}
+          <div></div>
 
           {/* DESKTOP SORT */}
           <div className="relative flex items-center gap-4 hidden lg:flex">
@@ -89,7 +99,7 @@ function Blog() {
         </div>
 
         {/* MOBILE SORT BUTTON — FIXED FOOTER */}
-        <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden px-4 z-30 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
+        <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden px-4 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
           <div className="flex justify-between">
             <div
               className="group flex items-center gap-x-[8px] cursor-pointer"

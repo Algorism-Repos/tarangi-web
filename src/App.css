@@ -259,8 +259,8 @@ img {
   background-color: tan;
   width: 60px;
   height: 60px;
-  border: 1px solid transparent;
-  border-radius: 50%;
+  /* border: 2px solid transparent; */
+  border-radius: 100%;
   display: grid;
   place-items: center;
   top: 50%;
@@ -389,6 +389,20 @@ input::placeholder {
     padding: 100px 0;
     object-fit: contain;
   }
+
+  .banner-2 {
+    background-image: url("./assets/Home_banner/banner_2_ipad.png");
+    height: 780px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 110px 0px;
+    background-position: center center;
+  }
 }
 
 @media only screen and (max-width: 620px) {
@@ -415,7 +429,7 @@ input::placeholder {
     background-position: center center;
   }
   .banner-2 {
-    background-image: url("./assets/Home_banner/banner_2.png");
+    background-image: url("./assets/Home_banner/banner_2_mobile.png");
     height: 780px;
     background-size: cover;
     background-repeat: no-repeat;

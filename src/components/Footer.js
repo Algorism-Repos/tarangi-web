@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router";
+import { Link, useLocation } from "react-router";
 import Marquee from "react-fast-marquee";
 
 // assets import
@@ -55,7 +55,7 @@ function Footer() {
                     <Marquee pauseOnHover={true} speed={80} gradient={false}>
                         <div className="flex items-center gap-x-8 sm:gap-x-12 lg:gap-x-16 px-4 sm:px-6 lg:px-8">
                             {
-                                Clients.map((items,index) => {
+                                Clients.map((items, index) => {
                                     return (
                                         <img key={index} className="w-[220px] h-[320px] sm:w-full sm:h-fit " src={items.src} alt="Clients" />
                                     )
@@ -87,22 +87,48 @@ function Footer() {
 
 
             {/* Footer */}
-            <div className="footer-section">
-                <div className="flex flex-col gap-y-20 sm:flex-row sm:items-center sm:justify-between px-3 pt-5 pb-12 sm:py-0 sm:pt-0 sm:px-[70px] ">
-                    <div className="">
-                        <img src={logo} alt="brand-logo" className="w-[231px] h-fit" />
+            <div className="footer-section z-40 font-[poppins] text-white">
 
-                        <div className=" flex flex-row items-center gap-x-6 w-fit ml-10 sm:ml-14">
-                            <a href="https://www.instagram.com/tarangijewels/" target="_blank"><img src={instagram} className="w-[30px] h-[31px]" /></a>
-                            <a href="https://wa.me/919003058300/?text=Hi," target="_blank"><img src={whatsapp} className="w-[40px] h-[40px]" /></a>
+                {/* Muhil */}
+                <div className="flex flex-col gap-y-16 xl:flex-row sm:items-center sm:justify-between px-3 pt-5 pb-12 sm:py-0 sm:pt-0 sm:px-[70px]">
+
+                    <div className="flex flex-wrap gap-x-[60px] gap-y-10">
+                        {/* Logo & Social */}
+                        <div>
+                            <img src={logo} alt="brand-logo" className="w-[231px] h-fit" />
+
+                            <div className=" flex flex-row items-center gap-x-6 w-fit ml-8 sm:ml-10">
+                                <a href="https://www.instagram.com/tarangijewels/" target="_blank"><img src={instagram} className="w-[30px] h-[31px]" /></a>
+                                <a href="https://wa.me/919003058300/?text=Hi," target="_blank"><img src={whatsapp} className="w-[40px] h-[40px]" /></a>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-x-[65px] gap-y-10">
+
+                            {/* Subpages */}
+                            <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] ml-6 sm:ml-0 md:border-l border-[#D6A76F] md:pl-[54px]">
+                                <Link to="/">Home</Link>
+                                <Link to="/about">About</Link>
+                                <Link to="/products">Products</Link>
+                                <Link to="/blog">Blog</Link>
+                            </div>
+
+                            {/* Product Catergory */}
+                            <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] ml-6 sm:ml-0">
+                                <Link to="#">Products</Link>
+                                <Link to="#">Women</Link>
+                                <Link to="#">Men</Link>
+                                <Link to="#">Couples</Link>
+                                <Link to="#">Gifts</Link>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="font-poppins text-[16px] sm:text-[18px] text-white text-left sm:text-right ml-7 sm:ml-0">
+                    <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] text-left sm:text-center xl:text-right ml-6 sm:ml-0">
                         <a href="tel:9003058300"><p>+91 90030 58300</p></a>
-                        <a href="mailto:tarangijewelsindia@gmail.com"><p className="mt-3">tarangijewelsindia@gmail.com</p></a>
+                        <a href="mailto:tarangijewelsindia@gmail.com"><p>tarangijewelsindia@gmail.com</p></a>
                         <a href="https://share.google/6f6U8XByQoc0FWsBP" target="_blank">
-                            <p className="mt-3">431-435,VNA Complex, NSR Road</p>
+                            <p>431-435,VNA Complex, NSR Road</p>
                             <p>Saibaba Colony, Coimbatore-641011</p>
                         </a>
                     </div>
