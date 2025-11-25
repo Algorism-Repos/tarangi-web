@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Modal from "./Modal";
+import { Swiper, SwiperSlide } from "swiper/react";
+
 import Trending_up from "../assets/Trending_up.png";
 import Search_icon from "../assets/search_icon.png";
 import Search_icon_white from "../assets/search_icon_white.png";
@@ -27,6 +29,16 @@ function Navbar() {
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const favourites = JSON.parse(localStorage.getItem("favourites")) || [];
   const hasFavourites = favourites.length > 0;
+
+
+  const TRENDING_PRODUCTS = [
+    { img: new_product_1, name: "Emerald Pendant" },
+    { img: new_product_1, name: "Diamond Necklace" },
+    { img: new_product_1, name: "Tulip Brooch" },
+    { img: new_product_1, name: "Tulip Brooch" },
+    { img: new_product_1, name: "Tulip Brooch" },
+    { img: new_product_1, name: "Tulip Brooch" },
+  ];
 
 
   const location = useLocation();
@@ -88,6 +100,19 @@ function Navbar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (menuVisible) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [menuVisible]);
+
 
   return (
     <>
@@ -248,11 +273,7 @@ function Navbar() {
                     Trending Products
                   </h3>
                   <div className="flex gap-6 overflow-x-auto text-white text-[14px] items-center object-contain">
-                    {[
-                      { img: new_product_1, name: "Emerald Pendant" },
-                      { img: new_product_1, name: "Diamond Necklace" },
-                      { img: new_product_1, name: "Tulip Brooch" },
-                    ].map((item, index) => (
+                    {TRENDING_PRODUCTS.map((item, index) => (
                       <div key={index} className="flex flex-col items-center">
                         <img
                           src={item.img}
@@ -447,28 +468,37 @@ function Navbar() {
                           Trending Products
                         </h3>
 
-                        <div className="flex gap-6 overflow-visible">
-                          {[
-                            { img: new_product_1, name: "Emerald Pendant" },
-                            { img: new_product_1, name: "Diamond Necklace" },
-                            { img: new_product_1, name: "Tulip Brooch" },
-                          ].map((item, index) => (
-                            <div
-                              key={index}
-                              className="flex flex-col items-center min-w-[120px]"
-                            >
+                        <Swiper
+                          spaceBetween={20}
+                          slidesPerView={2.4}
+                          className="trending-swiper"
+                          breakpoints={{
+                            640: {
+                              slidesPerView: 2.5,
+                              spaceBetween: 10,
+                            },
+                            768: {
+                              slidesPerView: 4,
+                              spaceBetween: 10,
+                            },
+                          }}
+                        >
+                          {TRENDING_PRODUCTS.map((item, index) => (
+                            <SwiperSlide key={index}>
+                            <div className="flex flex-col items-center">
                               <img
                                 src={item.img}
                                 alt={item.name}
                                 className="w-[121px] h-[109px] object-contain rounded-[12px] shadow-md"
                               />
-
                               <span className="mt-2 text-white text-[14px] font-poppins font-normal">
                                 {item.name}
                               </span>
                             </div>
+                          </SwiperSlide>
                           ))}
-                        </div>
+                        </Swiper>
+
                       </motion.div>
                     )}
                   </AnimatePresence>

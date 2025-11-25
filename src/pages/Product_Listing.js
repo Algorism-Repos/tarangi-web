@@ -8,6 +8,8 @@ import OutOfStockModal from "../components/OutOfStockModal";
 import LikeButton from "../components/LikeButton";
 import RestockModal from "../components/RestockModal";
 import RestockSuccessModal from "../components/RestockSuccessModal";
+import product_1 from "../assets/Products/product_1.png";
+import product_2 from "../assets/Products/product_2.png";
 
 function Product_Listing({ productCatergory }) {
   const [products, setProducts] = useState([]);
@@ -16,7 +18,6 @@ function Product_Listing({ productCatergory }) {
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  // open Restock form
 
   // after form success
   const handleSuccess = () => {
@@ -107,8 +108,8 @@ function Product_Listing({ productCatergory }) {
 
           const colorImages = {
             gold: item.image?.src,
-            silver: item.image?.src,
-            brown: item.image?.src,
+            silver: product_1,
+            brown: product_2,
           };
 
           return (
@@ -179,9 +180,9 @@ function Product_Listing({ productCatergory }) {
                         e.preventDefault();
                         handleColorChange(item.id, "gold");
                       }}
-                      className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all ${item.selectedColor === "gold"
-                        ? "border-2 border-[#D4AF37]"
-                        : "border border-primary"
+                      className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all  ${item.selectedColor === "gold"
+                        ? "border-2 border-primary shadow-md" 
+                        : "border border-gray-300 hover:border-primary"
                         }`}
                       src={gold_ellipse}
                       alt="gold ellipse"
@@ -193,9 +194,9 @@ function Product_Listing({ productCatergory }) {
                         e.preventDefault();
                         handleColorChange(item.id, "silver");
                       }}
-                      className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all ${item.selectedColor === "silver"
-                        ? "border-2 border-gray-400"
-                        : "border border-primary"
+                      className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all  ${item.selectedColor === "silver"
+                        ? "border-2 border-primary shadow-md" 
+                        : "border border-gray-300 hover:border-primary"
                         }`}
                       src={silver_ellipse}
                       alt="silver ellipse"
@@ -207,9 +208,9 @@ function Product_Listing({ productCatergory }) {
                         e.preventDefault();
                         handleColorChange(item.id, "brown");
                       }}
-                      className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all ${item.selectedColor === "brown"
-                        ? "border-2 border-[#8B4513]"
-                        : "border border-primary"
+                      className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all  ${item.selectedColor === "brown"
+                        ? "border-2 border-primary shadow-md" 
+                        : "border border-gray-300 hover:border-primary"
                         }`}
                       src={brown_ellipse}
                       alt="brown ellipse"
