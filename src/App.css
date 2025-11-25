@@ -21,6 +21,35 @@ html {
   padding: 0px 110px;
 }
 
+.banner-2 {
+  background: url("./assets/Home_banner/banner_2.png");
+  height: 780px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 784px;
+  background-position: center center;
+  object-fit: contain;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0px 110px;
+}
+
+.banner-4 {
+  background: url("./assets/Home_banner/banner_4.png");
+  height: 780px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 784px;
+  background-position: center center;
+  object-fit: contain;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0px 110px;
+}
+
+
 .festive-banner {
   background: url("./assets/backgrounds/festive_banner.png");
   height: 780px;
@@ -64,6 +93,17 @@ html {
   flex-direction: column;
   align-items: center;
   padding: 210px 0px;
+}
+
+.error-background {
+  background-image: url("./assets/backgrounds/error_background.png");
+  background-size: cover;
+  min-height: 848px;
+  background-position: center center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80px 0px;
 }
 
 .coming-soon {
@@ -144,11 +184,13 @@ html {
   background-size: cover;
   background-repeat: no-repeat;
 }
+
 .login-background {
   background-image: url("./assets/backgrounds/login_backgroundpng.png");
   background-size: cover;
   background-repeat: no-repeat;
 }
+
 .before-after-section {
   background-image: url("./assets/backgrounds/slider_background.png");
   background-size: cover;
@@ -157,7 +199,8 @@ html {
   place-content: center;
   align-items: center;
   overflow: hidden;
-  padding: 150px 0; /* replaced 10vw */
+  padding: 150px 0;
+  /* replaced 10vw */
   min-height: 784px;
   --position: 50%;
 }
@@ -207,7 +250,8 @@ img {
 .slider-line {
   position: absolute;
   inset: 0;
-  width: 12px; /* replaced 1.2vw */
+  width: 12px;
+  /* replaced 1.2vw */
   background-color: #8f113b;
   border-radius: 10px;
   z-index: 10;
@@ -221,8 +265,8 @@ img {
   background-color: tan;
   width: 60px;
   height: 60px;
-  border: 1px solid transparent;
-  border-radius: 50%;
+  /* border: 2px solid transparent; */
+  border-radius: 100%;
   display: grid;
   place-items: center;
   top: 50%;
@@ -351,6 +395,20 @@ input::placeholder {
     padding: 100px 0;
     object-fit: contain;
   }
+
+  .banner-2 {
+    background-image: url("./assets/Home_banner/banner_2_ipad.png");
+    height: 780px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 110px 0px;
+    background-position: center center;
+  }
 }
 
 @media only screen and (max-width: 620px) {
@@ -365,6 +423,34 @@ input::placeholder {
 
   .banner-section {
     background-image: url("./assets/backgrounds/banner_background_mobile.png");
+    height: 780px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 110px 0px;
+    background-position: center center;
+  }
+
+  .banner-2 {
+    background-image: url("./assets/Home_banner/banner_2_mobile.png");
+    height: 780px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 110px 0px;
+    background-position: center center;
+  }
+
+  .banner-4 {
+    background-image: url("./assets/Home_banner/banner_4.png");
     height: 780px;
     background-size: cover;
     background-repeat: no-repeat;
@@ -424,6 +510,13 @@ input::placeholder {
     background-size: cover;
     background-repeat: no-repeat;
   }
+
+  .blog-banner {
+    background-image: url("./assets//backgrounds/blog_banner_mobile.png");
+    justify-content: start;
+
+  }
+
 }
 
 /* Filter Checkbox */
@@ -453,7 +546,7 @@ input::placeholder {
 }
 
 /* When checked */
-.custom-checkbox input:checked + .checkmark {
+.custom-checkbox input:checked+.checkmark {
   background-color: #c89a5d;
   border-color: #c89a5d;
 }
@@ -466,7 +559,7 @@ input::placeholder {
 }
 
 /* Show checkmark when checked */
-.custom-checkbox input:checked + .checkmark::after {
+.custom-checkbox input:checked+.checkmark::after {
   display: block;
   left: 7px;
   top: 4px;
@@ -486,7 +579,7 @@ input::placeholder {
     border: 2px solid #c89a5d;
   }
 
-  .custom-checkbox input:checked + .checkmark::after {
+  .custom-checkbox input:checked+.checkmark::after {
     left: 6px;
     top: 3px;
     width: 5px;

@@ -2,8 +2,9 @@ import React from "react";
 import Filled_LikeIcon from "../assets/Products/Filled_likeIcon.png";
 import LikeIcon from "../assets/Products/Unfilled_likeIcon.png";
 
-function LikeButton({ liked, onToggle, isOutOfStock }) {
+function LikeButton({ liked, onToggle, isOutOfStock , isRestocking }) {
   if (isOutOfStock) return null;
+  if (isRestocking) return null;
 
   return (
     <button

@@ -106,6 +106,10 @@ function Product_Filter({ productCatergory }) {
     }
     return sorted;
   };
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
 
   const handleSortSelection = (option) => {
     setSortOption(option);
@@ -139,8 +143,8 @@ function Product_Filter({ productCatergory }) {
         (p) => p.min === range.min && p.max === range.max
       )
         ? selectedPrices.filter(
-            (p) => p.min !== range.min || p.max !== range.max
-          )
+          (p) => p.min !== range.min || p.max !== range.max
+        )
         : [...selectedPrices, range];
       setSelectedPrices(updated);
       handleFilterChange(selectedCategories, updated);
@@ -261,9 +265,8 @@ function Product_Filter({ productCatergory }) {
                     className="flex mt-4 cursor-pointer gap-x-[8px] items-center select-none"
                   >
                     <img
-                      className={`w-[26px] transform transition-transform duration-300 ${
-                        showMore ? "rotate-180" : ""
-                      }`}
+                      className={`w-[26px] transform transition-transform duration-300 ${showMore ? "rotate-180" : ""
+                        }`}
                       src={showMore ? down_arrow_red : down_arrow_red}
                       alt="toggle_arrow"
                     />
@@ -310,9 +313,8 @@ function Product_Filter({ productCatergory }) {
                     onClick={() => setShowMoreCategory(!showMoreCategory)}
                   >
                     <img
-                      className={`w-[26px] transform transition-transform duration-300 ${
-                        showMoreCategory ? "rotate-180" : ""
-                      }`}
+                      className={`w-[26px] transform transition-transform duration-300 ${showMoreCategory ? "rotate-180" : ""
+                        }`}
                       src={showMore ? down_arrow_red : down_arrow_red}
                       alt="toggle_arrow"
                     />
@@ -350,7 +352,7 @@ function Product_Filter({ productCatergory }) {
             </div>
 
             {/* Mobile Verion Filter */}
-            <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden px-4 z-30 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
+            <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden px-4 z-10 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
               <div className="flex justify-between">
                 {/* SORT BUTTON */}
                 <div
@@ -416,7 +418,7 @@ function Product_Filter({ productCatergory }) {
             <div
               className={
                 showSort
-                  ? "font-poppins bg-light-sandal w-full h-[302px] fixed inset-0 right-0 z-20 p-7 rounded-t-8 transition-all duration-300 ease-in-out lg:hidden"
+                  ? "font-poppins bg-light-sandal w-full h-[302px] fixed inset-0 right-0 z-50 p-7 rounded-t-8 transition-all duration-300 ease-in-out lg:hidden"
                   : "hidden"
               }
             >
@@ -459,7 +461,7 @@ function Product_Filter({ productCatergory }) {
             <div
               className={
                 showFilter === true
-                  ? "font-poppins bg-light-sandal w-full h-[470px] fixed inset-0 right-0 z-20 p-6 overflow-y-scroll lg:hidden"
+                  ? "font-poppins bg-light-sandal w-full h-[470px] fixed inset-0 right-0 z-50 p-6 overflow-y-scroll lg:hidden"
                   : "hidden"
               }
             >
@@ -490,11 +492,10 @@ function Product_Filter({ productCatergory }) {
                 {/* Tabs */}
                 <div className="flex flex-col items-start text-[14px] space-y-6 text-[#747474]">
                   <button
-                    className={`${
-                      tab === "productCatergory"
-                        ? "text-primary font-medium"
-                        : ""
-                    }`}
+                    className={`${tab === "productCatergory"
+                      ? "text-primary font-medium"
+                      : ""
+                      }`}
                     onClick={() => setTab("productCatergory")}
                   >
                     Category
@@ -561,9 +562,8 @@ function Product_Filter({ productCatergory }) {
                         onClick={() => setShowMoreCategory(!showMoreCategory)}
                       >
                         <img
-                          className={`w-[26px] transform transition-transform duration-300 ${
-                            showMoreCategory ? "rotate-180" : ""
-                          }`}
+                          className={`w-[26px] transform transition-transform duration-300 ${showMoreCategory ? "rotate-180" : ""
+                            }`}
                           src={down_arrow_red}
                           alt="toggle_arrow"
                         />
@@ -578,7 +578,7 @@ function Product_Filter({ productCatergory }) {
                 {/* Price Filter */}
                 {tab === "priceRange" && (
                   <div>
-                    <div className="w-[170px] h-fit space-y-5">
+                    <div className="w-[170px] h-fit space-y-5 ">
                       {priceRanges
                         .slice(0, showMorePrice ? priceRanges.length : 5)
                         .map((items) => (
@@ -609,9 +609,8 @@ function Product_Filter({ productCatergory }) {
                         onClick={() => setShowMorePrice(!showMorePrice)}
                       >
                         <img
-                          className={`w-[26px] transform transition-transform duration-300 ${
-                            showMorePrice ? "rotate-180" : ""
-                          }`}
+                          className={`w-[26px] transform transition-transform duration-300 ${showMorePrice ? "rotate-180" : ""
+                            }`}
                           src={down_arrow_red}
                           alt="toggle_arrow"
                         />
