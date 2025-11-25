@@ -1,24 +1,55 @@
-import react from "react";
-
+import React, { useState } from "react";
 // Image
-import location_icon from '../assets/Products/location.png'
-
-
+import location_icon from "../assets/Products/location.png";
 function Pincode_Input() {
+  const [pincode, setPincode] = useState("");
+  const [isEditable, setIsEditable] = useState(true);
+  const [savedPincode, setSavedPincode] = useState("");
+  const handleChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ""); // only digits
+    if (value.length <= 6) {
+      setPincode(value);
+    }
+  };
+  const handlePincodeChange = () => {
+    if (isEditable && pincode.length === 6) {
+      setSavedPincode(pincode);
+      setIsEditable(false);
+    } else {
+      setIsEditable(true);
+    }
+  };
+
   return (
-    <div className="w-full bg-white border border-[#ADADAD] mt-2 rounded-[8px]">
+    <div className="w-full bg-[#FFFAF3] border-2 border-[#F6EFE6] shadow-2xl mt-2 rounded-xl">
+      <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex items-center gap-2">
+          <img className="w-[24px] h-[24px] " src={location_icon} alt="location_icon" />
 
-      <div className="flex items-center justify-between p-3 sm:p-4">
-
-        <div className="flex w-[50%] sm:gap-x-2">
-          <img className="w-[24px]" src={location_icon} alt="location_icon" />
-          <input type="number" placeholder="Enter Pincode" maxlength="6" size="6" className="text-[#979797] focus:outline-none" />
+          {isEditable ? (
+            <input
+              type="text"
+              placeholder="Enter Pincode"
+              maxLength="6"
+              value={pincode}
+              onChange={handleChange}
+              className="bg-transparent focus:outline-none text-[#333333] placeholder-[#979797] placeholder:font-semibold text-[16px]"
+            />
+          ) : (
+            <p className="text-[#333333] text-[14px]">
+              Delivering to <span className="font-semibold">{savedPincode}</span>
+            </p>
+          )}
         </div>
-
-        <button type="button"className="text-primary text-[16px] font-semibold">Locate Me</button>
+        <button
+          type="button"
+          onClick={handlePincodeChange}
+          className="text-[#7C0022] font-semibold text-[15px]"
+        >
+          {isEditable ? "Locate Me" : "Change Pincode"}
+        </button>
       </div>
     </div>
   );
-};
-
+}
 export default Pincode_Input;

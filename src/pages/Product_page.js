@@ -1,157 +1,122 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-
-// Images
-import down_arrow from '../assets/Products/down_arrow.png'
-
+import React, { useContext, useEffect, useState } from "react";
 // Component
 import Product_Filter from "../components/Product_filter";
 import Product_Listing from "./Product_Listing";
+import { AppContext } from "../context/AppContext";
+import { useLocation } from "react-router";
+import { FetchAllProductByCollections } from "../handler/api Handler";
 
 function Product_page() {
+  const { setProductListFromShopify } = useContext(AppContext);
+  const location = useLocation();
+  const { category, collectionId } = location.state || {};
+  const [productListData, setProductListData] = useState([]);
+  const productList = async (collectionId) => {
+    try {
+      const response = await FetchAllProductByCollections(collectionId);
+      const edges = response?.data?.collection?.products?.edges || [];
 
-    const [product, setProduct] = useState([]);
-    const [filteredProducts, setFilteredProducts] = useState([]);
-    const [selectedCategories, setSelectedCategories] = useState([]);
-    const [selectedPrices, setSelectedPrices] = useState([]);
-    const [sortOption, setSortOption] = useState("Latest");
-    const SortOptions = [
-        "Price High to Low",
-        "Price Low to High",
-    ];
-    const productList = async () => {
-        try {
-            const response = await axios.get(
-                "https://tarangi-website.de.r.appspot.com/api/shopify/products"
-            );
-            setProduct(response.data);
-        } catch (error) {
-            console.error(
-                "Error fetching products:",
-                error.response?.data || error.message
-            );
-        }
-    };
-    console.log(product);
-    const categorizedProducts = product.reduce((acc, product) => {
-        const type = product.product_type || "Uncategorized";
-        if (!acc[type]) acc[type] = [];
-        acc[type].push({
-            id: product.id,
-            title: product.title,
-            image: product.image?.src,
-            price: product.variants?.[0]?.price,
-            vendor: product.vendor,
-            created_at: product.created_at,
-        });
-        return acc;
-    }, {});
-    console.log("-------categorizedProducts-------", categorizedProducts)
-    const handleFilterChange = (categories = [], prices = []) => {
-        setSelectedCategories(categories);
-        setSelectedPrices(prices);
-        let filtered = product;
-        if (categories.length > 0) {
-            filtered = filtered.filter((p) =>
-                categories.includes(p.product_type || "Uncategorized")
-            );
-        }
-        if (prices.length > 0) {
-            filtered = filtered.filter((p) => {
-                const price = Number(p.variants?.[0]?.price);
-                return prices.some((range) => price >= range.min && price <= range.max);
-            });
-        }
-        filtered = sortProducts(filtered, sortOption);
-        setFilteredProducts(filtered);
-    };
-    const sortProducts = (products, sortBy) => {
-        const sorted = [...products];
-        if (sortBy === "Latest") {
-            sorted.sort(
-                (a, b) =>
-                    new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-            );
-        } else if (sortBy === "Price High to Low") {
-            sorted.sort(
-                (a, b) =>
-                    Number(b.variants?.[0]?.price) - Number(a.variants?.[0]?.price)
-            );
-        } else if (sortBy === "Price Low to High") {
-            sorted.sort(
-                (a, b) =>
-                    Number(a.variants?.[0]?.price) - Number(b.variants?.[0]?.price)
-            );
-        } else if (sortBy === "Featured") {
-        }
-        return sorted;
-    };
-    const handleSortChange = (option) => {
-        setSortOption(option);
-        const sorted = sortProducts(filteredProducts, option);
-        setFilteredProducts(sorted);
-    };
-    console.log(filteredProducts);
-    useEffect(() => {
-        productList();
-    }, []);
-    useEffect(() => {
-        const sorted = sortProducts(product, sortOption);
-        setFilteredProducts(sorted);
-        // setFilteredProducts(product);
-    }, [product, sortOption]);
-    return (
-        <>
-            <div className="bg-[#FFF5E8] py-[50px] relative">
+      const formattedProducts = edges.map(({ node }) => {
+        const productId = Number(node.id.replace("gid://shopify/Product/", ""));
 
-                {/* Heading */}
-                <div className="max-w-[1350px] mx-auto flex flex-wrap justify-between px-4">
+        const variantGID = node.variants?.edges?.[0]?.node?.id || null;
 
-                    <div className="lg:flex flex-wrap items-center gap-x-[18px]">
-                        <h2 className="font-atteron text-[26px] text-primary sm:text-[36px]">Women Collections</h2>
-                        <p className="font-poppins text-font-grey text-[14px] sm:mt-3 sm:text-[16px]">30 Designs</p>
-                    </div>
+        const variantId = variantGID
+          ? Number(variantGID.replace("gid://shopify/ProductVariant/", ""))
+          : null;
+        return {
+          id: Number(productId),
+          admin_graphql_api_id: node.id,
+          title: node.title,
+          body_html: "",
+          vendor: node.vendor,
+          product_type: node.productType || "Uncategorized",
+          created_at: node.createdAt,
+          published_at: node.createdAt,
+          updated_at: node.createdAt,
+          status: "active",
+          tags: "",
+          template_suffix: "",
+          published_scope: "global",
 
-                    {/* Drop down */}
-                    <div className="lg:flex items-center gap-4 bg-light-sandal p-4 rounded-md hidden">
+          image: {
+            id: Number(productId) + 1,
+            alt: null,
+            position: 1,
+            product_id: Number(productId),
+            created_at: node.createdAt,
+            src: node.featuredImage?.url || "",
+          },
 
-                        <label className="font-poppins text-font-grey text-[18px]">Sort by</label>
+          images: [
+            {
+              id: Number(productId) + 1,
+              position: 1,
+              product_id: Number(productId),
+              src: node.featuredImage?.url || "",
+            },
+          ],
 
-                        <div className="relative" >
-                            <select className="appearance-none border w-[155px] border-[#B9B9B9] rounded-md p-2.5 bg-white text-font-grey text-[14px] cursor-pointer outline-none " onChange={(e) => handleSortChange(e.target.value)} >
-                                {SortOptions.map((option) => (
-                                    <option key={option} value={option}>
-                                        {option}
-                                    </option>
-                                ))}
-                            </select>
-                            <div className=" absolute right-1.5 top-2.5">
-                                <img src={down_arrow} alt="Down Arrow" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          options: [
+            {
+              id: Number(productId) + 1000,
+              product_id: Number(productId),
+              name: "Title",
+              position: 1,
+              values: ["Default Title"],
+            },
+          ],
+          variants: [
+            {
+              id: variantId,
+              product_id: Number(productId),
+              title: "Default Title",
+              inventory_quantity:
+                node.variants?.edges?.[0]?.node?.inventoryQuantity || 0,
 
-                {/* Filters */}
+              price: node.variants?.edges?.[0]?.node?.price || "0.00",
+              position: 1,
+              created_at: node.createdAt,
+              updated_at: node.createdAt,
+            },
+          ],
+        };
+      });
+      setProductListFromShopify(formattedProducts);
+      const products = edges.map(({ node }) => ({
+        id: node.id,
+        title: node.title,
+        vendor: node.vendor,
+        created_at: node.createdAt,
+        image: node.featuredImage?.url,
+        price: node.variants?.edges?.[0]?.node?.price || "0.00",
+        product_type: node.productType || "Uncategorized",
+      }));
+      setProductListData(products);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const categorized = productListData.reduce((acc, product) => {
+    const type = product.product_type || "Uncategorized";
+    if (!acc[type]) acc[type] = [];
+    acc[type].push(product);
+    return acc;
+  }, {});
+  useEffect(() => {
+    if (collectionId) {
+      productList(collectionId);
+    }
+  }, [collectionId]);
 
-                <div className="max-w-[1350px] mx-auto lg:flex gap-x-[40px] my-[50px]">
-                    <Product_Filter
-                        productCatergory={categorizedProducts}
-                        onFilterChange={handleFilterChange}
-                        selectedCategories={selectedCategories}
-                        selectedPrices={selectedPrices}
-                        onSortChange={handleSortChange}
-                    />
-                    <Product_Listing productCatergory={filteredProducts} />
-
-
-                </div>
-
-
-
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div className="bg-[#FFF5E8] py-[50px] relative">
+        <div className="max-w-[1350px] mx-auto lg:fle gap-x-[40px] my-[50px]">
+          <Product_Filter productCatergory={categorized} />
+        </div>
+      </div>
+    </>
+  );
 }
-
 export default Product_page;

@@ -2,7 +2,6 @@ html {
   @apply scroll-smooth;
 }
 
-
 @font-face {
   font-family: "Atteron";
   src: url("./assets/fonts/atteron.ttf") format("truetype");
@@ -38,8 +37,8 @@ html {
 
 .section-heading {
   font-family: "Atteron", serif;
-  font-size: 72px;
-  color: #5C0A1F;
+  font-size: 64px;
+  color: #5c0a1f;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -48,8 +47,8 @@ html {
 
 .section-content {
   font-family: "Poppins", sans-serif;
-  font-size: 24px;
-  color: #28040E;
+  font-size: 20px;
+  color: #28040e;
   text-align: center;
   line-height: normal;
   font-style: normal;
@@ -81,7 +80,7 @@ html {
 
 .footer-section {
   background-image: url("./assets/backgrounds/footer_background.png");
-  background-color: #4B001A;
+  background-color: #4b001a;
   background-size: cover;
   background-repeat: no-repeat;
   display: flex;
@@ -129,10 +128,187 @@ html {
   align-items: center;
 }
 
+.blog-banner {
+  background-image: url("./assets//backgrounds/blog_banner.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 784px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .thankyou {
   background-image: url("./assets/backgrounds/thankyou_background.png");
   background-size: cover;
   background-repeat: no-repeat;
+}
+.login-background {
+  background-image: url("./assets/backgrounds/login_backgroundpng.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.before-after-section {
+  background-image: url("./assets/backgrounds/slider_background.png");
+  background-size: cover;
+  background-position: center;
+  display: grid;
+  place-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding: 150px 0; /* replaced 10vw */
+  min-height: 784px;
+  --position: 50%;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  position: relative;
+  margin: auto;
+}
+
+.image-container {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.slider-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left;
+}
+
+.image-after {
+  position: absolute;
+  inset: 0;
+  width: var(--position);
+  overflow: hidden;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.slider-line {
+  position: absolute;
+  inset: 0;
+  width: 12px; /* replaced 1.2vw */
+  background-color: #8f113b;
+  border-radius: 10px;
+  z-index: 10;
+  left: var(--position);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.slider-button {
+  position: absolute;
+  background-color: tan;
+  width: 60px;
+  height: 60px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  top: 50%;
+  left: var(--position);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 20;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* .product-listing {
+  position: relative;
+
+}
+
+.sortby-filter{
+  position: fixed;
+} */
+
+@media (max-width: 1024px) {
+  .before-after-section {
+    padding: 100px 0;
+  }
+
+  .container {
+    width: 92%;
+  }
+}
+
+@media (max-width: 768px) {
+  .before-after-section {
+    padding: 80px 0;
+  }
+
+  .slider-line {
+    width: 14px;
+  }
+
+  .slider-button {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .before-after-section {
+    padding: 60px 0;
+  }
+
+  .container {
+    width: 95%;
+  }
+
+  .slider-line {
+    width: 10px;
+  }
+
+  .slider-button {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 320px) {
+  .before-after-section {
+    padding: 45px 0;
+  }
+
+  .container {
+    width: 96%;
+  }
+
+  .image-container {
+    aspect-ratio: 4 / 3;
+  }
+
+  .slider-line {
+    width: 8px;
+    min-width: 4px;
+  }
+
+  .slider-button {
+    width: 35px;
+    height: 35px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  }
 }
 
 html {
@@ -144,8 +320,8 @@ html {
   width: 100%;
   height: 48px;
   border-radius: 8px;
-  border: 1px solid #C89A5D;
-  background-color: #FFF8E4;
+  border: 1px solid #c89a5d;
+  background-color: #fff8e4;
   margin-top: 5px;
   outline: none;
   padding-left: 7px;
@@ -156,7 +332,7 @@ input::placeholder {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   line-height: 22.4px;
-  color: #B2AC99;
+  color: #b2ac99;
 }
 
 /* @media  only screen and (max-width : 1025px) {
@@ -180,12 +356,11 @@ input::placeholder {
 @media only screen and (max-width: 620px) {
   .footer-section {
     background-image: url("./assets/backgrounds/footer_background_mobile.png");
-    background-color: #4B001A;
+    background-color: #4b001a;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center right;
     width: 100%;
-
   }
 
   .banner-section {
@@ -218,7 +393,7 @@ input::placeholder {
 
   .whyus {
     background-image: url("./assets/backgrounds/whyus_background_mobile.png");
-    padding: 100px 0px;
+    /* padding: 100px 0px; */
   }
 
   .section-heading {
@@ -249,11 +424,9 @@ input::placeholder {
     background-size: cover;
     background-repeat: no-repeat;
   }
-
 }
 
 /* Filter Checkbox */
-
 
 .custom-checkbox {
   display: block;
@@ -272,7 +445,7 @@ input::placeholder {
 .custom-checkbox .checkmark {
   height: 20px;
   width: 20px;
-  border: 2px solid #C89A5D;
+  border: 2px solid #c89a5d;
   border-radius: 3px;
   background-color: transparent;
   transition: all 0.2s ease;
@@ -280,9 +453,9 @@ input::placeholder {
 }
 
 /* When checked */
-.custom-checkbox input:checked+.checkmark {
-  background-color: #C89A5D;
-  border-color: #C89A5D;
+.custom-checkbox input:checked + .checkmark {
+  background-color: #c89a5d;
+  border-color: #c89a5d;
 }
 
 /* Checkmark symbol */
@@ -293,7 +466,7 @@ input::placeholder {
 }
 
 /* Show checkmark when checked */
-.custom-checkbox input:checked+.checkmark::after {
+.custom-checkbox input:checked + .checkmark::after {
   display: block;
   left: 7px;
   top: 4px;
@@ -304,21 +477,22 @@ input::placeholder {
   transform: rotate(45deg);
 }
 
+
+
 @media (max-width: 768px) {
   .custom-checkbox .checkmark {
     height: 18px;
     width: 18px;
-    border: 2px solid #C89A5D;
+    border: 2px solid #c89a5d;
   }
 
-  .custom-checkbox input:checked+.checkmark::after {
+  .custom-checkbox input:checked + .checkmark::after {
     left: 6px;
     top: 3px;
     width: 5px;
     height: 10px;
   }
 }
-
 
 .swiper-pagination-bullets-dynamic {
   position: relative !important;
@@ -330,7 +504,7 @@ input::placeholder {
 }
 
 .swiper-pagination-bullet-active {
-  background-color: #6E0027 !important;
+  background-color: #6e0027 !important;
 }
 
 .swiper-pagination-bullet {
@@ -340,5 +514,5 @@ input::placeholder {
 
 .swiper-button-prev,
 .swiper-button-next {
-  color: #CFA266 !important;
+  color: #cfa266 !important;
 }

@@ -11,8 +11,11 @@ import Product_Description from './pages/Product_Description.js';
 import Favourites from './pages/Favourites.js'
 import Checkout from './pages/Checkout.js'
 import Payment from './pages/payment.js';
-
-
+import Profile from './pages/Profile.js';
+import Error from './pages/Error.js';
+import Login from './pages/Login.js';
+import Signup from './pages/Signup.js';
+import Blog from './pages/Blog.js'
 import ThankYou from './pages/Thank_you.js';
 import Cart from './pages/Cart.js'
 
@@ -21,8 +24,7 @@ function App() {
     <>
       <Navbar />
         <Routes>
-          <Route path="/*" element={<Navigate to="/home" />} />
-          
+          <Route path="/" element={<Home />} />
           <Route path='/home' element={<Home />} />
           <Route path='/about' element={<About />} />
           <Route path='/products' element={<Product_page />} />
@@ -32,6 +34,11 @@ function App() {
           <Route path='/payment' element={<Payment/>} />
           <Route path='/thankyou' element={<ThankYou />} />
           <Route path='/cart' element={<Cart />} />
+          <Route path='/profile' element={<Profile />} />
+          <Route path="*" element={<Error />} />
+          <Route path="login" element={<Login />}/>
+          <Route path="signup" element={<Signup/>}/>
+          <Route path="blog" element={<Blog />} />
         </Routes>
       <Footer />
     </>
