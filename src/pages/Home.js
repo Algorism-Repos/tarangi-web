@@ -170,7 +170,6 @@ function Home() {
     // fetchMetalRates();
   }, []);
 
-  console.log(festiveFiltered);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });

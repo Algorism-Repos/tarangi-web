@@ -253,7 +253,7 @@ function Cart() {
       </div>
 
       {/* DELETE CONFIRMATION MODAL */}
-      <DeleteConfirmationModal
+      {/* <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}
         title="Remove Item"
         message="Are you sure you want to remove this product from your cart?"
@@ -268,7 +268,7 @@ function Cart() {
           setIsDeleteModalOpen(false);
           setProductToDelete(null);
         }}
-      />
+      /> */}
     </>
   );
 }
