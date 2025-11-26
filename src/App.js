@@ -15,7 +15,10 @@ import Profile from './pages/Profile.js';
 import Error from './pages/Error.js';
 import Login from './pages/Login.js';
 import Signup from './pages/Signup.js';
-import Blog from './pages/Blog.js'
+import Blog from './pages/Blog.js';
+import Terms_Condition from './pages/Terms_Condition.js';
+
+
 import ThankYou from './pages/Thank_you.js';
 import Cart from './pages/Cart.js'
 
@@ -39,6 +42,7 @@ function App() {
           <Route path="login" element={<Login />}/>
           <Route path="signup" element={<Signup/>}/>
           <Route path="blog" element={<Blog />} />
+          <Route path="terms&conditions" element={<Terms_Condition/>}/>
         </Routes>
       <Footer />
     </>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import logo from "../assets/logo.png";
 import desktop_flower from "../assets/login_flower.png";
 import mobile_flower from "../assets/login_flower_mobile.png";
@@ -41,10 +41,14 @@ function Login() {
       }
     },
   });
+  useEffect(() => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}, []);
+
 
   return (
     <>
-      <div className="xl:min-h-screen w-full bg-[#6E0027] flex flex-col xl:flex-row font-[poppins]">
+      <div className="xl:h-[800px] w-full bg-[#6E0027] flex flex-col xl:flex-row font-[poppins] 2xl:min-h-screen">
         {/* Left image */}
         <div className="hidden xl:flex xl:w-1/2">
           <img
@@ -55,7 +59,7 @@ function Login() {
         </div>
 
         {/* Right section */}
-        <div className="flex w-full xl:w-1/2 justify-center items-center px-6 pt-28 sm:py-10">
+        <div className="flex w-full xl:w-1/2 justify-center items-center px-6 pt-28 sm:py-10 mr-[10px]">
           <div className="w-full max-w-[628px]">
             <div className="flex flex-col items-center">
               <img

@@ -169,6 +169,13 @@ function Home() {
     collectionsList();
     // fetchMetalRates();
   }, []);
+
+  console.log(festiveFiltered);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
     <>
       {/* Floating Whatsapp icon */}
@@ -176,7 +183,7 @@ function Home() {
         <img
           src={whatsapp_floating}
           alt="Whatsapp_Icon"
-          className="w-[50px] sm:w-[70px] h-fit fixed bottom-3 right-3 sm:bottom-9 sm:right-7 animate-bounce hover:scale-125 duration-300 transition-transform z-30"
+          className="w-[50px] sm:w-[70px] h-fit fixed bottom-3 right-3 sm:bottom-9 sm:right-7 animate-bounce hover:scale-125 duration-300 transition-transform z-50"
         />
       </a>
 
@@ -252,7 +259,7 @@ function Home() {
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"
       >
-        <SwiperSlide>
+        {/* <SwiperSlide>
           <div className="festive-banner relative">
             <a
               href="#launchOffers"
@@ -263,10 +270,10 @@ function Home() {
               </button>
             </a>
           </div>
-        </SwiperSlide>
+        </SwiperSlide> */}
         <SwiperSlide>
           <div className="banner-section">
-            <h1 className="font-atteron uppercase text-[52px] leading-[70px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
+            <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
               Born from tradition Designed for today
             </h1>
             <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">
@@ -279,6 +286,45 @@ function Home() {
             >
               <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
                 View our Best Sellers
+              </button>
+            </a>
+          </div>
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <div className="banner-2">
+            <h1 className="font-atteron uppercase text-[40px] leading-[60px] text-center sm:text-left sm:text-[65px] text-[#5B3A09] sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
+              Born from tradition Designed for today
+            </h1>
+            <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-[#5B3A09] text-center sm:text-left mt-3 sm:mt-8 max-w-[640px]">
+              Because exculsive 925 silver jewelry should feel as unique as the
+              one who wears it.
+            </h4>
+            <a
+              href="#launchOffers"
+              className="w-fit hover:scale-110 transition duration-300"
+            >
+              <button className=" mt-4 sm:mt-12 rounded-[32px] bg-[#5B3A09] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
+                View our Best Sellers
+              </button>
+            </a>
+          </div>
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <div className="banner-4">
+            <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
+              Born from tradition Designed for today
+            </h1>
+            <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+            </h4>
+            <a
+              href="#launchOffers"
+              className="w-fit hover:scale-110 transition duration-300"
+            >
+              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
+                View our Collections
               </button>
             </a>
           </div>
@@ -503,7 +549,7 @@ function Home() {
                 Gold
               </h2>
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                ₹ 4,00,000
+                ₹ 4<span className="font-[poppins]">,</span>00<span className="font-[poppins]">,</span>000
               </h2>
             </div>
 
@@ -517,7 +563,7 @@ function Home() {
                 Silver
               </h2>
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                ₹ 12,000
+                ₹ 12<span className="font-[poppins]">,</span>000
               </h2>
             </div>
           </div>
@@ -792,8 +838,7 @@ function Home() {
       <div className="before-after-section ">
         <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
           <h1 className="font-atteron section-heading text-[26px]  sm:text-[64px] text-center text-[#5C0A1F] mb-16">
-            <span className="text-[28px]"> Enhance Your Look With</span> <br />{" "}
-            Tarangi
+            <span className="text-[28px] sm:text-[64px]"> Enhance Your Look With</span> <br /> Tarangi
           </h1>
 
           <div className="container" ref={containerRef}>

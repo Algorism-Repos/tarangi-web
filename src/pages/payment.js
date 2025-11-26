@@ -82,6 +82,7 @@ function Paymentpage() {
     },
   });
 
+
   return (
     <div className="min-h-screen bg-[#FFF5E8] text-[#979797] text-sm font-poppins overflow-x-hidden px-3 sm:px-6">
       <div className="max-w-[1110px] mx-auto py-10 space-y-10">

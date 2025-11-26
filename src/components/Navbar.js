@@ -11,7 +11,8 @@ import Back_Arrow from "../assets/close_iconwhite.png";
 import logo from "../assets/logo.png";
 import menu from "../assets/menu_icon.png";
 import close from "../assets/close_iconwhite.png";
-import favourite_icon from "../assets/Favorites_icon.png";
+import favouriteFilled from "../assets/favourites_filled_icon.png";
+import favouriteUnfilled from "../assets/Favorites_icon.png";
 import cart_icon_empty from "../assets/Cart_white.png";
 import cart_icon_filled from "../assets/cart_filled.png";
 import profile_icon from "../assets/profile_icon.png";
@@ -25,40 +26,44 @@ function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
  const {isLoggedIn,setIsLoggedIn}=useContext(AppContext)
+  const favourites = JSON.parse(localStorage.getItem("favourites")) || [];
+  const hasFavourites = favourites.length > 0;
+
+
   const location = useLocation();
   const navigate = useNavigate();
 
   const isActive = (path) => location.pathname === path;
   const getLinkClass = (path) =>
     isActive(path) ? "text-white" : "text-white opacity-[0.5]";
-  const cartIcon = cartItems.length > 0 ? cart_icon_filled : cart_icon_empty;
+  const cartIcon = cartItems.length > 0 ? cart_icon_empty : cart_icon_filled;
 
   // ✅ Initial state setup
   useEffect(() => {
     localStorage.setItem("isLoggedIn", "false");
     setIsLoggedIn(true);
   }, []);
-useEffect(() => {
-  const storedStatus = localStorage.getItem("isLoggedIn") === "false";
-  setIsLoggedIn(storedStatus);
+  useEffect(() => {
+    const storedStatus = localStorage.getItem("isLoggedIn") === "false";
+    setIsLoggedIn(storedStatus);
 
-  const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-  setCartItems(storedCart);
+    const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    setCartItems(storedCart);
 
-  const updateStorage = () => {
-    const updatedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-    setCartItems(updatedCart);
+    const updateStorage = () => {
+      const updatedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      setCartItems(updatedCart);
 
-    const updatedLogin = localStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(updatedLogin);
-  };
+      const updatedLogin = localStorage.getItem("isLoggedIn") === "true";
+      setIsLoggedIn(updatedLogin);
+    };
 
-  window.addEventListener("storage", updateStorage);
-  return () => window.removeEventListener("storage", updateStorage);
-}, []);
+    window.addEventListener("storage", updateStorage);
+    return () => window.removeEventListener("storage", updateStorage);
+  }, []);
 
 
-  // ✅ Close search when clicking outside
+  // Close search when clicking outside
   useEffect(() => {
     const closeSearch = (e) => {
       if (
@@ -75,7 +80,7 @@ useEffect(() => {
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowSearchDropdown(false); // CLOSE DROPDOWN
+        setShowSearchDropdown(false);
       }
     }
 
@@ -95,7 +100,7 @@ useEffect(() => {
         </Link>
 
         {/* Nav Links */}
-        <div className="font-poppins text-[16px] flex flex-row gap-x-[40px] ml-[70px] xl:gap-x-[77px] items-center xl:ml-[170px] ">
+        <div className="font-poppins text-[16px] flex flex-row gap-x-[40px] ml-[70px] xl:gap-x-[55px] items-center xl:ml-[170px] ">
           <Link
             className="hover:bg-[#D6A76F4F] rounded-full py-2.5 px-4"
             to="/home"
@@ -114,7 +119,7 @@ useEffect(() => {
           >
             <p className={getLinkClass("/products")}>Products</p>
           </Link>
-           <Link
+          <Link
             className="hover:bg-[#D6A76F4F] rounded-full py-2.5 px-4"
             to="/blog"
           >
@@ -129,23 +134,21 @@ useEffect(() => {
 
           <div
             onClick={() => setShowSearch((prev) => !prev)}
-            className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] hover:bg-[#D6A76F4F] transition search-icon
+            className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] transition search-icon
                       ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"}
         `}
           >
             <img src={Search_icon_white} className="w-[42px] h-[42px]" />
           </div>
-
           <Link to="/favourites">
             <img
-              className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/favourites")
-                  ? "bg-[#CFA266]"
-                  : "hover:bg-[#D6A76F4F]"
+              className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/favourites") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
                 }`}
-              src={favourite_icon}
+              src={hasFavourites ? favouriteFilled : favouriteUnfilled}
               alt="favourite icon"
             />
           </Link>
+
 
           <Link to="/cart">
             <img
@@ -155,19 +158,19 @@ useEffect(() => {
               alt="cart"
             />
           </Link>
-                    {isLoggedIn ? (
+          {isLoggedIn ? (
             <>
               <Link to="/profile">
                 <img
-                  className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/profile")
-                      ? "bg-[#CFA266]"
-                      : "hover:bg-[#D6A76F4F]"
+                  className={`w-[48px] h-[48px] rounded-[8px] transition ${isActive("/profile")
+                    ? "bg-[#CFA266]"
+                    : "hover:bg-[#D6A76F4F]"
                     }`}
                   src={profile_icon}
                   alt="profile"
                 />
               </Link>
-              
+
             </>
           ) : (
             <>
@@ -271,31 +274,33 @@ useEffect(() => {
       </div>
 
       {/* Navbar - Mobile  */}
-      <div className="relative bg-[#680F26] flex flex-row justify-between w-full px-[20px] py-[30px] lg:hidden">
+      <div className="relative bg-[#680F26] flex flex-row justify-between w-full z-50 px-[20px] py-[30px] lg:hidden">
         <img
           src={menu}
           alt="menu_icon"
           className="w-[37px] h-[37px] cursor-pointer"
           onClick={() => setMenuVisible(true)}
         />
+        <Link to="/home">
+          <img
+            src={logo}
+            alt="brand-logo"
+            className="w-[85px] h-[55px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          />
+        </Link>
 
-        <img
-          src={logo}
-          alt="brand-logo"
-          className="w-[85px] h-[55px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-        />
 
         <div className="flex gap-x-2">
           <Link to="/favourites">
             <img
-              className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites")
-                  ? "bg-[#CFA266]"
-                  : "hover:bg-[#D6A76F4F]"
+              className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
                 }`}
-              src={favourite_icon}
+              src={hasFavourites ? favouriteFilled : favouriteUnfilled}
               alt="favourite icon"
             />
           </Link>
+
+
 
           <Link to="/cart">
             <img
@@ -312,8 +317,8 @@ useEffect(() => {
               <Link to="/profile">
                 <img
                   className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/profile")
-                      ? "bg-[#CFA266]"
-                      : "hover:bg-[#D6A76F4F]"
+                    ? "bg-[#CFA266]"
+                    : "hover:bg-[#D6A76F4F]"
                     }`}
                   src={profile_icon}
                   alt="profile"
@@ -332,10 +337,59 @@ useEffect(() => {
                 className="w-[30px] h-[30px] cursor-pointer "
                 onClick={() => setMenuVisible(false)}
               />
-              <img
-                src={logo}
-                className="w-[85px] h-[55px] cursor-pointer absolute top-9 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-              />
+              <Link to="/home">
+                <img
+                  src={logo}
+                  className="w-[85px] h-[55px] cursor-pointer absolute top-9 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                  onClick={() => setMenuVisible(false)}
+                />
+              </Link>
+
+
+
+              <div className="flex gap-x-2">
+                <Link to="/favourites">
+                  <img
+                    className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+                      }`}
+                    src={hasFavourites ? favouriteFilled : favouriteUnfilled}
+                    alt="favourite icon"
+                    onClick={() => setMenuVisible(false)}
+
+                  />
+                </Link>
+
+
+
+                <Link to="/cart">
+                  <img
+                    className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/cart") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+                      }`}
+                    src={cartIcon}
+                    alt="Cart icon"
+                    onClick={() => setMenuVisible(false)}
+
+                  />
+                </Link>
+                {isLoggedIn && (
+                  <>
+
+
+                    <Link to="/profile">
+                      <img
+                        className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/profile")
+                          ? "bg-[#CFA266]"
+                          : "hover:bg-[#D6A76F4F]"
+                          }`}
+                        src={profile_icon}
+                        alt="profile"
+                        onClick={() => setMenuVisible(false)}
+
+                      />
+                    </Link>
+                  </>
+                )}
+              </div>
             </div>
 
             <div className="flex flex-col items-center mt-10 gap-y-12 ">
@@ -423,12 +477,12 @@ useEffect(() => {
               </div>
 
               {/* PAGE LINKS */}
-              {["/home", "/about", "/products"].map((path) => (
+              {["/home", "/about", "/products", "/blog"].map((path) => (
                 <Link to={path} key={path}>
                   <h2
                     className={`font-poppins text-[16px] leading-normal text-center ${location.pathname === path
-                        ? "text-white font-semibold"
-                        : "text-[#A0A0A0]"
+                      ? "text-white font-semibold"
+                      : "text-[#A0A0A0]"
                       }`}
                     onClick={() => setMenuVisible(false)}
                   >
@@ -436,14 +490,18 @@ useEffect(() => {
                       ? "Home"
                       : path === "/about"
                         ? "About Us"
-                        : "Products"}
+                        : path === "/products"
+                          ? "Products"
+                          : "Blog"}
                   </h2>
                 </Link>
               ))}
 
+
               {/* LOGIN / SIGNUP */}
               {!isLoggedIn && (
-                <div className="flex flex-col items-center gap-y-[25px]">
+                <div className="flex flex-col items-center gap-y-[25px]" onClick={() => setMenuVisible(false)}
+                >
                   <button
                     onClick={() => navigate("/signup")}
                     className="rounded-[32px] border border-[#CFA266] w-[319px] h-[52px] font-poppins text-[16px] text-white"

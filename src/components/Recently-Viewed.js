@@ -1,20 +1,45 @@
 import React, { useContext } from "react";
 import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
+import product_3 from "../assets/Products/product_1.png"; // brown color image
+
 import gold_ellipse from "../assets/Products/gold_ellipse.png";
 import silver_ellipse from "../assets/Products/silver_ellipse.png";
 import brown_ellipse from "../assets/Products/brown_ellipse.png";
+
 import { AppContext } from "../context/AppContext";
 import LikeButton from "../components/LikeButton";
 
 function Recently_Viewed() {
   const { recentlyViewed, setRecentlyViewed } = useContext(AppContext);
 
+  // 🔥 Assign images based on color
+  const colorImages = {
+    gold: product_1,
+    silver: product_2,
+    brown: product_3,
+  };
 
+  // ❤️ Like toggle
   const toggleLike = (id) => {
     setRecentlyViewed((prev) =>
       prev.map((item) =>
         item.id === id ? { ...item, liked: !item.liked } : item
+      )
+    );
+  };
+
+  // 🎨 Color Change Function
+  const handleColorChange = (id, color) => {
+    setRecentlyViewed((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              selectedColor: color,
+              image: colorImages[color], // change product image here
+            }
+          : item
       )
     );
   };
@@ -52,21 +77,33 @@ function Recently_Viewed() {
                   ₹{item.price}
                 </h3>
 
+                {/* Color Options */}
                 <div className="flex justify-center gap-x-2.5 mr-1">
                   <img
-                    className="w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                    className={`w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px] cursor-pointer ${
+                      item.selectedColor === "gold" && "border-2"
+                    }`}
                     src={gold_ellipse}
-                    alt="gold ellipse"
+                    alt="gold"
+                    onClick={() => handleColorChange(item.id, "gold")}
                   />
+
                   <img
-                    className="w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                    className={`w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px] cursor-pointer ${
+                      item.selectedColor === "silver" && "border-2"
+                    }`}
                     src={silver_ellipse}
-                    alt="Silver ellipse"
+                    alt="silver"
+                    onClick={() => handleColorChange(item.id, "silver")}
                   />
+
                   <img
-                    className="w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                    className={`w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px] cursor-pointer ${
+                      item.selectedColor === "brown" && "border-2"
+                    }`}
                     src={brown_ellipse}
-                    alt="brown ellipse"
+                    alt="brown"
+                    onClick={() => handleColorChange(item.id, "brown")}
                   />
                 </div>
               </div>
@@ -78,18 +115,3 @@ function Recently_Viewed() {
   );
 }
 export default Recently_Viewed;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

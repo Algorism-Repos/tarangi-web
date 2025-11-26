@@ -6,6 +6,11 @@ import { AppContext } from "../context/AppContext";
 import cartIcon from "../assets/Products/Check.png";
 import closeIcon from "../assets/Close.png";
 import flowerBg from "../assets/backgrounds/flower_bg.png";
+import OutOfStockModal from "./OutOfStockModal";
+import RestockSuccessModal from "./RestockSuccessModal";
+import RestockModal from "./RestockModal";
+
+
 function AddToCartButton({ product, quantity }) {
   const [showToast, setShowToast] = useState(false);
   const [cartIconSrc, setCartIconSrc] = useState(shoppingCart_red);
@@ -23,6 +28,14 @@ function AddToCartButton({ product, quantity }) {
     });
   };
 
+  const [showRestockModal, setShowRestockModal] = useState(false);
+
+  const [showOutStockModal, setShowOutStockModal] = useState(false);
+  const [showRestockSuccess, setShowRestockSuccess] = useState(false);
+
+  const isDisabledInFavourites =
+    isFavouritesPage && (isOutOfStock || isRestocking);
+
   const handleClick = () => {
    
     setShowToast(true);
@@ -35,72 +48,74 @@ function AddToCartButton({ product, quantity }) {
       document.body.style.overflow = "auto"; // Enable scroll again
     }, 2000); // 2 seconds
      handleAddToCart()
+    // If inside favourites & product unavailable → remove instead
+    if (isDisabledInFavourites) {
+      if (onRemoveFromFavourites) onRemoveFromFavourites();
+      return;
+    }
+
+    if (isOutOfStock) {
+      setShowOutStockModal(true);
+      return;
+    }
+
+    if (isRestocking) {
+      setShowRestockModal(true);
+      return;
+    }
+
+    // Normal add to cart
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2000);
   };
 
   return (
     <>
       <button
-        className="cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] 
-                 w-full h-[50px] rounded-full text-primary text-[16px] font-medium mt-2 
-                 sm:text-[18px] sm:h-[54px] transition-all duration-300 ease-in-out 
-                 hover:bg-[#4B001A] hover:text-white"
-        onMouseEnter={() => setCartIconSrc(shoppingCart_white)}
-        onMouseLeave={() => setCartIconSrc(shoppingCart_red)}
+        className={`cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]
+          w-full h-[52px] rounded-full text-primary text-[16px] font-medium mt-2
+          transition-all duration-300 ease-in-out 
+          ${isDisabledInFavourites ? "hover:bg-[#4B001A] hover:text-white" : "hover:bg-[#4B001A] hover:text-white"}
+        `}
+        onMouseEnter={() =>
+          !isDisabledInFavourites && setCartIconSrc(shoppingCart_white)
+        }
+        onMouseLeave={() =>
+          !isDisabledInFavourites && setCartIconSrc(shoppingCart_red)
+        }
         onClick={handleClick}
         // onClick={handleAddToCart}
       >
-        <img className="w-[32px] h-[32px]" src={cartIconSrc} alt="cart_icon" />
-        Add to cart
+        {!isDisabledInFavourites && (
+          <img className="w-[32px] h-[32px]" src={cartIconSrc} alt="" />
+        )}
+
+        {isDisabledInFavourites ? "Remove from favourites" : "Add to cart"}
       </button>
 
-      <AnimatePresence>
-        {showToast && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.7 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.7 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-md bg-transparent"
-          >
-            <div
-              className="relative w-[90vw] max-w-[540px] h-[92px] bg-[#F9C892] 
-        rounded-[16px] shadow-lg flex items-center px-6 py-4 overflow-hidden"
-            >
-              {/* Background Flower */}
-              <div className="absolute left-0 z-0">
-                <img src={flowerBg} className="w-[100px] h-[100px]" />
-              </div>
+      <CartToast show={showToast} onClose={() => setShowToast(false)} />
 
-              {/* Check Icon */}
-              <div className="relative z-10 w-[52px] h-[52px] mr-3 flex items-center justify-center">
-                <img src={cartIcon} className="w-[52px] h-[52px]" />
-              </div>
+      <OutOfStockModal
+        open={showOutStockModal}
+        onClose={() => setShowOutStockModal(false)}
+      />
 
-              {/* Text */}
-              <div className="relative z-10">
-                <h3 className="text-[#2B2B2B] text-[18px] font-poppins font-semibold">
-                  Hooray!
-                </h3>
-                <p className="text-[#502F07] font-medium font-poppins text-[14px]">
-                  Added to your cart successfully
-                </p>
-              </div>
+      <RestockModal
+        open={showRestockModal}
+        onClose={() => setShowRestockModal(false)}
+        onSuccess={() => {
+          setShowRestockModal(false);
+          setShowRestockSuccess(true);
+        }}
+      />
 
-              {/* Close Button */}
-              <button
-                className="absolute top-3 right-3 z-10"
-                onClick={() => {
-                  setShowToast(false);
-                  document.body.style.overflow = "unset"; // restore scroll
-                }}
-              >
-                <img src={closeIcon} className="w-[25px] h-[25px]" />
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <RestockSuccessModal
+        open={showRestockSuccess}
+        onClose={() => setShowRestockSuccess(false)}
+      />
     </>
   );
 }
+
+
 export default AddToCartButton;
