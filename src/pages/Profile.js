@@ -805,7 +805,7 @@ const renderFavouritesSection = (
             No Products in the favourites page
           </p>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 gap-6 w-full overflow-visible relative">
+          <div className="grid grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full overflow-visible relative">
 
             {likedProducts.map((item) => (
               <div key={item.id} className="max-w-[304px] flex flex-wrap gap-x-10 mx-auto items-center group relative">

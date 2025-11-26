@@ -31,18 +31,51 @@ function Product_Description() {
   const { product } = location.state || {};
   const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } =
     useContext(AppContext);
-  const [quantity, setQuantity] = useState(1);
-  const [activeColor, setActiveColor] = useState("gold");
-  const [selectedImage, setSelectedImage] = useState(product?.image?.src);
+
   const swiperRef = useRef(null);
-  const [showWishlistPopup, setShowWishlistPopup] = useState(false)
 
+  // 👉 Which colors this product actually supports
+  const productColors =
+    Array.isArray(product?.availableColors) && product.availableColors.length > 0
+      ? product.availableColors 
+      : ["gold", "silver", "brown"]; 
 
-  const Colors = [
-    { id: "gold", img: gold_ellipse },
-    { id: "silver", img: silver_ellipse },
-    { id: "brown", img: brown_ellipse },
+  // base config for each color (ellipse image, main image, slide index)
+  const COLOR_CONFIG = [
+    {
+      id: "gold",
+      ellipse: gold_ellipse,
+      mainImage: product?.image?.src,
+      slideIndex: 0,
+    },
+    {
+      id: "silver",
+      ellipse: silver_ellipse,
+      mainImage: product_1,
+      slideIndex: 1,
+    },
+    {
+      id: "brown",
+      ellipse: brown_ellipse,
+      mainImage: product_2,
+      slideIndex: 2,
+    },
   ];
+
+  // only show colors that this product has
+  const visibleColors = COLOR_CONFIG.filter((c) =>
+    productColors.includes(c.id)
+  );
+
+  const [quantity, setQuantity] = useState(1);
+  const [activeColor, setActiveColor] = useState(
+    visibleColors[0]?.id || "gold"
+  );
+  const [selectedImage, setSelectedImage] = useState(
+    visibleColors[0]?.mainImage || product?.image?.src
+  );
+  const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
+  const [showWishlistPopup, setShowWishlistPopup] = useState(false);
 
   const handleAddToCart = () => {
     addToCart({
@@ -79,12 +112,19 @@ function Product_Description() {
       });
     }
   }, []);
-  const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
 
-    useEffect(() => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}, []);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
+  // click on a color toggle
+  const handleColorChange = (colorObj) => {
+    setActiveColor(colorObj.id);
+    setSelectedImage(colorObj.mainImage);
+    if (swiperRef.current) {
+      swiperRef.current.slideTo(colorObj.slideIndex);
+    }
+  };
 
   return (
     <>
@@ -112,26 +152,15 @@ function Product_Description() {
                 pagination={{ dynamicBullets: true }}
                 modules={[Pagination]}
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
-
-                //  Sync active color when user swipes
                 onSlideChange={(swiper) => {
-                  const index = swiper.activeIndex;
-
-                  if (index === 0) {
-                    setActiveColor("gold");
-                    setSelectedImage(product?.image?.src);
+                  const idx = swiper.activeIndex;
+                  const colorForSlide = visibleColors.find(
+                    (c) => c.slideIndex === idx
+                  );
+                  if (colorForSlide) {
+                    setActiveColor(colorForSlide.id);
+                    setSelectedImage(colorForSlide.mainImage);
                   }
-
-                  if (index === 1) {
-                    setActiveColor("silver");
-                    setSelectedImage(product_1);
-                  }
-
-                  if (index === 2) {
-                    setActiveColor("brown");
-                    setSelectedImage(product_2);
-                  }
-
                 }}
               >
                 <SwiperSlide>
@@ -158,8 +187,6 @@ function Product_Description() {
                   />
                 </SwiperSlide>
               </Swiper>
-
-
             </div>
 
             {/* Product Detail */}
@@ -204,7 +231,7 @@ function Product_Description() {
                     <img
                       className="w-[42px] h-[42px] mx-auto"
                       src={shipping}
-                      alt="pure silver icon"
+                      alt="shipping icon"
                     />
                     <p className="text-[14px] font-semibold ">
                       Pan India Shipping
@@ -214,7 +241,7 @@ function Product_Description() {
                     <img
                       className="w-[42px] h-[42px] mx-auto"
                       src={plating}
-                      alt="pure silver icon"
+                      alt="plating icon"
                     />
                     <p className="text-[14px] font-semibold ">
                       Life long plating
@@ -252,76 +279,26 @@ function Product_Description() {
 
               {/* Color Options */}
               <div className="mt-2 flex justify-start gap-x-4">
-                {Colors.map((color) => {
-                  const isAvailable =
-                    product?.availableColors?.includes(color.id) ?? true;
-
-                  const handleColorChange = () => {
-                    if (!isAvailable) return;
-
-                    setActiveColor(color.id);
-
-                    // 🔥 Scroll & Update Image
-                    if (color.id === "gold") {
-                      setSelectedImage(product?.image?.src);
-                      swiperRef.current.slideTo(0);
-                    }
-
-                    if (color.id === "silver") {
-                      setSelectedImage(product_1);
-                      swiperRef.current.slideTo(1);
-                    }
-
-                    if (color.id === "brown") {
-                      setSelectedImage(product_2);
-                      swiperRef.current.slideTo(2);
-
-                    }
-                  };
-
-                  return (
-                    <img
-                      key={color.id}
-                      onClick={handleColorChange}
-                      className={`w-[45px] h-[45px] rounded-full bg-white transition-all duration-200 cursor-pointer
-          ${activeColor === color.id
+                {visibleColors.map((color) => (
+                  <img
+                    key={color.id}
+                    onClick={() => handleColorChange(color)}
+                    className={`w-[45px] h-[45px] rounded-full bg-white transition-all duration-200 cursor-pointer
+                      ${
+                        activeColor === color.id
                           ? "border-[4px] border-primary p-[2px]"
                           : "border-[2px] border-transparent hover:border-primary hover:p-[2px]"
-                        }
-          ${!isAvailable ? "opacity-40 cursor-not-allowed" : ""}`}
-                      src={color.img}
-                      alt={color.id}
-                    />
-                  );
-                })}
+                      }`}
+                    src={color.ellipse}
+                    alt={color.id}
+                  />
+                ))}
               </div>
-
 
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
               {/* Buttons */}
               <div className="max-w-[500px] ">
-                {/* <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
-                  <AddToCartButton />
-
-                  <Link className="w-full" to="/favourites" state={{ product }}>
-                    <button
-                      className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-[361px] h-[56px] rounded-full text-primary text-[18px] font-medium sm:w-[176px]
-  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
-                      onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
-                      onMouseLeave={() => setWishIconSrc(favorie_icon)}
-                      onClick={handleAddToWish}
-                    >
-                      <img
-                        className="w-[32px] h-[32px]"
-                        src={wishIconSrc}
-                        alt="like_icon"
-                      />
-                      Wishlist
-                    </button>
-                  </Link>
-                </div> */}
-
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
                   <AddToCartButton />
 
@@ -329,7 +306,8 @@ function Product_Description() {
                     className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[52px] rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
                     onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
                     onMouseLeave={() => setWishIconSrc(favorie_icon)}
-                    onClick={() => setShowWishlistPopup(true)}>
+                    onClick={() => setShowWishlistPopup(true)}
+                  >
                     <img
                       className="w-[32px] h-[32px]"
                       src={wishIconSrc}
@@ -337,8 +315,6 @@ function Product_Description() {
                     />
                     Add to Wishlist
                   </button>
-
-
                 </div>
               </div>
             </div>
@@ -347,7 +323,6 @@ function Product_Description() {
 
         {/* Suggested products */}
         <div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 sm:px-0">
-          {/* Look Like */}
           <div>
             <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
               you may also like
@@ -356,7 +331,10 @@ function Product_Description() {
             <div className="flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
               {matchingProducts.map((item) => {
                 return (
-                  <div className="font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0">
+                  <div
+                    key={item.id}
+                    className="font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0"
+                  >
                     <img
                       className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[24px]"
                       src={item?.image?.src}
@@ -374,10 +352,6 @@ function Product_Description() {
                       </div>
 
                       <div className="hidden sm:block">
-                        {/* <p className="text-[15px] text-[#6F6F6F]">
-                          Colors Available
-                        </p> */}
-
                         <div className="mt-1 flex justify-end gap-x-3">
                           <img
                             className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
@@ -406,6 +380,7 @@ function Product_Description() {
           <Recently_Viewed />
         </div>
       </div>
+
       <Wishlist_Popup
         show={showWishlistPopup}
         onClose={() => setShowWishlistPopup(false)}

@@ -55,6 +55,8 @@ function Home() {
   const [modalToggle, setModalToggle] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
 
+
+
   const { setProductListFromShopify, productListFromShopify } =
     useContext(AppContext);
   function toggle(product) {
@@ -135,6 +137,35 @@ function Home() {
 
   console.log(festiveFiltered);
 
+// Silvar prices logic
+  const [pricePerGram, setPricePerGram] = useState(169.9);
+  const [pricePerKg, setPricePerKg] = useState(169900);
+  const [lastUpdated, setLastUpdated] = useState("27 Oct 2025, 11:00 AM");
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    if (isRefreshing) return; 
+
+    setIsRefreshing(true);
+
+    setTimeout(() => {
+      const now = new Date();
+      const formatted = now.toLocaleString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+
+      setLastUpdated(formatted);
+      setIsRefreshing(false);
+    }, 1000);
+  };
+
+
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -160,19 +191,24 @@ function Home() {
         <div className="flex justify-between p-3">
           <div className="flex items-center w-[161px] sm:w-[175px]">
             <p className="text-[#28040E] text-[15px] font-normal  sm:text-[16px]">
-              <span className="font-semibold">₹ 169.90</span> /g <br />{" "}
-              <span className="font-semibold">₹ 1,69,900</span>/ kilogram.
+              <span className="font-semibold">₹ {pricePerGram}</span> /g <br />
+              <span className="font-semibold">
+                ₹ {pricePerKg.toLocaleString("en-IN")}
+              </span>
+              / kilogram.
             </p>
           </div>
 
           <div className="flex items-center gap-x-1 w-[155px] sm:w-[170px]">
             <img
-              className="w-[15px] h-[15px]"
+              className={`w-[15px] h-[15px] cursor-pointer ${isRefreshing ? "animate-spin" : ""
+                }`}
               src={refresh_icon}
               alt="Refresh icon"
+              onClick={handleRefresh}
             />
             <p className="text-[14px] text-right sm:text-[16px]">
-              Last Updated 27 Oct 2025, 11:00 AM
+              Last Updated {lastUpdated}
             </p>
           </div>
         </div>
@@ -186,18 +222,24 @@ function Home() {
               Silver Price Today
             </p>
             <p className="text-[#28040E] text-[18px] font-normal">
-              <span className="font-semibold">₹169.90</span> per gram and{" "}
-              <span className="font-semibold">₹1,69,900</span> per kilogram.
+              <span className="font-semibold">₹{pricePerGram}</span> per gram
+              and{" "}
+              <span className="font-semibold">
+                ₹{pricePerKg.toLocaleString("en-IN")}
+              </span>{" "}
+              per kilogram.
             </p>
           </div>
 
           <div className="flex items-center gap-x-2 mr-6">
             <img
-              className="w-[15px] h-[15px]"
+              className={`w-[15px] h-[15px] cursor-pointer ${isRefreshing ? "animate-spin" : ""
+                }`}
               src={refresh_icon}
               alt="Refresh icon"
+              onClick={handleRefresh}
             />
-            <p>Last Updated 27 Oct 2025, 11:00 AM</p>
+            <p>Last Updated {lastUpdated}</p>
           </div>
         </div>
       </div>
