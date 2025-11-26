@@ -170,8 +170,6 @@ function Home() {
     // fetchMetalRates();
   }, []);
 
-  console.log(festiveFiltered);
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -189,7 +187,7 @@ function Home() {
 
       {/* Silver price */}
       {/* Mobile */}
-      {/* <div className="w-full bg-[#FCE8CD] font-poppins lg:hidden">
+      <div className="w-full bg-[#FCE8CD] font-poppins lg:hidden">
         <p className="bg-[#CFA266] text-white font-medium text-center py-4 text-[18px]">
           Silver Price Today
         </p>
@@ -214,10 +212,10 @@ function Home() {
             </p>
           </div>
         </div>
-      </div> */}
+      </div>
 
       {/* Desktop */}
-      {/* <div className="w-full bg-[#FCE8CD] font-poppins hidden lg:block">
+      <div className="w-full bg-[#FCE8CD] font-poppins hidden lg:block">
         <div className="flex justify-between">
           <div className="flex items-center gap-x-[25px]">
             <p className="bg-[#CFA266] px-8 py-3 w-fit text-white font-medium">
@@ -243,7 +241,7 @@ function Home() {
             <p>Last Updated {silverPriceUpdatedTime}</p>
           </div>
         </div>
-      </div> */}
+      </div>
 
       <Swiper
         spaceBetween={30}

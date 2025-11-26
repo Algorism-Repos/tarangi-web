@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 // Images
-import Search_icon from "../assets/search_icon_red.png";
+import sort_icon from "../assets/search_icon_red.png";
 import down_arrow from "../assets/Products/down_arrow.png";
 import blog_1 from "../assets/blog_1.png";
-import {
-  FetchAllBlogsFromShopify,
-  FetchBlogPosts,
-} from "../handler/api Handler";
+import {FetchAllBlogsFromShopify, FetchBlogPosts,} from "../handler/api Handler";
 import { parseArticleBody } from "../utils/helper";
 
 function Blog() {
@@ -15,6 +12,10 @@ function Blog() {
   const [allBlogData, setAllBlogData] = useState([]);
   const [sortedBlogData, setSortedBlogData] = useState([]);
   const [sortOption, setSortOption] = useState("Latest");
+  const [showSort, setShowSort] = useState("");
+  const [selectedSort, setSelectedSort] = useState ("Latest");
+
+
   //  fetching blogs
   const Blogs = async () => {
     try {
@@ -45,7 +46,7 @@ function Blog() {
     // All the articles in one array
     const extractedArticles = allBlogData.flatMap(item =>
       item.articles.map(article => ({
-        ...article,
+        ...article, 
         blogId: item.blogId
       }))
     );

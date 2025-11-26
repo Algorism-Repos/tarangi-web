@@ -3,7 +3,7 @@ import axios from "axios";
 export async function FetchAllProductFromShopify() {
   try {
     const response = await axios.get(
-      "https://tarangi-website.de.r.appspot.com/api/shopify/products"
+      "http://localhost:8080/api/shopify/products"
     );
     return response.data || [];
   } catch (error) {

@@ -1,4 +1,4 @@
-import React, { useContext ,useState} from "react";
+import React, { useContext, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import shoppingCart_red from "../assets/Products/shoppingcart_red.png";
 import shoppingCart_white from "../assets/Products/shoppingcart_white.png";
@@ -9,9 +9,12 @@ import flowerBg from "../assets/backgrounds/flower_bg.png";
 import OutOfStockModal from "./OutOfStockModal";
 import RestockSuccessModal from "./RestockSuccessModal";
 import RestockModal from "./RestockModal";
+import CartToast from "./CartToast";
 
 
-function AddToCartButton({ product, quantity }) {
+function AddToCartButton({ product, quantity, isOutOfStock, isRestocking, isFavouritesPage = false, onRemoveFromFavourites }) {
+
+
   const [showToast, setShowToast] = useState(false);
   const [cartIconSrc, setCartIconSrc] = useState(shoppingCart_red);
   const { addToCart } = useContext(AppContext);
@@ -73,7 +76,7 @@ function AddToCartButton({ product, quantity }) {
           !isDisabledInFavourites && setCartIconSrc(shoppingCart_red)
         }
         onClick={handleClick}
-        // onClick={handleAddToCart}
+      // onClick={handleAddToCart}
       >
         {!isDisabledInFavourites && (
           <img className="w-[32px] h-[32px]" src={cartIconSrc} alt="" />

@@ -289,26 +289,6 @@ function Product_Description() {
 
               {/* Buttons */}
               <div className="max-w-[397px] ">
-                <div className="flex flex-col  w-full sm:flex-row items-center gap-[16px]">
-                  <AddToCartButton product={product} quantity={quantity} />
-
-                  <Link className="w-full" to="/favourites" state={{ product }}>
-                    <button
-                      className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-[361px] h-[56px] rounded-full text-primary text-[18px] font-medium sm:w-[176px] transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
-                      onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
-                      onMouseLeave={() => setWishIconSrc(favorie_icon)}
-                      onClick={handleAddToWish}
-                    >
-                      <img
-                        className="w-[32px] h-[32px]"
-                        src={wishIconSrc}
-                        alt="like_icon"
-                      />
-                      Wishlist
-                    </button>
-                  </Link>
-                </div> */}
-
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
                   <AddToCartButton />
 
