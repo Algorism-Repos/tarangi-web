@@ -243,6 +243,49 @@ function Cart() {
               </div>
             </div>
           </div>
+          
+        {/* Mobile Version Summary */}
+        {cartItems.length > 0 && (
+          <div className="block sm:hidden">
+            {showSummary && (
+              <div className="bg-[#FFFAF3] p-4 max-w-[361px] rounded-[12px] shadow-lg mt-4 m-auto my-9 transition-all duration-300 ease-in-out">
+                <h3 className="text-[15px] font-semibold text-[#404040] mb-3">Order Summary</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <p className="text-[14px] text-[#878787] font-semibold">Sub total</p>
+                    <p className="text-[14px] text-[#404040] font-medium">{subtotal.toLocaleString("en-IN")}</p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-[14px] text-[#878787] font-semibold">Tax</p>
+                    <p className="text-[14px] text-[#404040] font-medium">{tax.toFixed(0)}</p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-[14px] text-[#878787] font-semibold">Shipping</p>
+                    <p className="text-[14px] text-[#C70039] font-medium">Free</p>
+                  </div>
+                  <hr className="border border-[#EDEDED] my-[10px]" />
+                  <div className="flex items-center justify-between">
+                    <p className="text-[15px] text-[#878787] font-semibold">Total</p>
+                    <p className="text-[15px] text-[#404040] font-semibold">{total.toFixed(0)}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <Pincode_Input />
+            <div className="w-full bg-[#FFFAF3] flex items-center justify-between px-5 py-3 z-50 bottom-0 left-0">
+              <div>
+                <p className="text-[#404040] font-semibold text-[16px]">₹{total.toFixed(0)}</p>
+                <button onClick={toggleSummary} className="text-[#6E0027] text-[12px] underline">
+                  {showSummary ? "Hide Order Summary" : "View Order Summary"}
+                </button>
+              </div>
+              <button className="bg-[#4B001A] text-white px-6 py-2 rounded-full font-medium text-[14px]">
+                Place Order
+              </button>
+            </div>
+          </div>
+          )}
         </div>
       </div>
 
