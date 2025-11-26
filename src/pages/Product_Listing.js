@@ -11,13 +11,24 @@ import RestockSuccessModal from "../components/RestockSuccessModal";
 import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
 
+const ELLIPSE_BY_COLOR = {
+  gold: gold_ellipse,
+  silver: silver_ellipse,
+  brown: brown_ellipse,
+};
+
+const IMAGE_BY_COLOR = (item) => ({
+  gold: item.image?.src, // gold = main image
+  silver: product_1,
+  brown: product_2,
+});
+
 function Product_Listing({ productCatergory }) {
   const [products, setProducts] = useState([]);
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-
 
   // after form success
   const handleSuccess = () => {
@@ -29,17 +40,26 @@ function Product_Listing({ productCatergory }) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-
-  //  Add default selectedColor for every product
+  // prepare local products: add liked + selectedColor
   useEffect(() => {
     if (productCatergory && productCatergory.length > 0) {
-      setProducts(
-        productCatergory.map((item) => ({
+      const prepared = productCatergory.map((item) => {
+        const colorsFromData =
+          Array.isArray(item.colors) && item.colors.length > 0
+            ? item.colors
+            : ["gold", "silver", "brown"]; 
+
+        return {
           ...item,
           liked: false,
-          selectedColor: "gold", // default
-        }))
-      );
+          colors: colorsFromData,   
+          selectedColor: colorsFromData[0],
+        };
+      });
+
+      setProducts(prepared);
+    } else {
+      setProducts([]);
     }
   }, [productCatergory]);
 
@@ -52,12 +72,14 @@ function Product_Listing({ productCatergory }) {
     );
   };
 
-  //  Color change handler
+  //  Color change handler 
   const handleColorChange = (id, color) => {
     setProducts((prev) =>
-      prev.map((product) =>
-        product.id === id ? { ...product, selectedColor: color } : product
-      )
+      prev.map((product) => {
+        if (product.id !== id) return product;
+        if (!product.colors?.includes(color)) return product;
+        return { ...product, selectedColor: color };
+      })
     );
   };
 
@@ -66,8 +88,8 @@ function Product_Listing({ productCatergory }) {
   };
 
   const handleRestockClick = () => {
-    setShowRestockModal(true)
-  }
+    setShowRestockModal(true);
+  };
 
   if (products.length === 0) {
     return (
@@ -75,7 +97,7 @@ function Product_Listing({ productCatergory }) {
         <p className="text-center w-full text-[18px] font-poppins text-[#747474]">
           No products found
         </p>
-        {/* Modals must still exist here */}
+
         <RestockModal
           open={showRestockModal}
           onClose={() => setShowRestockModal(false)}
@@ -93,24 +115,14 @@ function Product_Listing({ productCatergory }) {
     );
   }
 
-
-
-
-
   return (
     <>
       <div className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-y-10 sm:gap-x-[30px] px-1.5 ">
-
         {products.map((item) => {
           const isOutOfStock = item.variants[0].inventory_quantity === 0;
           const isRestocking = item.restock === true;
 
-
-          const colorImages = {
-            gold: item.image?.src,
-            silver: product_1,
-            brown: product_2,
-          };
+          const colorImages = IMAGE_BY_COLOR(item);
 
           return (
             <Link
@@ -121,18 +133,22 @@ function Product_Listing({ productCatergory }) {
                 isOutOfStock
                   ? handleOutOfStockClick
                   : isRestocking
-                    ? handleRestockClick
-                    : undefined
+                  ? handleRestockClick
+                  : undefined
               }
               className="font-poppins w-[170px] sm:w-[310px] mx-auto relative hover:scale-105 transition duration-300 ease-in-out group"
             >
-
-
               {/* MAIN PRODUCT IMAGE */}
               <img
-                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "grayscale" : ""
-                  } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
-                src={colorImages[item.selectedColor]}
+                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${
+                  isOutOfStock ? "grayscale" : ""
+                } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
+                src={
+                  (item.selectedColor &&
+                    colorImages[item.selectedColor]) ||
+                  item.image?.src ||
+                  product_1
+                }
                 alt={item?.title}
               />
 
@@ -150,13 +166,13 @@ function Product_Listing({ productCatergory }) {
                   Sold Out
                 </p>
               )}
+
               {/* RESTOCK SOON LABEL */}
               {!isOutOfStock && isRestocking && (
                 <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
                   Restocking Soon
                 </p>
               )}
-
 
               {/* PRODUCT DETAILS */}
               <div className="mt-2 flex flex-wrap gap-2 justify-between sm:mt-3">
@@ -173,48 +189,22 @@ function Product_Listing({ productCatergory }) {
 
                   {/*  COLOR TOGGLE BUTTONS */}
                   <div className="flex justify-center gap-x-2.5 mr-1">
-
-                    {/* GOLD */}
-                    <img
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleColorChange(item.id, "gold");
-                      }}
-                      className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all  ${item.selectedColor === "gold"
-                        ? "border-2 border-primary shadow-md" 
-                        : "border border-gray-300 hover:border-primary"
+                    {item.colors?.map((color) => (
+                      <img
+                        key={color}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleColorChange(item.id, color);
+                        }}
+                        className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all ${
+                          item.selectedColor === color
+                            ? "border-[3px] border-primary shadow-md"
+                            : "border border-gray-300 hover:border-primary"
                         }`}
-                      src={gold_ellipse}
-                      alt="gold ellipse"
-                    />
-
-                    {/* SILVER */}
-                    <img
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleColorChange(item.id, "silver");
-                      }}
-                      className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all  ${item.selectedColor === "silver"
-                        ? "border-2 border-primary shadow-md" 
-                        : "border border-gray-300 hover:border-primary"
-                        }`}
-                      src={silver_ellipse}
-                      alt="silver ellipse"
-                    />
-
-                    {/* BROWN */}
-                    <img
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleColorChange(item.id, "brown");
-                      }}
-                      className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all  ${item.selectedColor === "brown"
-                        ? "border-2 border-primary shadow-md" 
-                        : "border border-gray-300 hover:border-primary"
-                        }`}
-                      src={brown_ellipse}
-                      alt="brown ellipse"
-                    />
+                        src={ELLIPSE_BY_COLOR[color]}
+                        alt={`${color} ellipse`}
+                      />
+                    ))}
                   </div>
                 </div>
               </div>
@@ -229,7 +219,7 @@ function Product_Listing({ productCatergory }) {
         onClose={() => setShowOutStockModal(false)}
       />
 
-      {/*Restock model*/}
+      {/* Restock modal */}
       <RestockModal
         open={showRestockModal}
         onClose={() => setShowRestockModal(false)}
@@ -240,7 +230,6 @@ function Product_Listing({ productCatergory }) {
         open={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
       />
-
     </>
   );
 }
