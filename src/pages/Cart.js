@@ -19,20 +19,20 @@ function Cart() {
 
   // Cart items data
   const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Stone Necklace",
-      price: 10000,
-      color: "Gold",
-      image: product_1,
-    },
-    {
-      id: 2,
-      name: "Silver Kada",
-      price: 4000,
-      color: "Silver",
-      image: product_2,
-    },
+    // {
+    //   id: 1,
+    //   name: "Stone Necklace",
+    //   price: 10000,
+    //   color: "Gold",
+    //   image: product_1,
+    // },
+    // {
+    //   id: 2,
+    //   name: "Silver Kada",
+    //   price: 4000,
+    //   color: "Silver",
+    //   image: product_2,
+    // },
   ]);
 
   // ✨ NEW: delete modal states

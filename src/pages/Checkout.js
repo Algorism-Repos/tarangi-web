@@ -285,7 +285,7 @@ function CheckoutPage() {
         </div>
 
         {/* Main Grid */}
-        <div className="flex flex-1  max-w-[1440px]">
+        <div className="flex  max-w-[1300px]">
           {/* Left Form */}
           <div className="w-[700px]  mx-auto">
             <form
@@ -803,8 +803,8 @@ function CheckoutPage() {
           </div >
 
           {/* Right Summary */}
-          <div className="col-span-12 lg:col-span-4 hidden lg:block ">
-            <div className="w-[466px] h-[617px] bg-[#FFFAF3] rounded-[10px] shadow-md border border-[#EDEDED] p-5">
+          <div className="hidden lg:block ">
+            <div className="w-[466px] h-[617px] bg-[#FFFAF3] rounded-[10px] shadow-2xl border border-[#EDEDED] p-5">
               <h3 className="font-semibold mb-4 text-base text-[#313131]">
                 Order Summary
               </h3>

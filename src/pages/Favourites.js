@@ -15,97 +15,97 @@ import brown_ellipse from "../assets/Products/brown_ellipse.png";
 
 function Favourites() {
   const initialProducts = [
-    {
-      id: 1,
-      product_name: "Stone Necklace",
-      price: "₹10,000",
-      liked: true,
-      isOutOfStock: false,
-      isRestocking: true,
+    // {
+    //   id: 1,
+    //   product_name: "Stone Necklace",
+    //   price: "₹10,000",
+    //   liked: true,
+    //   isOutOfStock: false,
+    //   isRestocking: true,
 
-      colorImages: {
-        gold: product_1,
-        silver: product_2,
-        brown: product_2,
-      },
+    //   colorImages: {
+    //     gold: product_1,
+    //     silver: product_2,
+    //     brown: product_2,
+    //   },
 
-      colors: [
-        { id: "gold", img: gold_ellipse },
-        { id: "silver", img: silver_ellipse },
-        { id: "brown", img: brown_ellipse },
-      ],
+    //   colors: [
+    //     { id: "gold", img: gold_ellipse },
+    //     { id: "silver", img: silver_ellipse },
+    //     { id: "brown", img: brown_ellipse },
+    //   ],
 
-      selectedColor: "gold",
-    },
+    //   selectedColor: "gold",
+    // },
 
-    {
-      id: 2,
-      product_name: "Stone Kada",
-      price: "₹4,000",
-      liked: true,
-      isOutOfStock: false,
-      isRestocking: false,
+    // {
+    //   id: 2,
+    //   product_name: "Stone Kada",
+    //   price: "₹4,000",
+    //   liked: true,
+    //   isOutOfStock: false,
+    //   isRestocking: false,
 
-      colorImages: {
-        gold: product_1,
-        silver: product_2,
-        brown: product_2,
-      },
+    //   colorImages: {
+    //     gold: product_1,
+    //     silver: product_2,
+    //     brown: product_2,
+    //   },
 
-      colors: [
-        { id: "gold", img: gold_ellipse },
-        { id: "silver", img: silver_ellipse },
-        { id: "brown", img: brown_ellipse },
-      ],
+    //   colors: [
+    //     { id: "gold", img: gold_ellipse },
+    //     { id: "silver", img: silver_ellipse },
+    //     { id: "brown", img: brown_ellipse },
+    //   ],
 
-      selectedColor: "gold",
-    },
+    //   selectedColor: "gold",
+    // },
 
-    {
-      id: 3,
-      product_name: "Stone Kada",
-      price: "₹4,000",
-      liked: true,
-      isOutOfStock: true,
-      isRestocking: false,
+    // {
+    //   id: 3,
+    //   product_name: "Stone Kada",
+    //   price: "₹4,000",
+    //   liked: true,
+    //   isOutOfStock: true,
+    //   isRestocking: false,
 
-      colorImages: {
-        gold: product_1,
-        silver: product_2,
-        brown: product_2,
-      },
+    //   colorImages: {
+    //     gold: product_1,
+    //     silver: product_2,
+    //     brown: product_2,
+    //   },
 
-      colors: [
-        { id: "gold", img: gold_ellipse },
-        { id: "silver", img: silver_ellipse },
-        { id: "brown", img: brown_ellipse },
-      ],
+    //   colors: [
+    //     { id: "gold", img: gold_ellipse },
+    //     { id: "silver", img: silver_ellipse },
+    //     { id: "brown", img: brown_ellipse },
+    //   ],
 
-      selectedColor: "gold",
-    },
+    //   selectedColor: "gold",
+    // },
 
-    {
-      id: 4,
-      product_name: "Stone Kada",
-      price: "₹4,000",
-      liked: true,
-      isOutOfStock: false,
-      isRestocking: true,
+    // {
+    //   id: 4,
+    //   product_name: "Stone Kada",
+    //   price: "₹4,000",
+    //   liked: true,
+    //   isOutOfStock: false,
+    //   isRestocking: true,
 
-      colorImages: {
-        gold: product_1,
-        silver: product_2,
-        brown: product_2,
-      },
+    //   colorImages: {
+    //     gold: product_1,
+    //     silver: product_2,
+    //     brown: product_2,
+    //   },
 
-      colors: [
-        { id: "gold", img: gold_ellipse },
-        { id: "silver", img: silver_ellipse },
-        { id: "brown", img: brown_ellipse },
-      ],
+    //   colors: [
+    //     { id: "gold", img: gold_ellipse },
+    //     { id: "silver", img: silver_ellipse },
+    //     { id: "brown", img: brown_ellipse },
+    //   ],
 
-      selectedColor: "gold",
-    },
+    //   selectedColor: "gold",
+    // },
   ];
 
   const [products, setProducts] = useState(initialProducts);
