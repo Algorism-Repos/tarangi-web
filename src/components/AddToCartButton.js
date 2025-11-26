@@ -24,6 +24,7 @@ function AddToCartButton({ product, quantity }) {
   };
 
   const handleClick = () => {
+   
     setShowToast(true);
 
     // Disable page scroll
@@ -33,6 +34,7 @@ function AddToCartButton({ product, quantity }) {
       setShowToast(false);
       document.body.style.overflow = "auto"; // Enable scroll again
     }, 2000); // 2 seconds
+     handleAddToCart()
   };
 
   return (
