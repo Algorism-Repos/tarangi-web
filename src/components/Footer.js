@@ -31,7 +31,7 @@ function Footer() {
     const { pathname } = useLocation();
     const isVisible = pathname === "/" || pathname === "/home" || pathname === "/about";
 
-    const Clients = [
+    const clients = [
         { src: client_1 },
         { src: client_2 },
         { src: client_3 },
@@ -51,13 +51,15 @@ function Footer() {
                 <h1 className="font-atteron text-[32px] sm:text-[49px] font-normal leading-normal text-white text-center tracking-[1px]">Our Happy Customers,<br className="hidden sm:block" /> the stars of Tarangi</h1>
 
                 {/* Clients */}
-                <div className="w-full mx-auto my-[60px]  px-4 sm:px-6 sm:my-[80px] lg:px-8">
+                <div className="max-w-7xl mx-auto my-[60px]  px-4 sm:px-6 sm:my-[80px] lg:px-8">
                     <Marquee pauseOnHover={true} speed={80} gradient={false}>
                         <div className="flex items-center gap-x-8 sm:gap-x-12 lg:gap-x-16 px-4 sm:px-6 lg:px-8">
                             {
-                                Clients.map((items, index) => {
+                                clients.map((items, index) => {
                                     return (
-                                        <img key={index} className="w-[220px] h-[320px] sm:w-full sm:h-fit " src={items.src} alt="Clients" />
+                                        <div className="p-8 bg-secondary rounded-[16px]">
+                                            <img key={index} className="w-[220px] h-[320px] sm:w-full sm:h-fit rounded-[8px] " src={items.src} alt="Clients" />
+                                        </div>
                                     )
                                 })
                             }

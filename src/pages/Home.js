@@ -286,6 +286,25 @@ function Home() {
             </a>
           </div>
         </SwiperSlide>
+
+        <SwiperSlide>
+          <div className="banner-5">
+            <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
+              Born from tradition Designed for today
+            </h1>
+            <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+            </h4>
+            <a
+              href="#launchOffers"
+              className="w-fit hover:scale-110 transition duration-300"
+            >
+              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
+                View our Collections
+              </button>
+            </a>
+          </div>
+        </SwiperSlide>
       </Swiper>
 
       {/* Home Banner */}
@@ -347,7 +366,7 @@ function Home() {
               <img
                 src={women_design}
                 alt="men-image"
-                className="w-[359px] h-[465px] sm:w-[373px] sm:h-[430px]  transform transition-transform duration-300 ease-out hover:scale-105 absolute bottom-[-0px] z-10 "
+                className="w-[359px] h-[430px] sm:w-[378px] sm:h-[420px] transform transition-transform duration-300 ease-out hover:scale-105 absolute bottom-[-0px] z-10 "
               />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/4 ">
                 Women
@@ -813,7 +832,7 @@ function Home() {
 
       {/* Before After Slider */}
       <div className="before-after-section ">
-        <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
+        <div className="max-w-7xl mx-auto py-0 sm:py-10 px-3 sm:px-0">
           <h1 className="font-atteron section-heading text-[26px]  sm:text-[64px] text-center text-[#5C0A1F] mb-16">
             <span className="text-[28px] sm:text-[64px]"> Enhance Your Look With</span> <br /> Tarangi
           </h1>
