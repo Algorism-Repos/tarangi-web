@@ -26,10 +26,9 @@ function Navbar() {
   const [modalToggle, setModalToggle] = useState(false);
   const [cartItems, setCartItems] = useState(true);
   const [showSearch, setShowSearch] = useState(false);
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
  const {isLoggedIn,setIsLoggedIn}=useContext(AppContext)
   const favourites = JSON.parse(localStorage.getItem("favourites")) || [];
-  
-  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const hasFavourites = favourites.length > 0;
   const hasCartItems = cartItems.length > 0;
 
@@ -64,8 +63,8 @@ function Navbar() {
       setCartItems(storedCart);
 
       // favourites
-      const storedFav = JSON.parse(localStorage.getItem("favourites")) || [];
-      setFavourites(storedFav);
+      // const storedFav = JSON.parse(localStorage.getItem("favourites")) || [];
+      // setFavourites(storedFav);
 
 
     };

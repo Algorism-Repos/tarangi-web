@@ -614,7 +614,8 @@ const Profile = () => {
       />
 
     </div>
-        </div >
+  )
+
 
   {/* MOBILE DROPDOWN LAYOUT */ }
   < div className = "block md:hidden gap-y-4 flex flex-col" >
@@ -694,9 +695,6 @@ confirmText = "Delete"
 cancelText = "Cancel"
 icon = { trashcan }
   />
-
-    </div >
-  );
 };
 
 /* === Render Helper Functions === */

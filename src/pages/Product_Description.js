@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
-import { Link, useLocation, useParams } from "react-router";
+import { Link, useLocation } from "react-router";
 
 // images
 import grey_arrow from "../assets/Products/grey_arrow.png";
@@ -27,8 +27,6 @@ import AddToCartButton from "../components/AddToCartButton";
 import Wishlist_Popup from "../components/Wishlist_Popup";
 
 function Product_Description() {
-  const { productName } = useParams();
-
   const location = useLocation();
   const { product } = location.state || {};
   const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } =
@@ -38,9 +36,10 @@ function Product_Description() {
 
   // 👉 Which colors this product actually supports
   const productColors =
-    Array.isArray(product?.availableColors) && product.availableColors.length > 0
-      ? product.availableColors 
-      : ["gold", "silver", "brown"]; 
+    Array.isArray(product?.availableColors) &&
+    product.availableColors.length > 0
+      ? product.availableColors
+      : ["gold", "silver", "brown"];
 
   // base config for each color (ellipse image, main image, slide index)
   const COLOR_CONFIG = [
@@ -63,27 +62,54 @@ function Product_Description() {
       slideIndex: 2,
     },
   ];
-  //  console.log(product.variants[0].id)
-  const handleAddToWish = () => {
-    addToWishlist({
-      id: product?.variants[0].id,
+
+  // only show colors that this product has
+  const visibleColors = COLOR_CONFIG.filter((c) =>
+    productColors.includes(c.id)
+  );
+
+  const [quantity, setQuantity] = useState(1);
+  const [activeColor, setActiveColor] = useState(
+    visibleColors[0]?.id || "gold"
+  );
+  const [selectedImage, setSelectedImage] = useState(
+    visibleColors[0]?.mainImage || product?.image?.src
+  );
+  const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
+  const [showWishlistPopup, setShowWishlistPopup] = useState(false);
+
+  const handleAddToCart = () => {
+    addToCart({
+      id: product.variants[0].id,
       title: product.title,
-      price: parseInt(product.variants[0]?.price),
+      price: parseInt(product.variants[0].price),
       image: product.image.src,
       quantity: quantity,
     });
   };
+
   const matchingProducts = filteredProducts?.filter(
     (item) =>
       item.product_type === product.product_type && item.id !== product.id
   );
+
+  const handleAddToWish = () => {
+    addToWishlist({
+      id: product.variants[0].id,
+      title: product.title,
+      price: parseInt(product.variants[0].price),
+      image: product.image.src,
+      quantity: quantity,
+    });
+  };
+
   useEffect(() => {
     if (product) {
       addToRecentlyViewed({
         id: product.variants[0].id,
         title: product.title,
         image: product.image.src,
-        price: parseInt(product.variants[0]?.price),
+        price: parseInt(product.variants[0].price),
       });
     }
   }, []);
@@ -100,6 +126,25 @@ function Product_Description() {
       swiperRef.current.slideTo(colorObj.slideIndex);
     }
   };
+
+
+const colorVariants = product?.variants?.map((variant) => {
+  const color = variant.selected_options?.find(
+    (opt) => opt.name.toLowerCase() === "color"
+  )?.value;
+
+  return {
+    id: variant.id,
+    color: color?.toLowerCase() || null,
+    price: variant.price,
+    image: variant.variant_image, // field from backend
+    inventory: variant.inventory_quantity,
+  };
+}).filter(v => v.color !== null);
+
+
+   console.log(colorVariants)
+      console.log(product)
 
   return (
     <>
@@ -186,8 +231,7 @@ function Product_Description() {
                   Description
                 </h3>
                 <p className="text-[#484848] text-[16px] font-medium ">
-                  Handcrafted 22KT gold chain with a timeless design perfect for
-                  daily wear and gifting.
+                  {product?.description}
                 </p>
 
                 <div className="max-w-[305px] flex flex-wrap justify-between  font-[poppins] text-center text-[#313131] my-5">
@@ -273,28 +317,24 @@ function Product_Description() {
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
               {/* Buttons */}
-              <div className="max-w-[397px] ">
-                <div className="flex flex-col  w-full sm:flex-row items-center gap-[16px]">
-                  <AddToCartButton product={product} quantity={quantity} />
+              <div className="max-w-[500px] ">
+                <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
+                  <AddToCartButton />
 
-                  <Link className="w-full" to="/favourites" state={{ product }}>
-                    <button
-                      className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-[361px] h-[56px] rounded-full text-primary text-[18px] font-medium sm:w-[176px] transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
-                      onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
-                      onMouseLeave={() => setWishIconSrc(favorie_icon)}
-                      onClick={handleAddToWish}
-                    >
-                      <img
-                        className="w-[32px] h-[32px]"
-                        src={wishIconSrc}
-                        alt="like_icon"
-                      />
-                      Wishlist
-                    </button>
-                  </Link>
-                </div> 
-
-             
+                  <button
+                    className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[52px] rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
+                    onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
+                    onMouseLeave={() => setWishIconSrc(favorie_icon)}
+                    onClick={() => setShowWishlistPopup(true)}
+                  >
+                    <img
+                      className="w-[32px] h-[32px]"
+                      src={wishIconSrc}
+                      alt="like_icon"
+                    />
+                    Add to Wishlist
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -308,7 +348,7 @@ function Product_Description() {
             </h1>
 
             <div className="flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
-              {matchingProducts.slice(0, 8).map((item) => {
+              {matchingProducts.map((item) => {
                 return (
                   <div
                     key={item.id}

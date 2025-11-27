@@ -24,6 +24,8 @@ const IMAGE_BY_COLOR = (item) => ({
 });
 
 function Product_Listing({ productCatergory }) {
+
+  //  console.log(productCatergory)
   const [products, setProducts] = useState([]);
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
