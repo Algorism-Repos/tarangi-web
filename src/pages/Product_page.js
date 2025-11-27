@@ -35,7 +35,7 @@ function Product_page() {
           published_at: node.createdAt,
           updated_at: node.createdAt,
           status: "active",
-          tags: "",
+          tags: node.tags,
           template_suffix: "",
           published_scope: "global",
 
@@ -91,6 +91,7 @@ function Product_page() {
         image: node.featuredImage?.url,
         price: node.variants?.edges?.[0]?.node?.price || "0.00",
         product_type: node.productType || "Uncategorized",
+        tags:node.tags || [],
       }));
       setProductListData(products);
     } catch (error) {
