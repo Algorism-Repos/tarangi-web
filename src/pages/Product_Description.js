@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState, useParams } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -28,9 +28,9 @@ import Wishlist_Popup from "../components/Wishlist_Popup";
 
 function Product_Description() {
   const location = useLocation();
+  // const {productName} = useParams(); 
   const { product } = location.state || {};
-  const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } =
-    useContext(AppContext);
+  const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } = useContext(AppContext);
   const [quantity, setQuantity] = useState(1);
   const [activeColor, setActiveColor] = useState("gold");
   const [selectedImage, setSelectedImage] = useState(product?.image?.src);
@@ -43,7 +43,8 @@ function Product_Description() {
     { id: "silver", img: silver_ellipse },
     { id: "brown", img: brown_ellipse },
   ];
-  //  console.log(product.variants[0].id)
+   console.log(product.title)
+
   const handleAddToWish = () => {
     addToWishlist({
       id: product.variants[0].id,
@@ -172,8 +173,7 @@ function Product_Description() {
                   Description
                 </h3>
                 <p className="text-[#484848] text-[16px] font-medium ">
-                  Handcrafted 22KT gold chain with a timeless design perfect for
-                  daily wear and gifting.
+                  {product?.product_description}
                 </p>
 
                 <div className="max-w-[305px] flex flex-wrap justify-between  font-[poppins] text-center text-[#313131] my-5">

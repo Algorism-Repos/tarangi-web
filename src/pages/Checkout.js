@@ -10,7 +10,7 @@ import truck_icon from "../assets/truck_icon.png";
 import LineImg from "../assets/line.png";
 import red_arrow from "../assets/Products/down_arrow_red.png";
 import downArrow from "../assets/arrowDown.png";
-import { checkOrCreateCustomer } from "../handler/api Handler";
+import { checkOrCreateCustomer } from "../handler/api_Handler";
 
 function CheckoutPage() {
   const location = useLocation();

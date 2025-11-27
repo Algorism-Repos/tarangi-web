@@ -1,9 +1,13 @@
 import axios from "axios";
 
+let url = "http://localhost:8080/api/shopify";
+// let url = "https://tarangijewels.com/api/shopify"
+
+
 export async function FetchAllProductFromShopify() {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/shopify/products"
+      `${url}/products`
     );
     return response.data || [];
   } catch (error) {
@@ -13,7 +17,7 @@ export async function FetchAllProductFromShopify() {
 export async function FetchAllCollectionsFromShopify() {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/shopify/collections"
+      `${url}/collections`
     );
     return response.data || [];
   } catch (error) {
@@ -23,7 +27,7 @@ export async function FetchAllCollectionsFromShopify() {
 export async function FetchAllProductByCollections(collectionId) {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/shopify/products/${collectionId}`
+      `${url}/products/${collectionId}`
     );
     //  console.log(response.data)
     return response.data || [];
@@ -34,15 +38,15 @@ export async function FetchAllProductByCollections(collectionId) {
 
 // check the login customer is exit in  shopify
 export async function checkCustomer(logincredential) {
-   console.log(logincredential)
+  console.log(logincredential)
   try {
     const response = await axios.post(
-      "http://localhost:8080/api/shopify/check-customer",
+      `${url}/check-customer`,
       {
-       contact: logincredential.contact   
+        contact: logincredential.contact
       }
     );
-     console.log(response.data)
+    console.log(response.data)
     return response;
   } catch (error) {
     console.error("Customer check  failed:", error);
@@ -52,7 +56,7 @@ export async function checkCustomer(logincredential) {
 export async function checkOrCreateCustomer(customer) {
   try {
     const response = await axios.post(
-      "http://localhost:8080/api/shopify/check-or-create-customer",
+      `${url}/check-or-create-customer`,
       {
         email: customer.email,
         firstName: customer.firstName,
@@ -67,15 +71,15 @@ export async function checkOrCreateCustomer(customer) {
 }
 // fetch order details of customers based on customer id 
 export async function CustomersOrders(customerId) {
-   console.log(customerId)
+  console.log(customerId)
   try {
     const response = await axios.post(
-      "http://localhost:8080/api/shopify/customer-orders",
+      `${url}/customer-orders`,
       {
-       customerId: customerId 
+        customerId: customerId
       }
     );
-     console.log(response.data)
+    console.log(response.data)
     return response;
   } catch (error) {
     console.error("CustomersOrders check  failed:", error);
@@ -86,21 +90,21 @@ export async function CustomersOrders(customerId) {
 
 export async function FetchAllBlogsFromShopify() {
   try {
-    const response = await axios.get(`http://localhost:8080/api/shopify/blogs`);
+    const response = await axios.get(`${url}/blogs`);
     return response.data || [];
   } catch (error) {
     console.error("fetchings blogs failed:", error);
   }
 }
-export async function  FetchBlogPosts(blogId){
-    try {
-  const response = await axios.post(`http://localhost:8080/api/shopify/blogs/${blogId}/articles`);
-    return response.data;   
+export async function FetchBlogPosts(blogId) {
+  try {
+    const response = await axios.post(`${url}/blogs/${blogId}/articles`);
+    return response.data;
   } catch (error) {
     console.error("fetchings blogs failed:", error);
   }
 };
-export async function  FetchOrderByMail(email){
+export async function FetchOrderByMail(email) {
   //   try {
   // const response = await axios.post(`http://localhost:8080/api/shopify/orders/by-email`, { email });
   //   return response.data;   

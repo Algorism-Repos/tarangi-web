@@ -4,7 +4,7 @@ import Product_Filter from "../components/Product_filter";
 import Product_Listing from "./Product_Listing";
 import { AppContext } from "../context/AppContext";
 import { useLocation } from "react-router";
-import { FetchAllProductByCollections } from "../handler/api Handler";
+import { FetchAllProductByCollections } from "../handler/api_Handler";
 
 function Product_page() {
   const { setProductListFromShopify } = useContext(AppContext);
@@ -31,6 +31,7 @@ function Product_page() {
           body_html: "",
           vendor: node.vendor,
           product_type: node.productType || "Uncategorized",
+          product_description: node.productDescription,
           created_at: node.createdAt,
           published_at: node.createdAt,
           updated_at: node.createdAt,
@@ -91,7 +92,8 @@ function Product_page() {
         image: node.featuredImage?.url,
         price: node.variants?.edges?.[0]?.node?.price || "0.00",
         product_type: node.productType || "Uncategorized",
-        tags:node.tags || [],
+        product_description: node.productDescription,
+        tags: node.tags || [],
       }));
       setProductListData(products);
     } catch (error) {
@@ -104,7 +106,7 @@ function Product_page() {
     acc[type].push(product);
     return acc;
   }, {});
-  
+
   useEffect(() => {
     if (collectionId) {
       productList(collectionId);

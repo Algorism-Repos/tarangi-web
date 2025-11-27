@@ -37,7 +37,7 @@ import {
   FetchAllCollectionsFromShopify,
   FetchAllProductByCollections,
   FetchAllProductFromShopify,
-} from "../handler/api Handler";
+} from "../handler/api_Handler";
 import { AppContext } from "../context/AppContext";
 
 function Home() {
@@ -60,6 +60,7 @@ function Home() {
     try {
       const response = await FetchAllCollectionsFromShopify();
       setCollections(response);
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -78,6 +79,7 @@ function Home() {
     const fetchBestSellerProducts = async () => {
       try {
         const response = await FetchAllProductByCollections(bestSeller.id);
+        console.log(`${bestSeller.id} && ${response}`);
 
         const edges = response?.data?.collection?.products?.edges || [];
 
@@ -120,7 +122,7 @@ function Home() {
         timeZone: "Asia/kolkata",
       })
     );
-     
+
     const price = result.metals.silver;
     const silver_rate = price * 0.925;
     console.log(silver_rate);
@@ -398,7 +400,7 @@ function Home() {
             </h1>
             <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-between mt-20 sm:mt-36">
               {FestiveFiltered.map((type) => (
-                <div
+                <Link to={`/productdescription/${type.title.replace(/\s+/g, "-")}`} state={{ product: type }}>                  <div
                   className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
                   onClick={() => {
                     toggle(type?.title);
@@ -419,6 +421,7 @@ function Home() {
                     })}
                   </h4>
                 </div>
+                </Link>
               ))}
             </div>
 
@@ -875,3 +878,5 @@ function Home() {
 }
 
 export default Home;
+
+
