@@ -313,99 +313,99 @@ const Profile = () => {
                 alt="Logout"
                 className="w-[30px] h-[30px] object-contain"
               />
-      Logout
-    </button>
-  </div>
+              Logout
+            </button>
+          </div>
 
-    <div className="flex-1 bg-transparent">
-      {activeSection === "Your Profile" &&
-        renderProfileSection(formik, isEditing, handleEdit, handleSave, handleCancel, hasSavedOnce, successMessage)}
+          <div className="flex-1 bg-transparent">
+            {activeSection === "Your Profile" &&
+              renderProfileSection(formik, isEditing, handleEdit, handleSave, handleCancel, hasSavedOnce, successMessage)}
 
-      {activeSection === "Saved Address" &&
-        renderAddressSection(addresses, editingAddressId, handleAddNew, handleAddressEditClick, handleAddressSave, handleAddressCancel, handleAddressDelete, successMessage)}
+            {activeSection === "Saved Address" &&
+              renderAddressSection(addresses, editingAddressId, handleAddNew, handleAddressEditClick, handleAddressSave, handleAddressCancel, handleAddressDelete, successMessage)}
 
-      {activeSection === "Orders" && renderOrdersSection()}
-      {activeSection === "Favourites" && renderFavouritesSection(products, toggleLike, likedProducts)}
-    </div>
+            {activeSection === "Orders" && renderOrdersSection()}
+            {activeSection === "Favourites" && renderFavouritesSection(products, toggleLike, likedProducts)}
+          </div>
         </div >
 
-  {/* MOBILE DROPDOWN LAYOUT */ }
-  < div className = "block md:hidden gap-y-4 flex flex-col" >
-    {/* Profile Dropdown */ }
-    < div className = "bg-[#FFF5E8] rounded-[10px]" >
-      <button type="button" onClick={() => toggleSection("profile")} className="w-full flex justify-between items-center px-4 py-3 text-[#6E0027] font-medium text-[16px]">
-        <div className="flex items-center gap-2">
-          <img src={userIcon} alt="Profile" className="w-[30px] h-[30px]" />
-          <span>Your Profile</span>
+        {/* MOBILE DROPDOWN LAYOUT */}
+        < div className="block md:hidden gap-y-4 flex flex-col" >
+          {/* Profile Dropdown */}
+          < div className="bg-[#FFF5E8] rounded-[10px]" >
+            <button type="button" onClick={() => toggleSection("profile")} className="w-full flex justify-between items-center px-4 py-3 text-[#6E0027] font-medium text-[16px]">
+              <div className="flex items-center gap-2">
+                <img src={userIcon} alt="Profile" className="w-[30px] h-[30px]" />
+                <span>Your Profile</span>
+              </div>
+              <img src={openSections.profile ? upArrow : downArrow} alt="Toggle" className="w-[11px] h-[7px]" />
+            </button>
+            {openSections.profile && <div className="border-t px-4 py-4 bg-[#FFF5E8] transition-all duration-300">{renderProfileSection(formik, isEditing, handleEdit, handleSave, handleCancel, hasSavedOnce, successMessage)}</div>}
+          </div >
+
+          {/* Address Dropdown */}
+          < div className="bg-[#FFF5E8] rounded-[10px]" >
+            <button type="button" onClick={() => toggleSection("address")} className="w-full flex justify-between items-center px-4 py-3 text-[#6E0027] font-medium text-[16px]">
+              <div className="flex items-center gap-2">
+                <img src={addressIcon} alt="Address" className="w-[30px] h-[30px]" />
+                <span>Saved Address</span>
+              </div>
+              <img src={openSections.address ? upArrow : downArrow} alt="Toggle" className="w-[11px] h-[7px]" />
+            </button>
+            {openSections.address && <div className="border-t border-[#F6EFE6] px-4 py-4 bg-[#FFF5E8] transition-all duration-300">{renderAddressSection(addresses, editingAddressId, handleAddNew, handleAddressEditClick, handleAddressSave, handleAddressCancel, handleAddressDelete, successMessage)}</div>}
+          </div >
+
+          {/* Orders Dropdown */}
+          < div className="bg-[#FFF5E8] rounded-[10px]" >
+            <button type="button" onClick={() => toggleSection("orders")} className="w-full flex justify-between items-center px-4 py-3 text-[#6E0027] font-medium text-[16px]">
+              <div className="flex items-center gap-2">
+                <img src={ordersIcon} alt="Orders" className="w-[30px] h-[30px]" />
+                <span>Orders</span>
+              </div>
+              <img src={openSections.orders ? upArrow : downArrow} alt="Toggle" className="w-[11px] h-[7px]" />
+            </button>
+            {openSections.orders && <div className="border-t border-[#F6EFE6] px-4 py-4 bg-[#FFF5E8] transition-all duration-300">{renderOrdersSection()}</div>}
+          </div >
+
+          {/* Favourites Dropdown */}
+          < div className="bg-[#FFF5E8] rounded-[10px]" >
+            <button type="button" onClick={() => toggleSection("favourites")} className="w-full flex justify-between items-center px-4 py-3 text-[#6E0027] font-medium text-[16px]">
+              <div className="flex items-center gap-2">
+                <img src={favIcon} alt="Favourites" className="w-[30px] h-[30px]" />
+                <span>Favourites</span>
+              </div>
+              <img src={openSections.favourites ? upArrow : downArrow} alt="Toggle" className="w-[11px] h-[7px]" />
+            </button>
+            {openSections.favourites && <div className="border-t border-[#F6EFE6] px-4 py-4 bg-[#FFF5E8] transition-all duration-300">{renderFavouritesSection(products, toggleLike, likedProducts)}</div>}
+          </div >
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 px-5 py-3  mt-[275px] text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
+          >
+            <img
+              src={logout_icon}
+              alt="Logout"
+              className="w-[30px] h-[30px] object-contain"
+            />
+            Logout
+          </button>
         </div>
-        <img src={openSections.profile ? upArrow : downArrow} alt="Toggle" className="w-[11px] h-[7px]" />
-      </button>
-{ openSections.profile && <div className="border-t px-4 py-4 bg-[#FFF5E8] transition-all duration-300">{renderProfileSection(formik, isEditing, handleEdit, handleSave, handleCancel, hasSavedOnce, successMessage)}</div> }
-          </div >
-
-  {/* Address Dropdown */ }
-  < div className = "bg-[#FFF5E8] rounded-[10px]" >
-    <button type="button" onClick={() => toggleSection("address")} className="w-full flex justify-between items-center px-4 py-3 text-[#6E0027] font-medium text-[16px]">
-      <div className="flex items-center gap-2">
-        <img src={addressIcon} alt="Address" className="w-[30px] h-[30px]" />
-        <span>Saved Address</span>
-      </div>
-      <img src={openSections.address ? upArrow : downArrow} alt="Toggle" className="w-[11px] h-[7px]" />
-    </button>
-{ openSections.address && <div className="border-t border-[#F6EFE6] px-4 py-4 bg-[#FFF5E8] transition-all duration-300">{renderAddressSection(addresses, editingAddressId, handleAddNew, handleAddressEditClick, handleAddressSave, handleAddressCancel, handleAddressDelete, successMessage)}</div> }
-          </div >
-
-  {/* Orders Dropdown */ }
-  < div className = "bg-[#FFF5E8] rounded-[10px]" >
-    <button type="button" onClick={() => toggleSection("orders")} className="w-full flex justify-between items-center px-4 py-3 text-[#6E0027] font-medium text-[16px]">
-      <div className="flex items-center gap-2">
-        <img src={ordersIcon} alt="Orders" className="w-[30px] h-[30px]" />
-        <span>Orders</span>
-      </div>
-      <img src={openSections.orders ? upArrow : downArrow} alt="Toggle" className="w-[11px] h-[7px]" />
-    </button>
-{ openSections.orders && <div className="border-t border-[#F6EFE6] px-4 py-4 bg-[#FFF5E8] transition-all duration-300">{renderOrdersSection()}</div> }
-          </div >
-
-  {/* Favourites Dropdown */ }
-  < div className = "bg-[#FFF5E8] rounded-[10px]" >
-    <button type="button" onClick={() => toggleSection("favourites")} className="w-full flex justify-between items-center px-4 py-3 text-[#6E0027] font-medium text-[16px]">
-      <div className="flex items-center gap-2">
-        <img src={favIcon} alt="Favourites" className="w-[30px] h-[30px]" />
-        <span>Favourites</span>
-      </div>
-      <img src={openSections.favourites ? upArrow : downArrow} alt="Toggle" className="w-[11px] h-[7px]" />
-    </button>
-{ openSections.favourites && <div className="border-t border-[#F6EFE6] px-4 py-4 bg-[#FFF5E8] transition-all duration-300">{renderFavouritesSection(products, toggleLike, likedProducts)}</div> }
-          </div >
-  <button
-    onClick={handleLogout}
-    className="flex items-center gap-3 px-5 py-3  mt-[275px] text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
-  >
-    <img
-      src={logout_icon}
-      alt="Logout"
-      className="w-[30px] h-[30px] object-contain"
-    />
-      Logout
-    </button>
-  </div>
       </div >
 
-  {/* Delete confirmation modal (render inside component so state is available) */ }
-  < DeleteConfirmationModal
-isOpen = { isDeleteModalOpen }
-onCancel = {() => setIsDeleteModalOpen(false)}
-onConfirm = {() => {
-  setAddresses((prev) => prev.filter(a => a.id !== addressToDelete));
-  setIsDeleteModalOpen(false);
-}}
-title = "Are you Sure"
-message = "You want to delete this address ??"
-confirmText = "Delete"
-cancelText = "Cancel"
-icon = { trashcan }
-  />
+      {/* Delete confirmation modal (render inside component so state is available) */}
+      < DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onCancel={() => setIsDeleteModalOpen(false)}
+        onConfirm={() => {
+          setAddresses((prev) => prev.filter(a => a.id !== addressToDelete));
+          setIsDeleteModalOpen(false);
+        }}
+        title="Are you Sure"
+        message="You want to delete this address ??"
+        confirmText="Delete"
+        cancelText="Cancel"
+        icon={trashcan}
+      />
 
     </div >
   );
@@ -508,9 +508,9 @@ const renderAddressSection = (addresses, editingAddressId, handleAddNew, handleE
             <p className="font-semibold">{addr.name}</p>
             <p>{addr.address}</p>
             <p>{addr.details}</p>
-<p>
-  {addr.province}, {addr.province_code}, {addr.country} - {addr.country_code}
-</p>
+            <p>
+              {addr.province}, {addr.province_code}, {addr.country} - {addr.country_code}
+            </p>
           </div >
         )}
       </div >
@@ -620,9 +620,8 @@ const renderFavouritesSection = (products, toggleLike, likedProducts) => (
           <div key={product.id} className="max-w-[304px] flex flex-wrap gap-x-10 mx-auto items-center group relative">
             <div className="overflow-hidden rounded-2xl relative">
               <img
-                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] object-cover rounded-[16px] ${
-                  product.isOutOfStock ? "grayscale" : ""
-                } transition-all duration-300 ease-in-out group-hover:shadow-lg`}
+                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] object-cover rounded-[16px] ${product.isOutOfStock ? "grayscale" : ""
+                  } transition-all duration-300 ease-in-out group-hover:shadow-lg`}
                 src={product.src}
                 alt={product.name}
               />
