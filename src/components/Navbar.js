@@ -28,8 +28,34 @@ function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [favourites, setFavourites] = useState([]);
+  const [productDropdown, setProductDropdown] = useState(false);
+  const [activeTab, setActiveTab] = useState("women");
   const hasFavourites = favourites.length > 0;
 
+
+
+  // Product dropdown datas
+  const productCategory = ["women", "men", "couples", "gifts"];
+  const menuRef = useRef(null);
+
+  const products = {
+    women: [
+      { img: new_product_1, name: "Emerald Pendant" },
+      { img: new_product_1, name: "Diamond Necklace" },
+      { img: new_product_1, name: "Tulip Brooch" },
+      { img: new_product_1, name: "Emerald Pendant" },
+    ],
+    men: [
+      { img: new_product_1, name: "Emerald Pendant" },
+    ],
+    couples: [
+      { img: new_product_1, name: "Emerald Pendant" },
+      { img: new_product_1, name: "Emerald Pendant" },
+    ],
+    gifts: [
+      { img: new_product_1, name: "Emerald Pendant" },
+    ]
+  };
 
   const TRENDING_PRODUCTS = [
     { img: new_product_1, name: "Emerald Pendant" },
@@ -39,6 +65,17 @@ function Navbar() {
     { img: new_product_1, name: "Tulip Brooch" },
     { img: new_product_1, name: "Tulip Brooch" },
   ];
+
+    useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setProductDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
 
   const location = useLocation();
@@ -111,6 +148,7 @@ function Navbar() {
     };
   }, []);
 
+
   useEffect(() => {
     if (menuVisible) {
       document.body.style.overflow = "hidden";
@@ -134,7 +172,7 @@ function Navbar() {
         </Link>
 
         {/* Nav Links */}
-        <div className="font-poppins text-[16px] flex flex-row gap-x-[40px] ml-[70px] xl:gap-x-[55px] items-center xl:ml-[170px] ">
+        <div className="font-poppins text-[16px] flex flex-row gap-x-[40px] ml-[70px] xl:gap-x-[55px] items-center xl:ml-[170px] " ref={menuRef}>
           <Link
             to="/home"
             className={`rounded-full py-2.5 px-4 text-white ${isActive("/home")
@@ -143,40 +181,83 @@ function Navbar() {
               }`}
           >
             Home
-            {/* <p className={getLinkClass("/home")}>Home</p> */}
           </Link>
 
           <Link
             to="/about"
             className={`rounded-full py-2.5 px-4 text-white ${isActive("/about")
-                ? "bg-[#CFA266] cursor-default"
-                : "hover:bg-[#D6A76F] opacity-[0.5]"
+              ? "bg-[#CFA266] cursor-default"
+              : "hover:bg-[#D6A76F] opacity-[0.5]"
               }`}
           >
             About Us
-            {/* <p className={getLinkClass("/about")}>About Us</p> */}
           </Link>
 
-          <Link
-            to="/products"
-            className={`rounded-full py-2.5 px-4 text-white ${isActive("/products")
-                ? "bg-[#CFA266] cursor-default"
-                : "hover:bg-[#D6A76F] opacity-[0.5]"
-              }`}
-          >
+          {/* <Link to="/products"
+              className={`rounded-full py-2.5 px-4 text-white ${isActive("/products") ? "bg-[#CFA266] cursor-default" : "hover:bg-[#D6A76F] opacity-[0.5]"}`}>
+              Products
+            </Link> */}
+
+
+          {/* Product dropdown */}
+
+          <button onClick={() => setProductDropdown(!productDropdown)}
+            className={`rounded-full py-2.5 px-4 text-white transition-all duration-200 ${productDropdown ? "bg-[#CFA266]" : "hover:bg-[#D6A76F] opacity-50"}`} >
             Products
-            {/* <p className={getLinkClass("/products")}>Products</p> */}
-          </Link>
+          </button>
+
+          {/* Dropdown */}
+          {productDropdown && (
+
+            <div className="absolute top-[100px] left-0 w-full bg-[#FFF5E8] px-10 py-16 shadow-lg z-30 search-dropdown">
+
+              <div className="max-w-[1200px] mx-auto flex">
+
+                {/* Product category */}
+                <div className="w-[170px] space-y-[20px] font-poppins text-[16px]">
+                  {productCategory.map((tab) => (
+                    <div key={tab} onClick={() => setActiveTab(tab)} className={`cursor-pointer py-2.5 px-3 rounded-[8px] ${activeTab === tab ? "bg-primary text-white" : "text-gray-700 hover:bg-gray-100"}`}>
+                      {tab}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Similar Products */}
+                <div className="max-w-[1000px] mx-auto">
+                  <div className="grid grid-cols-4 gap-4">
+
+                    {products[activeTab]?.map((item, i) => (
+                      <div key={i} className="text-center">
+                        <img className="w-[203px] h-[200px] rounded-[8px] object-cover" src={item.img} alt={item.title} />
+                        <p className="text-sm text-primary mt-2 font-medium">{item.name}</p>
+                      </div>
+                    ))}
+
+
+
+                  </div>
+
+                  {/* VIEW MORE */}
+                  <div className="float-right mt-4 mr-2">
+                    <Link to="/products" className="text-[#7A0A1E] font-medium">
+                      View more →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+
 
           <Link
             to="/blog"
             className={`rounded-full py-2.5 px-4 text-white ${isActive("/blog")
-                ? "bg-[#CFA266] cursor-default"
-                : "hover:bg-[#D6A76F] opacity-[0.5]"
+              ? "bg-[#CFA266] cursor-default"
+              : "hover:bg-[#D6A76F] opacity-[0.5]"
               }`}
           >
             Blog
-            {/* <p className={getLinkClass("/blog")}>Blog</p> */}
           </Link>
 
         </div>
@@ -184,8 +265,6 @@ function Navbar() {
         {/* Right Side Icons */}
         <div className="flex flex-row items-center gap-x-[20px]">
           {/* 🔍 Search Button */}
-
-
           <div
             onClick={() => setShowSearch((prev) => !prev)}
             className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] transition search-icon
@@ -321,6 +400,7 @@ function Navbar() {
             </motion.div>
           )}
         </AnimatePresence>
+
       </div >
 
       {/* Navbar - Mobile  */}

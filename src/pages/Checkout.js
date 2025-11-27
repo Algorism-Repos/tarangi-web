@@ -197,7 +197,7 @@ function CheckoutPage() {
         </div>
 
         {/* ======= Mobile Order Summary Dropdown ======= */}
-        <div className="block lg:hidden bg-[#FFFAF3] shadow-md border border-[#F6EFE6] mb-6">
+        <div className="max-w-[660px] mx-auto block xl:hidden bg-[#FFFAF3] shadow-md border border-[#F6EFE6] mb-6">
           <button
             type="button"
             onClick={() => setShowSummary(!showSummary)}
@@ -285,7 +285,7 @@ function CheckoutPage() {
         </div>
 
         {/* Main Grid */}
-        <div className="flex  max-w-[1300px]">
+        <div className="flex max-w-[1300px]">
           {/* Left Form */}
           <div className="w-[700px]  mx-auto">
             <form
@@ -803,7 +803,7 @@ function CheckoutPage() {
           </div >
 
           {/* Right Summary */}
-          <div className="hidden lg:block ">
+          <div className="hidden xl:block ">
             <div className="w-[466px] h-[617px] bg-[#FFFAF3] rounded-[10px] shadow-2xl border border-[#EDEDED] p-5">
               <h3 className="font-semibold mb-4 text-base text-[#313131]">
                 Order Summary

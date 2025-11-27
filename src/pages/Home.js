@@ -164,8 +164,6 @@ function Home() {
     }, 1000);
   };
 
-
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);

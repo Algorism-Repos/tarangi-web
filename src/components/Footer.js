@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router";
 import Marquee from "react-fast-marquee";
 
@@ -43,6 +43,10 @@ function Footer() {
         { src: client_9 },
         { src: client_10 }
     ]
+
+    useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
     return (
         <>
@@ -109,7 +113,7 @@ function Footer() {
 
                             {/* Subpages */}
                             <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] ml-6 sm:ml-0 md:border-l border-[#D6A76F] md:pl-[54px]">
-                                <Link to="/">Home</Link>
+                                <Link to="/home">Home</Link>
                                 <Link to="/about">About</Link>
                                 <Link to="/products">Products</Link>
                                 <Link to="/blog">Blog</Link>
