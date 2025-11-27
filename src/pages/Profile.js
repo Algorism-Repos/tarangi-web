@@ -372,9 +372,19 @@ const Profile = () => {
     localStorage.setItem("isLoggedIn", "false");
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");
+
+    // Optional: clear user-specific data
+    localStorage.removeItem("favourites");
+    localStorage.setItem("hasFavourites", "false");
+    // localStorage.removeItem("cartItems"); // if you want to clear cart too
+
+    // Notify Navbar
     window.dispatchEvent(new Event("storage"));
+
     navigate("/login");
   };
+
+
 
   const profileRef = useRef(null);
   const addressRef = useRef(null);

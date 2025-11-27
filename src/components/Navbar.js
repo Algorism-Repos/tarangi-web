@@ -24,11 +24,13 @@ function Navbar() {
   const [menuVisible, setMenuVisible] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [cartItems, setCartItems] = useState(true);
+  const [cartItems, setCartItems] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [favourites, setFavourites] = useState([]);
   const hasFavourites = favourites.length > 0;
+  const hasCartItems = cartItems.length > 0;
+
 
 
   const TRENDING_PRODUCTS = [
@@ -47,41 +49,43 @@ function Navbar() {
   const isActive = (path) => location.pathname === path;
   // const getLinkClass = (path) =>
   //   isActive(path) ? "text-white bg-[#CFA266] rounded-full" : "text-white opacity-[0.5]";
-  const cartIcon =
-    cartItems.length > 0 ? cart_icon_filled : cart_icon_empty;
-  // ✅ Initial state setup
+  const cartIcon = hasCartItems ? cart_icon_filled : cart_icon_empty;
+
   useEffect(() => {
-    localStorage.setItem("isLoggedIn", "false");
-    setIsLoggedIn(true);
-  }, []);
-  useEffect(() => {
-    const storedStatus = localStorage.getItem("isLoggedIn") === "false";
-    setIsLoggedIn(storedStatus);
-    // cart items
-    const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-    setCartItems(storedCart);
+    const syncFromStorage = () => {
+      // ✅ login: true means logged in
+      const storedLogin = localStorage.getItem("isLoggedIn") === "falue";
+      setIsLoggedIn(storedLogin);
 
-    // favourites
-    const storedFav =
-      JSON.parse(localStorage.getItem("favourites")) || [];
-    setFavourites(storedFav);
+      // cart
+      const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      setCartItems(storedCart);
 
-    const updateStorage = () => {
-      const updatedCart =
-        JSON.parse(localStorage.getItem("cartItems")) || [];
-      setCartItems(updatedCart);
+      // favourites
+      const storedFav = JSON.parse(localStorage.getItem("favourites")) || [];
+      setFavourites(storedFav);
 
-      const updatedFav =
-        JSON.parse(localStorage.getItem("favourites")) || [];
-      setFavourites(updatedFav);
 
-      const updatedLogin = localStorage.getItem("isLoggedIn") === "true";
-      setIsLoggedIn(updatedLogin);
     };
 
-    window.addEventListener("storage", updateStorage);
-    return () => window.removeEventListener("storage", updateStorage);
+    // initial load
+    syncFromStorage();
+
+    // other tabs
+    window.addEventListener("storage", syncFromStorage);
+
+    // custom events (same tab updates)
+    window.addEventListener("favouritesUpdated", syncFromStorage);
+    window.addEventListener("cartUpdated", syncFromStorage);
+
+    return () => {
+      window.removeEventListener("storage", syncFromStorage);
+      window.removeEventListener("favouritesUpdated", syncFromStorage);
+      window.removeEventListener("cartUpdated", syncFromStorage);
+    };
   }, []);
+
+
 
 
   // Close search when clicking outside
@@ -127,7 +131,7 @@ function Navbar() {
   return (
     <>
       {/* Navbar - large screens */}
-      <div className="bg-[#6E0027] lg:flex flex-row justify-between items-center w-full py-5 px-7 hidden ">
+      <div className="bg-[#6E0027] xl:flex flex-row justify-between items-center w-full py-5 px-7 hidden ">
         {/* Logo */}
         <Link to="/home">
           <img src={logo} alt="brand-logo" className="w-[106px] h-[71px]" />
@@ -149,8 +153,8 @@ function Navbar() {
           <Link
             to="/about"
             className={`rounded-full py-2.5 px-4 text-white ${isActive("/about")
-                ? "bg-[#CFA266] cursor-default"
-                : "hover:bg-[#D6A76F] opacity-[0.5]"
+              ? "bg-[#CFA266] cursor-default"
+              : "hover:bg-[#D6A76F] opacity-[0.5]"
               }`}
           >
             About Us
@@ -160,8 +164,8 @@ function Navbar() {
           <Link
             to="/products"
             className={`rounded-full py-2.5 px-4 text-white ${isActive("/products")
-                ? "bg-[#CFA266] cursor-default"
-                : "hover:bg-[#D6A76F] opacity-[0.5]"
+              ? "bg-[#CFA266] cursor-default"
+              : "hover:bg-[#D6A76F] opacity-[0.5]"
               }`}
           >
             Products
@@ -171,8 +175,8 @@ function Navbar() {
           <Link
             to="/blog"
             className={`rounded-full py-2.5 px-4 text-white ${isActive("/blog")
-                ? "bg-[#CFA266] cursor-default"
-                : "hover:bg-[#D6A76F] opacity-[0.5]"
+              ? "bg-[#CFA266] cursor-default"
+              : "hover:bg-[#D6A76F] opacity-[0.5]"
               }`}
           >
             Blog
@@ -324,7 +328,7 @@ function Navbar() {
       </div >
 
       {/* Navbar - Mobile  */}
-      < div className="relative bg-[#680F26] flex flex-row justify-between w-full z-50 px-[20px] py-[30px] lg:hidden" >
+      < div className="relative bg-[#680F26] flex flex-row justify-between w-full z-50 px-[20px] py-[30px] xl:hidden" >
         <img
           src={menu}
           alt="menu_icon"
