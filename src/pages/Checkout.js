@@ -1,4 +1,4 @@
-import React, { useContext, useState , useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, Link, useLocation } from "react-router-dom";
@@ -22,18 +22,16 @@ function CheckoutPage() {
   const [showSummary, setShowSummary] = useState(false);
   // Yup validation schema
   const validationSchema = Yup.object({
+    // Contact
     email: Yup.string().email("Invalid email").required("Email is required"),
     firstName: Yup.string().required("First Name is required"),
     lastName: Yup.string().required("Last Name is required"),
     mobile: Yup.string()
       .matches(/^[0-9]{10}$/, "Enter a valid 10-digit number")
       .required("Mobile number is required"),
+
+    // Shipping
     address: Yup.string().required("Address is required"),
-    billingaddress: Yup.string().when("useDifferentBilling", {
-      is: true,
-      then: (schema) => schema.required("Billing address is required"),
-      otherwise: (schema) => schema.notRequired(),
-    }),
     landmark: Yup.string(),
     city: Yup.string().required("City is required"),
     pincode: Yup.string()
@@ -41,6 +39,38 @@ function CheckoutPage() {
       .required("Pincode is required"),
     state: Yup.string().required("State is required"),
     country: Yup.string().required("Country is required"),
+
+    // Billing (conditional)
+    billingAddress: Yup.string().when("useDifferentBilling", {
+      is: true,
+      then: (schema) => schema.required("Address is required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    billingLandmark: Yup.string(),
+    billingCity: Yup.string().when("useDifferentBilling", {
+      is: true,
+      then: (schema) => schema.required("City is required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    billingPincode: Yup.string().when("useDifferentBilling", {
+      is: true,
+      then: (schema) =>
+        schema
+          .matches(/^[0-9]{6}$/, "Enter a valid 6-digit PIN")
+          .required("Pincode is required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    billingState: Yup.string().when("useDifferentBilling", {
+      is: true,
+      then: (schema) => schema.required("tate is required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    billingCountry: Yup.string().when("useDifferentBilling", {
+      is: true,
+      then: (schema) => schema.required("Country is required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+
     terms: Yup.boolean().oneOf([true], "You must accept the terms"),
     useDifferentBilling: Yup.boolean(),
     addGiftWrap: Yup.boolean(),
@@ -54,13 +84,23 @@ function CheckoutPage() {
       firstName: "",
       lastName: "",
       mobile: "",
+
+      // Shipping
       address: "",
-      billingaddress: "",
       landmark: "",
       city: "",
       pincode: "",
       state: "",
       country: "India",
+
+      // Billing
+      billingAddress: "",
+      billingLandmark: "",
+      billingCity: "",
+      billingPincode: "",
+      billingState: "",
+      billingCountry: "India",
+
       terms: false,
       useDifferentBilling: false,
       addGiftWrap: false,
@@ -146,7 +186,7 @@ function CheckoutPage() {
     <div className="min-h-screen bg-[#FFF5E8] text-[#979797]  font-poppins overflow-x-hidden px-3 sm:px-6">
       <div className="max-w-[1440px] mx-auto py-10 space-y-10 ">
         {/* Header */}
-        <div className="flex   items-center  relative px-2 sm:px-4 md:px-6 lg:px-10 py-2">
+        <div className="flex items-center  relative px-2 sm:px-4 md:px-6 lg:px-10 py-2">
           <Link
             to="/cart"
             className="flex  items-center gap-x-[6px] px-5 max-[425px]:gap-x-[4px] max-[425px]:px-4"
@@ -176,7 +216,7 @@ function CheckoutPage() {
         </div>
 
         {/* ======= Mobile Order Summary Dropdown ======= */}
-        <div className="block lg:hidden bg-[#FFFAF3] shadow-md border border-[#F6EFE6] mb-6">
+        <div className="block xl:hidden bg-[#FFFAF3] shadow-md border border-[#F6EFE6] mb-6">
           <button
             type="button"
             onClick={() => setShowSummary(!showSummary)}
@@ -265,7 +305,7 @@ function CheckoutPage() {
         </div>
 
         {/* Main Grid */}
-        <div className="flex flex-1 gap-20 max-w-[1440px]">
+        <div className="flex  max-w-[1300px]">
           {/* Left Form */}
           <div className="w-[700px]  mx-auto">
             <form
@@ -356,6 +396,8 @@ function CheckoutPage() {
                 </div>
 
                 <div>
+                  <label className="text-sm block mb-1">Email Id</label>
+
                   <input
                     name="email"
                     type="email"
@@ -445,9 +487,16 @@ function CheckoutPage() {
 
                   <div className="flex-1 min-w-[45%]">
                     <label className="text-sm block mb-1">Pincode</label>
+
                     <input
+                      type="tel"
                       name="pincode"
-                      onChange={formik.handleChange}
+                      inputMode="numeric"
+                      maxLength={6}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, "");
+                        formik.setFieldValue("pincode", value);
+                      }}
                       onBlur={formik.handleBlur}
                       value={formik.values.pincode}
                       className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
@@ -458,6 +507,7 @@ function CheckoutPage() {
                       focus:outline-none focus:border-[#8C455E]`}
                       placeholder="Pincode"
                     />
+
                     {formik.touched.pincode && formik.errors.pincode && (
                       <p className="text-xs text-red-500 mt-1">
                         {formik.errors.pincode}
@@ -562,8 +612,7 @@ function CheckoutPage() {
                     </span>
                     <span
                       className={`w-[22px] h-[22px] border-2 rounded-full flex items-center justify-center
-        ${useDifferentBilling ? "border-[#6E0027]" : "border-[#6E0027]"}
-      `}
+        ${useDifferentBilling ? "border-[#6E0027]" : "border-[#6E0027]"}`}
                     >
                       {useDifferentBilling && (
                         <span className="w-3 h-3 rounded-full bg-[#6E0027]" />
@@ -578,123 +627,151 @@ function CheckoutPage() {
                   <label className="text-[14px] font-Poppins text-[#6E0027] mb-2 block">
                     Billing Address
                   </label>
- <div>
-                  <label className="text-sm block mb-1">Address</label>
-                  <input
-                    name="address"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.address}
-                    className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${formik.errors.address && formik.touched.address
-                      ? "border-red-500"
-                      : "border-[#efe6e6]"
-                      }
-                     focus:outline-none focus:border-[#8C455E]`}
-                    placeholder="Address (Flat No./ House No./Street/Area))"
-                  />
-                  {formik.touched.address && formik.errors.address && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {formik.errors.address}
-                    </p>
-                  )}
-                </div>
 
-                {/* Landmark */}
-                <div>
-                  <label className="text-sm block mb-1">Landmark</label>
-                  <input
-                    name="landmark"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.landmark}
-                    className="w-full h-[44px] px-3 border border-[#efe6e6] rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal focus:outline-none focus:border-[#8C455E]"
-                    placeholder="Landmark (Optional)"
-                  />
-                </div>
-
-                {/* City, PIN, State, Country */}
-                <div className="flex flex-col sm:flex-wrap sm:flex-row gap-3">
-                  <div className="flex-1 min-w-[45%]">
-                    <label className="text-sm block mb-1">City</label>
+                  {/* Billing Address */}
+                  <div>
+                    <label className="text-sm block mb-1 mt-2.5">
+                      Address
+                    </label>
                     <input
-                      name="city"
+                      name="billingAddress"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.city}
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.city && formik.touched.city
-                        ? "border-red-500"
-                        : "border-[#efe6e6]"
+                      value={formik.values.billingAddress}
+                      className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${formik.errors.billingAddress &&
+                          formik.touched.billingAddress
+                          ? "border-red-500"
+                          : "border-[#efe6e6]"
                         }
+                     focus:outline-none focus:border-[#8C455E]`}
+                      placeholder="Address (Flat No./ House No./Street/Area))"
+                    />
+                    {formik.touched.billingAddress &&
+                      formik.errors.billingAddress && (
+                        <p className="text-xs text-red-500 mt-1">
+                          {formik.errors.billingAddress}
+                        </p>
+                      )}
+                  </div>
+
+                  {/* Billing Landmark */}
+                  <div>
+                    <label className="text-sm block mb-1 mt-2.5">
+                      Landmark
+                    </label>
+                    <input
+                      name="billingLandmark"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.billingLandmark}
+                      className="w-full h-[44px] px-3 border border-[#efe6e6] rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal focus:outline-none focus:border-[#8C455E]"
+                      placeholder="Landmark (Optional)"
+                    />
+                  </div>
+
+                  {/* Billing City, PIN, State, Country */}
+                  <div className="flex flex-col sm:flex-wrap sm:flex-row gap-3">
+                    <div className="flex-1 min-w-[45%]">
+                      <label className="text-sm block mb-1 mt-2.5">
+                        City
+                      </label>
+                      <input
+                        name="billingCity"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.billingCity}
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.billingCity &&
+                            formik.touched.billingCity
+                            ? "border-red-500"
+                            : "border-[#efe6e6]"
+                          }
                        focus:outline-none focus:border-[#8C455E]`}
-                      placeholder="City"
-                    />
-                    {formik.touched.city && formik.errors.city && (
-                      <p className="text-xs text-red-500 mt-1">
-                        {formik.errors.city}
-                      </p>
-                    )}
-                  </div>
+                        placeholder="City"
+                      />
+                      {formik.touched.billingCity &&
+                        formik.errors.billingCity && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {formik.errors.billingCity}
+                          </p>
+                        )}
+                    </div>
 
-                  <div className="flex-1 min-w-[45%]">
-                    <label className="text-sm block mb-1">Pincode</label>
-                    <input
-                      name="pincode"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.pincode}
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.pincode && formik.touched.pincode
-                        ? "border-red-500"
-                        : "border-[#efe6e6]"
-                        }
-                      focus:outline-none focus:border-[#8C455E]`}
-                      placeholder="Pincode"
-                    />
-                    {formik.touched.pincode && formik.errors.pincode && (
-                      <p className="text-xs text-red-500 mt-1">
-                        {formik.errors.pincode}
-                      </p>
-                    )}
-                  </div>
+                    <div className="flex-1 min-w-[45%]">
+                      <label className="text-sm block mb-1 mt-2.5">
+                        Pincode
+                      </label>
 
-                  <div className="flex-1 min-w-[45%]">
-                    <label className="text-sm block mb-1">State</label>
-                    <select
-                      name="state"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.state}
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${formik.errors.state && formik.touched.state
-                        ? "border-red-500"
-                        : "border-[#efe6e6]"
-                        }
+                      <input
+                        type="tel"
+                        name="billingPincode"
+                        inputMode="numeric"
+                        maxLength={6}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, "");
+                          formik.setFieldValue("billingPincode", value);
+                        }}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.billingPincode}
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.billingPincode &&
+                            formik.touched.billingPincode
+                            ? "border-red-500"
+                            : "border-[#efe6e6]"
+                          } focus:outline-none focus:border-[#8C455E]`}
+                        placeholder="Pincode"
+                      />
+
+                      {formik.touched.billingPincode &&
+                        formik.errors.billingPincode && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {formik.errors.billingPincode}
+                          </p>
+                        )}
+                    </div>
+
+                    <div className="flex-1 min-w-[45%]">
+                      <label className="text-sm block mb-1 mt-2.5">
+                        State
+                      </label>
+                      <select
+                        name="billingState"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.billingState}
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${formik.errors.billingState &&
+                            formik.touched.billingState
+                            ? "border-red-500"
+                            : "border-[#efe6e6]"
+                          }
                      focus:outline-none focus:border-[#8C455E]`}
-                    >
-                      <option value="">Select State</option>
-                      <option value="Tamil Nadu">Tamil Nadu</option>
-                      <option value="Kerala">Kerala</option>
-                      <option value="Karnataka">Karnataka</option>
-                    </select>
-                    {formik.touched.state && formik.errors.state && (
-                      <p className="text-xs text-red-500 mt-1">
-                        {formik.errors.state}
-                      </p>
-                    )}
-                  </div>
+                      >
+                        <option value="">Select State</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Kerala">Kerala</option>
+                        <option value="Karnataka">Karnataka</option>
+                      </select>
+                      {formik.touched.billingState &&
+                        formik.errors.billingState && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {formik.errors.billingState}
+                          </p>
+                        )}
+                    </div>
 
-                  <div className="flex-1 min-w-[45%]">
-                    <label className="text-sm block mb-1">Country</label>
-                    <select
-                      name="country"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.country}
-                      className="w-full h-[44px] px-3 border border-[#efe6e6] focus:outline-none focus:border-[#8C455E] rounded-md text-[16px]"
-                    >
-                      <option value="India">India</option>
-                    </select>
+                    <div className="flex-1 min-w-[45%]">
+                      <label className="text-sm block mb-1 mt-2.5">
+                        Country
+                      </label>
+                      <select
+                        name="billingCountry"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.billingCountry}
+                        className="w-full h-[44px] px-3 border border-[#efe6e6] focus:outline-none focus:border-[#8C455E] rounded-md text-[16px]"
+                      >
+                        <option value="India">India</option>
+                      </select>
+                    </div>
                   </div>
-                </div>
-              
                 </div>
               )}
 
@@ -777,8 +854,8 @@ function CheckoutPage() {
           </div>
 
           {/* Right Summary */}
-          <div className="col-span-12 lg:col-span-4 hidden lg:block ">
-            <div className="w-[466px] h-[617px] bg-[#FFFAF3] rounded-[10px] shadow-md border border-[#EDEDED] p-5">
+          <div className="hidden xl:block ">
+            <div className="w-[466px] h-[617px] bg-[#FFFAF3] rounded-[10px] shadow-2xl border border-[#EDEDED] p-5">
               <h3 className="font-semibold mb-4 text-base text-[#313131]">
                 Order Summary
               </h3>

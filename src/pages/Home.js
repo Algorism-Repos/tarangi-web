@@ -170,6 +170,35 @@ function Home() {
     // fetchMetalRates();
   }, []);
 
+// Silvar prices logic
+  const [pricePerGram, setPricePerGram] = useState(169.9);
+  const [pricePerKg, setPricePerKg] = useState(169900);
+  const [lastUpdated, setLastUpdated] = useState("27 Oct 2025, 11:00 AM");
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    if (isRefreshing) return; 
+
+    setIsRefreshing(true);
+
+    setTimeout(() => {
+      const now = new Date();
+      const formatted = now.toLocaleString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+
+      setLastUpdated(formatted);
+      setIsRefreshing(false);
+    }, 1000);
+  };
+
+
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -202,7 +231,8 @@ function Home() {
 
           <div className="flex items-center gap-x-1 w-[155px] sm:w-[170px]">
             <img
-              className="w-[15px] h-[15px]"
+              className={`w-[15px] h-[15px] cursor-pointer ${isRefreshing ? "animate-spin" : ""
+                }`}
               src={refresh_icon}
               alt="Refresh icon"
               onClick={fetchMetalRates}
@@ -233,7 +263,8 @@ function Home() {
 
           <div className="flex items-center gap-x-2 mr-6">
             <img
-              className="w-[15px] h-[15px]"
+              className={`w-[15px] h-[15px] cursor-pointer ${isRefreshing ? "animate-spin" : ""
+                }`}
               src={refresh_icon}
               alt="Refresh icon"
               onClick={fetchMetalRates}
@@ -433,28 +464,28 @@ function Home() {
             <div className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden">
               {/* Custom navigation buttons */}
               {showNavigation && (
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
+                <div className="absolute -bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
                   <div className="">
                     <button
                       ref={prevRef}
-                      className="swiper-button-prev-custom bg-[#D9B16F70] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                      className="swiper-button-prev-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
                     >
                       <img
                         src={left_arrow}
                         alt="Previous"
-                        className="w-[28px] h-[28px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                        className="w-[42px] h-[42px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
                       />
                     </button>
                   </div>
                   <div className="">
                     <button
                       ref={nextRef}
-                      className="swiper-button-next-custom bg-[#D9B16F70] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                      className="swiper-button-next-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
                     >
                       <img
                         src={right_arrow}
                         alt="Next"
-                        className="w-[28px] h-[28px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                        className="w-[42px] h-[42px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
                       />
                     </button>
                   </div>
@@ -613,7 +644,7 @@ function Home() {
       {/* Tarangi Specials */}
       <div className="newproducts-section tracking-[1px]">
         <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
-          <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-30 sm:mt-0 overflow-x-hidden">
+          <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-10 sm:mt-0  overflow-x-hidden">
             Tarangi Specials
           </h1>
 
@@ -643,28 +674,28 @@ function Home() {
         <div className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0 sm:hidden">
           {/* Custom navigation buttons */}
           {showNavigation && (
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
+            <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
               <div>
                 <button
                   ref={prevRef}
-                  className="swiper-button-prev-custom bg-[#D9B16F70] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                  className="swiper-button-prev-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
                 >
                   <img
                     src={left_arrow}
                     alt="Previous"
-                    className="w-[28px] h-[28px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                    className="w-[42px] h-[42px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
                   />
                 </button>
               </div>
               <div>
                 <button
                   ref={nextRef}
-                  className="swiper-button-next-custom bg-[#D9B16F70] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                  className="swiper-button-next-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
                 >
                   <img
                     src={right_arrow}
                     alt="Next"
-                    className="w-[28px] h-[28px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                    className="w-[42px] h-[42px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
                   />
                 </button>
               </div>
@@ -688,7 +719,7 @@ function Home() {
                 swiper.navigation.update();
               }
             }}
-            className="!overflow-hidden !h-[520px]"
+            className="!overflow-hidden !h-[620px]"
           >
             {specials.length > 0 ? (
               specials.map((item, index) => (

@@ -22,22 +22,18 @@ function Favourites() {
       liked: true,
       isOutOfStock: false,
       isRestocking: true,
-
       colorImages: {
         gold: product_1,
         silver: product_2,
         brown: product_2,
       },
-
       colors: [
         { id: "gold", img: gold_ellipse },
         { id: "silver", img: silver_ellipse },
         { id: "brown", img: brown_ellipse },
       ],
-
       selectedColor: "gold",
     },
-
     {
       id: 2,
       product_name: "Stone Kada",
@@ -45,22 +41,18 @@ function Favourites() {
       liked: true,
       isOutOfStock: false,
       isRestocking: false,
-
       colorImages: {
         gold: product_1,
         silver: product_2,
         brown: product_2,
       },
-
       colors: [
         { id: "gold", img: gold_ellipse },
         { id: "silver", img: silver_ellipse },
         { id: "brown", img: brown_ellipse },
       ],
-
       selectedColor: "gold",
     },
-
     {
       id: 3,
       product_name: "Stone Kada",
@@ -68,22 +60,18 @@ function Favourites() {
       liked: true,
       isOutOfStock: true,
       isRestocking: false,
-
       colorImages: {
         gold: product_1,
         silver: product_2,
         brown: product_2,
       },
-
       colors: [
         { id: "gold", img: gold_ellipse },
         { id: "silver", img: silver_ellipse },
         { id: "brown", img: brown_ellipse },
       ],
-
       selectedColor: "gold",
     },
-
     {
       id: 4,
       product_name: "Stone Kada",
@@ -91,29 +79,24 @@ function Favourites() {
       liked: true,
       isOutOfStock: false,
       isRestocking: true,
-
       colorImages: {
         gold: product_1,
         silver: product_2,
         brown: product_2,
       },
-
       colors: [
         { id: "gold", img: gold_ellipse },
         { id: "silver", img: silver_ellipse },
         { id: "brown", img: brown_ellipse },
       ],
-
       selectedColor: "gold",
     },
   ];
 
   const [products, setProducts] = useState(initialProducts);
-  const [favorites, setFavorites] = useState([]);
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
-
 
   const handleProductClick = (item) => {
     if (item.isOutOfStock) {
@@ -129,6 +112,7 @@ function Favourites() {
     // Later → navigate to product page
   };
 
+  // ♥ toggle like
   const toggleLike = (id) => {
     setProducts((prev) =>
       prev.map((p) =>
@@ -137,6 +121,7 @@ function Favourites() {
     );
   };
 
+  // color change
   const handleColorSelect = (productId, colorId) => {
     setProducts((prev) =>
       prev.map((p) =>
@@ -157,11 +142,24 @@ function Favourites() {
 
 
 
+  // 🔁 keep localStorage + Navbar in sync with favourites
   useEffect(() => {
+    const updatedFavourites = likedProducts;
+
+    // store the list
+    localStorage.setItem(
+      "favourites",
+      JSON.stringify(updatedFavourites)
+    );
+
+    // optional flag (if you still want it)
     localStorage.setItem(
       "hasFavourites",
-      likedProducts.length > 0 ? "true" : "false"
+      updatedFavourites.length > 0 ? "true" : "false"
     );
+
+    // notify Navbar in same tab
+    window.dispatchEvent(new Event("favouritesUpdated"));
   }, [likedProducts]);
 
   useEffect(() => {
@@ -233,7 +231,6 @@ function Favourites() {
                         </p>
                       </div>
 
-
                       {/* COLOR SELECTOR */}
                       <div className="flex gap-x-2.5">
                         {item.colors.map((color) => (
@@ -262,8 +259,13 @@ function Favourites() {
 
 
 
+                  <AddToCartButton
+                    isOutOfStock={item.isOutOfStock}
+                    isRestocking={item.isRestocking}
+                    isFavouritesPage={true}
+                    onRemoveFromFavourites={() => handleRemove(item.id)}
+                  />
                 </div>
-
               ))}
             </div>
           )}
@@ -290,9 +292,20 @@ function Favourites() {
         onClose={() => setShowRestockSuccess(false)}
       />
 
+      <RestockModal
+        open={showRestockModal}
+        onClose={() => setShowRestockModal(false)}
+        onSuccess={() => {
+          setShowRestockModal(false);
+          setShowRestockSuccess(true);
+        }}
+      />
 
+      <RestockSuccessModal
+        open={showRestockSuccess}
+        onClose={() => setShowRestockSuccess(false)}
+      />
     </>
-
   );
 }
 
