@@ -14,7 +14,6 @@ function Product_page() {
   const productList = async (collectionId) => {
     try {
       const response = await FetchAllProductByCollections(collectionId);
-      console.log(response);
       const edges = response?.data?.collection?.products?.edges || [];
 
       const formattedProducts = edges.map(({ node }) => {
@@ -39,7 +38,6 @@ function Product_page() {
           tags: node.tags,
           template_suffix: "",
           published_scope: "global",
-          description: " ",
 
           image: {
             id: Number(productId) + 1,
@@ -93,8 +91,7 @@ function Product_page() {
         image: node.featuredImage?.url,
         price: node.variants?.edges?.[0]?.node?.price || "0.00",
         product_type: node.productType || "Uncategorized",
-        tags: node.tags || [],
-        description:node.description,
+        tags:node.tags || [],
       }));
       setProductListData(products);
     } catch (error) {
@@ -107,12 +104,13 @@ function Product_page() {
     acc[type].push(product);
     return acc;
   }, {});
-
+  
   useEffect(() => {
     if (collectionId) {
       productList(collectionId);
     }
   }, [collectionId]);
+
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
