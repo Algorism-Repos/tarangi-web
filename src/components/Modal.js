@@ -77,7 +77,7 @@ function Modal({ modal, active, productName }) {
       <div
         className={
           modal === true
-            ? "bg-black bg-opacity-70 inset-0 fixed z-50 w-full h-full flex flex-col items-center justify-center"
+            ? "bg-black bg-opacity-70 inset-0 fixed z-50 w-full h-full flex px-4 flex-col items-center justify-center"
             : "hidden"
         }
       >

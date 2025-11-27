@@ -172,6 +172,35 @@ function Home() {
     // fetchMetalRates();
   }, []);
 
+// Silvar prices logic
+  const [pricePerGram, setPricePerGram] = useState(169.9);
+  const [pricePerKg, setPricePerKg] = useState(169900);
+  const [lastUpdated, setLastUpdated] = useState("27 Oct 2025, 11:00 AM");
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    if (isRefreshing) return; 
+
+    setIsRefreshing(true);
+
+    setTimeout(() => {
+      const now = new Date();
+      const formatted = now.toLocaleString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+
+      setLastUpdated(formatted);
+      setIsRefreshing(false);
+    }, 1000);
+  };
+
+
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -204,7 +233,8 @@ function Home() {
 
           <div className="flex items-center gap-x-1 w-[155px] sm:w-[170px]">
             <img
-              className="w-[15px] h-[15px]"
+              className={`w-[15px] h-[15px] cursor-pointer ${isRefreshing ? "animate-spin" : ""
+                }`}
               src={refresh_icon}
               alt="Refresh icon"
               onClick={fetchMetalRates}
@@ -235,7 +265,8 @@ function Home() {
 
           <div className="flex items-center gap-x-2 mr-6">
             <img
-              className="w-[15px] h-[15px]"
+              className={`w-[15px] h-[15px] cursor-pointer ${isRefreshing ? "animate-spin" : ""
+                }`}
               src={refresh_icon}
               alt="Refresh icon"
               onClick={fetchMetalRates}
@@ -372,7 +403,8 @@ function Home() {
                   (type) =>
                     type.handle?.toLowerCase().includes("men") ||
                     type.handle?.toLowerCase().includes("women") ||
-                    type.handle?.toLowerCase().includes("gifts")
+                    type.handle?.toLowerCase().includes("gifts") ||
+                    type.handle?.toLowerCase().includes("couples")
                 )
                 .map((type) => (
                   <Link
@@ -398,6 +430,7 @@ function Home() {
             <h1 className="section-heading !text-white tracking-[1px] text-center">
               Best Sellers
             </h1>
+
             <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-between mt-20 sm:mt-36">
               {FestiveFiltered.map((type) => (
                 <Link to={`/productdescription/${type.title.replace(/\s+/g, "-")}`} state={{ product: type }}>                  <div
@@ -429,28 +462,28 @@ function Home() {
             <div className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden">
               {/* Custom navigation buttons */}
               {showNavigation && (
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
+                <div className="absolute -bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
                   <div className="">
                     <button
                       ref={prevRef}
-                      className="swiper-button-prev-custom bg-[#D9B16F70] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                      className="swiper-button-prev-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
                     >
                       <img
                         src={left_arrow}
                         alt="Previous"
-                        className="w-[28px] h-[28px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                        className="w-[42px] h-[42px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
                       />
                     </button>
                   </div>
                   <div className="">
                     <button
                       ref={nextRef}
-                      className="swiper-button-next-custom bg-[#D9B16F70] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                      className="swiper-button-next-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
                     >
                       <img
                         src={right_arrow}
                         alt="Next"
-                        className="w-[28px] h-[28px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                        className="w-[42px] h-[42px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
                       />
                     </button>
                   </div>
@@ -550,7 +583,8 @@ function Home() {
                 Gold
               </h2>
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                ₹ 4<span className="font-[poppins]">,</span>00<span className="font-[poppins]">,</span>000
+                ₹ 4<span className="font-[poppins]">,</span>00
+                <span className="font-[poppins]">,</span>000
               </h2>
             </div>
 
@@ -608,7 +642,7 @@ function Home() {
       {/* Tarangi Specials */}
       <div className="newproducts-section tracking-[1px]">
         <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
-          <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-30 sm:mt-0 overflow-x-hidden">
+          <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-10 sm:mt-0  overflow-x-hidden">
             Tarangi Specials
           </h1>
 
@@ -638,28 +672,28 @@ function Home() {
         <div className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0 sm:hidden">
           {/* Custom navigation buttons */}
           {showNavigation && (
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
+            <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
               <div>
                 <button
                   ref={prevRef}
-                  className="swiper-button-prev-custom bg-[#D9B16F70] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                  className="swiper-button-prev-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
                 >
                   <img
                     src={left_arrow}
                     alt="Previous"
-                    className="w-[28px] h-[28px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                    className="w-[42px] h-[42px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
                   />
                 </button>
               </div>
               <div>
                 <button
                   ref={nextRef}
-                  className="swiper-button-next-custom bg-[#D9B16F70] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                  className="swiper-button-next-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
                 >
                   <img
                     src={right_arrow}
                     alt="Next"
-                    className="w-[28px] h-[28px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                    className="w-[42px] h-[42px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
                   />
                 </button>
               </div>
@@ -683,7 +717,7 @@ function Home() {
                 swiper.navigation.update();
               }
             }}
-            className="!overflow-hidden !h-[520px]"
+            className="!overflow-hidden !h-[620px]"
           >
             {specials.length > 0 ? (
               specials.map((item, index) => (
@@ -839,7 +873,11 @@ function Home() {
       <div className="before-after-section ">
         <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
           <h1 className="font-atteron section-heading text-[26px]  sm:text-[64px] text-center text-[#5C0A1F] mb-16">
-            <span className="text-[28px] sm:text-[64px]"> Enhance Your Look With</span> <br /> Tarangi
+            <span className="text-[28px] sm:text-[64px]">
+              {" "}
+              Enhance Your Look With
+            </span>{" "}
+            <br /> Tarangi
           </h1>
 
           <div className="container" ref={containerRef}>

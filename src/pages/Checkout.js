@@ -22,18 +22,16 @@ function CheckoutPage() {
   const [showSummary, setShowSummary] = useState(false);
   // Yup validation schema
   const validationSchema = Yup.object({
+    // Contact
     email: Yup.string().email("Invalid email").required("Email is required"),
     firstName: Yup.string().required("First Name is required"),
     lastName: Yup.string().required("Last Name is required"),
     mobile: Yup.string()
       .matches(/^[0-9]{10}$/, "Enter a valid 10-digit number")
       .required("Mobile number is required"),
+
+    // Shipping
     address: Yup.string().required("Address is required"),
-    billingaddress: Yup.string().when("useDifferentBilling", {
-      is: true,
-      then: (schema) => schema.required("Billing address is required"),
-      otherwise: (schema) => schema.notRequired(),
-    }),
     landmark: Yup.string(),
     city: Yup.string().required("City is required"),
     pincode: Yup.string()
@@ -41,6 +39,38 @@ function CheckoutPage() {
       .required("Pincode is required"),
     state: Yup.string().required("State is required"),
     country: Yup.string().required("Country is required"),
+
+    // Billing (conditional)
+    billingAddress: Yup.string().when("useDifferentBilling", {
+      is: true,
+      then: (schema) => schema.required("Address is required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    billingLandmark: Yup.string(),
+    billingCity: Yup.string().when("useDifferentBilling", {
+      is: true,
+      then: (schema) => schema.required("City is required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    billingPincode: Yup.string().when("useDifferentBilling", {
+      is: true,
+      then: (schema) =>
+        schema
+          .matches(/^[0-9]{6}$/, "Enter a valid 6-digit PIN")
+          .required("Pincode is required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    billingState: Yup.string().when("useDifferentBilling", {
+      is: true,
+      then: (schema) => schema.required("tate is required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    billingCountry: Yup.string().when("useDifferentBilling", {
+      is: true,
+      then: (schema) => schema.required("Country is required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+
     terms: Yup.boolean().oneOf([true], "You must accept the terms"),
     useDifferentBilling: Yup.boolean(),
     addGiftWrap: Yup.boolean(),
@@ -54,13 +84,23 @@ function CheckoutPage() {
       firstName: "",
       lastName: "",
       mobile: "",
+
+      // Shipping
       address: "",
-      billingaddress: "",
       landmark: "",
       city: "",
       pincode: "",
       state: "",
       country: "India",
+
+      // Billing
+      billingAddress: "",
+      billingLandmark: "",
+      billingCity: "",
+      billingPincode: "",
+      billingState: "",
+      billingCountry: "India",
+
       terms: false,
       useDifferentBilling: false,
       addGiftWrap: false,
@@ -146,7 +186,7 @@ function CheckoutPage() {
     <div className="min-h-screen bg-[#FFF5E8] text-[#979797]  font-poppins overflow-x-hidden px-3 sm:px-6">
       <div className="max-w-[1440px] mx-auto py-10 space-y-10 ">
         {/* Header */}
-        <div className="flex   items-center  relative px-2 sm:px-4 md:px-6 lg:px-10 py-2">
+        <div className="flex items-center  relative px-2 sm:px-4 md:px-6 lg:px-10 py-2">
           <Link
             to="/cart"
             className="flex  items-center gap-x-[6px] px-5 max-[425px]:gap-x-[4px] max-[425px]:px-4"
@@ -176,7 +216,7 @@ function CheckoutPage() {
         </div>
 
         {/* ======= Mobile Order Summary Dropdown ======= */}
-        <div className="block lg:hidden bg-[#FFFAF3] shadow-md border border-[#F6EFE6] mb-6">
+        <div className="block xl:hidden bg-[#FFFAF3] shadow-md border border-[#F6EFE6] mb-6">
           <button
             type="button"
             onClick={() => setShowSummary(!showSummary)}
@@ -264,7 +304,7 @@ function CheckoutPage() {
         </div>
 
         {/* Main Grid */}
-        <div className="flex flex-1 gap-20 max-w-[1440px]">
+        <div className="flex  max-w-[1300px]">
           {/* Left Form */}
           <div className="w-[700px]  mx-auto">
             <form
@@ -352,6 +392,8 @@ function CheckoutPage() {
                 </div>
 
                 <div>
+                  <label className="text-sm block mb-1">Email Id</label>
+
                   <input
                     name="email"
                     type="email"
@@ -438,9 +480,16 @@ function CheckoutPage() {
 
                   <div className="flex-1 min-w-[45%]">
                     <label className="text-sm block mb-1">Pincode</label>
+
                     <input
+                      type="tel"
                       name="pincode"
-                      onChange={formik.handleChange}
+                      inputMode="numeric"
+                      maxLength={6}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, "");
+                        formik.setFieldValue("pincode", value);
+                      }}
                       onBlur={formik.handleBlur}
                       value={formik.values.pincode}
                       className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.pincode && formik.touched.pincode
@@ -450,6 +499,7 @@ function CheckoutPage() {
                       focus:outline-none focus:border-[#8C455E]`}
                       placeholder="Pincode"
                     />
+
                     {formik.touched.pincode && formik.errors.pincode && (
                       <p className="text-xs text-red-500 mt-1">
                         {formik.errors.pincode}
@@ -550,8 +600,7 @@ function CheckoutPage() {
                     </span>
                     <span
                       className={`w-[22px] h-[22px] border-2 rounded-full flex items-center justify-center
-        ${useDifferentBilling ? "border-[#6E0027]" : "border-[#6E0027]"}
-      `}
+        ${useDifferentBilling ? "border-[#6E0027]" : "border-[#6E0027]"}`}
                     >
                       {useDifferentBilling && (
                         <span className="w-3 h-3 rounded-full bg-[#6E0027]" />
@@ -765,8 +814,8 @@ function CheckoutPage() {
           </div>
 
           {/* Right Summary */}
-          <div className="col-span-12 lg:col-span-4 hidden lg:block ">
-            <div className="w-[466px] h-[617px] bg-[#FFFAF3] rounded-[10px] shadow-md border border-[#EDEDED] p-5">
+          <div className="hidden xl:block ">
+            <div className="w-[466px] h-[617px] bg-[#FFFAF3] rounded-[10px] shadow-2xl border border-[#EDEDED] p-5">
               <h3 className="font-semibold mb-4 text-base text-[#313131]">
                 Order Summary
               </h3>

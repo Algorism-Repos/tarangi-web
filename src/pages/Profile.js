@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+// src/pages/Profile.js
+import React, { useState, useEffect, useRef } from "react";
 import { useFormik } from "formik";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -37,6 +38,11 @@ import { AppContext } from "../context/AppContext";
 
 // Move schema definition here so it’s in scope
 import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
+import OutOfStockModal from "../components/OutOfStockModal";
+import RestockModal from "../components/RestockModal";
+import RestockSuccessModal from "../components/RestockSuccessModal";
+import OrderSummaryPopup from "../components/OrderSummaryPopup";
+
 
 // schema
 const addressValidationSchema = Yup.object({
@@ -64,6 +70,12 @@ const Profile = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [addressToDelete, setAddressToDelete] = useState(null);
 
+  // favourites function 
+  const [showOutStockModal, setShowOutStockModal] = useState(false);
+  const [showRestockModal, setShowRestockModal] = useState(false);
+  const [showRestockSuccess, setShowRestockSuccess] = useState(false);
+  const [showOrderPopup, setShowOrderPopup] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -102,8 +114,6 @@ const Profile = () => {
     }
   };
 
-
-
   // const orderByEmail = async () => {
   //   try {
   //     const response = await FetchOrderByMail("bob@example.com");
@@ -117,12 +127,6 @@ const Profile = () => {
     CustomerOrders()
     // orderByEmail();
   }, []);
-
-
-
-
-
-
   const handleEdit = () => setIsEditing(true);
   const handleCancel = () => setIsEditing(false);
 
@@ -154,39 +158,150 @@ const Profile = () => {
     orders: false,
     favourites: false,
   });
-
-
   const [products, setProducts] = useState([
     {
       id: 1,
-      src: product_1,
+      product_name: "Stone Necklace",
       price: "₹10,000",
-      name: "Stone Necklace",
       liked: true,
       isOutOfStock: false,
+      isRestocking: false,
+
+      colorImages: {
+        gold: product_1,
+        silver: product_2,
+        brown: product_2,
+      },
+
+      colors: [
+        { id: "gold", img: gold_ellipse },
+        { id: "silver", img: silver_ellipse },
+        { id: "brown", img: brown_ellipse },
+      ],
+
+      selectedColor: "gold",
     },
+
     {
       id: 2,
-      src: product_2,
+      product_name: "Stone Kada",
       price: "₹4,000",
-      name: "Silver Kada",
       liked: true,
       isOutOfStock: false,
+      isRestocking: false,
+
+      colorImages: {
+        gold: product_1,
+        silver: product_2,
+        brown: product_2,
+      },
+
+      colors: [
+        { id: "gold", img: gold_ellipse },
+        { id: "silver", img: silver_ellipse },
+        { id: "brown", img: brown_ellipse },
+      ],
+
+      selectedColor: "gold",
     },
+
     {
       id: 3,
-      src: product_2,
+      product_name: "Stone Kada",
       price: "₹4,000",
-      name: "Silver Kada",
+      liked: true,
+      isOutOfStock: true,
+      isRestocking: false,
+
+      colorImages: {
+        gold: product_1,
+        silver: product_2,
+        brown: product_2,
+      },
+
+      colors: [
+        { id: "gold", img: gold_ellipse },
+        { id: "silver", img: silver_ellipse },
+        { id: "brown", img: brown_ellipse },
+      ],
+
+      selectedColor: "gold",
+    },
+
+    {
+      id: 4,
+      product_name: "Stone Kada",
+      price: "₹4,000",
       liked: true,
       isOutOfStock: false,
+      isRestocking: true,
+
+      colorImages: {
+        gold: product_1,
+        silver: product_2,
+        brown: product_2,
+      },
+
+      colors: [
+        { id: "gold", img: gold_ellipse },
+        { id: "silver", img: silver_ellipse },
+        { id: "brown", img: brown_ellipse },
+      ],
+
+      selectedColor: "gold",
     },
   ]);
 
-  const toggleLike = (id) =>
-    setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, liked: !p.liked } : p)));
+
+
+  const handleProductClick = (item) => {
+    if (item.isOutOfStock) {
+      setShowOutStockModal(true);
+      return;
+    }
+
+    if (item.isRestocking) {
+      setShowRestockModal(true);
+      return;
+    }
+
+    // Later → navigate to product page
+  };
+
+
+  const toggleLike = (id) => {
+    setProducts((prev) =>
+      prev.map((p) =>
+        p.id === id ? { ...p, liked: !p.liked } : p
+      )
+    );
+  };
+
+  const handleColorSelect = (productId, colorId) => {
+    setProducts((prev) =>
+      prev.map((p) =>
+        p.id === productId ? { ...p, selectedColor: colorId } : p
+      )
+    );
+  };
+
 
   const likedProducts = products.filter((p) => p.liked);
+
+  const handleRemove = (id) => {
+    setProducts((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, liked: false } : item
+      )
+    );
+  };
+
+  useEffect(() => {
+    localStorage.setItem(
+      "hasFavourites",
+      likedProducts.length > 0 ? "true" : "false"
+    );
+  }, [likedProducts]);
 
   const toggleSection = (key) => {
     setOpenSections((prev) => {
@@ -194,6 +309,26 @@ const Profile = () => {
       return { ...allClosed, [key]: !prev[key] };
     });
   };
+
+  // Order details 
+  const orderItems =
+    selectedOrder?.products?.map((p) => ({
+      product_img: p,
+      product_name: "Product Name",
+      quantity: 1,
+      free: false,
+      price: 1200,
+    })) || [];
+
+  const subTotal = orderItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  const tax = 800;
+  const shipping = 0;
+  const total = subTotal + tax + shipping;
+
 
   // Address logic
   const [addresses, setAddresses] = useState([
@@ -269,12 +404,50 @@ const Profile = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");
 
-    // This triggers your useEffect’s storage event
+    // Optional: clear user-specific data
+    localStorage.removeItem("favourites");
+    localStorage.setItem("hasFavourites", "false");
+    // localStorage.removeItem("cartItems"); // if you want to clear cart too
+
+    // Notify Navbar
     window.dispatchEvent(new Event("storage"));
 
-    // Navigate to login page
     navigate("/login");
   };
+
+
+
+  const profileRef = useRef(null);
+  const addressRef = useRef(null);
+  const ordersRef = useRef(null);
+  const favouritesRef = useRef(null);
+
+  useEffect(() => {
+    const sectionMap = {
+      profile: profileRef,
+      address: addressRef,
+      orders: ordersRef,
+      favourites: favouritesRef,
+    };
+
+    const ref = sectionMap[
+      Object.keys(openSections).find((key) => openSections[key])
+    ];
+
+    if (ref?.current) {
+      setTimeout(() => {
+        ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        ref.current.focus();
+      }, 200);
+    }
+  }, [openSections]);
+
+
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
 
   return (
     <div className="min-h-fit bg-[#FFF5E8] py-16 px-4 sm:px-6 lg:px-16 xl:px-28">
@@ -293,10 +466,7 @@ const Profile = () => {
                   key={item.name}
                   onClick={() => setActiveSection(item.name)}
                   className={`flex items-center gap-3 px-5 py-3 rounded-[8px] text-[16px] font-poppins transition-all w-full
-            ${isActive
-                      ? "bg-[#5A0010] text-white"
-                      : "text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010]"
-                    }`}
+                      ${isActive ? "bg-[#5A0010] text-white" : "text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010]"}`}
                 >
                   <img src={isActive ? item.activeIcon : item.icon} alt={item.name} className="w-[30px] h-[30px] transition-all" />
                   {item.name}
@@ -518,7 +688,7 @@ const renderAddressSection = (addresses, editingAddressId, handleAddNew, handleE
   </div >
 );
 
-const renderOrdersSection = () => {
+const renderOrdersSection = (setSelectedOrder, setShowOrderPopup) => {
   const upcomingOrders = [
     { id: 1, date: "12 Oct 2025", number: "#123456", status: "Shipped", delivery: "20th Oct", products: [product_1, product_2] },
     { id: 2, date: "15 Oct 2025", number: "#654321", status: "Processing", delivery: "25th Oct", products: [product_2, product_1] },
@@ -528,6 +698,7 @@ const renderOrdersSection = () => {
     { id: 1, date: "05 Sep 2025", number: "#789012", deliveredOn: "10 Sep", products: [product_1, product_2] },
     { id: 2, date: "01 Aug 2025", number: "#890123", deliveredOn: "06 Aug", products: [product_2, product_1] },
   ];
+
 
   return (
     <div className="space-y-10 max-w-[634px]">
@@ -552,7 +723,15 @@ const renderOrdersSection = () => {
                   <img src={circle} alt="circle" className="w-[8px] h-[8px]" />
                   <span>{order.status}</span>
                 </div>
-                <button className="text-[#5A0010] text-[12px] font-medium hover:underline">View Order Details</button>
+                <button
+                  className="text-[#5A0010] text-[12px] font-medium hover:underline"
+                  onClick={() => {
+                    setSelectedOrder(order);
+                    setShowOrderPopup(true);
+                  }}
+                >
+                  View Order Details
+                </button>
               </div>
             </div>
 
@@ -589,7 +768,15 @@ const renderOrdersSection = () => {
                 </div>
               </div>
               <div className="flex flex-col sm:items-end gap-[6px] mt-2 sm:mt-0">
-                <button className="text-[#4B001A] text-[12px] font-medium hover:underline">View Order Details</button>
+                <button
+                  className="text-[#5A0010] text-[12px] font-medium hover:underline"
+                  onClick={() => {
+                    setSelectedOrder(order);
+                    setShowOrderPopup(true);
+                  }}
+                >
+                  View Order Details
+                </button>
               </div>
             </div>
 
@@ -609,46 +796,176 @@ const renderOrdersSection = () => {
     </div>
   );
 };
-const renderFavouritesSection = (products, toggleLike, likedProducts) => (
-  <div>
-    {likedProducts.length === 0 ? (
-      <p className="text-center text-[14px] text-[#4B0010] mt-6 font-poppins">No Products in the favourites page</p>
-    ) : (
-      <div className="grid grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 gap-6 w-full overflow-visible relative">
-        {products.map((product) => (
-          <div key={product.id} className="max-w-[304px] flex flex-wrap gap-x-10 mx-auto items-center group relative">
-            <div className="overflow-hidden rounded-2xl relative">
-              <img
-                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] object-cover rounded-[16px] ${product.isOutOfStock ? "grayscale" : ""
-                  } transition-all duration-300 ease-in-out group-hover:shadow-lg`}
-                src={product.src}
-                alt={product.name}
-              />
-              <LikeButton
-                liked={product.liked}
-                isOutOfStock={product.isOutOfStock}
-                onToggle={() => toggleLike(product.id)}
-              />
-            </div >
-            <div className="flex justify-between items-center w-full my-3 gap-x-2">
-              <div>
-                <p className="text-[13px] font-semibold sm:text-[18px] text-[#313131]">{product.name}</p>
-                <p className="text-[#4E4E4E] font-semibold text-[16px]">{product.price}</p>
-              </div>
-              <div className="mt-1.5 flex items-center justify-between">
-                <div className="flex justify-center gap-x-2.5 mr-1">
-                  <img className="w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]" src={gold_ellipse} alt="gold ellipse" />
-                  <img className="w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]" src={silver_ellipse} alt="Silver ellipse" />
-                  <img className="w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]" src={brown_ellipse} alt="brown ellipse" />
+
+//  FAVOURITES SECTION
+const renderFavouritesSection = (
+  likedProducts,
+  handleProductClick,
+  toggleLike,
+  handleColorSelect,
+  handleRemove,
+  showOutStockModal,
+  setShowOutStockModal,
+  showRestockModal,
+  setShowRestockModal,
+  showRestockSuccess,
+  setShowRestockSuccess
+) => {
+  return (
+    <>
+      <div >
+        {likedProducts.length === 0 ? (
+          <p className="text-center text-[14px] text-[#4B0010] mt-6 font-poppins">
+            No Products in the favourites page
+          </p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full overflow-visible relative">
+
+            {likedProducts.map((item) => (
+              <div key={item.id} className="max-w-[304px] flex flex-wrap gap-x-10 mx-auto items-center group relative">
+
+                {/* IMAGE CARD */}
+                <div
+                  onClick={() => handleProductClick(item)}
+                  className="overflow-hidden rounded-2xl relative "
+                >
+                  <img
+                    src={item.colorImages[item.selectedColor]}
+                    className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] object-cover rounded-[16px]${item.isOutOfStock ? " grayscale" : ""
+                      } ${item.isRestocking ? "opacity-50" : ""
+                      }  transition-all duration-300 group-hover:scale-105`}
+                  />
+
+                  {/* LABEL */}
+                  {item.isOutOfStock ? (
+                    <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
+                      Sold Out
+                    </p>
+                  ) : item.isRestocking ? (
+                    <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
+                      Restocking Soon
+                    </p>
+                  ) : null}
+
+                  {/* HEART BUTTON */}
+                  <div >
+                    <LikeButton
+                      liked={item.liked}
+                      isOutOfStock={item.isOutOfStock}
+                      isRestocking={item.isRestocking}
+                      onToggle={() => toggleLike(item.id)}
+                    />
+                  </div>
                 </div>
+
+
+                {/* PRODUCT NAME + PRICE */}
+                <div className="flex justify-between items-center w-full my-3 gap-x-2">
+                  <div>
+                    <p className="text-[13px] font-semibold sm:text-[18px] text-[#313131]">
+                      {item.product_name}
+                    </p>
+                    <p className="text-[#4E4E4E] font-semibold text-[16px]">
+                      {item.price}
+                    </p>
+                  </div>
+
+                  {/* COLOR OPTIONS */}
+                  <div className="mt-1.5 flex items-center justify-between">
+                    <div className="flex justify-center gap-x-2.5 mr-1">
+                      {item.colors.map((color) => (
+                        <img
+                          key={color.id}
+                          src={color.img}
+                          onClick={() =>
+                            handleColorSelect(item.id, color.id)
+                          }
+                          className={`w-[20px] sm:w-[24px] rounded-full cursor-pointer transition-all ${item.selectedColor === color.id
+                            ? "border-2 border-primary p-[2px]"
+                            : "border bg-white"
+                            }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+
+                {/* BUTTON */}
+                <AddToCartButton
+                  isOutOfStock={item.isOutOfStock}
+                  isRestocking={item.isRestocking}
+                  isFavouritesPage={true}
+                  onRemoveFromFavourites={() => handleRemove(item.id)}
+                />
               </div>
-            </div>
-            <AddToCartButton />
-          </div >
-        ))}
-      </div >
-    )}
-  </div >
-);
+
+            ))}
+
+          </div>
+        )}
+      </div>
+
+      {/* MODALS */}
+      <OutOfStockModal
+        open={showOutStockModal}
+        onClose={() => setShowOutStockModal(false)}
+      />
+
+      <RestockModal
+        open={showRestockModal}
+        onClose={() => setShowRestockModal(false)}
+        onSuccess={() => {
+          setShowRestockModal(false);
+          setShowRestockSuccess(true);
+        }}
+      />
+
+      <RestockSuccessModal
+        open={showRestockSuccess}
+        onClose={() => setShowRestockSuccess(false)}
+      />
+    </>
+
+  );
+};
+
+// };
+
+// const renderFavouritesSection = (products, toggleLike, likedProducts) => (
+//   <div>
+//     {likedProducts.length === 0 ? (
+//       <p className="text-center text-[14px] text-[#4B0010] mt-6 font-poppins">No Products in the favourites page</p>
+//     ) : (
+//       <div className="grid grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 gap-6 w-full overflow-visible relative">
+//         {products.map((product) => (
+//           <div key={product.id} className="max-w-[304px] flex flex-wrap gap-x-10 mx-auto items-center group relative">
+//             <div className="overflow-hidden rounded-2xl relative">
+//               <img className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] object-cover rounded-[16px] ${product.isOutOfStock ? "grayscale" : ""} transition-all duration-300 ease-in-out group-hover:shadow-lg`} src={product.src} alt={product.name} />
+//               <LikeButton liked={product.liked} isOutOfStock={product.isOutOfStock} onToggle={() => toggleLike(product.id)} />
+//             </div>
+//             <div className="flex justify-between items-center w-full my-3 gap-x-2">
+//               <div>
+//                 <p className="text-[13px] font-semibold sm:text-[18px] text-[#313131]">{product.name}</p>
+//                 <p className="text-[#4E4E4E] font-semibold text-[16px]">{product.price}</p>
+//               </div>
+//               <div className="mt-1.5 flex items-center justify-between">
+//                 <div className="flex justify-center gap-x-2.5 mr-1">
+//                   <img className="w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]" src={gold_ellipse} alt="gold ellipse" />
+//                   <img className="w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]" src={silver_ellipse} alt="Silver ellipse" />
+//                   <img className="w-[20px] sm:w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]" src={brown_ellipse} alt="brown ellipse" />
+//                 </div>
+//               </div>
+//             </div>
+//             <AddToCartButton />
+//           </div>
+//         ))}
+//       </div>
+//     )}
+//   </div>
+// );
+
+
+
 
 export default Profile;
