@@ -28,10 +28,36 @@ function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [favourites, setFavourites] = useState([]);
+
+
   const hasFavourites = favourites.length > 0;
   const hasCartItems = cartItems.length > 0;
 
+  const location = useLocation();
+  const navigate = useNavigate();
 
+  const mobileSearchRef = useRef(null);
+  const [productDropdown, setProductDropdown] = useState(false);
+  const [activeTab, setActiveTab] = useState("women");
+  const productDropdownRef = useRef(null);
+
+  // Product dropdown datas
+  const productCategory = ["women", "men", "couples", "gifts"];
+
+  const products = {
+    women: [
+      { img: new_product_1, name: "Emerald Pendant" },
+      { img: new_product_1, name: "Diamond Necklace" },
+      { img: new_product_1, name: "Tulip Brooch" },
+      { img: new_product_1, name: "Emerald Pendant" },
+    ],
+    men: [{ img: new_product_1, name: "Emerald Pendant" }],
+    couples: [
+      { img: new_product_1, name: "Emerald Pendant" },
+      { img: new_product_1, name: "Emerald Pendant" },
+    ],
+    gifts: [{ img: new_product_1, name: "Emerald Pendant" }],
+  };
 
   const TRENDING_PRODUCTS = [
     { img: new_product_1, name: "Emerald Pendant" },
@@ -42,19 +68,13 @@ function Navbar() {
     { img: new_product_1, name: "Tulip Brooch" },
   ];
 
-
-  const location = useLocation();
-  const navigate = useNavigate();
-
   const isActive = (path) => location.pathname === path;
-  // const getLinkClass = (path) =>
-  //   isActive(path) ? "text-white bg-[#CFA266] rounded-full" : "text-white opacity-[0.5]";
   const cartIcon = hasCartItems ? cart_icon_filled : cart_icon_empty;
 
   useEffect(() => {
     const syncFromStorage = () => {
-      // ✅ login: true means logged in
-      const storedLogin = localStorage.getItem("isLoggedIn") === "falue";
+      // login check
+      const storedLogin = localStorage.getItem("isLoggedIn") === "true";
       setIsLoggedIn(storedLogin);
 
       // cart
@@ -64,17 +84,11 @@ function Navbar() {
       // favourites
       const storedFav = JSON.parse(localStorage.getItem("favourites")) || [];
       setFavourites(storedFav);
-
-
     };
 
-    // initial load
     syncFromStorage();
 
-    // other tabs
     window.addEventListener("storage", syncFromStorage);
-
-    // custom events (same tab updates)
     window.addEventListener("favouritesUpdated", syncFromStorage);
     window.addEventListener("cartUpdated", syncFromStorage);
 
@@ -85,10 +99,6 @@ function Navbar() {
     };
   }, []);
 
-
-
-
-  // Close search when clicking outside
   useEffect(() => {
     const closeSearch = (e) => {
       if (
@@ -101,10 +111,11 @@ function Navbar() {
     document.addEventListener("click", closeSearch);
     return () => document.removeEventListener("click", closeSearch);
   }, []);
-  const dropdownRef = useRef(null);
+
+  // Mobile search dropdown close on outside click
   useEffect(() => {
     function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (mobileSearchRef.current && !mobileSearchRef.current.contains(event.target)) {
         setShowSearchDropdown(false);
       }
     }
@@ -116,6 +127,30 @@ function Navbar() {
   }, []);
 
   useEffect(() => {
+    setProductDropdown(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!productDropdown) return;
+
+    const handleClickOutside = (e) => {
+      if (
+        productDropdownRef.current &&
+        !productDropdownRef.current.contains(e.target)
+      ) {
+        setProductDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [productDropdown]);
+
+
+  // Lock body scroll when mobile menu open
+  useEffect(() => {
     if (menuVisible) {
       document.body.style.overflow = "hidden";
     } else {
@@ -126,7 +161,6 @@ function Navbar() {
       document.body.style.overflow = "auto";
     };
   }, [menuVisible]);
-
 
   return (
     <>
@@ -147,7 +181,6 @@ function Navbar() {
               }`}
           >
             Home
-            {/* <p className={getLinkClass("/home")}>Home</p> */}
           </Link>
 
           <Link
@@ -158,19 +191,18 @@ function Navbar() {
               }`}
           >
             About Us
-            {/* <p className={getLinkClass("/about")}>About Us</p> */}
           </Link>
 
-          <Link
-            to="/products"
-            className={`rounded-full py-2.5 px-4 text-white ${isActive("/products")
-              ? "bg-[#CFA266] cursor-default"
-              : "hover:bg-[#D6A76F] opacity-[0.5]"
+          {/* Product dropdown trigger */}
+          <button
+            onClick={() => setProductDropdown((prev) => !prev)}
+            className={`rounded-full py-2.5 px-4 text-white transition-all duration-200 ${productDropdown ? "bg-[#CFA266]" : "hover:bg-[#D6A76F] opacity-50"
               }`}
           >
             Products
-            {/* <p className={getLinkClass("/products")}>Products</p> */}
-          </Link>
+          </button>
+
+
 
           <Link
             to="/blog"
@@ -180,33 +212,32 @@ function Navbar() {
               }`}
           >
             Blog
-            {/* <p className={getLinkClass("/blog")}>Blog</p> */}
           </Link>
-
         </div>
 
         {/* Right Side Icons */}
         <div className="flex flex-row items-center gap-x-[20px]">
-          {/* 🔍 Search Button */}
-
-
+          {/* Search Button */}
           <div
             onClick={() => setShowSearch((prev) => !prev)}
             className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] transition search-icon
-                      ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"}
+                      ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+              }
         `}
           >
             <img src={Search_icon_white} className="w-[42px] h-[42px]" />
           </div>
+
           <Link to="/favourites">
             <img
-              className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/favourites") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+              className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/favourites")
+                ? "bg-[#CFA266]"
+                : "hover:bg-[#D6A76F4F]"
                 }`}
               src={hasFavourites ? favouriteFilled : favouriteUnfilled}
               alt="favourite icon"
             />
           </Link>
-
 
           <Link to="/cart">
             <img
@@ -216,20 +247,18 @@ function Navbar() {
               alt="cart"
             />
           </Link>
-          {isLoggedIn ? (
-            <>
-              <Link to="/profile">
-                <img
-                  className={`w-[48px] h-[48px] rounded-[8px] transition ${isActive("/profile")
-                    ? "bg-[#CFA266]"
-                    : "hover:bg-[#D6A76F4F]"
-                    }`}
-                  src={profile_icon}
-                  alt="profile"
-                />
-              </Link>
 
-            </>
+          {isLoggedIn ? (
+            <Link to="/profile">
+              <img
+                className={`w-[48px] h-[48px] rounded-[8px] transition ${isActive("/profile")
+                  ? "bg-[#CFA266]"
+                  : "hover:bg-[#D6A76F4F]"
+                  }`}
+                src={profile_icon}
+                alt="profile"
+              />
+            </Link>
           ) : (
             <>
               <Link to="/signup">
@@ -246,7 +275,73 @@ function Navbar() {
           )}
         </div>
 
-        {/* Search Dropdown */}
+        {/* Product Dropdown */}
+        <AnimatePresence>
+          {productDropdown && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="absolute top-[100px] left-0 w-full bg-[#FFF5E8] px-10 py-16 shadow-lg z-30"
+            >
+              <div
+                ref={productDropdownRef}
+                className="max-w-[1200px] mx-auto flex"
+              >
+                {/* Product category */}
+                <div className="w-[170px] space-y-[20px] font-poppins text-[16px]">
+                  {productCategory.map((tab) => (
+                    <div
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={`cursor-pointer py-2.5 px-3 rounded-[8px] ${activeTab === tab
+                        ? "bg-primary text-white"
+                        : "text-gray-700 hover:bg-gray-100"
+                        }`}
+                    >
+                      {tab}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Similar Products */}
+                <div className="max-w-[1000px] mx-auto">
+                  <div className="grid grid-cols-4 gap-4">
+                    {products[activeTab]?.map((item, i) => (
+                      <div key={i} className="text-center">
+                        <img
+                          className="w-[203px] h-[200px] rounded-[8px] object-cover"
+                          src={item.img}
+                          alt={item.name}
+                        />
+                        <p className="text-sm text-primary mt-2 font-medium">
+                          {item.name}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* VIEW MORE */}
+                  <div className="float-right mt-4 mr-2">
+                    <Link
+                      to="/products"
+                      className="text-[#7A0A1E] font-medium"
+                      onClick={() => setProductDropdown(false)}
+                    >
+                      View more →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+
+
+
+        {/* Search Dropdown (desktop) */}
         <AnimatePresence>
           {showSearch && (
             <motion.div
@@ -257,26 +352,19 @@ function Navbar() {
               className="absolute top-[100px] left-0 w-full bg-[#680F26] px-10 py-8 shadow-lg z-30 search-dropdown"
             >
               <div className="max-w-[1100px] mx-auto relative ">
-                {/* Search Input */}
                 <div className="flex items-center gap-6 w-full">
-
-
-                  {/* Search Bar Container */}
                   <div className="relative w-full">
                     <input
                       type="text"
                       placeholder="Search for Products"
                       className="w-full bg-white rounded-[12px] py-4 pl-5 pr-12 font-poppins text-[16px] placeholder:font-medium placeholder:text-[#ABABAB] outline-none"
                     />
-
-                    {/* Search Icon */}
                     <img
                       src={Search_icon}
                       alt="search icon"
                       className="absolute right-4 top-1/2 -translate-y-1/2 w-[42px] h-[42px]"
                     />
                   </div>
-                  {/* Back Arrow */}
                   <img
                     src={Back_Arrow}
                     className="w-[42px] h-[42px] cursor-pointer hover:scale-110 duration-300 bg-[#D6A76F4F] p-1 hover:bg-[#CFA266] rounded-full"
@@ -284,31 +372,40 @@ function Navbar() {
                   />
                 </div>
 
-                {/* Popular Searches */}
                 <div className="mt-6">
                   <h3 className="text-white font-poppins text-[16px] mb-3">
                     Popular Searches
                   </h3>
                   <div className="flex gap-3 flex-wrap">
                     <button className="flex items-center gap-2 bg-white text-[#4B001A] px-4 py-2 rounded-[10px] font-poppins">
-                      <img src={Trending_up} className="w-[20px] h-[20px]" />
+                      <img
+                        src={Trending_up}
+                        className="w-[20px] h-[20px]"
+                        alt=""
+                      />
                       Diwali Jewelry
                     </button>
                     <button className="flex items-center gap-2 bg-white text-[#4B001A] px-4 py-2 rounded-[10px] font-poppins">
-                      <img src={Trending_up} className="w-[20px] h-[20px]" />
+                      <img
+                        src={Trending_up}
+                        className="w-[20px] h-[20px]"
+                        alt=""
+                      />
                       Pendants
                     </button>
                   </div>
                 </div>
 
-                {/* Trending Products */}
                 <div className="mt-8">
                   <h3 className="text-white font-poppins text-[16px] mb-3">
                     Trending Products
                   </h3>
                   <div className="flex gap-6 overflow-x-auto text-white text-[14px] items-center object-contain">
                     {TRENDING_PRODUCTS.map((item, index) => (
-                      <div key={index} className="flex flex-col items-center">
+                      <div
+                        key={index}
+                        className="flex flex-col items-center min-w-[121px]"
+                      >
                         <img
                           src={item.img}
                           alt={item.name}
@@ -327,7 +424,7 @@ function Navbar() {
         </AnimatePresence>
       </div >
 
-      {/* Navbar - Mobile  */}
+      {/* Navbar - Mobile */}
       < div className="relative bg-[#680F26] flex flex-row justify-between w-full z-50 px-[20px] py-[30px] xl:hidden" >
         <img
           src={menu}
@@ -335,6 +432,7 @@ function Navbar() {
           className="w-[37px] h-[37px] cursor-pointer"
           onClick={() => setMenuVisible(true)}
         />
+
         <Link to="/home">
           <img
             src={logo}
@@ -343,17 +441,17 @@ function Navbar() {
           />
         </Link>
 
-
         <div className="flex gap-x-2">
           <Link to="/favourites">
             <img
-              className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+              className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites")
+                ? "bg-[#CFA266]"
+                : "hover:bg-[#D6A76F4F]"
                 }`}
               src={hasFavourites ? favouriteFilled : favouriteUnfilled}
               alt="favourite icon"
             />
           </Link>
-
 
           <Link to="/cart">
             <img
@@ -363,21 +461,18 @@ function Navbar() {
               alt="Cart icon"
             />
           </Link>
+
           {isLoggedIn && (
-            <>
-
-
-              <Link to="/profile">
-                <img
-                  className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/profile")
-                    ? "bg-[#CFA266]"
-                    : "hover:bg-[#D6A76F4F]"
-                    }`}
-                  src={profile_icon}
-                  alt="profile"
-                />
-              </Link>
-            </>
+            <Link to="/profile">
+              <img
+                className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/profile")
+                  ? "bg-[#CFA266]"
+                  : "hover:bg-[#D6A76F4F]"
+                  }`}
+                src={profile_icon}
+                alt="profile"
+              />
+            </Link>
           )}
         </div>
 
@@ -399,49 +494,43 @@ function Navbar() {
                   />
                 </Link>
 
-
-
                 <div className="flex gap-x-2">
                   <Link to="/favourites">
                     <img
-                      className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+                      className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites")
+                        ? "bg-[#CFA266]"
+                        : "hover:bg-[#D6A76F4F]"
                         }`}
                       src={hasFavourites ? favouriteFilled : favouriteUnfilled}
                       alt="favourite icon"
                       onClick={() => setMenuVisible(false)}
-
                     />
                   </Link>
 
-
-
                   <Link to="/cart">
                     <img
-                      className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/cart") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+                      className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/cart")
+                        ? "bg-[#CFA266]"
+                        : "hover:bg-[#D6A76F4F]"
                         }`}
                       src={cartIcon}
                       alt="Cart icon"
                       onClick={() => setMenuVisible(false)}
-
                     />
                   </Link>
+
                   {isLoggedIn && (
-                    <>
-
-
-                      <Link to="/profile">
-                        <img
-                          className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/profile")
-                            ? "bg-[#CFA266]"
-                            : "hover:bg-[#D6A76F4F]"
-                            }`}
-                          src={profile_icon}
-                          alt="profile"
-                          onClick={() => setMenuVisible(false)}
-
-                        />
-                      </Link>
-                    </>
+                    <Link to="/profile">
+                      <img
+                        className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/profile")
+                          ? "bg-[#CFA266]"
+                          : "hover:bg-[#D6A76F4F]"
+                          }`}
+                        src={profile_icon}
+                        alt="profile"
+                        onClick={() => setMenuVisible(false)}
+                      />
+                    </Link>
                   )}
                 </div>
               </div>
@@ -463,8 +552,8 @@ function Navbar() {
                     />
                   </div>
 
-                  {/* Search Dropdown */}
-                  <div ref={dropdownRef} className="relative w-full">
+                  {/* Search Dropdown (mobile) */}
+                  <div ref={mobileSearchRef} className="relative w-full">
                     <AnimatePresence>
                       {showSearchDropdown && (
                         <motion.div
@@ -474,30 +563,22 @@ function Navbar() {
                           transition={{ duration: 0.25 }}
                           className="w-full py-6 "
                         >
-                          {/* Popular Searches */}
                           <h3 className="text-white font-poppins text-[16px] mb-3">
                             Popular Searches
                           </h3>
 
                           <div className="flex gap-3 flex-wrap mb-6">
-                            <button
-                              className="flex items-center gap-2 bg-white text-[#4B001A]
-                                   px-4 py-2 rounded-[10px] font-poppins text-[14px]"
-                            >
+                            <button className="flex items-center gap-2 bg-white text-[#4B001A] px-4 py-2 rounded-[10px] font-poppins text-[14px]">
                               <img src={Trending_up} className="w-[16px]" />
                               Diwali Jewelry
                             </button>
 
-                            <button
-                              className="flex items-center gap-2 bg-white text-[#4B001A]
-                                   px-4 py-2 rounded-[10px] font-poppins text-[14px]"
-                            >
+                            <button className="flex items-center gap-2 bg-white text-[#4B001A] px-4 py-2 rounded-[10px] font-poppins text-[14px]">
                               <img src={Trending_up} className="w-[16px]" />
                               Pendants
                             </button>
                           </div>
 
-                          {/* Trending Products */}
                           <h3 className="text-white font-poppins text-[16px] mb-3">
                             Trending Products
                           </h3>
@@ -532,7 +613,6 @@ function Navbar() {
                               </SwiperSlide>
                             ))}
                           </Swiper>
-
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -560,10 +640,11 @@ function Navbar() {
                   </Link>
                 ))}
 
-
                 {/* LOGIN / SIGNUP */}
                 {!isLoggedIn && (
-                  <div className="flex flex-col items-center gap-y-[25px]" onClick={() => setMenuVisible(false)}
+                  <div
+                    className="flex flex-col items-center gap-y-[25px]"
+                    onClick={() => setMenuVisible(false)}
                   >
                     <button
                       onClick={() => navigate("/signup")}

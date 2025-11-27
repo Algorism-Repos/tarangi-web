@@ -8,6 +8,14 @@ import sort_icon from "../assets/Products/sort_icon.png"; // ← add your correc
 
 function Blog() {
   const SortOptions = ["Latest", "Featured", "Newest First", "Oldest First"];
+  // const [showSort, setShowSort] = useState(false);
+  // const [selectedSort, setSelectedSort] = useState("Latest");
+  const [showSort, setShowSort] = useState(false);
+  const [selectedSort, setSelectedSort] = useState("Latest");
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const blogData = [
     {
@@ -33,8 +41,7 @@ function Blog() {
     },
   ];
 
-  const [showSort, setShowSort] = useState(false);
-  const [selectedSort, setSelectedSort] = useState("Latest");
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -44,18 +51,19 @@ function Blog() {
     <>
       {/* Banner */}
       <div className="relative blog-banner text-white">
-        <h1 className="font-atteron text-[80px] font-normal mt-32 sm:mt-0">Blog</h1>
+        <h1 className="font-atteron text-[80px] font-normal mt-[150px] sm:mt-0">Blog</h1>
         <p className="font-[poppins] text-[20px] mt-[20px] text-center">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit,
         </p>
       </div>
 
       {/* Main Section */}
-      <div className="bg-light-sandal py-[75px]">
+      <div className="bg-light-sandal py-[75px] h-fit relative border">
         {/* Search + Filters */}
         <div className="max-w-[1320px] mx-auto flex flex-col gap-10 md:flex-row md:items-center md:justify-between px-4 lg:gap-20">
+
           {/* Search */}
-          <div className="relative w-full md:flex-1">
+          <div className="relative w-full md:flex-1 hidden">
             <input
               type="text"
               placeholder="Search for Products"
@@ -67,6 +75,9 @@ function Blog() {
               alt="search icon"
             />
           </div>
+
+          {/*Empty div */}
+          <div></div>
 
           {/* DESKTOP SORT */}
           <div className="relative flex items-center gap-4 hidden lg:flex">
@@ -93,7 +104,7 @@ function Blog() {
         </div>
 
         {/* MOBILE SORT BUTTON — FIXED FOOTER */}
-        <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden px-4 z-30 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
+        <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden px-4 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
           <div className="flex justify-between">
             <div
               className="group flex items-center gap-x-[8px] cursor-pointer"
@@ -134,8 +145,8 @@ function Blog() {
                       setShowSort(false);
                     }}
                     className={`text-[16px] cursor-pointer ${selectedSort === option
-                        ? "text-[#6C001A] font-semibold"
-                        : "text-[#4A2B17]"
+                      ? "text-[#6C001A] font-semibold"
+                      : "text-[#4A2B17]"
                       }`}
                   >
                     {option}
@@ -147,7 +158,7 @@ function Blog() {
         )}
 
         {/* BLOG LIST */}
-        <div className="max-w-[1320px] mx-auto px-4 my-[40px] flex flex-wrap gap-x-[15px] gap-y-[60px] justify-between">
+        <div className="max-w-[1320px] mx-auto px-4 my-[50px] flex flex-wrap gap-x-[15px] gap-y-[60px] justify-between">
           {blogData.map((items, i) => (
             <div key={i} className="max-w-[410px] mx-auto font-[poppins]">
               <img
