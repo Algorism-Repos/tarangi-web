@@ -40,6 +40,17 @@ function AddToCartButton({ product, quantity, isOutOfStock, isRestocking, isFavo
     isFavouritesPage && (isOutOfStock || isRestocking);
 
   const handleClick = () => {
+   
+    setShowToast(true);
+
+    // Disable page scroll
+    document.body.style.overflow = "hidden";
+
+    setTimeout(() => {
+      setShowToast(false);
+      document.body.style.overflow = "auto"; // Enable scroll again
+    }, 2000); // 2 seconds
+     handleAddToCart()
     // If inside favourites & product unavailable → remove instead
     if (isDisabledInFavourites) {
       if (onRemoveFromFavourites) onRemoveFromFavourites();
@@ -76,7 +87,7 @@ function AddToCartButton({ product, quantity, isOutOfStock, isRestocking, isFavo
           !isDisabledInFavourites && setCartIconSrc(shoppingCart_red)
         }
         onClick={handleClick}
-      // onClick={handleAddToCart}
+        // onClick={handleAddToCart}
       >
         {!isDisabledInFavourites && (
           <img className="w-[32px] h-[32px]" src={cartIconSrc} alt="" />

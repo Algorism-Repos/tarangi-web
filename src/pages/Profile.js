@@ -609,7 +609,6 @@ const renderOrdersSection = () => {
     </div>
   );
 };
-
 const renderFavouritesSection = (products, toggleLike, likedProducts) => (
   <div>
     {likedProducts.length === 0 ? (

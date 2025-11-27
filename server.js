@@ -2,8 +2,7 @@ require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const path = require ("path");
-
-const shopifyRouter = require("./src/routes/shopify"); // path to your router
+const shopifyRouter = require("./src/routes/shopify"); 
 const app = express();
 app.use(express.json());
 app.use(cors());

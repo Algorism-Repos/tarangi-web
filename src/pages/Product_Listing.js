@@ -27,7 +27,7 @@ function Product_Listing({ productCatergory }) {
   }, []);
 
 
-  //  Add default selectedColor for every product
+  // Add default selectedColor for every product
   useEffect(() => {
     if (productCatergory && productCatergory.length > 0) {
       setProducts(
@@ -89,7 +89,6 @@ function Product_Listing({ productCatergory }) {
       </>
     );
   }
- console.log("products",products)
   return (
     <>
       <div className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-y-10 sm:gap-x-[30px] px-1.5 ">
