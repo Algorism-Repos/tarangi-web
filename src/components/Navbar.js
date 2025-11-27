@@ -20,6 +20,9 @@ import cart_icon_filled from "../assets/cart_filled.png";
 import profile_icon from "../assets/profile_icon.png";
 import new_product_1 from "../assets/Frame 29.png";
 
+import down_arrow from "../assets/down_arrow.png";
+import up_arrow from "../assets/up_arrow.png";
+
 function Navbar() {
   const [menuVisible, setMenuVisible] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
@@ -28,7 +31,6 @@ function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [favourites, setFavourites] = useState([]);
-
 
   const hasFavourites = favourites.length > 0;
   const hasCartItems = cartItems.length > 0;
@@ -40,6 +42,9 @@ function Navbar() {
   const [productDropdown, setProductDropdown] = useState(false);
   const [activeTab, setActiveTab] = useState("women");
   const productDropdownRef = useRef(null);
+
+  // NEW: mobile products dropdown state
+  const [mobileProductDropdown, setMobileProductDropdown] = useState(false);
 
   // Product dropdown datas
   const productCategory = ["women", "men", "couples", "gifts"];
@@ -115,7 +120,10 @@ function Navbar() {
   // Mobile search dropdown close on outside click
   useEffect(() => {
     function handleClickOutside(event) {
-      if (mobileSearchRef.current && !mobileSearchRef.current.contains(event.target)) {
+      if (
+        mobileSearchRef.current &&
+        !mobileSearchRef.current.contains(event.target)
+      ) {
         setShowSearchDropdown(false);
       }
     }
@@ -128,6 +136,7 @@ function Navbar() {
 
   useEffect(() => {
     setProductDropdown(false);
+    setMobileProductDropdown(false); // close mobile dropdown when route changes
   }, [location.pathname]);
 
   useEffect(() => {
@@ -147,7 +156,6 @@ function Navbar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [productDropdown]);
-
 
   // Lock body scroll when mobile menu open
   useEffect(() => {
@@ -201,8 +209,6 @@ function Navbar() {
           >
             Products
           </button>
-
-
 
           <Link
             to="/blog"
@@ -275,7 +281,7 @@ function Navbar() {
           )}
         </div>
 
-        {/* Product Dropdown */}
+        {/* Product Dropdown (desktop) */}
         <AnimatePresence>
           {productDropdown && (
             <motion.div
@@ -337,9 +343,6 @@ function Navbar() {
             </motion.div>
           )}
         </AnimatePresence>
-
-
-
 
         {/* Search Dropdown (desktop) */}
         <AnimatePresence>
@@ -422,10 +425,10 @@ function Navbar() {
             </motion.div>
           )}
         </AnimatePresence>
-      </div >
+      </div>
 
       {/* Navbar - Mobile */}
-      < div className="relative bg-[#680F26] flex flex-row justify-between w-full z-50 px-[20px] py-[30px] xl:hidden" >
+      <div className="relative bg-[#680F26] flex flex-row justify-between w-full z-50 px-[20px] py-[30px] xl:hidden">
         <img
           src={menu}
           alt="menu_icon"
@@ -477,150 +480,151 @@ function Navbar() {
         </div>
 
         {/* Mobile Menu */}
-        {
-          menuVisible && (
-            <div className="bg-[#4B001A] h-full inset-y-0 w-full fixed right-0 z-20 p-[20px]">
-              <div className="flex flex-row items-center justify-between w-full">
+        {menuVisible && (
+          <div className="bg-[#4B001A] h-full inset-y-0 w-full fixed right-0 z-20 p-[20px] overflow-y-auto">
+            <div className="flex flex-row items-center justify-between w-full">
+              <img
+                src={close}
+                className="w-[30px] h-[30px] cursor-pointer "
+                onClick={() => setMenuVisible(false)}
+              />
+              <Link to="/home">
                 <img
-                  src={close}
-                  className="w-[30px] h-[30px] cursor-pointer "
+                  src={logo}
+                  className="w-[85px] h-[55px] cursor-pointer absolute top-9 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                   onClick={() => setMenuVisible(false)}
                 />
-                <Link to="/home">
+              </Link>
+
+              <div className="flex gap-x-2">
+                <Link to="/favourites">
                   <img
-                    src={logo}
-                    className="w-[85px] h-[55px] cursor-pointer absolute top-9 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites")
+                      ? "bg-[#CFA266]"
+                      : "hover:bg-[#D6A76F4F]"
+                      }`}
+                    src={hasFavourites ? favouriteFilled : favouriteUnfilled}
+                    alt="favourite icon"
                     onClick={() => setMenuVisible(false)}
                   />
                 </Link>
 
-                <div className="flex gap-x-2">
-                  <Link to="/favourites">
+                <Link to="/cart">
+                  <img
+                    className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/cart")
+                      ? "bg-[#CFA266]"
+                      : "hover:bg-[#D6A76F4F]"
+                      }`}
+                    src={cartIcon}
+                    alt="Cart icon"
+                    onClick={() => setMenuVisible(false)}
+                  />
+                </Link>
+
+                {isLoggedIn && (
+                  <Link to="/profile">
                     <img
-                      className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites")
+                      className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/profile")
                         ? "bg-[#CFA266]"
                         : "hover:bg-[#D6A76F4F]"
                         }`}
-                      src={hasFavourites ? favouriteFilled : favouriteUnfilled}
-                      alt="favourite icon"
+                      src={profile_icon}
+                      alt="profile"
                       onClick={() => setMenuVisible(false)}
                     />
                   </Link>
+                )}
+              </div>
+            </div>
 
-                  <Link to="/cart">
-                    <img
-                      className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/cart")
-                        ? "bg-[#CFA266]"
-                        : "hover:bg-[#D6A76F4F]"
-                        }`}
-                      src={cartIcon}
-                      alt="Cart icon"
-                      onClick={() => setMenuVisible(false)}
-                    />
-                  </Link>
+            <div className="flex flex-col items-center mt-10 gap-y-12 ">
+              {/* Search Input */}
+              <div className="w-full px-0 py-2 mx-auto">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search for Products"
+                    onClick={() => setShowSearchDropdown(true)}
+                    className="w-full h-[48px] py-4 pl-5 pr-12 font-poppins text-[16px] outline-none placeholder:text-[#B0B0B0] placeholder:font-normal rounded-[12px]"
+                  />
+                  <img
+                    src={Search_icon}
+                    alt="Search"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 w-[42px] h-[42px]"
+                  />
+                </div>
 
-                  {isLoggedIn && (
-                    <Link to="/profile">
-                      <img
-                        className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/profile")
-                          ? "bg-[#CFA266]"
-                          : "hover:bg-[#D6A76F4F]"
-                          }`}
-                        src={profile_icon}
-                        alt="profile"
-                        onClick={() => setMenuVisible(false)}
-                      />
-                    </Link>
-                  )}
+                {/* Search Dropdown (mobile) */}
+                <div ref={mobileSearchRef} className="relative w-full">
+                  <AnimatePresence>
+                    {showSearchDropdown && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.25 }}
+                        className="w-full py-6 "
+                      >
+                        <h3 className="text-white font-poppins text-[16px] mb-3">
+                          Popular Searches
+                        </h3>
+
+                        <div className="flex gap-3 flex-wrap mb-6">
+                          <button className="flex items-center gap-2 bg-white text-[#4B001A] px-4 py-2 rounded-[10px] font-poppins text-[14px]">
+                            <img src={Trending_up} className="w-[16px]" />
+                            Diwali Jewelry
+                          </button>
+
+                          <button className="flex items-center gap-2 bg-white text-[#4B001A] px-4 py-2 rounded-[10px] font-poppins text-[14px]">
+                            <img src={Trending_up} className="w-[16px]" />
+                            Pendants
+                          </button>
+                        </div>
+
+                        <h3 className="text-white font-poppins text-[16px] mb-3">
+                          Trending Products
+                        </h3>
+
+                        <Swiper
+                          spaceBetween={20}
+                          slidesPerView={2.4}
+                          className="trending-swiper"
+                          breakpoints={{
+                            640: {
+                              slidesPerView: 2.5,
+                              spaceBetween: 10,
+                            },
+                            768: {
+                              slidesPerView: 4,
+                              spaceBetween: 10,
+                            },
+                          }}
+                        >
+                          {TRENDING_PRODUCTS.map((item, index) => (
+                            <SwiperSlide key={index}>
+                              <div className="flex flex-col items-center">
+                                <img
+                                  src={item.img}
+                                  alt={item.name}
+                                  className="w-[121px] h-[109px] object-contain rounded-[12px] shadow-md"
+                                />
+                                <span className="mt-2 text-white text-[14px] font-poppins font-normal">
+                                  {item.name}
+                                </span>
+                              </div>
+                            </SwiperSlide>
+                          ))}
+                        </Swiper>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
 
-              <div className="flex flex-col items-center mt-10 gap-y-12 ">
-                {/* Search Input */}
-                <div className="w-full px-0 py-2 mx-auto">
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Search for Products"
-                      onClick={() => setShowSearchDropdown(true)}
-                      className="w-full h-[48px] py-4 pl-5 pr-12 font-poppins text-[16px] outline-none placeholder:text-[#B0B0B0] placeholder:font-normal rounded-[12px]"
-                    />
-                    <img
-                      src={Search_icon}
-                      alt="Search"
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 w-[42px] h-[42px]"
-                    />
-                  </div>
-
-                  {/* Search Dropdown (mobile) */}
-                  <div ref={mobileSearchRef} className="relative w-full">
-                    <AnimatePresence>
-                      {showSearchDropdown && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          transition={{ duration: 0.25 }}
-                          className="w-full py-6 "
-                        >
-                          <h3 className="text-white font-poppins text-[16px] mb-3">
-                            Popular Searches
-                          </h3>
-
-                          <div className="flex gap-3 flex-wrap mb-6">
-                            <button className="flex items-center gap-2 bg-white text-[#4B001A] px-4 py-2 rounded-[10px] font-poppins text-[14px]">
-                              <img src={Trending_up} className="w-[16px]" />
-                              Diwali Jewelry
-                            </button>
-
-                            <button className="flex items-center gap-2 bg-white text-[#4B001A] px-4 py-2 rounded-[10px] font-poppins text-[14px]">
-                              <img src={Trending_up} className="w-[16px]" />
-                              Pendants
-                            </button>
-                          </div>
-
-                          <h3 className="text-white font-poppins text-[16px] mb-3">
-                            Trending Products
-                          </h3>
-
-                          <Swiper
-                            spaceBetween={20}
-                            slidesPerView={2.4}
-                            className="trending-swiper"
-                            breakpoints={{
-                              640: {
-                                slidesPerView: 2.5,
-                                spaceBetween: 10,
-                              },
-                              768: {
-                                slidesPerView: 4,
-                                spaceBetween: 10,
-                              },
-                            }}
-                          >
-                            {TRENDING_PRODUCTS.map((item, index) => (
-                              <SwiperSlide key={index}>
-                                <div className="flex flex-col items-center">
-                                  <img
-                                    src={item.img}
-                                    alt={item.name}
-                                    className="w-[121px] h-[109px] object-contain rounded-[12px] shadow-md"
-                                  />
-                                  <span className="mt-2 text-white text-[14px] font-poppins font-normal">
-                                    {item.name}
-                                  </span>
-                                </div>
-                              </SwiperSlide>
-                            ))}
-                          </Swiper>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </div>
-
-                {/* PAGE LINKS */}
-                {["/home", "/about", "/products", "/blog"].map((path) => (
+              {/* PAGE LINKS + MOBILE PRODUCTS DROPDOWN */}
+              <div className="w-full flex flex-col items-center gap-y-8">
+                {/* Simple page links (without Products) */}
+                {["/home", "/about", "/blog"].map((path) => (
                   <Link to={path} key={path}>
                     <h2
                       className={`font-poppins text-[16px] leading-normal text-center ${location.pathname === path
@@ -633,38 +637,90 @@ function Navbar() {
                         ? "Home"
                         : path === "/about"
                           ? "About Us"
-                          : path === "/products"
-                            ? "Products"
-                            : "Blog"}
+                          : "Blog"}
                     </h2>
                   </Link>
                 ))}
 
-                {/* LOGIN / SIGNUP */}
-                {!isLoggedIn && (
-                  <div
-                    className="flex flex-col items-center gap-y-[25px]"
-                    onClick={() => setMenuVisible(false)}
+                {/* Products dropdown (mobile) */}
+                <div className="w-full">
+                  <button
+                    onClick={() => setMobileProductDropdown((prev) => !prev)}
+                    className="w-full flex items-center justify-center gap-3 px-1"
                   >
-                    <button
-                      onClick={() => navigate("/signup")}
-                      className="rounded-[32px] border border-[#CFA266] w-[319px] h-[52px] font-poppins text-[16px] text-white"
+                    <span
+                      className={`font-poppins text-[16px] ${mobileProductDropdown
+                        ? "text-white font-semibold"
+                        : "text-[#A0A0A0]"
+                        }`}
                     >
-                      Sign Up
-                    </button>
-                    <button
-                      onClick={() => navigate("/login")}
-                      className="rounded-[32px] bg-[#CFA266] w-[319px] h-[52px] font-poppins text-[16px] text-white"
-                    >
-                      Log In
-                    </button>
-                  </div>
-                )}
+                      Products
+                    </span>
+
+                    <img
+                      src={mobileProductDropdown ? up_arrow : down_arrow}
+                      alt="dropdown arrow"
+                      className="w-4 h-4"
+                    />
+                  </button>
+
+
+                  <AnimatePresence>
+                    {mobileProductDropdown && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.2 }}
+                        className="mt-4"
+                      >
+                        {/* Categories */}
+                        <div className="flex flex-col gap-3 justify-center overflow-x-auto mb-4">
+                          {productCategory.map((tab) => (
+                            <button
+                              key={tab}
+                              onClick={() => {
+                                navigate("/products");
+                                setMenuVisible(false);
+                                setMobileProductDropdown(false);
+                              }}
+                              className="px-4 py-2 rounded-[999px] text-[14px] font-poppins capitalize whitespace-nowrap text-white bg-[#FFFFFF1A] hover:bg-[#CFA266]" 
+      
+                            >
+                              {tab}
+                            </button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
+
+              {/* LOGIN / SIGNUP */}
+              {!isLoggedIn && (
+                <div
+                  className="flex flex-col items-center gap-y-[25px]"
+                  onClick={() => setMenuVisible(false)}
+                >
+                  <button
+                    onClick={() => navigate("/signup")}
+                    className="rounded-[32px] border border-[#CFA266] w-[319px] h-[52px] font-poppins text-[16px] text-white"
+                  >
+                    Sign Up
+                  </button>
+                  <button
+                    onClick={() => navigate("/login")}
+                    className="rounded-[32px] bg-[#CFA266] w-[319px] h-[52px] font-poppins text-[16px] text-white"
+                  >
+                    Log In
+                  </button>
+                </div>
+              )}
             </div>
-          )
-        }
-      </div >
+          </div>
+        )}
+      </div>
 
       <Modal modal={modalToggle} active={() => setModalToggle(!modalToggle)} />
     </>
