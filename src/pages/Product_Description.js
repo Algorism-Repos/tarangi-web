@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useParams } from "react-router";
 
 // images
 import grey_arrow from "../assets/Products/grey_arrow.png";
@@ -27,6 +27,8 @@ import AddToCartButton from "../components/AddToCartButton";
 import Wishlist_Popup from "../components/Wishlist_Popup";
 
 function Product_Description() {
+  const { productName } = useParams();
+
   const location = useLocation();
   const { product } = location.state || {};
   const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } =
@@ -46,7 +48,7 @@ function Product_Description() {
   //  console.log(product.variants[0].id)
   const handleAddToWish = () => {
     addToWishlist({
-      id: product.variants[0].id,
+      id: product?.variants[0].id,
       title: product.title,
       price: parseInt(product.variants[0]?.price),
       image: product.image.src,
@@ -307,26 +309,9 @@ function Product_Description() {
                       Wishlist
                     </button>
                   </Link>
-                </div> */}
+                </div> 
 
-                <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
-                  <AddToCartButton />
-
-                  <button
-                    className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[52px] rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
-                    onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
-                    onMouseLeave={() => setWishIconSrc(favorie_icon)}
-                    onClick={() => setShowWishlistPopup(true)}>
-                    <img
-                      className="w-[32px] h-[32px]"
-                      src={wishIconSrc}
-                      alt="like_icon"
-                    />
-                    Add to Wishlist
-                  </button>
-
-
-                </div>
+             
               </div>
             </div>
           </div>

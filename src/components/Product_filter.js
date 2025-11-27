@@ -188,7 +188,7 @@ function Product_Filter({ productCatergory }) {
     setProductCount(filteredProducts.length);
   }, [filteredProducts]);
 
-  console.log("Total Products:", filteredProducts);
+  console.log("Total Products:", productCatergory);
 
   return (
     <>

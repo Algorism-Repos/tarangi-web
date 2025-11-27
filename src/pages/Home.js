@@ -120,7 +120,7 @@ function Home() {
         timeZone: "Asia/kolkata",
       })
     );
-     
+
     const price = result.metals.silver;
     const silver_rate = price * 0.925;
     console.log(silver_rate);
@@ -169,7 +169,6 @@ function Home() {
     collectionsList();
     // fetchMetalRates();
   }, []);
-
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -371,7 +370,8 @@ function Home() {
                   (type) =>
                     type.handle?.toLowerCase().includes("men") ||
                     type.handle?.toLowerCase().includes("women") ||
-                    type.handle?.toLowerCase().includes("gifts")
+                    type.handle?.toLowerCase().includes("gifts") ||
+                    type.handle?.toLowerCase().includes("couples")
                 )
                 .map((type) => (
                   <Link
@@ -397,29 +397,35 @@ function Home() {
             <h1 className="section-heading !text-white tracking-[1px] text-center">
               Best Sellers
             </h1>
+
             <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-between mt-20 sm:mt-36">
               {FestiveFiltered.map((type) => (
-                <div
-                  className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
-                  onClick={() => {
-                    toggle(type?.title);
-                  }}
+                <Link
+                  to={`/productdescription/${type.title.replace(/\s+/g, "-")}`}
+                  state={{ product: type }}
                 >
-                  <img
-                    src={type?.image?.src}
-                    alt={type?.name}
-                    className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] "
-                  />
-                  <h5 className="font-poppins text-[22px] font-normal leading-normal text-white mt-6">
-                    {type?.title}
-                  </h5>
-                  <h4 className="font-poppins text-[20px] font-semibold leading-normal text-[#FCD99F]">
-                    ₹
-                    {Number(type.variants[0]?.price).toLocaleString("en-IN", {
-                      maximumFractionDigits: 0,
-                    })}
-                  </h4>
-                </div>
+                  <div
+                    className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
+                    onClick={() => {
+                      toggle(type?.title);
+                    }}
+                  >
+                    <img
+                      src={type?.image?.src}
+                      alt={type?.name}
+                      className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] "
+                    />
+                    <h5 className="font-poppins text-[22px] font-normal leading-normal text-white mt-6">
+                      {type?.title}
+                    </h5>
+                    <h4 className="font-poppins text-[20px] font-semibold leading-normal text-[#FCD99F]">
+                      ₹
+                      {Number(type.variants[0]?.price).toLocaleString("en-IN", {
+                        maximumFractionDigits: 0,
+                      })}
+                    </h4>
+                  </div>
+                </Link>
               ))}
             </div>
 
@@ -548,7 +554,8 @@ function Home() {
                 Gold
               </h2>
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[35px] sm:text-[50px] z-20 absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                ₹ 4<span className="font-[poppins]">,</span>00<span className="font-[poppins]">,</span>000
+                ₹ 4<span className="font-[poppins]">,</span>00
+                <span className="font-[poppins]">,</span>000
               </h2>
             </div>
 
@@ -837,7 +844,11 @@ function Home() {
       <div className="before-after-section ">
         <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
           <h1 className="font-atteron section-heading text-[26px]  sm:text-[64px] text-center text-[#5C0A1F] mb-16">
-            <span className="text-[28px] sm:text-[64px]"> Enhance Your Look With</span> <br /> Tarangi
+            <span className="text-[28px] sm:text-[64px]">
+              {" "}
+              Enhance Your Look With
+            </span>{" "}
+            <br /> Tarangi
           </h1>
 
           <div className="container" ref={containerRef}>
