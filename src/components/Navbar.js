@@ -32,7 +32,33 @@ function Navbar() {
   const [productDropdown, setProductDropdown] = useState(false);
   const hasFavourites = favourites.length > 0;
 
+  // Product dropdown - desktop
 
+  // Catergory
+  const productCatergory = [
+    {
+      img: new_product_1,
+      name: "Women",
+      link: "#"
+    },
+    {
+      img: new_product_1,
+      name: "Men",
+      link: "#"
+    },
+    {
+      img: new_product_1,
+      name: "Couples",
+      link: "#"
+    },
+    {
+      img: new_product_1,
+      name: "Gifts",
+      link: "#"
+    },
+  ]
+
+  // Timer function
   const closeTimer = useRef(null);
   const handleMouseEnter = () => {
     if (closeTimer.current) {
@@ -57,32 +83,8 @@ function Navbar() {
   };
 
   const handleSubMenuClick = () => {
-    // Close dropdown instantly after clicking a submenu item
     handleClose();
   };
-
-  const products = [
-    {
-      img: new_product_1,
-      name: "Women",
-      link: "#"
-    },
-    {
-      img: new_product_1,
-      name: "Men",
-      link: "#"
-    },
-    {
-      img: new_product_1,
-      name: "Couples",
-      link: "#"
-    },
-    {
-      img: new_product_1,
-      name: "Gifts",
-      link: "#"
-    },
-  ]
 
   const TRENDING_PRODUCTS = [
     { img: new_product_1, name: "Emerald Pendant" },
@@ -92,8 +94,6 @@ function Navbar() {
     { img: new_product_1, name: "Tulip Brooch" },
     { img: new_product_1, name: "Tulip Brooch" },
   ];
-
-
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -231,7 +231,7 @@ function Navbar() {
 
                 <h2 className="font-atteron text-primary text-[32px] text-center mb-8">Product Caterogry</h2>
                 <div className="grid grid-cols-4 gap-4">
-                  {products.map((item) => (
+                  {productCatergory.map((item) => (
                     <Link to="/products" onClick={handleSubMenuClick}  className="group transition-transform duration-300 hover:scale-105 ">
 
                       <div className="w-[200px] h-fit text-center">
