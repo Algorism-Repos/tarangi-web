@@ -30,7 +30,6 @@ function Navbar() {
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [favourites, setFavourites] = useState([]);
   const [productDropdown, setProductDropdown] = useState(false);
-  const [activeTab, setActiveTab] = useState("women");
   const hasFavourites = favourites.length > 0;
 
 
