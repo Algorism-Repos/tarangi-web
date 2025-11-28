@@ -127,24 +127,48 @@ function Product_Description() {
     }
   };
 
+  function normalizeProduct(raw) {
+    return {
+      admin_graphql_api_id: raw.admin_graphql_api_id,
+      colors: raw.colors || [],
+      created_at: raw.created_at,
+      description: raw.description,
+      id: raw.id,
+      image: raw.image,
+      images: raw.images || [],
+      liked: raw.liked || false,
+      options: raw.options || [],
+      product_type: raw.product_type,
+      selectedColor: raw.selectedColor,
+      status: raw.status,
+      tags: raw.tags || [],
+      title: raw.title,
+      updated_at: raw.updated_at || null,
+      variants: (raw.variants || []).map((v) => ({
+        id: v.id,
+        product_id: v.product_id,
+        title: v.title || "",
+        price: v.price,
+        position: v.position,
+        image: v.image,
+        inventory_quantity: v.inventory_quantity,
+        selected_options: v.selected_options || [],
+        created_at: v.created_at,
+        updated_at: v.updated_at,
+      })),
+      vendor: raw.vendor,
+    };
+  }
 
-const colorVariants = product?.variants?.map((variant) => {
-  const color = variant.selected_options?.find(
-    (opt) => opt.name.toLowerCase() === "color"
-  )?.value;
+  const clean = normalizeProduct(product);
 
-  return {
-    id: variant.id,
-    color: color?.toLowerCase() || null,
-    price: variant.price,
-    image: variant.variant_image, // field from backend
-    inventory: variant.inventory_quantity,
-  };
-}).filter(v => v.color !== null);
+  const variantColors = clean?.variants?.map(v => 
+  v.selected_options?.find(opt => opt.name === "Color")?.value
+);
 
+  console.log(clean);
 
-   console.log(colorVariants)
-      console.log(product)
+  console.log(variantColors);
 
   return (
     <>
@@ -183,29 +207,15 @@ const colorVariants = product?.variants?.map((variant) => {
                   }
                 }}
               >
+              {clean?.images?.map((img, index) => (
                 <SwiperSlide>
+
                   <img
                     className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
-                    src={product?.image?.src}
+                    src={img?.src}
                     alt="Product"
                   />
-                </SwiperSlide>
-
-                <SwiperSlide>
-                  <img
-                    className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
-                    src={product_1}
-                    alt="gold"
-                  />
-                </SwiperSlide>
-
-                <SwiperSlide>
-                  <img
-                    className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
-                    src={product_2}
-                    alt="silver"
-                  />
-                </SwiperSlide>
+                </SwiperSlide>))}
               </Swiper>
             </div>
 
@@ -298,7 +308,7 @@ const colorVariants = product?.variants?.map((variant) => {
 
               {/* Color Options */}
               <div className="mt-2 flex justify-start gap-x-4">
-                {visibleColors.map((color) => (
+                {variantColors.map((color) => (
                   <img
                     key={color.id}
                     onClick={() => handleColorChange(color)}
