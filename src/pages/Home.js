@@ -197,8 +197,6 @@ function Home() {
     }, 1000);
   };
 
-
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -342,6 +340,25 @@ function Home() {
 
         <SwiperSlide>
           <div className="banner-4">
+            <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
+              Born from tradition Designed for today
+            </h1>
+            <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+            </h4>
+            <a
+              href="#launchOffers"
+              className="w-fit hover:scale-110 transition duration-300"
+            >
+              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
+                View our Collections
+              </button>
+            </a>
+          </div>
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <div className="banner-5">
             <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
               Born from tradition Designed for today
             </h1>

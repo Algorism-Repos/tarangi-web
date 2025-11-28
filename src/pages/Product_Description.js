@@ -34,7 +34,7 @@ function Product_Description() {
 
   const swiperRef = useRef(null);
 
-  // 👉 Which colors this product actually supports
+  // Which colors this product actually supports
   const productColors =
     Array.isArray(product?.availableColors) &&
     product.availableColors.length > 0
