@@ -318,27 +318,27 @@ function Home() {
           </div>
         </SwiperSlide>
 
+        {/* Women banner */}
         <SwiperSlide>
           <div className="banner-2">
-            <h1 className="font-atteron uppercase text-[40px] leading-[60px] text-center sm:text-left sm:text-[65px] text-[#5B3A09] sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
-              Born from tradition Designed for today
+            <h1 className="font-atteron uppercase text-[40px] leading-[60px] text-center sm:text-left sm:text-[65px] text-[#5B3A09] sm:leading-[80px] font-normal w-full sm:max-w-[780px] tracking-[1px]">
+              Embrace your beauty Shine with Elegance
             </h1>
             <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-[#5B3A09] text-center sm:text-left mt-3 sm:mt-8 max-w-[640px]">
-              Because exculsive 925 silver jewelry should feel as unique as the
-              one who wears it.
+              Because every exquisite 925 silver jewelry should perfectly reflect the grace of its wearer.
             </h4>
             <a
               href="#launchOffers"
               className="w-fit hover:scale-110 transition duration-300"
             >
-              <button className=" mt-4 sm:mt-12 rounded-[32px] bg-[#5B3A09] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
-                View our Best Sellers
+              <button className=" mt-4 sm:mt-12 rounded-[32px] bg-[#5B3A09] font-poppins text-[16px] font-normal text-white py-[16px] px-[25px] cursor-pointer">
+                View our womens Collections
               </button>
             </a>
           </div>
         </SwiperSlide>
 
-        <SwiperSlide>
+        {/* <SwiperSlide>
           <div className="banner-4">
             <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
               Born from tradition Designed for today
@@ -355,22 +355,22 @@ function Home() {
               </button>
             </a>
           </div>
-        </SwiperSlide>
+        </SwiperSlide> */}
 
         <SwiperSlide>
           <div className="banner-5">
-            <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
-              Born from tradition Designed for today
+            <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[850px] tracking-[1px]">
+              Heritage of Strength Crafted for Character
             </h1>
             <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+              Because distinguished 925 silver jewelry should feel as commanding as the one who wears it.
             </h4>
             <a
               href="#launchOffers"
               className="w-fit hover:scale-110 transition duration-300"
             >
-              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
-                View our Collections
+              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#8F103B] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
+                View our mens Collections
               </button>
             </a>
           </div>

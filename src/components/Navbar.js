@@ -19,10 +19,7 @@ import cart_icon_empty from "../assets/Cart_white.png";
 import cart_icon_filled from "../assets/cart_filled.png";
 import profile_icon from "../assets/profile_icon.png";
 import new_product_1 from "../assets/Frame 29.png";
-import { AppContext } from "../context/AppContext";
-
-import down_arrow from "../assets/down_arrow.png";
-import up_arrow from "../assets/up_arrow.png";
+import product_downarrow from '../assets/Icons/Nav Bar/Keyboard arrow down.png'
 
 function Navbar() {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -43,26 +40,56 @@ function Navbar() {
   const [activeTab, setActiveTab] = useState("women");
   const productDropdownRef = useRef(null);
 
-  // NEW: mobile products dropdown state
-  const [mobileProductDropdown, setMobileProductDropdown] = useState(false);
-
-  // Product dropdown datas
-  const productCategory = ["women", "men", "couples", "gifts"];
-
-  const products = {
-    women: [
-      { img: new_product_1, name: "Emerald Pendant" },
-      { img: new_product_1, name: "Diamond Necklace" },
-      { img: new_product_1, name: "Tulip Brooch" },
-      { img: new_product_1, name: "Emerald Pendant" },
-    ],
-    men: [{ img: new_product_1, name: "Emerald Pendant" }],
-    couples: [
-      { img: new_product_1, name: "Emerald Pendant" },
-      { img: new_product_1, name: "Emerald Pendant" },
-    ],
-    gifts: [{ img: new_product_1, name: "Emerald Pendant" }],
+  const closeTimer = useRef(null);
+  const handleMouseEnter = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+    setProductDropdown(true);
   };
+
+  const handleMouseLeave = () => {
+    closeTimer.current = setTimeout(() => {
+      setProductDropdown(false);
+    }, 500);
+  };
+
+  const handleClose = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+    setProductDropdown(false);
+  };
+
+  const handleSubMenuClick = () => {
+    // Close dropdown instantly after clicking a submenu item
+    handleClose();
+  };
+
+  const products = [
+    {
+      img: new_product_1,
+      name: "Women",
+      link: "#"
+    },
+    {
+      img: new_product_1,
+      name: "Men",
+      link: "#"
+    },
+    {
+      img: new_product_1,
+      name: "Couples",
+      link: "#"
+    },
+    {
+      img: new_product_1,
+      name: "Gifts",
+      link: "#"
+    },
+  ]
 
   const TRENDING_PRODUCTS = [
     { img: new_product_1, name: "Emerald Pendant" },
@@ -72,6 +99,10 @@ function Navbar() {
     { img: new_product_1, name: "Tulip Brooch" },
     { img: new_product_1, name: "Tulip Brooch" },
   ];
+
+
+
+
 
   const isActive = (path) => location.pathname === path;
   const cartIcon = hasCartItems ? cart_icon_filled : cart_icon_empty;
@@ -182,7 +213,7 @@ function Navbar() {
         </Link>
 
         {/* Nav Links */}
-        <div className="font-poppins text-[16px] flex flex-row gap-x-[40px] ml-[70px] xl:gap-x-[55px] items-center xl:ml-[170px] ">
+        <div className="font-poppins text-[16px] flex flex-row gap-x-[40px] ml-[70px] xl:gap-x-[55px] items-center xl:ml-[170px] " >
           <Link
             to="/home"
             className={`rounded-full py-2.5 px-4 text-white ${isActive("/home")
@@ -203,22 +234,46 @@ function Navbar() {
             About Us
           </Link>
 
-          {/* Product dropdown trigger */}
-          <button
-            onClick={() => setProductDropdown((prev) => !prev)}
-            className={`rounded-full py-2.5 px-4 text-white transition-all duration-200 ${productDropdown ? "bg-[#CFA266]" : "hover:bg-[#D6A76F] opacity-50"
-              }`}
-          >
+          {/* <Link to="/products" onMouseEnter={() => setProductDropdown(true)} onMouseLeave={() => setProductDropdown(false)}
+            className={`rounded-full py-2.5 px-4 text-white ${isActive("/products") ? "bg-[#CFA266] cursor-default" : "hover:bg-[#D6A76F] opacity-[0.5]"}`}>
             Products
-          </button>
+          </Link> */}
 
-          <Link
-            to="/blog"
-            className={`rounded-full py-2.5 px-4 text-white ${isActive("/blog")
-              ? "bg-[#CFA266] cursor-default"
-              : "hover:bg-[#D6A76F] opacity-[0.5]"
-              }`}
-          >
+          {/* Product dropdown */}
+
+          <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+
+            <Link to="#"
+              className={`rounded-full py-2.5 px-4 text-white transition-all duration-200 flex items-center ${isActive("/products") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F] opacity-50"}`} >
+              Products
+              <img className="w-[28px] h-[28px]" src={product_downarrow} alt="" />
+            </Link>
+
+            {/* Dropdown */}
+            {productDropdown && (
+              <div className="absolute top-[111px] left-1/2 transform -translate-x-1/2 min-w-[1000px] h-fit bg-[#FFF5E8] px-10 py-8 shadow-2xl z-30 rounded-lg">
+
+                <h2 className="font-atteron text-primary text-[32px] text-center mb-8">Product Caterogry</h2>
+                <div className="grid grid-cols-4 gap-4">
+                  {products.map((item) => (
+                    <Link to="/products" onClick={handleSubMenuClick}  className="group transition-transform duration-300 hover:scale-105 ">
+
+                      <div className="w-[200px] h-fit text-center">
+                        <img className="w-[200px] h-[200px] rounded-[8px] object-cover" src={item.img} alt={item.title} />
+                        <p className="text-[18px] text-[#6D6D6D] font-poppins mt-2 font-normal group-hover:text-primary group-hover:font-medium"> {item.name} </p>
+                      </div>
+
+                    </Link>
+                  ))}
+                </div>
+                {/* <Link className="w-full  text-center border" to="/products">View All Products</Link> */}
+              </div>
+
+            )}
+
+          </div>
+
+          <Link to="/blog" className={`rounded-full py-2.5 px-4 text-white ${isActive("/blog") ? "bg-[#CFA266] cursor-default" : "hover:bg-[#D6A76F] opacity-[0.5]"}`}>
             Blog
           </Link>
         </div>
@@ -429,8 +484,10 @@ function Navbar() {
         </AnimatePresence>
       </div>
 
-      {/* Navbar - Mobile */}
-      <div className="relative bg-[#680F26] flex flex-row justify-between w-full z-50 px-[20px] py-[30px] xl:hidden">
+      
+
+      {/* Navbar - Mobile  */}
+      < div className="relative bg-[#680F26] flex flex-row justify-between w-full z-50 px-[20px] py-[30px] xl:hidden" >
         <img
           src={menu}
           alt="menu_icon"
