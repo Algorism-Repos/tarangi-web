@@ -1,6 +1,3 @@
-html {
-  @apply scroll-smooth;
-}
 
 @font-face {
   font-family: "Atteron";
@@ -37,6 +34,19 @@ html {
 
 .banner-4 {
   background: url("./assets/Home_banner/banner_4.png");
+  height: 780px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 784px;
+  background-position: center center;
+  object-fit: contain;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0px 110px;
+}
+.banner-5 {
+  background: url("./assets/Home_banner/banner_5.png");
   height: 780px;
   background-size: cover;
   background-repeat: no-repeat;
@@ -355,9 +365,7 @@ img {
   }
 }
 
-html {
-  @apply scroll-smooth;
-}
+
 
 /* Form Classes */
 .input-box {
@@ -446,7 +454,6 @@ input::placeholder {
     justify-content: flex-start;
     align-items: center;
     padding: 110px 0px;
-    background-position: center center;
   }
 
   .banner-4 {
@@ -460,8 +467,22 @@ input::placeholder {
     justify-content: flex-start;
     align-items: center;
     padding: 110px 0px;
-    background-position: center center;
   }
+
+  .banner-5 {
+  background: url("./assets/Home_banner/banner_5.png");
+  height: 780px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  object-fit: contain;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+   align-items: center;
+  padding: 110px 0px;
+}
+  
 
   .festive-banner {
     background-image: url("./assets/backgrounds/festive_banner_mobile.png");
@@ -516,6 +537,7 @@ input::placeholder {
     justify-content: start;
 
   }
+
 
 }
 

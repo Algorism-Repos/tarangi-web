@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router";
 import Marquee from "react-fast-marquee";
 
@@ -31,7 +31,7 @@ function Footer() {
     const { pathname } = useLocation();
     const isVisible = pathname === "/" || pathname === "/home" || pathname === "/about";
 
-    const Clients = [
+    const clients = [
         { src: client_1 },
         { src: client_2 },
         { src: client_3 },
@@ -44,6 +44,10 @@ function Footer() {
         { src: client_10 }
     ]
 
+    useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
     return (
         <>
             {/* Coming Soon - Section */}
@@ -55,9 +59,11 @@ function Footer() {
                     <Marquee pauseOnHover={true} speed={80} gradient={false}>
                         <div className="flex items-center gap-x-8 sm:gap-x-12 lg:gap-x-16 px-4 sm:px-6 lg:px-8">
                             {
-                                Clients.map((items, index) => {
+                                clients.map((items, index) => {
                                     return (
-                                        <img key={index} className="w-[220px] h-[320px] sm:w-full sm:h-fit " src={items.src} alt="Clients" />
+                                        <div className="p-8 bg-secondary rounded-[16px]">
+                                            <img key={index} className="w-[220px] h-[320px] sm:w-full sm:h-fit rounded-[8px] " src={items.src} alt="Clients" />
+                                        </div>
                                     )
                                 })
                             }
@@ -107,7 +113,7 @@ function Footer() {
 
                             {/* Subpages */}
                             <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] ml-6 sm:ml-0 md:border-l border-[#D6A76F] md:pl-[54px]">
-                                <Link to="/">Home</Link>
+                                <Link to="/home">Home</Link>
                                 <Link to="/about">About</Link>
                                 <Link to="/products">Products</Link>
                                 <Link to="/blog">Blog</Link>
