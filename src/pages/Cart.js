@@ -35,7 +35,6 @@ function Cart() {
     },
   ];
 
-  // ✅ Load from localStorage first, else use initialCartItems
   const [cartItems, setCartItems] = useState(() => {
     const stored = JSON.parse(localStorage.getItem("cartItems"));
     if (Array.isArray(stored) && stored.length > 0) {
@@ -44,23 +43,23 @@ function Cart() {
     return initialCartItems;
   });
 
-  // ✨ Delete modal states
+  // Delete modal states
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
 
-  // ✅ Keep localStorage in sync + notify Navbar
-  useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  // Keep localStorage in sync + notify Navbar
+  // useEffect(() => {
+  //   localStorage.setItem("cartItems", JSON.stringify(cartItems));
 
-    // optional: simple flag if you want
-    localStorage.setItem(
-      "hasCartItems",
-      cartItems.length > 0 ? "true" : "false"
-    );
+  //   // optional: simple flag if you want
+  //   localStorage.setItem(
+  //     "hasCartItems",
+  //     cartItems.length > 0 ? "true" : "false"
+  //   );
 
-    // Notify Navbar (and others) in this tab
-    window.dispatchEvent(new Event("cartUpdated"));
-  }, [cartItems]);
+  //   // Notify Navbar (and others) in this tab
+  //   window.dispatchEvent(new Event("cartUpdated"));
+  // }, [cartItems]);
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price, 0);
   const tax = 800;

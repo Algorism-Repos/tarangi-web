@@ -4,12 +4,12 @@ import React, { useState, useEffect } from "react";
 import Search_icon from "../assets/search_icon_red.png";
 import down_arrow from "../assets/Products/down_arrow.png";
 import blog_1 from "../assets/blog_1.png";
-import sort_icon from "../assets/Products/sort_icon.png"; // ← add your correct path
+import sort_icon from "../assets/Products/sort_icon.png";
+import close_icon from "../assets/Products/close_icon.png"; // adjust path if needed
 
 function Blog() {
   const SortOptions = ["Latest", "Featured", "Newest First", "Oldest First"];
-  // const [showSort, setShowSort] = useState(false);
-  // const [selectedSort, setSelectedSort] = useState("Latest");
+
   const [showSort, setShowSort] = useState(false);
   const [selectedSort, setSelectedSort] = useState("Latest");
 
@@ -41,28 +41,23 @@ function Blog() {
     },
   ];
 
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
-
-
   return (
     <>
       {/* Banner */}
       <div className="relative blog-banner text-white">
-        <h1 className="font-atteron text-[80px] font-normal mt-[150px] sm:mt-0">Blog</h1>
+        <h1 className="font-atteron text-[80px] font-normal mt-[150px] sm:mt-0">
+          Blog
+        </h1>
         <p className="font-[poppins] text-[20px] mt-[20px] text-center">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit,
         </p>
       </div>
 
       {/* Main Section */}
-      <div className="bg-light-sandal py-[75px] h-fit relative border">
+      <div className="bg-light-sandal py-[75px] h-fit relative">
         {/* Search + Filters */}
         <div className="max-w-[1320px] mx-auto flex flex-col gap-10 md:flex-row md:items-center md:justify-between px-4 lg:gap-20">
-
-          {/* Search */}
+          {/* Search (hidden for now on mobile & desktop) */}
           <div className="relative w-full md:flex-1 hidden">
             <input
               type="text"
@@ -76,7 +71,7 @@ function Blog() {
             />
           </div>
 
-          {/*Empty div */}
+          {/* Empty spacer for layout symmetry */}
           <div></div>
 
           {/* DESKTOP SORT */}
@@ -108,7 +103,10 @@ function Blog() {
           <div className="flex justify-between">
             <div
               className="group flex items-center gap-x-[8px] cursor-pointer"
-              onClick={() => setShowSort(true)}
+              onClick={() => {
+                setShowSort(true);
+                document.body.style.overflow = "hidden";
+              }}
             >
               <img className="w-[24px] h-[24px]" src={sort_icon} alt="Sort" />
               <button className="text-primary text-[18px] font-semibold">
@@ -118,39 +116,58 @@ function Blog() {
           </div>
         </div>
 
-        {/* MOBILE SORT POPUP */}
+        {/* MOBILE SORT POPUP – CARD FROM TOP */}
         {showSort && (
-          <div className="fixed inset-0 bg-black bg-opacity-40 z-40 flex items-end lg:hidden">
-            <div className="w-full bg-[#FFF5EA] rounded-t-[20px] p-6 pb-10">
+          <div
+            className="fixed inset-0 bg-black/40  z-50 flex items-end lg:hidden"
+            onClick={() => {
+              setShowSort(false);
+              document.body.style.overflow = "auto";
+            }}
+          >
+            <div
+              className="font-poppins bg-light-sandal w-full h-fit p-7 rounded-t-[30px] transition-all duration-300 ease-in-out shadow-xl "
+              onClick={(e) => e.stopPropagation()}
+            >
               {/* Header */}
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="font-semibold text-[18px] text-[#4A2B17]">
+              <div className="relative flex items-center justify-center mb-6">
+                <h2 className="font-poppins text-[18px] font-semibold text-[#4A2B17]">
                   Sort Designs By
                 </h2>
+
                 <button
-                  className="text-[#4A2B17] font-semibold"
-                  onClick={() => setShowSort(false)}
+                  className="absolute right-0"
+                  onClick={() => {
+                    setShowSort(false);
+                    document.body.style.overflow = "auto";
+                  }}
                 >
-                  Close
+                  <img
+                    src={close_icon}
+                    alt="Close"
+                    className="w-[22px] h-[22px]"
+                  />
                 </button>
               </div>
 
               {/* Sort Options */}
               <div className="flex flex-col gap-5">
                 {SortOptions.map((option) => (
-                  <p
+                  <button
                     key={option}
                     onClick={() => {
                       setSelectedSort(option);
                       setShowSort(false);
+                      document.body.style.overflow = "auto";
                     }}
-                    className={`text-[16px] cursor-pointer ${selectedSort === option
-                      ? "text-[#6C001A] font-semibold"
-                      : "text-[#4A2B17]"
-                      }`}
+                    className={`text-left text-[16px] font-poppins cursor-pointer ${
+                      selectedSort === option
+                        ? "text-[#6E0027] font-semibold"
+                        : "text-[#6E6E6E]"
+                    }`}
                   >
                     {option}
-                  </p>
+                  </button>
                 ))}
               </div>
             </div>
@@ -173,7 +190,9 @@ function Blog() {
               <h1 className="text-[#404040] text-[24px] mt-2">
                 {items.heading}
               </h1>
-              <p className="text-[#6E0027] text-[16px]">{items.description}</p>
+              <p className="text-[#6E0027] text-[16px]">
+                {items.description}
+              </p>
               <button className="text-[#6E0027] font-semibold mt-2">
                 Read more
               </button>

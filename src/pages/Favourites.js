@@ -112,7 +112,7 @@ function Favourites() {
     // Later → navigate to product page
   };
 
-  // ♥ toggle like
+  // toggle like
   const toggleLike = (id) => {
     setProducts((prev) =>
       prev.map((p) =>
@@ -141,25 +141,25 @@ function Favourites() {
     );
   };
 
-  // 🔁 keep localStorage + Navbar in sync with favourites
-  useEffect(() => {
-    const updatedFavourites = likedProducts;
+  // keep localStorage + Navbar in sync with favourites
+  // useEffect(() => {
+  //   const updatedFavourites = likedProducts;
 
-    // store the list
-    localStorage.setItem(
-      "favourites",
-      JSON.stringify(updatedFavourites)
-    );
+  //   // store the list
+  //   localStorage.setItem(
+  //     "favourites",
+  //     JSON.stringify(updatedFavourites)
+  //   );
 
-    // optional flag (if you still want it)
-    localStorage.setItem(
-      "hasFavourites",
-      updatedFavourites.length > 0 ? "true" : "false"
-    );
+  //   // optional flag (if you still want it)
+  //   localStorage.setItem(
+  //     "hasFavourites",
+  //     updatedFavourites.length > 0 ? "true" : "false"
+  //   );
 
-    // notify Navbar in same tab
-    window.dispatchEvent(new Event("favouritesUpdated"));
-  }, [likedProducts]);
+  //   // notify Navbar in same tab
+  //   window.dispatchEvent(new Event("favouritesUpdated"));
+  // }, [likedProducts]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
