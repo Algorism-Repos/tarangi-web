@@ -1,5 +1,5 @@
 // src/pages/Profile.js
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -33,13 +33,15 @@ import ProfileSection from "../profilecomponent/ProfileSection";
 import AddressSection from "../profilecomponent/AddressSection";
 import OrdersSection from "../profilecomponent/OrdersSection";
 import FavouritesSection from "../profilecomponent/FavouritesSection";
+import { AppContext } from "../context/AppContext";
+import { CustomersOrders } from "../handler/api Handler";
 
 const Profile = () => {
   const [activeSection, setActiveSection] = useState("Your Profile");
   const [isEditing, setIsEditing] = useState(true);
   const [hasSavedOnce, setHasSavedOnce] = useState(false);
   const { loggedCustomerId } = useContext(AppContext);
-  const [orders, setorder] = useState([])
+  const [orders, setorder] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
 
   // delete modal state
@@ -82,13 +84,11 @@ const Profile = () => {
     }
   }, [loggedCustomerId]);
 
-
-
   const CustomerOrders = async () => {
     try {
       const response = await CustomersOrders(loggedCustomerId?.customer?.id);
       console.log(response.data);
-      setorder(response.data.orders)
+      setorder(response.data.orders);
     } catch (error) {
       console.log(error);
     }
@@ -104,7 +104,7 @@ const Profile = () => {
   // };
 
   useEffect(() => {
-    CustomerOrders()
+    CustomerOrders();
     // orderByEmail();
   }, []);
   const handleEdit = () => setIsEditing(true);
@@ -251,9 +251,7 @@ const Profile = () => {
 
   const handleRemove = (id) => {
     setProducts((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, liked: false } : item
-      )
+      prev.map((item) => (item.id === id ? { ...item, liked: false } : item))
     );
   };
 
@@ -320,9 +318,7 @@ const Profile = () => {
 
   const [editingAddressId, setEditingAddressId] = useState(null);
   const nextAddressId = () =>
-    addresses.length === 0
-      ? 1
-      : Math.max(...addresses.map((a) => a.id)) + 1;
+    addresses.length === 0 ? 1 : Math.max(...addresses.map((a) => a.id)) + 1;
 
   const handleAddNew = () => {
     const newId = nextAddressId();
@@ -345,9 +341,7 @@ const Profile = () => {
 
   const handleAddressSave = (values, { setSubmitting }) => {
     setAddresses((prev) =>
-      prev.map((a) =>
-        a.id === values.id ? { ...values, isNew: false } : a
-      )
+      prev.map((a) => (a.id === values.id ? { ...values, isNew: false } : a))
     );
     setEditingAddressId(null);
     setSubmitting(false);
@@ -392,7 +386,6 @@ const Profile = () => {
     navigate("/login");
   };
 
-
   const profileRef = useRef(null);
   const addressRef = useRef(null);
   const ordersRef = useRef(null);
@@ -407,9 +400,7 @@ const Profile = () => {
     };
 
     const ref =
-      sectionMap[
-      Object.keys(openSections).find((key) => openSections[key])
-      ];
+      sectionMap[Object.keys(openSections).find((key) => openSections[key])];
 
     if (ref?.current) {
       setTimeout(() => {
@@ -442,10 +433,11 @@ const Profile = () => {
                   key={item.name}
                   onClick={() => setActiveSection(item.name)}
                   className={`flex items-center gap-3 px-5 py-3 rounded-[8px] text-[16px] font-poppins transition-all w-full
-                      ${isActive
-                      ? "bg-[#5A0010] text-white"
-                      : "text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010]"
-                    }`}
+                      ${
+                        isActive
+                          ? "bg-[#5A0010] text-white"
+                          : "text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010]"
+                      }`}
                 >
                   <img
                     src={isActive ? item.activeIcon : item.icon}
@@ -461,10 +453,13 @@ const Profile = () => {
               onClick={handleLogout}
               className="flex items-center gap-3 px-5 py-3 text-[#6D6D6D] mt-[240px] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
             >
-              <img src={logout_icon} alt="Logout" className="w-[30px] h-[30px] object-contain" />
+              <img
+                src={logout_icon}
+                alt="Logout"
+                className="w-[30px] h-[30px] object-contain"
+              />
               Logout
             </button>
-
           </div>
 
           <div className="flex-1 bg-transparent">
@@ -699,9 +694,7 @@ const Profile = () => {
         isOpen={isDeleteModalOpen}
         onCancel={() => setIsDeleteModalOpen(false)}
         onConfirm={() => {
-          setAddresses((prev) =>
-            prev.filter((a) => a.id !== addressToDelete)
-          );
+          setAddresses((prev) => prev.filter((a) => a.id !== addressToDelete));
           setIsDeleteModalOpen(false);
         }}
         title="Are you Sure"
@@ -722,87 +715,7 @@ const Profile = () => {
         total={total}
       />
     </div>
-  )
-
-
-  {/* MOBILE DROPDOWN LAYOUT */ }
-  < div className = "block md:hidden gap-y-4 flex flex-col" >
-    {/* Profile Dropdown */ }
-    < div className = "bg-[#FFF5E8] rounded-[10px]" >
-      <button type="button" onClick={() => toggleSection("profile")} className="w-full flex justify-between items-center px-4 py-3 text-[#6E0027] font-medium text-[16px]">
-        <div className="flex items-center gap-2">
-          <img src={userIcon} alt="Profile" className="w-[30px] h-[30px]" />
-          <span>Your Profile</span>
-        </div>
-        <img src={openSections.profile ? upArrow : downArrow} alt="Toggle" className="w-[11px] h-[7px]" />
-      </button>
-{ openSections.profile && <div className="border-t px-4 py-4 bg-[#FFF5E8] transition-all duration-300">{renderProfileSection(formik, isEditing, handleEdit, handleSave, handleCancel, hasSavedOnce, successMessage)}</div> }
-          </div >
-
-  {/* Address Dropdown */ }
-  < div className = "bg-[#FFF5E8] rounded-[10px]" >
-    <button type="button" onClick={() => toggleSection("address")} className="w-full flex justify-between items-center px-4 py-3 text-[#6E0027] font-medium text-[16px]">
-      <div className="flex items-center gap-2">
-        <img src={addressIcon} alt="Address" className="w-[30px] h-[30px]" />
-        <span>Saved Address</span>
-      </div>
-      <img src={openSections.address ? upArrow : downArrow} alt="Toggle" className="w-[11px] h-[7px]" />
-    </button>
-{ openSections.address && <div className="border-t border-[#F6EFE6] px-4 py-4 bg-[#FFF5E8] transition-all duration-300">{renderAddressSection(addresses, editingAddressId, handleAddNew, handleAddressEditClick, handleAddressSave, handleAddressCancel, handleAddressDelete, successMessage)}</div> }
-          </div >
-
-  {/* Orders Dropdown */ }
-  < div className = "bg-[#FFF5E8] rounded-[10px]" >
-    <button type="button" onClick={() => toggleSection("orders")} className="w-full flex justify-between items-center px-4 py-3 text-[#6E0027] font-medium text-[16px]">
-      <div className="flex items-center gap-2">
-        <img src={ordersIcon} alt="Orders" className="w-[30px] h-[30px]" />
-        <span>Orders</span>
-      </div>
-      <img src={openSections.orders ? upArrow : downArrow} alt="Toggle" className="w-[11px] h-[7px]" />
-    </button>
-{ openSections.orders && <div className="border-t border-[#F6EFE6] px-4 py-4 bg-[#FFF5E8] transition-all duration-300">{renderOrdersSection()}</div> }
-          </div >
-
-  {/* Favourites Dropdown */ }
-  < div className = "bg-[#FFF5E8] rounded-[10px]" >
-    <button type="button" onClick={() => toggleSection("favourites")} className="w-full flex justify-between items-center px-4 py-3 text-[#6E0027] font-medium text-[16px]">
-      <div className="flex items-center gap-2">
-        <img src={favIcon} alt="Favourites" className="w-[30px] h-[30px]" />
-        <span>Favourites</span>
-      </div>
-      <img src={openSections.favourites ? upArrow : downArrow} alt="Toggle" className="w-[11px] h-[7px]" />
-    </button>
-{ openSections.favourites && <div className="border-t border-[#F6EFE6] px-4 py-4 bg-[#FFF5E8] transition-all duration-300">{renderFavouritesSection(products, toggleLike, likedProducts)}</div> }
-          </div >
-  <button
-    onClick={handleLogout}
-    className="flex items-center gap-3 px-5 py-3  mt-[275px] text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
-  >
-    <img
-      src={logout_icon}
-      alt="Logout"
-      className="w-[30px] h-[30px] object-contain"
-    />
-      Logout
-    </button>
-  </div>
-     
-    
-
-  {/* Delete confirmation modal (render inside component so state is available) */ }
-  < DeleteConfirmationModal
-isOpen = { isDeleteModalOpen }
-onCancel = {() => setIsDeleteModalOpen(false)}
-onConfirm = {() => {
-  setAddresses((prev) => prev.filter(a => a.id !== addressToDelete));
-  setIsDeleteModalOpen(false);
-}}
-title = "Are you Sure"
-message = "You want to delete this address ??"
-confirmText = "Delete"
-cancelText = "Cancel"
-icon = { trashcan }
-  />
+  );
 };
 
 export default Profile;
