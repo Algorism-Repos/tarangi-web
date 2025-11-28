@@ -9,6 +9,8 @@ import { AppContext } from "../context/AppContext";
 import { ref } from "yup";
 
 function Product_Filter({ productCatergory }) {
+    //  console.log(productCatergory)
+
   const [productCount, setProductCount] = useState(0);
   const [selectedOccasions, setSelectedOccasions] = useState([]);
 
@@ -140,7 +142,7 @@ function Product_Filter({ productCatergory }) {
 
   const handleCheckbox = (type, filterType) => {
 
-     console.log(type,filterType)
+    //  console.log(type,filterType)
     let updated;
     if (filterType === "category") {
       updated = selectedCategories.includes(type)
@@ -188,7 +190,7 @@ function Product_Filter({ productCatergory }) {
     setProductCount(filteredProducts.length);
   }, [filteredProducts]);
 
-  console.log("Total Products:", productCatergory);
+  // console.log("Total Products:", productCatergory);
 
   return (
     <>
