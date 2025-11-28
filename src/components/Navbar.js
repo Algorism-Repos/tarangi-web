@@ -19,6 +19,7 @@ import cart_icon_empty from "../assets/Cart_white.png";
 import cart_icon_filled from "../assets/cart_filled.png";
 import profile_icon from "../assets/profile_icon.png";
 import new_product_1 from "../assets/Frame 29.png";
+import product_downarrow from '../assets/Icons/Nav Bar/Keyboard arrow down.png'
 
 function Navbar() {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -83,25 +84,6 @@ function Navbar() {
       link: "#"
     },
   ]
-
-  // const products = {
-  //   women: [
-  //     { img: new_product_1, name: "Women" },
-  //     { img: new_product_1, name: "Men" },
-  //     { img: new_product_1, name: "Couple" },
-  //     { img: new_product_1, name: "Gifts" },
-  //   ],
-  //   men: [
-  //     { img: new_product_1, name: "Emerald Pendant" },
-  //   ],
-  //   couples: [
-  //     { img: new_product_1, name: "Emerald Pendant" },
-  //     { img: new_product_1, name: "Emerald Pendant" },
-  //   ],
-  //   gifts: [
-  //     { img: new_product_1, name: "Emerald Pendant" },
-  //   ]
-  // };
 
   const TRENDING_PRODUCTS = [
     { img: new_product_1, name: "Emerald Pendant" },
@@ -201,7 +183,7 @@ function Navbar() {
   return (
     <>
       {/* Navbar - large screens */}
-      <div className="bg-[#6E0027] lg:flex flex-row justify-between items-center w-full py-5 px-7 hidden ">
+      <div className="bg-[#6E0027] xl:flex flex-row justify-between items-center w-full py-5 px-7 hidden ">
         {/* Logo */}
         <Link to="/home">
           <img src={logo} alt="brand-logo" className="w-[106px] h-[71px]" />
@@ -234,66 +216,39 @@ function Navbar() {
             Products
           </Link> */}
 
-
           {/* Product dropdown */}
 
           <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
 
             <Link to="#"
-              className={`rounded-full py-2.5 px-4 text-white transition-all duration-200 ${isActive("/products") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F] opacity-50"}`} >
+              className={`rounded-full py-2.5 px-4 text-white transition-all duration-200 flex items-center ${isActive("/products") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F] opacity-50"}`} >
               Products
+              <img className="w-[28px] h-[28px]" src={product_downarrow} alt="" />
             </Link>
 
             {/* Dropdown */}
             {productDropdown && (
-              <div className="absolute top-[111px] left-1/2 transform -translate-x-1/2 min-w-[1000px] bg-[#FFF5E8] px-10 py-16 shadow-2xl z-30 rounded-lg">
+              <div className="absolute top-[111px] left-1/2 transform -translate-x-1/2 min-w-[1000px] h-fit bg-[#FFF5E8] px-10 py-8 shadow-2xl z-30 rounded-lg">
 
+                <h2 className="font-atteron text-primary text-[32px] text-center mb-8">Product Caterogry</h2>
                 <div className="grid grid-cols-4 gap-4">
-
                   {products.map((item) => (
-                    <Link to="/products" onClick={handleSubMenuClick} >
+                    <Link to="/products" onClick={handleSubMenuClick}  className="group transition-transform duration-300 hover:scale-105 ">
 
-                      <div className="w-[200px] h-[200px] text-center">
+                      <div className="w-[200px] h-fit text-center">
                         <img className="w-[200px] h-[200px] rounded-[8px] object-cover" src={item.img} alt={item.title} />
-                        <p className="text-lg text-grey font-poppins mt-2 font-medium"> {item.name} </p>
+                        <p className="text-[18px] text-[#6D6D6D] font-poppins mt-2 font-normal group-hover:text-primary group-hover:font-medium"> {item.name} </p>
                       </div>
 
                     </Link>
                   ))}
-
                 </div>
+                {/* <Link className="w-full  text-center border" to="/products">View All Products</Link> */}
               </div>
 
             )}
 
           </div>
-
-
-
-          {/* Dropdown */}
-          {/* {productDropdown && (
-
-            <div className="absolute top-[111px] left-1/2 transform -translate-x-1/2 min-w-[1000px]  bg-[#FFF5E8] px-10 py-12 shadow-xl z-30 search-dropdown rounded-lg">
-
-              <div className="max-w-[1200px] mx-auto">
-                <div className="grid grid-cols-4 gap-4">
-
-                  {products[activeTab]?.map((item, i) => (
-                    <div key={i} className="text-center">
-                      <img className="w-[203px] h-[200px] rounded-[8px] object-cover" src={item.img} alt={item.title} />
-                      <p className="text-sm text-primary mt-2 font-medium">{item.name}</p>
-                    </div>
-                  ))}
-
-                </div>
-
-              </div>
-
-
-            </div>
-          )} */}
-
-
 
           <Link to="/blog" className={`rounded-full py-2.5 px-4 text-white ${isActive("/blog") ? "bg-[#CFA266] cursor-default" : "hover:bg-[#D6A76F] opacity-[0.5]"}`}>
             Blog
@@ -443,7 +398,7 @@ function Navbar() {
       </div >
 
       {/* Navbar - Mobile  */}
-      < div className="relative bg-[#680F26] flex flex-row justify-between w-full z-50 px-[20px] py-[30px] lg:hidden" >
+      < div className="relative bg-[#680F26] flex flex-row justify-between w-full z-50 px-[20px] py-[30px] xl:hidden" >
         <img
           src={menu}
           alt="menu_icon"

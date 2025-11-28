@@ -43,7 +43,7 @@ function App() {
           <Route path="login" element={<Login />}/>
           <Route path="signup" element={<Signup/>}/>
           <Route path="blog" element={<Blog />} />
-          <Route path="terms&conditions" element={<Terms_Condition/>}/>
+          <Route path="terms" element={<Terms_Condition/>}/>
         </Routes>
       <Footer />
     </>
