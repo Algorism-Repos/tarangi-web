@@ -100,20 +100,18 @@ function Pincode_Input() {
       }
 
       {/* Delivery Date - product-description page */}
-      <div className={pathname === "product_description" ? "block ml-2" : "hidden"}>
-        <div className="flex items-center gap-x-[8px] mb-3">
+      <div className={pathname === "product_description" && pincode.length === 6 ? "block ml-2" : "hidden"}>
+        <div className="flex items-center gap-x-[8px] mt-4 ml-2 ">
           <img
             className="w-[18px] h-[22px]"
             src={shopping_bag}
             alt="Shopping bag icon"
           />
-          <h3 className="text-[#6F6F6F] text-[14px] font-medium ">
-            Expected Delivery Date
-          </h3>
+          <p className="text-[#484848] text-[15px] font-medium">
+            Expected to deliver by <span className="font-bold">Oct 10</span>
+          </p>
         </div>
-        <p className="text-[#484848] text-[15px] font-medium ">
-          Delivered by Oct 10
-        </p>
+
       </div>
     </>
   );
