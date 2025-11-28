@@ -433,7 +433,7 @@ function Home() {
 
             <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-between mt-20 sm:mt-36">
               {FestiveFiltered.map((type) => (
-                <Link to={`/productdescription/${type.title.replace(/\s+/g, "-")}`} state={{ product: type }}>                  <div
+                <Link to={`/product_description/${type.title.replace(/\s+/g, "-")}`} state={{ product: type }}>                  <div
                   className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
                   onClick={() => {
                     toggle(type?.title);

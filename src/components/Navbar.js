@@ -65,7 +65,7 @@ function Navbar() {
 
       // favourites
       const storedFav = JSON.parse(localStorage.getItem("favourites")) || [];
-      setFavourites(storedFav);
+      // setFavourites(storedFav);
 
 
     };

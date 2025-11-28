@@ -127,7 +127,7 @@ function Product_Listing({ productCatergory }) {
           return (
             <Link
               key={item.id}
-              to={!isOutOfStock && !isRestocking ? `/productdescription/${item.title.replace(/\s+/g, "-")}` : "#"}
+              to={!isOutOfStock && !isRestocking ? `/product_description/${item.title.replace(/\s+/g, "-")}` : "#"}
               state={!isOutOfStock && !isRestocking ? { product: item } : {}}
               onClick={
                 isOutOfStock

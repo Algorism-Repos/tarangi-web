@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router";
 import location_icon from "../assets/Products/location.png";
+import shopping_bag from "../assets/Products/shopping_bag.png";
+
 
 function Pincode_Input() {
   const [pincode, setPincode] = useState("");
@@ -7,6 +10,11 @@ function Pincode_Input() {
   const [savedPincode, setSavedPincode] = useState("");
   const [error, setError] = useState("");
   const [handleReSubmit, setHandleReSubmit] = useState(false);
+
+  const pageLocation = useLocation();
+  const location = pageLocation.pathname.split("/")
+  const pathname = location[1];
+
 
   const handleChange = (e) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -53,7 +61,7 @@ function Pincode_Input() {
 
   return (
     <>
-      <div className={`w-full bg-[#FFFAF3] border-2 border-[#F6EFE6] mx-auto shadow-2xl mt-2 rounded-xl ${error ? "border-2 border-red-400" : "border-2 border-[#F6EFE6]"}`}>
+      <div className={`w-full bg-[#FFFAF3] border-2 border-[#F6EFE6] mx-auto shadow-md mt-2 rounded-xl ${error ? "border-2 border-red-400" : "border-2 border-[#F6EFE6]"}`}>
         <div className="flex flex-col px-4 py-3">
 
           {/* Main Row */}
@@ -71,7 +79,6 @@ function Pincode_Input() {
                   maxLength="6"
                   value={pincode}
                   onChange={handleChange}
-                  autoFocus
                   className={`bg-transparent focus:outline-none text-[#333333] placeholder-[#979797]
                   placeholder:font-semibold text-[16px] `}
                 />
@@ -86,12 +93,28 @@ function Pincode_Input() {
       </div>
 
       {/* Error Message */}
-      {
-        error && (
-          <p className="text-red-500 text-[12px] leading-none !mt-2 ml-2 font-medium">
-            {error}
-          </p>)
+      {error && (
+        <p className="text-red-500 text-[12px] leading-none !mt-2 ml-2 font-medium">
+          {error}
+        </p>)
       }
+
+      {/* Delivery Date - product-description page */}
+      <div className={pathname === "product_description" ? "block ml-2" : "hidden"}>
+        <div className="flex items-center gap-x-[8px] mb-3">
+          <img
+            className="w-[18px] h-[22px]"
+            src={shopping_bag}
+            alt="Shopping bag icon"
+          />
+          <h3 className="text-[#6F6F6F] text-[14px] font-medium ">
+            Expected Delivery Date
+          </h3>
+        </div>
+        <p className="text-[#484848] text-[15px] font-medium ">
+          Delivered by Oct 10
+        </p>
+      </div>
     </>
   );
 }

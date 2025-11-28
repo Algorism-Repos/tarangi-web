@@ -31,7 +31,6 @@ function Product_page() {
           body_html: "",
           vendor: node.vendor,
           product_type: node.productType || "Uncategorized",
-          product_description: node.productDescription,
           created_at: node.createdAt,
           published_at: node.createdAt,
           updated_at: node.createdAt,
@@ -39,6 +38,7 @@ function Product_page() {
           tags: node.tags,
           template_suffix: "",
           published_scope: "global",
+          description: node.description,
 
           image: {
             id: Number(productId) + 1,
@@ -92,8 +92,9 @@ function Product_page() {
         image: node.featuredImage?.url,
         price: node.variants?.edges?.[0]?.node?.price || "0.00",
         product_type: node.productType || "Uncategorized",
-        product_description: node.productDescription,
         tags: node.tags || [],
+        description: node.description,
+
       }));
       setProductListData(products);
     } catch (error) {
@@ -104,16 +105,17 @@ function Product_page() {
     const type = product.product_type || "Uncategorized";
     if (!acc[type]) acc[type] = [];
     acc[type].push(product);
+    
     return acc;
   }, {});
-
+  console.log(categorized);
   useEffect(() => {
     if (collectionId) {
       productList(collectionId);
     }
   }, [collectionId]);
 
-
+  
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);

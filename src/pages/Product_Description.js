@@ -1,15 +1,14 @@
-import React, { useContext, useEffect, useRef, useState, useParams } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
-import { Link, useLocation, useParams } from "react-router";
+import { Link, useLocation } from "react-router";
 
 // images
 import grey_arrow from "../assets/Products/grey_arrow.png";
 import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
-import shopping_bag from "../assets/Products/shopping_bag.png";
 import gold_ellipse from "../assets/Products/gold_ellipse.png";
 import silver_ellipse from "../assets/Products/silver_ellipse.png";
 import brown_ellipse from "../assets/Products/brown_ellipse.png";
@@ -27,15 +26,11 @@ import AddToCartButton from "../components/AddToCartButton";
 import Wishlist_Popup from "../components/Wishlist_Popup";
 
 function Product_Description() {
-  const { productName } = useParams();
-
   const location = useLocation();
-  // const {productName} = useParams(); 
   const { product } = location.state || {};
-  const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } = useContext(AppContext);
-  const [quantity, setQuantity] = useState(1);
-  const [activeColor, setActiveColor] = useState("gold");
-  const [selectedImage, setSelectedImage] = useState(product?.image?.src);
+  const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } =
+    useContext(AppContext);
+
   const swiperRef = useRef(null);
 
   // 👉 Which colors this product actually supports
@@ -65,28 +60,54 @@ function Product_Description() {
       slideIndex: 2,
     },
   ];
-   console.log(product.title)
 
-  const handleAddToWish = () => {
-    addToWishlist({
-      id: product?.variants[0].id,
+  // only show colors that this product has
+  const visibleColors = COLOR_CONFIG.filter((c) =>
+    productColors.includes(c.id)
+  );
+
+  const [quantity, setQuantity] = useState(1);
+  const [activeColor, setActiveColor] = useState(
+    visibleColors[0]?.id || "gold"
+  );
+  const [selectedImage, setSelectedImage] = useState(
+    visibleColors[0]?.mainImage || product?.image?.src
+  );
+  const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
+  const [showWishlistPopup, setShowWishlistPopup] = useState(false);
+
+  const handleAddToCart = () => {
+    addToCart({
+      id: product.variants[0].id,
       title: product.title,
-      price: parseInt(product.variants[0]?.price),
+      price: parseInt(product.variants[0].price),
       image: product.image.src,
       quantity: quantity,
     });
   };
+
   const matchingProducts = filteredProducts?.filter(
     (item) =>
       item.product_type === product.product_type && item.id !== product.id
   );
+
+  const handleAddToWish = () => {
+    addToWishlist({
+      id: product.variants[0].id,
+      title: product.title,
+      price: parseInt(product.variants[0].price),
+      image: product.image.src,
+      quantity: quantity,
+    });
+  };
+
   useEffect(() => {
     if (product) {
       addToRecentlyViewed({
         id: product.variants[0].id,
         title: product.title,
         image: product.image.src,
-        price: parseInt(product.variants[0]?.price),
+        price: parseInt(product.variants[0].price),
       });
     }
   }, []);
@@ -103,6 +124,8 @@ function Product_Description() {
       swiperRef.current.slideTo(colorObj.slideIndex);
     }
   };
+
+  console.log(product);
 
   return (
     <>
@@ -189,7 +212,7 @@ function Product_Description() {
                   Description
                 </h3>
                 <p className="text-[#484848] text-[16px] font-medium ">
-                  {product?.product_description}
+                  {product?.description}
                 </p>
 
                 <div className="max-w-[305px] flex flex-wrap justify-between  font-[poppins] text-center text-[#313131] my-5">
@@ -229,27 +252,13 @@ function Product_Description() {
 
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
-              {/* Locations */}
+              {/* Pincode */}
               <div className="space-y-6 sm:space-y-3">
                 <h3 className="text-[#6F6F6F] text-[14px] font-medium">
                   Check estimated delivery date with Pincode
                 </h3>
 
                 <PincodeInput />
-
-                <div className="flex items-center gap-x-[8px]">
-                  <img
-                    className="w-[18px] h-[22px]"
-                    src={shopping_bag}
-                    alt="Shopping bag icon"
-                  />
-                  <h3 className="text-[#6F6F6F] text-[14px] font-medium ">
-                    Expected Delivery Date
-                  </h3>
-                </div>
-                <p className="text-[#484848] text-[15px] font-medium ">
-                  Delivered by Oct 10
-                </p>
               </div>
 
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
@@ -275,7 +284,7 @@ function Product_Description() {
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
               {/* Buttons */}
-              <div className="max-w-[397px] ">
+              <div className="max-w-[500px] ">
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
                   <AddToCartButton />
 
@@ -283,7 +292,8 @@ function Product_Description() {
                     className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[52px] rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
                     onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
                     onMouseLeave={() => setWishIconSrc(favorie_icon)}
-                    onClick={() => setShowWishlistPopup(true)}>
+                    onClick={() => setShowWishlistPopup(true)}
+                  >
                     <img
                       className="w-[32px] h-[32px]"
                       src={wishIconSrc}
@@ -291,8 +301,6 @@ function Product_Description() {
                     />
                     Add to Wishlist
                   </button>
-
-
                 </div>
               </div>
             </div>
@@ -307,7 +315,7 @@ function Product_Description() {
             </h1>
 
             <div className="flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
-              {matchingProducts.slice(0, 8).map((item) => {
+              {matchingProducts.map((item) => {
                 return (
                   <div
                     key={item.id}
