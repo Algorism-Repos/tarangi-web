@@ -32,10 +32,10 @@ function Navbar() {
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
 
   const [cartItems, setCartItems] = useState([]);
-  const [hasCartItems, setHasCartItems] = useState(false); 
+  const [hasCartItems, setHasCartItems] = useState(true); 
 
   const [favourites, setFavourites] = useState([]);
-  const [hasFavourites, setHasFavourites] = useState(false); 
+  const [hasFavourites, setHasFavourites] = useState(true); 
 
 
 
@@ -623,7 +623,7 @@ function Navbar() {
               </div>
 
               {/* PAGE LINKS + MOBILE PRODUCTS DROPDOWN */}
-              <div className="w-full flex flex-col items-center gap-y-8">
+              <div className="w-full flex flex-col items-center  gap-y-[40px]">
                 {/* Simple page links (Home, About) */}
                 {["/home", "/about"].map((path) => (
                   <Link
@@ -632,7 +632,7 @@ function Navbar() {
                     onClick={() => setMenuVisible(false)}
                   >
                     <h2
-                      className={`font-poppins text-[16px] leading-normal text-center ${
+                      className={`font-poppins text-[18px] leading-normal text-center ${
                         location.pathname === path
                           ? "text-white font-semibold"
                           : "text-[#A0A0A0]"
@@ -652,7 +652,7 @@ function Navbar() {
                     className="w-full flex items-center justify-center relative px-1 ml-2"
                   >
                     <span
-                      className={`font-poppins text-[16px] ${
+                      className={`font-poppins text-[18px] ${
                         mobileProductDropdown || isProductsRoute
                           ? "text-white font-semibold"
                           : "text-[#A0A0A0]"
@@ -709,7 +709,7 @@ function Navbar() {
                   onClick={() => setMenuVisible(false)}
                 >
                   <h2
-                    className={`font-poppins text-[16px] leading-normal text-center ${
+                    className={`font-poppins text-[18px] leading-normal text-center ${
                       location.pathname === "/blog"
                         ? "text-white font-semibold"
                         : "text-[#A0A0A0]"
@@ -726,7 +726,7 @@ function Navbar() {
                     onClick={() => setMenuVisible(false)}
                   >
                     <h2
-                      className={`font-poppins text-[16px] leading-normal text-center ${
+                      className={`font-poppins text-[18px] leading-normal text-center ${
                         location.pathname === "/profile"
                           ? "text-white font-semibold"
                           : "text-[#A0A0A0]"
@@ -742,7 +742,7 @@ function Navbar() {
               {isLoggedIn && (
                 <button
                   onClick={handleLogout}
-                  className="mt-36 mb-4 rounded-[32px] bg-[#CFA266] w-[319px] h-[52px] font-poppins text-[16px] text-white flex items-center justify-center gap-2"
+                  className="mt-36 mb-4 rounded-[32px] bg-[#CFA266] w-[319px] h-[52px] font-poppins text-[18px] text-white flex items-center justify-center gap-2"
                 >
                   <img src={logout} alt="logout_icon" className="w-[30px] h-[30px]"/>
                   Logout
