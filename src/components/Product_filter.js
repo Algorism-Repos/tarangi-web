@@ -9,30 +9,16 @@ import { AppContext } from "../context/AppContext";
 import { ref } from "yup";
 
 function Product_Filter({ productCatergory }) {
-    //  console.log(productCatergory)
-
-  const [productCount, setProductCount] = useState(0);
-  const [selectedOccasions, setSelectedOccasions] = useState([]);
-
+  const [product, setProduct] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedPrices, setSelectedPrices] = useState([]);
   const [sortOption, setSortOption] = useState("Latest");
   const [showSort, setShowSort] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [tab, setTab] = useState("productCatergory");
-  const [selectedSort, setSelectedSort] = useState("Latest");
-
   const { productListFromShopify, filteredProducts, setFilteredProducts } =
     useContext(AppContext);
-
-  // Use same options everywhere (desktop + mobile)
-  const SortOptions = [
-    "Latest",
-    "Featured",
-    "Price High to Low",
-    "Price Low to High",
-  ];
-
+  const SortOptions = ["Price High to Low", "Price Low to High"];
   const priceRanges = [
     { label: "₹10,000 – ₹15,000" },
     { label: "₹15,000 – ₹25,000" },
@@ -43,10 +29,19 @@ function Product_Filter({ productCatergory }) {
     { label: "₹100,000 – ₹125,000" },
   ];
 
+  const Occasion = [
+    { label: "Daily wear" },
+    { label: "Wedding" },
+    { label: "Office Attire" },
+    { label: "Casual" },
+    { label: "Festival" },
+  ];
+
   const [showMore, setShowMore] = useState(false);
   const visibleItems = showMore ? priceRanges : priceRanges.slice(0, 5);
 
   const [showMoreCategory, setShowMoreCategory] = useState(false);
+
   const [showMorePrice, setShowMorePrice] = useState(false);
 
   // Convert productCatergory object keys to array
@@ -64,7 +59,6 @@ function Product_Filter({ productCatergory }) {
       behavior: "smooth",
     });
   };
-
   const parsePriceRange = (label) => {
     const [min, max] = label
       .replace(/₹|,/g, "")
@@ -72,23 +66,14 @@ function Product_Filter({ productCatergory }) {
       .map((p) => Number(p.trim()));
     return { min, max };
   };
- const occasions = Array.from(
-  new Set(
-    productListFromShopify
-      .flatMap(item => Array.isArray(item.tags) ? item.tags : [])
-      .filter(tag => tag && tag.trim() !== "")
-  )
-);
 
-
-
-  const handleFilterChange = (categories = [], prices = [],occasionsSelected = []) => {
+  const handleFilterChange = (categories = [], prices = []) => {
     setSelectedCategories(categories);
     setSelectedPrices(prices);
     let filtered = productListFromShopify;
     if (categories.length > 0) {
       filtered = filtered.filter((p) =>
-        categories.includes(p.product_type || "Uncategorized")
+        categories.includes(p.product_type || "Uncateg  orized")
       );
     }
     if (prices.length > 0) {
@@ -97,16 +82,12 @@ function Product_Filter({ productCatergory }) {
         return prices.some((range) => price >= range.min && price <= range.max);
       });
     }
-  if (occasionsSelected.length > 0) {
-    filtered = filtered.filter(
-      (p) =>
-        Array.isArray(p.tags) &&
-        p.tags.some((tag) => occasionsSelected.includes(tag))
-    );
-  }
     filtered = sortProducts(filtered, sortOption);
     setFilteredProducts(filtered);
   };
+
+  const [products, setProducts] = useState([]);
+
   const sortProducts = (products, sortBy) => {
     const sorted = [...products];
     if (sortBy === "Latest") {
@@ -125,23 +106,24 @@ function Product_Filter({ productCatergory }) {
           Number(a.variants?.[0]?.price) - Number(b.variants?.[0]?.price)
       );
     } else if (sortBy === "Featured") {
-      // handle featured if needed
     }
     return sorted;
   };
-
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
+
   const handleSortSelection = (option) => {
     setSortOption(option);
-    setSelectedSort(option);
 
+    // choose the array you want to sort:
+    // If you want to sort currently filtered list:
     setFilteredProducts((prev) => {
       const base =
-        Array.isArray(prev) && prev.length ? prev : productListFromShopify || [];
+        Array.isArray(prev) && prev.length
+          ? prev
+          : productListFromShopify || [];
       return sortProducts(base, option);
     });
 
@@ -151,8 +133,6 @@ function Product_Filter({ productCatergory }) {
   };
 
   const handleCheckbox = (type, filterType) => {
-
-    //  console.log(type,filterType)
     let updated;
     if (filterType === "category") {
       updated = selectedCategories.includes(type)
@@ -166,43 +146,31 @@ function Product_Filter({ productCatergory }) {
         (p) => p.min === range.min && p.max === range.max
       )
         ? selectedPrices.filter(
-            (p) => p.min !== range.min || p.max !== range.max
-          )
+          (p) => p.min !== range.min || p.max !== range.max
+        )
         : [...selectedPrices, range];
       setSelectedPrices(updated);
       handleFilterChange(selectedCategories, updated);
-    } else if (filterType === "occasion") {
-      updated = selectedOccasions.includes(type)
-        ? selectedOccasions.filter((o) => o !== type)
-        : [...selectedOccasions, type];
-
-      setSelectedOccasions(updated);
-      handleFilterChange(selectedCategories, selectedPrices, updated);
     }
   };
-
-  // Desktop dropdown uses this wrapper
   const handleSortChange = (option) => {
-    handleSortSelection(option);
+    setSortOption(option);
+    const sorted = sortProducts(filteredProducts, option);
+    setFilteredProducts(sorted);
   };
-
   useEffect(() => {
     const sorted = sortProducts(productListFromShopify, sortOption);
     setFilteredProducts(sorted);
+    // setFilteredProducts(product);
   }, [productListFromShopify, sortOption]);
-  //  console.log(productListFromShopify)
+
   const refreshpage = () => {
     window.location.reload(false);
   };
 
   const filterToggleCount = selectedCategories.length + selectedPrices.length;
 
-  useEffect(() => {
-    setProductCount(filteredProducts.length);
-  }, [filteredProducts]);
-
-  // console.log("Total Products:", productCatergory);
-
+  console.log(productCatergory);
   return (
     <>
       <div>
@@ -213,11 +181,11 @@ function Product_Filter({ productCatergory }) {
               Collections
             </h2>
             <p className="font-poppins text-font-grey text-[14px] sm:mt-3 sm:text-[16px]">
-              {productCount} Designs
+              180 Designs
             </p>
           </div>
 
-          {/* Desktop Sort dropdown */}
+          {/* Drop down */}
           <div className="lg:flex items-center gap-4 bg-light-sandal p-4 rounded-md hidden">
             <label className="font-poppins text-font-grey text-[18px]">
               Sort by
@@ -225,8 +193,7 @@ function Product_Filter({ productCatergory }) {
 
             <div className="relative">
               <select
-                className="appearance-none border border-[#B9B9B9] rounded-md py-2.5 pl-3 w-[190px] bg-white text-font-grey text-[14px] cursor-pointer outline-none"
-                value={selectedSort}
+                className="appearance-none border border-[#B9B9B9] rounded-md py-2.5 pl-3 w-[155px] bg-white text-font-grey text-[14px] cursor-pointer outline-none"
                 onChange={(e) => handleSortChange(e.target.value)}
               >
                 {SortOptions.map((option) => (
@@ -243,15 +210,13 @@ function Product_Filter({ productCatergory }) {
         </div>
 
         <div className="max-w-[1350px] mx-auto lg:flex gap-x-[40px] my-[50px]">
-          {/* Filter column  */}
+          {/* Filter  */}
           <div>
             {/* Laptop Filter */}
             <div className="w-[275px] font-poppins text-font-grey hidden lg:block pl-6">
               <div className="flex justify-between">
                 <div className="flex items-center gap-2">
-                  <p className="text-[16px] font-semibold uppercase">
-                    Filters
-                  </p>
+                  <p className="text-[16px] font-semibold uppercase">Filters</p>
                   {filterToggleCount > 0 && (
                     <span className="bg-[#D6A76F] text-white text-[13px] items-center justify-center font-medium px-3  w-[29px] h-[19px] rounded-full">
                       {filterToggleCount}
@@ -304,9 +269,8 @@ function Product_Filter({ productCatergory }) {
                     className="flex mt-4 cursor-pointer gap-x-[8px] items-center select-none"
                   >
                     <img
-                      className={`w-[26px] transform transition-transform duration-300 ${
-                        showMore ? "rotate-180" : ""
-                      }`}
+                      className={`w-[26px] transform transition-transform duration-300 ${showMore ? "rotate-180" : ""
+                        }`}
                       src={showMore ? down_arrow_red : down_arrow_red}
                       alt="toggle_arrow"
                     />
@@ -353,9 +317,8 @@ function Product_Filter({ productCatergory }) {
                     onClick={() => setShowMoreCategory(!showMoreCategory)}
                   >
                     <img
-                      className={`w-[26px] transform transition-transform duration-300 ${
-                        showMoreCategory ? "rotate-180" : ""
-                      }`}
+                      className={`w-[26px] transform transition-transform duration-300 ${showMoreCategory ? "rotate-180" : ""
+                        }`}
                       src={showMore ? down_arrow_red : down_arrow_red}
                       alt="toggle_arrow"
                     />
@@ -368,35 +331,34 @@ function Product_Filter({ productCatergory }) {
                 <hr className="border border-[#C8C8C8] my-[25px]" />
               </div>
 
-              {/* Occasion */}
+              {/* occasion */}
               <div>
                 <h3 className="text-primary text-[20px] font-semibold">
-                  Occasions
+                  Occasion
                 </h3>
-                <div className="mt-6 space-y-3">
-                                          {occasions.map(tag => (
 
-                      <label className="flex items-center justify-between text-font-grey cursor-pointer">
-                        <div className="flex items-center space-x-3">
-                          <label className="custom-checkbox">
-                            <input type="checkbox" onChange={() =>
-                                    handleCheckbox(tag, "occasion")
-                                  } />
-                            <span class="checkmark"></span>
-                          </label>
-                          <span className="text-[18px]">{tag}</span>
-                        </div>
-                      </label>
-                    ))}
+                <div className="mt-6 space-y-3">
+                  {Occasion.map((items) => (
+                    <label className="flex items-center justify-between text-font-grey cursor-pointer">
+                      <div className="flex items-center space-x-3">
+                        {/* Checkbox */}
+                        <label className="custom-checkbox">
+                          <input type="checkbox" />
+                          <span class="checkmark"></span>
+                        </label>
+                        <span className="text-[18px]">{items.label}</span>
+                      </div>
+                    </label>
+                  ))}
                 </div>
 
                 <hr className="border border-[#C8C8C8] my-[25px]" />
               </div>
             </div>
 
-            {/* Mobile Version Filter bar */}
+            {/* Mobile Verion Filter */}
             <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden px-4 z-10 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
-              <div className="flex justify-between ">
+              <div className="flex justify-between">
                 {/* SORT BUTTON */}
                 <div
                   className="group flex items-center gap-x-[8px] cursor-pointer"
@@ -404,14 +366,11 @@ function Product_Filter({ productCatergory }) {
                     setShowSort((prev) => {
                       const newState = !prev;
 
+                      // 🔹 If Sort is opening → close Filter
                       if (newState) {
-                        // opening sort → close filter & lock scroll
                         setShowFilter(false);
-                        setShowMoreCategory(false);
-                        setShowMorePrice(false);
                         document.body.style.overflow = "hidden";
                       } else {
-                        // closing
                         document.body.style.overflow = "auto";
                       }
 
@@ -437,12 +396,11 @@ function Product_Filter({ productCatergory }) {
                       const newState = !prev;
 
                       if (newState) {
+                        // Opening → close sort, lock scroll
                         setShowSort(false);
-                        setShowMoreCategory(false);
+                        setShowMoreCategory(false); // reset category show more
                         setShowMorePrice(false);
                         document.body.style.overflow = "hidden";
-                      } else {
-                        document.body.style.overflow = "auto";
                       }
 
                       return newState;
@@ -461,122 +419,88 @@ function Product_Filter({ productCatergory }) {
               </div>
             </div>
 
-            {/* Sort popup with bg-black/40 + blur overlay */}
-            {showSort && (
-              <div
-                className="fixed inset-0 bg-black/40  z-50 flex items-end lg:hidden"
-                onClick={() => {
-                  setShowSort(false);
-                  document.body.style.overflow = "auto";
-                }}
-              >
-                <div
-                  className="font-poppins bg-light-sandal w-full h-fit p-7 rounded-t-[30px] transition-all duration-300 ease-in-out"
-                  onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
+            {/* Sort popup  */}
+            <div
+              className={
+                showSort
+                  ? "font-poppins bg-light-sandal w-full h-[302px] fixed inset-0 right-0 z-50 p-7 rounded-t-8 transition-all duration-300 ease-in-out lg:hidden"
+                  : "hidden"
+              }
+            >
+              <div className="flex flex-col space-y-[20px] text-[#747474]">
+                <h2 className="text-center text-[18px] font-semibold text-[#434343]">
+                  Sort Designs By
+                </h2>
+
+                <button
+                  className="text-[16px] font-medium text-left focus:text-primary"
+                  onClick={() => handleSortSelection("Latest")}
                 >
-                  <div className="flex flex-col space-y-[20px] text-[#747474] relative">
-                    <div className="relative flex items-center justify-center mb-4">
-                      <h2 className="text-center text-[18px] font-semibold text-[#434343]">
-                        Sort Designs By
-                      </h2>
+                  Latest
+                </button>
 
-                      <img
-                        className="w-[25px] h-[25px] cursor-pointer absolute right-0"
-                        src={close_icon}
-                        alt="Close icon"
-                        onClick={() => {
-                          setShowSort(false);
-                          setShowMoreCategory(false);
-                          setShowMorePrice(false);
-                          document.body.style.overflow = "auto";
-                          ScrollToTop();
-                        }}
-                      />
-                    </div>
+                <button
+                  className="text-[16px] font-medium text-left focus:text-primary"
+                  onClick={() => handleSortSelection("Featured")}
+                >
+                  Featured
+                </button>
 
-                    <button
-                      onClick={() => handleSortSelection("Latest")}
-                      className={`text-left text-[16px] font-poppins cursor-pointer 
-                        ${
-                          selectedSort === "Latest"
-                            ? "text-[#6E0027] font-semibold"
-                            : "text-[#6E6E6E]"
-                        }`}
-                    >
-                      Latest
-                    </button>
+                <button
+                  className="text-[16px] font-medium text-left focus:text-primary"
+                  onClick={() => handleSortSelection("Price High to Low")}
+                >
+                  Price High to Low
+                </button>
 
-                    <button
-                      onClick={() => handleSortSelection("Featured")}
-                      className={`text-left text-[16px] font-poppins cursor-pointer 
-                        ${
-                          selectedSort === "Featured"
-                            ? "text-[#6E0027] font-semibold"
-                            : "text-[#6E6E6E]"
-                        }`}
-                    >
-                      Featured
-                    </button>
-
-                    <button
-                      onClick={() => handleSortSelection("Price High to Low")}
-                      className={`text-left text-[16px] font-poppins cursor-pointer 
-                        ${
-                          selectedSort === "Price High to Low"
-                            ? "text-[#6E0027] font-semibold"
-                            : "text-[#6E6E6E]"
-                        }`}
-                    >
-                      Price High to Low
-                    </button>
-
-                    <button
-                      onClick={() => handleSortSelection("Price Low to High")}
-                      className={`text-left text-[16px] font-poppins cursor-pointer 
-                        ${
-                          selectedSort === "Price Low to High"
-                            ? "text-[#6E0027] font-semibold"
-                            : "text-[#6E6E6E]"
-                        }`}
-                    >
-                      Price Low to High
-                    </button>
-                  </div>
-                </div>
+                <button
+                  className="text-[16px] font-medium text-left focus:text-primary"
+                  onClick={() => handleSortSelection("Price Low to High")}
+                >
+                  Price Low to High
+                </button>
               </div>
-            )}
+            </div>
 
             {/* Filter popup */}
-            {showFilter && (
-              <div
-                className="fixed inset-0 bg-black/40 z-50 flex items-start justify-center lg:hidden"
-                onClick={() => {
-                  setShowFilter(false);
-                  setShowMoreCategory(false);
-                  setShowMorePrice(false);
-                  document.body.style.overflow = "auto";
-                }}
-              >
-                {/* CARD */}
-                <div
-                  className="font-poppins bg-light-sandal w-full max-w-[430px] rounded-md shadow-xl p-5 max-h-[80vh] overflow-y-auto"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {/* HEADER */}
-                  <div className="relative flex items-center justify-center mb-4">
-                    <h2 className="text-[16px] font-semibold text-[#434343]">
-                      Filter
-                    </h2>
+            <div
+              className={
+                showFilter === true
+                  ? "font-poppins bg-light-sandal w-full h-[470px] fixed inset-0 right-0 z-50 p-6 overflow-y-scroll lg:hidden"
+                  : "hidden"
+              }
+            >
+              <div className="flex items-center justify-start gap-[16px]">
+                <img
+                  className="w-[22px] h-[22px] cursor-pointer"
+                  src={close_icon}
+                  alt="Close icon"
+                  onClick={() => {
+                    setShowFilter(false);
+                    setShowMoreCategory(false); // reset category show more
+                    setShowMorePrice(false);
+                    document.body.style.overflow = "auto";
+                    ScrollToTop();
+                  }}
+                />
+                <h2 className="text-[16px] font-semibold text-center flex-col">
+                  Filter
+                </h2>
+                {filterToggleCount > 0 && (
+                  <span className="bg-[#D6A76F] text-white text-[13px] items-center justify-center font-medium px-3  w-[29px] h-[19px] rounded-full">
+                    {filterToggleCount}
+                  </span>
+                )}
+              </div>
 
               <div className="flex gap-x-16 justify-start mt-11  ">
                 {/* Tabs */}
                 <div className="flex flex-col items-start text-[14px] space-y-6 text-[#747474]">
                   <button
-                    className={`${
-                      tab === "productCatergory"
-                        ? "text-primary font-medium"
-                        : ""
-                    }`}
+                    className={`${tab === "productCatergory"
+                      ? "text-primary font-medium"
+                      : ""
+                      }`}
                     onClick={() => setTab("productCatergory")}
                   >
                     Category
@@ -604,61 +528,36 @@ function Product_Filter({ productCatergory }) {
                   </button>
                 </div>
 
-                  {/* BODY */}
-                  <div className="flex gap-x-8 mt-4">
-                    {/* TABS LEFT */}
-                    <div className="flex flex-col text-[14px] text-[#747474] w-[184px]">
-                      {/* Category row + badge */}
-                      <div className="flex items-center justify-between w-full mb-3">
-                        <button
-                          className={`text-left ${
-                            tab === "productCatergory"
-                              ? "text-primary font-medium"
-                              : ""
-                          }`}
-                          onClick={() => setTab("productCatergory")}
-                        >
-                          Product Category
-                        </button>
-
-                        {filterToggleCount > 0 && (
-                          <span className="bg-[#D6A76F] text-white text-[11px] font-medium min-w-[20px] h-[20px] rounded-full flex items-center justify-center">
-                            {filterToggleCount}
-                          </span>
-                        )}
-                      </div>
-
-                      <hr className="border border-t-[#D9D9D9] w-full mb-3" />
-
-                      <button
-                        className={`text-left mb-3 ${
-                          tab === "priceRange"
-                            ? "text-primary font-medium"
-                            : ""
-                        }`}
-                        onClick={() => setTab("priceRange")}
-                      >
-                        Price Range
-                      </button>
-                      <hr className="border border-t-[#D9D9D9] w-full mb-3" />
-
-                      <button
-                        className={`text-left mb-3 ${
-                          tab === "occasion" ? "text-primary font-medium" : ""
-                        }`}
-                        onClick={() => setTab("occasion")}
-                      >
-                        Occasion
-                      </button>
-
-                      <hr className="border border-t-[#D9D9D9] w-full mb-3" />
-
-                      <button
-                        className="text-primary text-[13px] font-medium uppercase text-left"
-                        onClick={refreshpage}
-                      >
-                        Clear All
-                      </button>
+                {/* Category */}
+                {tab === "productCatergory" && (
+                  <div>
+                    <div className="space-y-5">
+                      {Object.keys(productCatergory)
+                        .slice(
+                          0,
+                          showMoreCategory
+                            ? Object.keys(productCatergory).length
+                            : 5
+                        )
+                        .map((type) => (
+                          <label
+                            key={type}
+                            className="flex items-center justify-between text-font-grey cursor-pointer"
+                          >
+                            <div className="flex items-center space-x-2">
+                              <label className="custom-checkbox">
+                                <input
+                                  type="checkbox"
+                                  onChange={() =>
+                                    handleCheckbox(type, "category")
+                                  }
+                                />
+                                <span className="checkmark"></span>
+                              </label>
+                              <span className="text-[15px]">{type}</span>
+                            </div>
+                          </label>
+                        ))}
                     </div>
 
                     {/* Show more/less button */}
@@ -668,9 +567,8 @@ function Product_Filter({ productCatergory }) {
                         onClick={() => setShowMoreCategory(!showMoreCategory)}
                       >
                         <img
-                          className={`w-[26px] transform transition-transform duration-300 ${
-                            showMoreCategory ? "rotate-180" : ""
-                          }`}
+                          className={`w-[26px] transform transition-transform duration-300 ${showMoreCategory ? "rotate-180" : ""
+                            }`}
                           src={down_arrow_red}
                           alt="toggle_arrow"
                         />
@@ -716,9 +614,8 @@ function Product_Filter({ productCatergory }) {
                         onClick={() => setShowMorePrice(!showMorePrice)}
                       >
                         <img
-                          className={`w-[26px] transform transition-transform duration-300 ${
-                            showMorePrice ? "rotate-180" : ""
-                          }`}
+                          className={`w-[26px] transform transition-transform duration-300 ${showMorePrice ? "rotate-180" : ""
+                            }`}
                           src={down_arrow_red}
                           alt="toggle_arrow"
                         />
@@ -734,29 +631,26 @@ function Product_Filter({ productCatergory }) {
                 {tab === "occasion" && (
                   <div>
                     <div className="space-y-5">
-                         {occasions.map(tag => (
-
-                          <label className="flex items-center justify-between text-font-grey cursor-pointer">
-                            <div className="flex items-center space-x-2">
-                              {/* Checkbox */}
-                              <label className="custom-checkbox ">
-                                <input
-                                  type="checkbox"
-                                  onChange={() =>
-                                    handleCheckbox(tag, "occasion")
-                                  }
-                                />
-                                <span class="checkmark"></span>
-                              </label>
-                              <span className="text-[15px]">{tag}</span>
-                            </div>
-                          </label>
-                        ))}
+                      {Occasion.map((items) => (
+                        <label className="flex items-center justify-between text-font-grey cursor-pointer">
+                          <div className="flex items-center space-x-2">
+                            {/* Checkbox */}
+                            <label className="custom-checkbox ">
+                              <input type="checkbox" />
+                              <span class="checkmark"></span>
+                            </label>
+                            <span className="text-[15px]">{items.label}</span>
+                          </div>
+                        </label>
+                      ))}
                     </div>
                   </div>
-            )}
+                )}
+              </div>
+            </div>
           </div>
 
+          {/*  */}
           <Product_Listing productCatergory={filteredProducts} />
         </div>
       </div>
