@@ -35,75 +35,38 @@ function Navbar() {
 
   const [favourites, setFavourites] = useState([]);
   const [hasFavourites, setHasFavourites] = useState(false); 
-
-
-
-  // Product dropdown - desktop
-    const [productDropdown, setProductDropdown] = useState(false);
  
-  // Catergory
-  const productCatergory = [
-    {
-      img: new_product_1,
-      name: "Women",
-      link: "#"
-    },
-    {
-      img: new_product_1,
-      name: "Men",
-      link: "#"
-    },
-    {
-      img: new_product_1,
-      name: "Couples",
-      link: "#"
-    },
-    {
-      img: new_product_1,
-      name: "Gifts",
-      link: "#"
-    },
-  ]
-  // Timer function
-  const closeTimer = useRef(null);
-  const handleMouseEnter = () => {
-    if (closeTimer.current) {
-      clearTimeout(closeTimer.current);
-      closeTimer.current = null;
-    }
-    setProductDropdown(true);
-  };
-  const handleMouseLeave = () => {
-    closeTimer.current = setTimeout(() => {
-      setProductDropdown(false);
-    }, 500);
-  };
-  const handleClose = () => {
-    if (closeTimer.current) {
-      clearTimeout(closeTimer.current);
-      closeTimer.current = null;
-    }
-    setProductDropdown(false);
-  };
-  const handleSubMenuClick = () => {
-    handleClose();
-  };
-
 
   const location = useLocation();
   const navigate = useNavigate();
 
   const mobileSearchRef = useRef(null);
- 
+  const [productDropdown, setProductDropdown] = useState(false);
+  const [activeTab, setActiveTab] = useState("women");
+  const productDropdownRef = useRef(null);
 
   // mobile products dropdown
   const [mobileProductDropdown, setMobileProductDropdown] = useState(false);
   const [mobileActiveTab, setMobileActiveTab] = useState("men"); // for mobile pills
 
   // Product dropdown datas
+  const productCategory = ["women", "men", "couples", "gifts"];
   const mobileCategories = ["men", "women", "couples"]; // to match your design
 
-  
+  const products = {
+    women: [
+      { img: new_product_1, name: "Emerald Pendant" },
+      { img: new_product_1, name: "Diamond Necklace" },
+      { img: new_product_1, name: "Tulip Brooch" },
+      { img: new_product_1, name: "Emerald Pendant" },
+    ],
+    men: [{ img: new_product_1, name: "Emerald Pendant" }],
+    couples: [
+      { img: new_product_1, name: "Emerald Pendant" },
+      { img: new_product_1, name: "Emerald Pendant" },
+    ],
+    gifts: [{ img: new_product_1, name: "Emerald Pendant" }],
+  };
 
   const TRENDING_PRODUCTS = [
     { img: new_product_1, name: "Emerald Pendant" },
@@ -179,8 +142,28 @@ function Navbar() {
     };
   }, []);
 
+  useEffect(() => {
+    setProductDropdown(false);
+    setMobileProductDropdown(false); // close mobile dropdown when route changes
+  }, [location.pathname]);
 
+  useEffect(() => {
+    if (!productDropdown) return;
 
+    const handleClickOutside = (e) => {
+      if (
+        productDropdownRef.current &&
+        !productDropdownRef.current.contains(e.target)
+      ) {
+        setProductDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [productDropdown]);
 
   // Lock body scroll when mobile menu open
   useEffect(() => {
@@ -235,33 +218,17 @@ function Navbar() {
             About Us
           </Link>
 
-          {/* Product dropdown */}
-          <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <Link to="#"
-              className={`rounded-full py-2.5 px-4 text-white transition-all duration-200 flex items-center ${isActive("/products") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F] opacity-50"}`} >
-              Products
-              <img className="w-[28px] h-[28px]" src={down_arrow} alt="" />
-            </Link>
-            {/* Dropdown */}
-            {productDropdown && (
-              <div className="absolute top-[111px] left-1/2 transform -translate-x-1/2 min-w-[1000px] h-fit bg-[#FFF5E8] px-10 py-8 shadow-2xl z-30 rounded-lg">
-                <h2 className="font-atteron text-primary text-[32px] text-center mb-8">Product Caterogry</h2>
-                <div className="grid grid-cols-4 gap-4">
-                  {productCatergory.map((item) => (
-                    <Link to="/products" onClick={handleSubMenuClick}  className="group transition-transform duration-300 hover:scale-105 ">
-                      <div className="w-[200px] h-fit text-center">
-                        <img className="w-[200px] h-[200px] rounded-[8px] object-cover" src={item.img} alt={item.title} />
-                        <p className="text-[18px] text-[#6D6D6D] font-poppins mt-2 font-normal group-hover:text-primary group-hover:font-medium"> {item.name} </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-                {/* <Link className="w-full  text-center border" to="/products">View All Products</Link> */}
-              </div>
-            )}
-          </div>
-
-
+          {/* Product dropdown trigger */}
+          <button
+            onClick={() => setProductDropdown((prev) => !prev)}
+            className={`rounded-full py-2.5 px-4 text-white transition-all duration-200 ${
+              productDropdown || isProductsRoute
+                ? "bg-[#CFA266] cursor-default"
+                : "hover:bg-[#D6A76F] opacity-50"
+            }`}
+          >
+            Products
+          </button>
 
           <Link
             to="/blog"
@@ -339,7 +306,69 @@ function Navbar() {
           )}
         </div>
 
+        {/* Product Dropdown (desktop) */}
+        <AnimatePresence>
+          {productDropdown && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="absolute top-[100px] left-0 w-full bg-[#FFF5E8] px-10 py-16 shadow-lg z-30"
+            >
+              <div
+                ref={productDropdownRef}
+                className="max-w-[1200px] mx-auto flex"
+              >
+                {/* Product category */}
+                <div className="w-[170px] space-y-[20px] font-poppins text-[16px]">
+                  {productCategory.map((tab) => (
+                    <div
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={`cursor-pointer py-2.5 px-3 rounded-[8px] ${
+                        activeTab === tab
+                          ? "bg-primary text-white"
+                          : "text-gray-700 hover:bg-gray-100"
+                      }`}
+                    >
+                      {tab}
+                    </div>
+                  ))}
+                </div>
 
+                {/* Similar Products */}
+                <div className="max-w-[1000px] mx-auto">
+                  <div className="grid grid-cols-4 gap-4">
+                    {products[activeTab]?.map((item, i) => (
+                      <div key={i} className="text-center">
+                        <img
+                          className="w-[203px] h-[200px] rounded-[8px] object-cover"
+                          src={item.img}
+                          alt={item.name}
+                        />
+                        <p className="text-sm text-primary mt-2 font-medium">
+                          {item.name}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* VIEW MORE */}
+                  <div className="float-right mt-4 mr-2">
+                    <Link
+                      to="/products"
+                      className="text-[#7A0A1E] font-medium"
+                      onClick={() => setProductDropdown(false)}
+                    >
+                      View more →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Search Dropdown (desktop) */}
         <AnimatePresence>
