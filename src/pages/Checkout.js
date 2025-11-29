@@ -18,7 +18,6 @@ function CheckoutPage() {
   const [useDifferentBilling, setUseDifferentBilling] = useState(false);
   const navigate = useNavigate();
   const { cartItems, removeFromCart } = useContext(AppContext);
-  const [formValues, setFormValues] = useState({});
   const [showSummary, setShowSummary] = useState(false);
   // Yup validation schema
   const validationSchema = Yup.object({
@@ -62,7 +61,7 @@ function CheckoutPage() {
     }),
     billingState: Yup.string().when("useDifferentBilling", {
       is: true,
-      then: (schema) => schema.required("tate is required"),
+      then: (schema) => schema.required("State is required"),
       otherwise: (schema) => schema.notRequired(),
     }),
     billingCountry: Yup.string().when("useDifferentBilling", {
@@ -564,7 +563,6 @@ function CheckoutPage() {
 
                 <div
                   onClick={() => {
-                    setUseDifferentBilling(false);
                     formik.setFieldValue("useDifferentBilling", false);
                   }}
                   className={`cursor-pointer w-full p-4 rounded-md border transition-all duration-300
@@ -596,7 +594,6 @@ function CheckoutPage() {
 
                 <div
                   onClick={() => {
-                    setUseDifferentBilling(true);
                     formik.setFieldValue("useDifferentBilling", true);
                   }}
                   className={`cursor-pointer w-full p-4 mt-3 rounded-md border transition-all duration-300
@@ -612,7 +609,9 @@ function CheckoutPage() {
                     </span>
                     <span
                       className={`w-[22px] h-[22px] border-2 rounded-full flex items-center justify-center
-        ${useDifferentBilling ? "border-[#6E0027]" : "border-[#6E0027]"}`}
+        ${
+          useDifferentBilling ? "border-[#6E0027]" : "border-[#6E0027]"
+        }`}
                     >
                       {useDifferentBilling && (
                         <span className="w-3 h-3 rounded-full bg-[#6E0027]" />
@@ -638,11 +637,12 @@ function CheckoutPage() {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.billingAddress}
-                      className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${formik.errors.billingAddress &&
-                          formik.touched.billingAddress
+                      className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${
+                        formik.errors.billingAddress &&
+                        formik.touched.billingAddress
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                        }
+                      }
                      focus:outline-none focus:border-[#8C455E]`}
                       placeholder="Address (Flat No./ House No./Street/Area))"
                     />
@@ -680,11 +680,12 @@ function CheckoutPage() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.billingCity}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.billingCity &&
-                            formik.touched.billingCity
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                          formik.errors.billingCity &&
+                          formik.touched.billingCity
                             ? "border-red-500"
                             : "border-[#efe6e6]"
-                          }
+                        }
                        focus:outline-none focus:border-[#8C455E]`}
                         placeholder="City"
                       />
@@ -712,11 +713,12 @@ function CheckoutPage() {
                         }}
                         onBlur={formik.handleBlur}
                         value={formik.values.billingPincode}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.billingPincode &&
-                            formik.touched.billingPincode
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                          formik.errors.billingPincode &&
+                          formik.touched.billingPincode
                             ? "border-red-500"
                             : "border-[#efe6e6]"
-                          } focus:outline-none focus:border-[#8C455E]`}
+                        } focus:outline-none focus:border-[#8C455E]`}
                         placeholder="Pincode"
                       />
 
@@ -737,11 +739,12 @@ function CheckoutPage() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.billingState}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${formik.errors.billingState &&
-                            formik.touched.billingState
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${
+                          formik.errors.billingState &&
+                          formik.touched.billingState
                             ? "border-red-500"
                             : "border-[#efe6e6]"
-                          }
+                        }
                      focus:outline-none focus:border-[#8C455E]`}
                       >
                         <option value="">Select State</option>

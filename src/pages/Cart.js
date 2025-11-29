@@ -38,7 +38,7 @@ function Cart() {
   //   return initialCartItems;
   // });
 
-  // ✨ Delete modal states
+  // Delete modal states
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
 
@@ -46,14 +46,14 @@ function Cart() {
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
 
-    // optional: simple flag if you want
-    localStorage.setItem(
-      "hasCartItems",
-      cartItems.length > 0 ? "true" : "false"
-    );
+  //   // optional: simple flag if you want
+  //   localStorage.setItem(
+  //     "hasCartItems",
+  //     cartItems.length > 0 ? "true" : "false"
+  //   );
 
-    // Notify Navbar (and others) in this tab
-    window.dispatchEvent(new Event("cartUpdated"));
+  //   // Notify Navbar (and others) in this tab
+  //   window.dispatchEvent(new Event("cartUpdated"));
   }, [cartItems]);
 
 
