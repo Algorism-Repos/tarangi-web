@@ -16,6 +16,8 @@ import Login from './pages/Login.js';
 import Signup from './pages/Signup.js';
 import Blog from './pages/Blog.js';
 import Terms_Condition from './pages/Terms_Condition.js';
+import Privacy_Policy from './pages/Privacy_Policy.js';
+import Blog_Description from './pages/Blog_Description.js';
 
 
 import ThankYou from './pages/Thank_you.js';
@@ -27,7 +29,6 @@ function App() {
       <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          
           <Route path='/home' element={<Home />} />
           <Route path='/about' element={<About />} />
           <Route path='/products' element={<Product_page />} />
@@ -38,10 +39,12 @@ function App() {
           <Route path='/cart' element={<Cart />} />
           <Route path='/profile' element={<Profile />} />
           <Route path="*" element={<Error />} />
-          <Route path="login" element={<Login />}/>
-          <Route path="signup" element={<Signup/>}/>
-          <Route path="blog" element={<Blog />} />
-          <Route path="terms&conditions" element={<Terms_Condition/>}/>
+          <Route path="/login" element={<Login />}/>
+          <Route path="/signup" element={<Signup/>}/>
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/terms" element={<Terms_Condition/>}/>
+          <Route path='/privacy' element={<Privacy_Policy />}/>
+          <Route path='/blogdescription' element={<Blog_Description />} />
         </Routes>
       <Footer />
     </>
