@@ -33,47 +33,10 @@ function Product_Description() {
 
   const swiperRef = useRef(null);
 
-  // Which colors this product actually supports
-  const productColors =
-    Array.isArray(product?.availableColors) &&
-    product.availableColors.length > 0
-      ? product.availableColors
-      : ["gold", "silver", "brown"];
+ 
 
-  // base config for each color (ellipse image, main image, slide index)
-  const COLOR_CONFIG = [
-    {
-      id: "gold",
-      ellipse: gold_ellipse,
-      mainImage: product?.image?.src,
-      slideIndex: 0,
-    },
-    {
-      id: "silver",
-      ellipse: silver_ellipse,
-      mainImage: product_1,
-      slideIndex: 1,
-    },
-    {
-      id: "brown",
-      ellipse: brown_ellipse,
-      mainImage: product_2,
-      slideIndex: 2,
-    },
-  ];
-
-  // only show colors that this product has
-  const visibleColors = COLOR_CONFIG.filter((c) =>
-    productColors.includes(c.id)
-  );
 
   const [quantity, setQuantity] = useState(1);
-  const [activeColor, setActiveColor] = useState(
-    visibleColors[0]?.id || "gold"
-  );
-  const [selectedImage, setSelectedImage] = useState(
-    visibleColors[0]?.mainImage || product?.image?.src
-  );
   const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
 
@@ -118,13 +81,11 @@ function Product_Description() {
   }, []);
 
   // click on a color toggle
-  const handleColorChange = (colorObj) => {
-    setActiveColor(colorObj.id);
-    setSelectedImage(colorObj.mainImage);
-    if (swiperRef.current) {
-      swiperRef.current.slideTo(colorObj.slideIndex);
-    }
-  };
+  // const handleColorChange = () => {
+  //   if (swiperRef.current) {
+  //     swiperRef.current.slideTo(colorObj.slideIndex);
+  //   }
+  // };
 
   function normalizeProduct(raw) {
     return {
@@ -167,8 +128,6 @@ function Product_Description() {
 
   console.log(clean);
 
-  console.log(variantColors);
-
   return (
     <>
       {/* Backgound */}
@@ -197,13 +156,13 @@ function Product_Description() {
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
                 onSlideChange={(swiper) => {
                   const idx = swiper.activeIndex;
-                  const colorForSlide = visibleColors.find(
-                    (c) => c.slideIndex === idx
-                  );
-                  if (colorForSlide) {
-                    setActiveColor(colorForSlide.id);
-                    setSelectedImage(colorForSlide.mainImage);
-                  }
+                  // const colorForSlide = visibleColors.find(
+                  //   (c) => c.slideIndex === idx
+                  // );
+                  // if (colorForSlide) {
+                  //   setActiveColor(colorForSlide.id);
+                  //   setSelectedImage(colorForSlide.mainImage);
+                  // }
                 }}
               >
               {clean?.images?.map((img, index) => (
@@ -292,7 +251,7 @@ function Product_Description() {
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
               {/* Color Options */}
-              <div className="mt-2 flex justify-start gap-x-4">
+              {/* <div className="mt-2 flex justify-start gap-x-4">
                 {variantColors.map((color) => (
                   <img
                     key={color.id}
@@ -307,7 +266,7 @@ function Product_Description() {
                     alt={color.id}
                   />
                 ))}
-              </div>
+              </div> */}
 
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 

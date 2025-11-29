@@ -4,19 +4,15 @@ import Product_Listing from "./Product_Listing";
 import { AppContext } from "../context/AppContext";
 import { useLocation } from "react-router";
 import { FetchAllProductByCollections } from "../handler/api_Handler";
-
 function Product_page() {
   const { setProductListFromShopify } = useContext(AppContext);
   const location = useLocation();
-
   const { category, collectionId } = location.state || {};
   const [productListData, setProductListData] = useState([]);
-
   // converted graphql to rest
   const formatProducts = (edges) => {
     return edges.map(({ node }) => {
       const productId = Number(node.id.replace("gid://shopify/Product/", ""));
-
       //  images
       const productImages =
         node.images?.edges?.map((img, index) => ({
@@ -25,7 +21,6 @@ function Product_page() {
           src: img.node.url,
           position: index + 1,
         })) || [];
-
       // variants
       const variants =
         node.variants?.edges?.map((variantEdge, index) => {
@@ -38,13 +33,12 @@ function Product_page() {
             inventory_quantity: variant.inventoryQuantity,
             selected_options: variant.selectedOptions || [],
             // variant level image
-            image: variant.image?.url || null, 
+            image: variant.image?.url || null,
             position: index + 1,
             created_at: node.createdAt,
             updated_at: node.createdAt,
           };
         }) || [];
-
       // color
       const optionValues = [
         ...new Set(
@@ -53,7 +47,6 @@ function Product_page() {
           )
         ),
       ];
-
       return {
         id: productId,
         admin_graphql_api_id: node.id,
@@ -65,7 +58,6 @@ function Product_page() {
         created_at: node.createdAt,
         updated_at: node.updatedAt,
         status: "active",
-
         // Featured image for main listing
         image: {
           id: productId + 1,
@@ -74,10 +66,8 @@ function Product_page() {
           position: 1,
         },
         //  all product images and  variants
-
         images: productImages,
         variants,
-
         options: [
           {
             id: productId + 1000,
@@ -90,21 +80,16 @@ function Product_page() {
       };
     });
   };
-
   // fetch product list
   const productList = async (collectionId) => {
     try {
       const response = await FetchAllProductByCollections(collectionId);
       const edges = response?.data?.collection?.products?.edges || [];
-
       // format  REST
       const formatted = formatProducts(edges);
-
       // Save in Context
       setProductListFromShopify(formatted);
-
       // Also store minimal list for filtering/UI
-
       const liteProducts = edges.map(({ node }) => ({
         id: node.id,
         title: node.title,
@@ -122,33 +107,27 @@ function Product_page() {
             options: v.node.selectedOptions,
           })) || [],
       }));
-
       setProductListData(liteProducts);
     } catch (error) {
       console.log(error);
     }
   };
-
   // product catogory
   const categorized = productListData.reduce((acc, product) => {
     const type = product.product_type || "Uncategorized";
     if (!acc[type]) acc[type] = [];
     acc[type].push(product);
-    
     return acc;
   }, {});
   console.log(categorized);
-
   useEffect(() => {
     if (collectionId) {
       productList(collectionId);
     }
   }, [collectionId]);
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-
   return (
     <>
       <div className="bg-[#FFF5E8] py-[50px] relative">
@@ -159,5 +138,4 @@ function Product_page() {
     </>
   );
 }
-
-export default Product_page;
+export default Product_page
