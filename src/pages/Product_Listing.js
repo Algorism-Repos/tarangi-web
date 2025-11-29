@@ -10,6 +10,9 @@ import RestockModal from "../components/RestockModal";
 import RestockSuccessModal from "../components/RestockSuccessModal";
 import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
+import LoadingScreen from "../components/LoadingScreen";
 
 const ELLIPSE_BY_COLOR = {
   gold: gold_ellipse,
@@ -24,14 +27,13 @@ const IMAGE_BY_COLOR = (item) => ({
 });
 
 function Product_Listing({ productCatergory }) {
-
   //  console.log(productCatergory)
   const [products, setProducts] = useState([]);
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-
+  const { loading,setLoading } = useContext(AppContext);
   // after form success
   const handleSuccess = () => {
     setShowRestockModal(false);
@@ -42,7 +44,6 @@ function Product_Listing({ productCatergory }) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-
   // Add default selectedColor for every product
   useEffect(() => {
     if (productCatergory && productCatergory.length > 0) {
@@ -50,19 +51,21 @@ function Product_Listing({ productCatergory }) {
         const colorsFromData =
           Array.isArray(item.colors) && item.colors.length > 0
             ? item.colors
-            : ["gold", "silver", "brown"]; 
+            : ["gold", "silver", "brown"];
 
         return {
           ...item,
           liked: false,
-          colors: colorsFromData,   
+          colors: colorsFromData,
           selectedColor: colorsFromData[0],
         };
       });
 
       setProducts(prepared);
+      setLoading(false);
     } else {
       setProducts([]);
+      setLoading(false);
     }
   }, [productCatergory]);
 
@@ -75,7 +78,7 @@ function Product_Listing({ productCatergory }) {
     );
   };
 
-  //  Color change handler 
+  //  Color change handler
   const handleColorChange = (id, color) => {
     setProducts((prev) =>
       prev.map((product) => {
@@ -93,6 +96,9 @@ function Product_Listing({ productCatergory }) {
   const handleRestockClick = () => {
     setShowRestockModal(true);
   };
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   if (products.length === 0) {
     return (
@@ -129,7 +135,11 @@ function Product_Listing({ productCatergory }) {
           return (
             <Link
               key={item.id}
-              to={!isOutOfStock && !isRestocking ? `/productdescription/${item.title.replace(/\s+/g, "-")}` : "#"}
+              to={
+                !isOutOfStock && !isRestocking
+                  ? `/productdescription/${item.title.replace(/\s+/g, "-")}`
+                  : "#"
+              }
               state={!isOutOfStock && !isRestocking ? { product: item } : {}}
               onClick={
                 isOutOfStock
@@ -146,8 +156,7 @@ function Product_Listing({ productCatergory }) {
                   isOutOfStock ? "grayscale" : ""
                 } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
                 src={
-                  (item.selectedColor &&
-                    colorImages[item.selectedColor]) ||
+                  (item.selectedColor && colorImages[item.selectedColor]) ||
                   item.image?.src ||
                   product_1
                 }

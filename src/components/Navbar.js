@@ -8,7 +8,8 @@ import Trending_up from "../assets/Trending_up.png";
 import Search_icon from "../assets/search_icon.png";
 import Search_icon_white from "../assets/search_icon_white.png";
 import Back_Arrow from "../assets/close_iconwhite.png";
-
+import down_arrow from "../assets/down_arrow.png";
+import up_arrow from "../assets/up_arrow.png";
 // Assets
 import logo from "../assets/logo.png";
 import menu from "../assets/menu_icon.png";
@@ -20,6 +21,7 @@ import cart_icon_filled from "../assets/cart_filled.png";
 import profile_icon from "../assets/profile_icon.png";
 import new_product_1 from "../assets/Frame 29.png";
 import product_downarrow from '../assets/Icons/Nav Bar/Keyboard arrow down.png'
+import { AppContext } from "../context/AppContext";
 
 function Navbar() {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -31,7 +33,7 @@ function Navbar() {
   const favourites = JSON.parse(localStorage.getItem("favourites")) || [];
   const hasFavourites = favourites.length > 0;
   const hasCartItems = cartItems.length > 0;
-
+ const[mobileProductDropdown,setMobileProductDropdown]=useState(false)
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -67,6 +69,7 @@ function Navbar() {
     // Close dropdown instantly after clicking a submenu item
     handleClose();
   };
+  const productCategory = ["women", "men", "couples", "gifts"];
 
   const products = [
     {
@@ -99,7 +102,6 @@ function Navbar() {
     { img: new_product_1, name: "Tulip Brooch" },
     { img: new_product_1, name: "Tulip Brooch" },
   ];
-
 
 
 
@@ -169,7 +171,7 @@ function Navbar() {
 
   useEffect(() => {
     setProductDropdown(false);
-    setMobileProductDropdown(false); // close mobile dropdown when route changes
+    // setMobileProductDropdown(false); // close mobile dropdown when route changes
   }, [location.pathname]);
 
   useEffect(() => {
@@ -484,7 +486,7 @@ function Navbar() {
         </AnimatePresence>
       </div>
 
-      
+   
 
       {/* Navbar - Mobile  */}
       < div className="relative bg-[#680F26] flex flex-row justify-between w-full z-50 px-[20px] py-[30px] xl:hidden" >

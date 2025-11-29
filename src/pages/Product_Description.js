@@ -31,145 +31,62 @@ function Product_Description() {
   const { product } = location.state || {};
   const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } =
     useContext(AppContext);
-
-  const swiperRef = useRef(null);
-
-  // Which colors this product actually supports
-  const productColors =
-    Array.isArray(product?.availableColors) &&
-    product.availableColors.length > 0
-      ? product.availableColors
-      : ["gold", "silver", "brown"];
-
-  // base config for each color (ellipse image, main image, slide index)
-  const COLOR_CONFIG = [
-    {
-      id: "gold",
-      ellipse: gold_ellipse,
-      mainImage: product?.image?.src,
-      slideIndex: 0,
-    },
-    {
-      id: "silver",
-      ellipse: silver_ellipse,
-      mainImage: product_1,
-      slideIndex: 1,
-    },
-    {
-      id: "brown",
-      ellipse: brown_ellipse,
-      mainImage: product_2,
-      slideIndex: 2,
-    },
-  ];
-
-  // only show colors that this product has
-  const visibleColors = COLOR_CONFIG.filter((c) =>
-    productColors.includes(c.id)
-  );
-
   const [quantity, setQuantity] = useState(1);
-  const [activeColor, setActiveColor] = useState(
-    visibleColors[0]?.id || "gold"
-  );
-  const [selectedImage, setSelectedImage] = useState(
-    visibleColors[0]?.mainImage || product?.image?.src
-  );
   const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
-
-  const handleAddToCart = () => {
-    addToCart({
-      id: product.variants[0].id,
-      title: product.title,
-      price: parseInt(product.variants[0].price),
-      image: product.image.src,
-      quantity: quantity,
-    });
-  };
-
-  const matchingProducts = filteredProducts?.filter(
-    (item) =>
-      item.product_type === product.product_type && item.id !== product.id
-  );
-
-  const handleAddToWish = () => {
-    addToWishlist({
-      id: product.variants[0].id,
-      title: product.title,
-      price: parseInt(product.variants[0].price),
-      image: product.image.src,
-      quantity: quantity,
-    });
-  };
-
-  useEffect(() => {
-    if (product) {
-      addToRecentlyViewed({
-        id: product.variants[0].id,
+  const swiperRef = useRef(null);
+  const clean = product
+    ? {
+        admin_graphql_api_id: product.admin_graphql_api_id,
+        created_at: product.created_at,
+        description: product.description,
+        id: product.id,
+        images: product.images || [],
+        liked: product.liked || false,
+        options: product.options || [],
+        product_type: product.product_type,
+        selectedColor: product.selectedColor,
+        status: product.status,
+        tags: product.tags || [],
         title: product.title,
-        image: product.image.src,
-        price: parseInt(product.variants[0].price),
-      });
+        updated_at: product.updated_at || null,
+        variants: (product.variants || []).map((v) => ({
+          id: v.id,
+          product_id: v.product_id,
+          title: v.title || "",
+          price: v.price,
+          position: v.position,
+          image: v.image,
+          inventory_quantity: v.inventory_quantity,
+          selected_options: v.selected_options || [],
+          created_at: v.created_at,
+          updated_at: v.updated_at,
+        })),
+        vendor: product.vendor,
+      }
+    : null;
+
+  console.log("cleaned json data", clean);
+  const uniqueColors = [
+    ...new Set(clean?.variants?.map((v) => v.selected_options[0]?.value)),
+  ];
+  const [activeVariant, setActiveVariant] = useState(
+    clean?.variants?.[0] || null
+  );
+  const [selectedColor, setselectedColor] = useState(uniqueColors[0]);
+  const handleColorChange = (color) => {
+    const found = clean.variants.find(
+      (v) => v.selected_options[0]?.value === color
+    );
+
+    if (found) {
+      setActiveVariant(found);
     }
-  }, []);
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-
-  // click on a color toggle
-  const handleColorChange = (colorObj) => {
-    setActiveColor(colorObj.id);
-    setSelectedImage(colorObj.mainImage);
-    if (swiperRef.current) {
-      swiperRef.current.slideTo(colorObj.slideIndex);
-    }
-  };
-
-  function normalizeProduct(raw) {
-    return {
-      admin_graphql_api_id: raw.admin_graphql_api_id,
-      colors: raw.colors || [],
-      created_at: raw.created_at,
-      description: raw.description,
-      id: raw.id,
-      image: raw.image,
-      images: raw.images || [],
-      liked: raw.liked || false,
-      options: raw.options || [],
-      product_type: raw.product_type,
-      selectedColor: raw.selectedColor,
-      status: raw.status,
-      tags: raw.tags || [],
-      title: raw.title,
-      updated_at: raw.updated_at || null,
-      variants: (raw.variants || []).map((v) => ({
-        id: v.id,
-        product_id: v.product_id,
-        title: v.title || "",
-        price: v.price,
-        position: v.position,
-        image: v.image,
-        inventory_quantity: v.inventory_quantity,
-        selected_options: v.selected_options || [],
-        created_at: v.created_at,
-        updated_at: v.updated_at,
-      })),
-      vendor: raw.vendor,
-    };
-  }
-
-  const clean = normalizeProduct(product);
-
-  const variantColors = clean?.variants?.map(v => 
-  v.selected_options?.find(opt => opt.name === "Color")?.value
-);
-
-  console.log(clean);
-
-  console.log(variantColors);
-
   return (
     <>
       {/* Backgound */}
@@ -196,26 +113,26 @@ function Product_Description() {
                 pagination={{ dynamicBullets: true }}
                 modules={[Pagination]}
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
-                onSlideChange={(swiper) => {
-                  const idx = swiper.activeIndex;
-                  const colorForSlide = visibleColors.find(
-                    (c) => c.slideIndex === idx
-                  );
-                  if (colorForSlide) {
-                    setActiveColor(colorForSlide.id);
-                    setSelectedImage(colorForSlide.mainImage);
-                  }
-                }}
+                // onSlideChange={(swiper) => {
+                //   const idx = swiper.activeIndex;
+                //   // const colorForSlide = visibleColors.find(
+                //   //   (c) => c.slideIndex === idx
+                //   // );
+                //   if (colorForSlide) {
+                //     // setActiveColor(colorForSlide.id);
+                //     setSelectedImage(colorForSlide.mainImage);
+                //   }
+                // }}
               >
-              {clean?.images?.map((img, index) => (
+                {/* {clean?.images?.map((img, index) => ( */}
                 <SwiperSlide>
-
                   <img
                     className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
-                    src={img?.src}
+                    src={activeVariant?.image}
                     alt="Product"
                   />
-                </SwiperSlide>))}
+                </SwiperSlide>
+                {/* ))} */}
               </Swiper>
             </div>
 
@@ -226,15 +143,14 @@ function Product_Description() {
                   {product?.title}
                 </h1>
                 <h2 className="text-[26px] font-semibold sm:text-[32px]">
-                  ₹{parseInt(product.variants[0].price).toLocaleString("en-IN")}
+                  ₹{parseInt(activeVariant?.price).toLocaleString("en-IN")}
+                  {/* ₹{parseInt(product.variants[0].price).toLocaleString("en-IN")} */}
                 </h2>
                 <p className="text-[#878787] text-[14px]">
                   MRP Incl. of all taxes
                 </p>
               </div>
-
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
-
               {/* Description */}
               <div>
                 <h3 className="text-[#6F6F6F] text-[14px] font-medium">
@@ -278,9 +194,7 @@ function Product_Description() {
                   </div>
                 </div>
               </div>
-
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
-
               {/* Locations */}
               <div className="space-y-6 sm:space-y-3">
                 <h3 className="text-[#6F6F6F] text-[14px] font-medium">
@@ -303,29 +217,40 @@ function Product_Description() {
                   Delivered by Oct 10
                 </p>
               </div>
-
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
-
-              {/* Color Options */}
+              Color Options
               <div className="mt-2 flex justify-start gap-x-4">
-                {variantColors.map((color) => (
-                  <img
-                    key={color.id}
+                {uniqueColors.map((color) => (
+                  <button
+                    key={color}
                     onClick={() => handleColorChange(color)}
-                    className={`w-[45px] h-[45px] rounded-full bg-white transition-all duration-200 cursor-pointer
-                      ${
-                        activeColor === color.id
-                          ? "border-[4px] border-primary p-[2px]"
-                          : "border-[2px] border-transparent hover:border-primary hover:p-[2px]"
-                      }`}
-                    src={color.ellipse}
-                    alt={color.id}
-                  />
+                    className={`px-4 py-2 rounded-full border
+          ${
+            selectedColor === color
+              ? "border-primary text-primary"
+              : "border-gray-400"
+          }
+        `}
+                  >
+                    {color}
+                  </button>
                 ))}
               </div>
+              {/* 
+                 <img
+                  // key={color.id}
+                  // onClick={() => handleColorChange(color)}
+                  // className={`w-[45px] h-[45px] rounded-full bg-white transition-all duration-200 cursor-pointer
+                  //   ${
+                  //     activeColor === color.id
+                  //       ? "border-[4px] border-primary p-[2px]"
+                  //       : "border-[2px] border-transparent hover:border-primary hover:p-[2px]"
+                  //   }`}
 
+                  // src={variant?.images}
+                  // alt={color.id}
+                /> */}
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
-
               {/* Buttons */}
               <div className="max-w-[500px] ">
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
@@ -358,7 +283,7 @@ function Product_Description() {
             </h1>
 
             <div className="flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
-              {matchingProducts.map((item) => {
+              {/* {matchingProducts.map((item) => {
                 return (
                   <div
                     key={item.id}
@@ -402,7 +327,7 @@ function Product_Description() {
                     </div>
                   </div>
                 );
-              })}
+              })} */}
             </div>
           </div>
 

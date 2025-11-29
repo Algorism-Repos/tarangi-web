@@ -36,9 +36,9 @@ import left_arrow from "../assets/left_arrow.png";
 import {
   FetchAllCollectionsFromShopify,
   FetchAllProductByCollections,
-  FetchAllProductFromShopify,
 } from "../handler/api Handler";
 import { AppContext } from "../context/AppContext";
+import LoadingScreen from "../components/LoadingScreen";
 
 function Home() {
   const [silverPrice, SetSilverPrice] = useState();
@@ -48,9 +48,11 @@ function Home() {
   const [modalToggle, setModalToggle] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
   const [FestiveFiltered, setFestiveFiltered] = useState([]);
+   const {   loading,
+        setLoading,} =
+        useContext(AppContext);
   function toggle(product) {
     setSelectedType(product);
-    setModalToggle(!modalToggle);
   }
   const prevRef = useRef(null);
   const nextRef = useRef(null);
@@ -62,7 +64,9 @@ function Home() {
       setCollections(response);
     } catch (error) {
       console.log(error);
-    }
+    } finally {
+    setLoading(false);
+  }
   };
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -403,7 +407,10 @@ function Home() {
           </p>
         </div>
       </div>
-
+    {loading ? (
+  <LoadingScreen />
+) : (
+  <>
       {/* Collections - Section */}
       <div className="design-section py-40 relative">
         <div className="max-w-7xl mx-auto tracking-[1px]">
@@ -570,6 +577,8 @@ function Home() {
           </div>
         </div>
       </div>
+      </>
+      )}
 
       {/* Gold vs Gold Plated Silver Section */}
       <div className="bg-secondary">

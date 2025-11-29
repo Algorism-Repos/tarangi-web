@@ -3,7 +3,6 @@ import logo from "../assets/Tarangi-Logo2.png";
 
 export default function LoadingScreen() {
 
-  // 🟢 Disable scroll when loading screen is active
   useEffect(() => {
     document.body.style.overflow = "hidden";
 

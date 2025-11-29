@@ -42,7 +42,7 @@ function Cart() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
 
-  // ✅ Keep localStorage in sync + notify Navbar
+  // Keep localStorage in sync + notify Navbar
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
 
