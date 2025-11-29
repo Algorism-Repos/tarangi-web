@@ -140,7 +140,8 @@ function Terms_Condition() {
 
                         <p className="mt-3">Tarangi will acknowledge all complaints within 48 hours and endeavour to resolve them within the prescribed statutory timeframe.</p>
                     </div>
-
+                    
+                    
                 </div>
             </div>
 
