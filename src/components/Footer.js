@@ -72,21 +72,6 @@ function Footer() {
                     </Marquee>
                 </div>
 
-                {/* Clients */}
-                {/* <div className="w-full max-w-7xl mx-auto my-20 px-4 sm:px-6 lg:px-8">
-                    <Marquee pauseOnHover={true} speed={100} gradient={false}>
-                        <div className="flex items-center gap-x-8 sm:gap-x-12 lg:gap-x-16 px-4 sm:px-6 lg:px-8">
-                            {Clients.map((item) => (
-                                <img
-                                    className="h-10 sm:h-14 lg:h-20 w-auto object-contain"
-                                    src={item.src}
-                                    alt="Client logo"
-                                />
-                            ))}
-                        </div>
-                    </Marquee>
-                </div> */}
-
                 {/* Insta Button */}
                 <a href="https://www.instagram.com/tarangistars" target="_blank"><button className="font-poppins text-white text-[20px] font-extralight leading-normal bg-[#4B001A] rounded-[93px] py-[10px] px-[20px] cursor-pointer sm:text-[24px] sm:mt-6 ">Explore More</button></a>
             </div>
@@ -103,7 +88,7 @@ function Footer() {
                         <div>
                             <img src={logo} alt="brand-logo" className="w-[231px] h-fit" />
 
-                            <div className=" flex flex-row items-center gap-x-6 w-fit ml-8 sm:ml-10">
+                            <div className=" flex flex-row items-center gap-x-6 w-fit mx-auto ">
                                 <a href="https://www.instagram.com/tarangijewels/" target="_blank"><img src={instagram} className="w-[30px] h-[31px]" /></a>
                                 <a href="https://wa.me/919003058300/?text=Hi," target="_blank"><img src={whatsapp} className="w-[40px] h-[40px]" /></a>
                             </div>
@@ -117,6 +102,8 @@ function Footer() {
                                 <Link to="/about">About</Link>
                                 <Link to="/products">Products</Link>
                                 <Link to="/blog">Blog</Link>
+                                <Link to="/terms">Terms & Conditions</Link>
+                                <Link to="/privacy">Privacy Policy</Link>
                             </div>
 
                             {/* Product Catergory */}
