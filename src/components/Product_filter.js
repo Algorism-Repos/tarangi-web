@@ -21,7 +21,6 @@ function Product_Filter({ productCatergory }) {
   const { productListFromShopify, filteredProducts, setFilteredProducts } =
     useContext(AppContext);
 
-  // Use same options everywhere (desktop + mobile)
   const SortOptions = [
     "Latest",
     "Featured",
@@ -53,10 +52,8 @@ function Product_Filter({ productCatergory }) {
   const [showMoreCategory, setShowMoreCategory] = useState(false);
   const [showMorePrice, setShowMorePrice] = useState(false);
 
-  // Convert productCatergory object keys to array
   const categories = Object.keys(productCatergory);
 
-  // Limit display to 5 unless "show more" is active
   const visibleCategories = showMoreCategory
     ? categories
     : categories.slice(0, 5);
@@ -121,11 +118,8 @@ function Product_Filter({ productCatergory }) {
     setFilteredProducts(filtered);
   };
 
-  const [products, setProducts] = useState([]);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+
 
   // 🔹 Unified sort selection logic (used by desktop + mobile)
   const handleSortSelection = (option) => {
@@ -157,8 +151,8 @@ function Product_Filter({ productCatergory }) {
         (p) => p.min === range.min && p.max === range.max
       )
         ? selectedPrices.filter(
-            (p) => p.min !== range.min || p.max !== range.max
-          )
+          (p) => p.min !== range.min || p.max !== range.max
+        )
         : [...selectedPrices, range];
       setSelectedPrices(updated);
       handleFilterChange(selectedCategories, updated);
@@ -284,9 +278,8 @@ function Product_Filter({ productCatergory }) {
                     className="flex mt-4 cursor-pointer gap-x-[8px] items-center select-none"
                   >
                     <img
-                      className={`w-[26px] transform transition-transform duration-300 ${
-                        showMore ? "rotate-180" : ""
-                      }`}
+                      className={`w-[26px] transform transition-transform duration-300 ${showMore ? "rotate-180" : ""
+                        }`}
                       src={down_arrow_red}
                       alt="toggle_arrow"
                     />
@@ -333,9 +326,8 @@ function Product_Filter({ productCatergory }) {
                     onClick={() => setShowMoreCategory(!showMoreCategory)}
                   >
                     <img
-                      className={`w-[26px] transform transition-transform duration-300 ${
-                        showMoreCategory ? "rotate-180" : ""
-                      }`}
+                      className={`w-[26px] transform transition-transform duration-300 ${showMoreCategory ? "rotate-180" : ""
+                        }`}
                       src={down_arrow_red}
                       alt="toggle_arrow"
                     />
@@ -479,10 +471,9 @@ function Product_Filter({ productCatergory }) {
                     <button
                       onClick={() => handleSortSelection("Latest")}
                       className={`text-left text-[16px] font-poppins cursor-pointer 
-                        ${
-                          selectedSort === "Latest"
-                            ? "text-[#6E0027] font-semibold"
-                            : "text-[#6E6E6E]"
+                        ${selectedSort === "Latest"
+                          ? "text-[#6E0027] font-semibold"
+                          : "text-[#6E6E6E]"
                         }`}
                     >
                       Latest
@@ -491,10 +482,9 @@ function Product_Filter({ productCatergory }) {
                     <button
                       onClick={() => handleSortSelection("Featured")}
                       className={`text-left text-[16px] font-poppins cursor-pointer 
-                        ${
-                          selectedSort === "Featured"
-                            ? "text-[#6E0027] font-semibold"
-                            : "text-[#6E6E6E]"
+                        ${selectedSort === "Featured"
+                          ? "text-[#6E0027] font-semibold"
+                          : "text-[#6E6E6E]"
                         }`}
                     >
                       Featured
@@ -503,10 +493,9 @@ function Product_Filter({ productCatergory }) {
                     <button
                       onClick={() => handleSortSelection("Price High to Low")}
                       className={`text-left text-[16px] font-poppins cursor-pointer 
-                        ${
-                          selectedSort === "Price High to Low"
-                            ? "text-[#6E0027] font-semibold"
-                            : "text-[#6E6E6E]"
+                        ${selectedSort === "Price High to Low"
+                          ? "text-[#6E0027] font-semibold"
+                          : "text-[#6E6E6E]"
                         }`}
                     >
                       Price High to Low
@@ -515,10 +504,9 @@ function Product_Filter({ productCatergory }) {
                     <button
                       onClick={() => handleSortSelection("Price Low to High")}
                       className={`text-left text-[16px] font-poppins cursor-pointer 
-                        ${
-                          selectedSort === "Price Low to High"
-                            ? "text-[#6E0027] font-semibold"
-                            : "text-[#6E6E6E]"
+                        ${selectedSort === "Price Low to High"
+                          ? "text-[#6E0027] font-semibold"
+                          : "text-[#6E6E6E]"
                         }`}
                     >
                       Price Low to High
@@ -541,7 +529,7 @@ function Product_Filter({ productCatergory }) {
               >
                 {/* CARD */}
                 <div
-                  className="font-poppins bg-light-sandal w-full max-w-[430px] rounded-md shadow-xl p-5 max-h-[80vh] overflow-y-auto"
+                  className="font-poppins bg-light-sandal w-full h-fit rounded-md shadow-xl p-5 max-h-[80vh] overflow-y-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {/* HEADER */}
@@ -571,11 +559,10 @@ function Product_Filter({ productCatergory }) {
                       {/* Category row + badge */}
                       <div className="flex items-center justify-between w-full mb-3">
                         <button
-                          className={`text-left ${
-                            tab === "productCatergory"
-                              ? "text-primary font-medium"
-                              : ""
-                          }`}
+                          className={`text-left ${tab === "productCatergory"
+                            ? "text-primary font-medium"
+                            : ""
+                            }`}
                           onClick={() => setTab("productCatergory")}
                         >
                           Product Category
@@ -591,11 +578,10 @@ function Product_Filter({ productCatergory }) {
                       <hr className="border border-t-[#D9D9D9] w-full mb-3" />
 
                       <button
-                        className={`text-left mb-3 ${
-                          tab === "priceRange"
-                            ? "text-primary font-medium"
-                            : ""
-                        }`}
+                        className={`text-left mb-3 ${tab === "priceRange"
+                          ? "text-primary font-medium"
+                          : ""
+                          }`}
                         onClick={() => setTab("priceRange")}
                       >
                         Price Range
@@ -603,9 +589,8 @@ function Product_Filter({ productCatergory }) {
                       <hr className="border border-t-[#D9D9D9] w-full mb-3" />
 
                       <button
-                        className={`text-left mb-3 ${
-                          tab === "occasion" ? "text-primary font-medium" : ""
-                        }`}
+                        className={`text-left mb-3 ${tab === "occasion" ? "text-primary font-medium" : ""
+                          }`}
                         onClick={() => setTab("occasion")}
                       >
                         Occasion
@@ -624,15 +609,14 @@ function Product_Filter({ productCatergory }) {
                     {/* RIGHT CONTENT */}
                     <div className="flex-1">
                       {/* Category */}
+
                       {tab === "productCatergory" && (
                         <div>
                           <div className="space-y-4">
                             {Object.keys(productCatergory)
                               .slice(
                                 0,
-                                showMoreCategory
-                                  ? Object.keys(productCatergory).length
-                                  : 5
+                                showMoreCategory ? Object.keys(productCatergory).length : 5
                               )
                               .map((type) => (
                                 <label
@@ -643,9 +627,8 @@ function Product_Filter({ productCatergory }) {
                                     <label className="custom-checkbox">
                                       <input
                                         type="checkbox"
-                                        onChange={() =>
-                                          handleCheckbox(type, "category")
-                                        }
+                                        checked={selectedCategories.includes(type)}
+                                        onChange={() => handleCheckbox(type, "category")}
                                       />
                                       <span className="checkmark"></span>
                                     </label>
@@ -654,6 +637,7 @@ function Product_Filter({ productCatergory }) {
                                 </label>
                               ))}
                           </div>
+
 
                           {/* Show more/less button */}
                           {Object.keys(productCatergory).length > 5 && (
@@ -664,9 +648,8 @@ function Product_Filter({ productCatergory }) {
                               }
                             >
                               <img
-                                className={`w-[20px] transform transition-transform duration-300 ${
-                                  showMoreCategory ? "rotate-180" : ""
-                                }`}
+                                className={`w-[20px] transform transition-transform duration-300 ${showMoreCategory ? "rotate-180" : ""
+                                  }`}
                                 src={down_arrow_red}
                                 alt="toggle_arrow"
                               />
@@ -684,40 +667,41 @@ function Product_Filter({ productCatergory }) {
                           <div className="space-y-4">
                             {priceRanges
                               .slice(0, showMorePrice ? priceRanges.length : 5)
-                              .map((items) => (
-                                <label
-                                  key={items.label}
-                                  className="flex items-center justify-between text-font-grey cursor-pointer"
-                                >
-                                  <div className="flex items-center space-x-2">
-                                    <label className="custom-checkbox">
-                                      <input
-                                        type="checkbox"
-                                        onChange={() =>
-                                          handleCheckbox(items.label, "price")
-                                        }
-                                      />
-                                      <span className="checkmark"></span>
-                                    </label>
-                                    <span className="text-[14px]">
-                                      {items.label}
-                                    </span>
-                                  </div>
-                                </label>
-                              ))}
+                              .map((items) => {
+                                const range = parsePriceRange(items.label);
+                                const checked = selectedPrices.some(
+                                  (p) => p.min === range.min && p.max === range.max
+                                );
+
+                                return (
+                                  <label
+                                    key={items.label}
+                                    className="flex items-center justify-between text-font-grey cursor-pointer"
+                                  >
+                                    <div className="flex items-center space-x-2">
+                                      <label className="custom-checkbox">
+                                        <input
+                                          type="checkbox"
+                                          checked={checked}
+                                          onChange={() => handleCheckbox(items.label, "price")}
+                                        />
+                                        <span className="checkmark"></span>
+                                      </label>
+                                      <span className="text-[14px]">{items.label}</span>
+                                    </div>
+                                  </label>
+                                );
+                              })}
                           </div>
 
                           {priceRanges.length > 5 && (
                             <div
                               className="flex mt-4 cursor-pointer gap-x-[8px] items-center"
-                              onClick={() =>
-                                setShowMorePrice(!showMorePrice)
-                              }
+                              onClick={() => setShowMorePrice(!showMorePrice)}
                             >
                               <img
-                                className={`w-[20px] transform transition-transform duration-300 ${
-                                  showMorePrice ? "rotate-180" : ""
-                                }`}
+                                className={`w-[20px] transform transition-transform duration-300 ${showMorePrice ? "rotate-180" : ""
+                                  }`}
                                 src={down_arrow_red}
                                 alt="toggle_arrow"
                               />
@@ -728,6 +712,7 @@ function Product_Filter({ productCatergory }) {
                           )}
                         </div>
                       )}
+
 
                       {/* Occasion */}
                       {tab === "occasion" && (
@@ -760,7 +745,7 @@ function Product_Filter({ productCatergory }) {
           {/* Right side: products */}
           <Product_Listing productCatergory={filteredProducts} />
         </div>
-      </div>
+      </div >
     </>
   );
 }

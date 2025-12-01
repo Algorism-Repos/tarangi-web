@@ -17,7 +17,7 @@ function Cart() {
     setShowSummary(!showSummary);
   };
 
-  // ✅ Initial cart items (fallback if nothing in localStorage)
+  
   const initialCartItems = [
     {
       id: 1,
@@ -71,7 +71,7 @@ function Cart() {
 
   return (
     <>
-      <div className="font-poppins bg-light-sandal pt-[35px] sm:py-[70px]">
+      <div className="font-poppins bg-light-sandal pt-[35px] ">
         <div className="max-w-[1300px] mx-auto">
           {/* Heading */}
           <div className="lg:flex flex-auto justify-items-center  gap-x-[18px]">
@@ -94,7 +94,7 @@ function Cart() {
                     key={item.id}
                     className="bg-[#FFFAF3] max-w-[694px] p-[24px] rounded-[16px] shadow-2xl mb-[25px] max-[425px]:p-[16px]"
                   >
-                    {/* ❌ DELETE ICON (opens modal) */}
+                    {/* DELETE ICON  */}
                     <img
                       className="float-right w-[29px] h-[29px] cursor-pointer max-[425px]:w-[22px] max-[425px]:h-[22px]"
                       src={close_icon}
@@ -178,7 +178,7 @@ function Cart() {
 
             {/* Summary Box (Desktop) */}
             {cartItems.length > 0 && (
-              <div className="w-[466px] mx-auto xl:mx-0 max-[425px]:w-full hidden sm:block">
+              <div className="w-[466px] mx-auto xl:mx-0 max-[425px]:w-full hidden lg:block">
                 <Pincode_Input />
 
                 <div className="bg-[#FFFAF3] p-[24px] rounded-[16px] shadow-2xl mt-[25px]">
@@ -231,7 +231,7 @@ function Cart() {
           </div>
 
           {/* Recommended products */}
-          <div className="my-[100px] px-5 md:px-0 max-[425px]:my-[60px]">
+          <div className="py-12 px-5 md:px-0 max-[425px]:my-[60px]">
             <h1 className="font-atteron  text-primary text-[26px] text-center sm:text-[30px] xl:text-left max-[425px]:text-[22px] mx-auto">
               Frequently bought together
             </h1>
@@ -293,7 +293,7 @@ function Cart() {
 
           {/* Mobile Version Summary */}
           {cartItems.length > 0 && (
-            <div className="block sm:hidden">
+            <div className="block lg:hidden">
               {showSummary && (
                 <div className="bg-[#FFFAF3] p-4 max-w-[361px] rounded-[12px] shadow-lg mt-4 m-auto my-9 transition-all duration-300 ease-in-out">
                   <h3 className="text-[15px] font-semibold text-[#404040] mb-3">
