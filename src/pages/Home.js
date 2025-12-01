@@ -269,17 +269,17 @@ function Home() {
           </div>
         </SwiperSlide> */}
         <SwiperSlide>
-          <div className="banner-section">
-            <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
+          <div className="banner-section ">
+            <h1 className="font-atteron uppercase text-[40px] text-center xl:text-left sm:text-[50px] xl:text-[65px] text-white font-normal w-full sm:max-w-[720px] mx-auto tracking-[1px] xl:mx-0">
               Born from tradition Designed for today
             </h1>
-            <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">
+            <h4 className="font-poppins text-[13px] max-w-[260px]  sm:text-[22px] font-normal leading-normal text-white text-center xl:text-left mt-8 max-w-[640px] mx-auto xl:mx-0">
               Because exculsive 925 silver jewelry should feel as unique as the
               one who wears it.
             </h4>
             <a
               href="#launchOffers"
-              className="w-fit hover:scale-110 transition duration-300"
+              className="w-fit hover:scale-110 transition duration-300 mx-auto xl:mx-0"
             >
               <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
                 View our Best Sellers
@@ -289,72 +289,44 @@ function Home() {
         </SwiperSlide>
 
         {/* Women banner */}
-        <SwiperSlide>
-          <div className="banner-2">
-            <h1 className="font-atteron uppercase text-[40px] leading-[60px] text-center sm:text-left sm:text-[65px] text-[#5B3A09] sm:leading-[80px] font-normal w-full sm:max-w-[780px] tracking-[1px]">
+      <SwiperSlide>
+          <div className="women-banner-slider">
+            <h1 className="font-atteron uppercase text-[#5B3A09] text-[40px] text-center xl:text-left sm:text-[50px] xl:text-[65px] font-normal w-full sm:max-w-[780px] tracking-[1px]">
               Embrace your beauty Shine with Elegance
             </h1>
-            <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-[#5B3A09] text-center sm:text-left mt-3 sm:mt-8 max-w-[640px]">
+            <h4 className="font-poppins text-[13px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-[#5B3A09] text-center xl:text-left mt-3 sm:mt-6 xl:mt-8 max-w-[640px]">
               Because every exquisite 925 silver jewelry should perfectly reflect the grace of its wearer.
             </h4>
             <a
               href="#launchOffers"
               className="w-fit hover:scale-110 transition duration-300"
             >
-              <button className=" mt-4 sm:mt-12 rounded-[32px] bg-[#5B3A09] font-poppins text-[16px] font-normal text-white py-[16px] px-[25px] cursor-pointer">
+              <button className=" mt-4 sm:mt-7 xl:mt-12 rounded-[32px] bg-[#5B3A09] font-poppins text-[16px] font-normal text-white py-[16px] px-[25px] cursor-pointer">
                 View our womens Collections
               </button>
             </a>
           </div>
         </SwiperSlide>
 
-        {/* <SwiperSlide>
-          <div className="banner-4">
-            <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
-              Born from tradition Designed for today
-            </h1>
-            <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            </h4>
-            <a
-              href="#launchOffers"
-              className="w-fit hover:scale-110 transition duration-300"
-            >
-              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
-                View our Collections
-              </button>
-            </a>
-          </div>
-        </SwiperSlide> */}
-
         <SwiperSlide>
-          <div className="banner-5">
-            <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[850px] tracking-[1px]">
+          <div className="men-banner-slider">
+            <h1 className="font-atteron uppercase text-white text-[40px] text-center xl:text-left sm:text-[50px] xl:text-[62px] font-normal w-full sm:max-w-[780px] tracking-[1px]">
               Heritage of Strength Crafted for Character
             </h1>
-            <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">
+            <h4 className="font-poppins text-[13px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center xl:text-left mt-3 sm:mt-6 xl:mt-8 max-w-[640px]">
               Because distinguished 925 silver jewelry should feel as commanding as the one who wears it.
             </h4>
             <a
               href="#launchOffers"
               className="w-fit hover:scale-110 transition duration-300"
             >
-              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#8F103B] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
+              <button className=" mt-10 sm:mt-11 rounded-[32px] bg-[#8F103B] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
                 View our mens Collections
               </button>
             </a>
           </div>
-        </SwiperSlide>
+        </SwiperSlide> 
       </Swiper>
-
-      {/* Home Banner */}
-      {/* <div className="banner-section">
-                <h1 className="font-atteron uppercase text-[52px] leading-[70px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px]">Born from tradition Designed for today</h1>
-                <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">Because exculsive 925 silver jewelry should feel as unique as the one who wears it.</h4>
-                <a href="#launchOffers" className="w-fit">
-                    <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[16px] cursor-pointer">View our Collection</button>
-                </a>
-            </div> */}
 
       <div className="whyus">
         <h1 className="font-atteron text-[52px] sm:text-[72px] text-center text-[#5C0A1F] leading-normal">
@@ -380,7 +352,7 @@ function Home() {
           <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white ">
             Our Curations
           </h1>
-          <div className="flex flex-wrap gap-y-[160px] items-center justify-center gap-x-12 relative my-36 sm:my-56">
+          <div className="flex flex-wrap gap-y-[100px] items-center justify-center gap-x-12 relative my-36 sm:my-56">
             <div
               className="border-2 border-white w-[360px] h-[374px] relative z-0"
               onClick={() => {
@@ -390,7 +362,7 @@ function Home() {
               <img
                 src={men_design}
                 alt="men-image"
-                className="w-[359px] h-[539px] sm:w-[340px] sm:h-[400px] h-fit mx-auto transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
+                className="w-[359px] h-[539px] sm:w-[340px] sm:h-[395px] h-fit mx-auto transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
               />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/3 ">
                 Men
@@ -405,8 +377,8 @@ function Home() {
               {" "}
               <img
                 src={women_design}
-                alt="men-image"
-                className="w-[359px] h-[430px] sm:w-[378px] sm:h-[420px] transform transition-transform duration-300 ease-out hover:scale-105 absolute bottom-[-0px] z-10 "
+                alt="women-image"
+                className="w-[359px] h-[430px] sm:w-[378px] sm:h-[415px] transform transition-transform duration-300 ease-out hover:scale-105 absolute bottom-[-0px] z-10 "
               />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/4 ">
                 Women
@@ -420,14 +392,30 @@ function Home() {
             >
               <img
                 src={couple_design}
-                alt="men-image"
-                className="w-[360px] h-[360px] sm:w-[380px] sm:h-[420px] object-cover h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px]  z-10"
+                alt="couple-image"
+                className="w-[360px] h-[360px] sm:w-[380px] sm:h-[410px] object-cover h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px]  z-10"
               />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-[-15px] left-1/4 ">
                 Couples
               </h2>
             </div>
+              {/* <div
+              className="border-2 border-white w-[360px] h-[374.15px] relative z-0"
+              onClick={() => {
+                toggle();
+              }}
+            >
+              <img
+                src={couple_design}
+                alt="couple-image"
+                className="w-[360px] h-[360px] sm:w-[380px] sm:h-[410px] object-cover h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px]  z-10"
+              />
+              <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-[-15px] left-1/4 ">
+                Couples
+              </h2>
+            </div> */}
           </div>
+          
 
           {/* Best Sellers */}
           <div id="launchOffers" className="max-w-full">

@@ -94,7 +94,7 @@ function Footer() {
                             </div>
                         </div>
 
-                        <div className="flex gap-x-[65px] gap-y-10">
+                        <div className="flex gap-x-[25px] sm:gap-x-[65px] gap-y-10">
 
                             {/* Subpages */}
                             <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] ml-6 sm:ml-0 md:border-l border-[#D6A76F] md:pl-[54px]">
@@ -107,7 +107,7 @@ function Footer() {
                             </div>
 
                             {/* Product Catergory */}
-                            <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] ml-6 sm:ml-0">
+                            <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] ml-7 sm:ml-0">
                                 <Link to="#">Products</Link>
                                 <Link to="#">Women</Link>
                                 <Link to="#">Men</Link>

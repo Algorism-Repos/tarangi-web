@@ -237,6 +237,13 @@ function Navbar() {
             About Us
           </Link>
 
+          {/* {productDropdown && (
+            <div
+              className="fixed inset-0 bg-black/40 z-20"
+              onClick={() => setProductDropdown(false)}
+            ></div>
+          )} */}
+          
           {/* Product dropdown */}
           <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
 
@@ -245,6 +252,7 @@ function Navbar() {
               Products
               <img className="w-[28px] h-[28px]" src={down_arrow} alt="" />
             </Link>
+
             {/* Dropdown */}
             {productDropdown && (
               <div className="fixed inset-0 z-20 bg-black/40"></div>
