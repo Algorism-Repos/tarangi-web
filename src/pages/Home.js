@@ -29,6 +29,7 @@ import offer_product_3 from "../assets/offer_product_3.png";
 import men_design from "../assets/men_design.png";
 import women_design from "../assets/women_1.png";
 import couple_design from "../assets/couple_designpng.png";
+import gift_collection from "../assets/gift_category.png"
 import pink_collection from "../assets/pink_collection_design.png";
 import statement_earrings from "../assets/statement_earrings_design.png";
 import dangers from "../assets/dangers_design.png";
@@ -397,6 +398,21 @@ function Home() {
               />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-[-15px] left-1/4 ">
                 Couples
+              </h2>
+            </div>
+            <div
+              className="border-2 border-white w-[360px] h-[374.15px] relative z-0"
+              onClick={() => {
+                toggle();
+              }}
+            >
+              <img
+                src={gift_collection}
+                alt="couple-image"
+                className="w-[360px] h-[360px] sm:w-[380px] sm:h-[410px] object-cover h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px]  z-10"
+              />
+              <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-[-15px] left-1/4 ">
+                Gifts
               </h2>
             </div>
               {/* <div
@@ -859,7 +875,7 @@ function Home() {
       </div>
 
       {/* Before After Slider */}
-      <div className="before-after-section ">
+      <div className="before-after-section">
         <div className="max-w-7xl mx-auto py-0 sm:py-10 px-3 sm:px-0">
           <h1 className="font-atteron section-heading text-[26px]  sm:text-[64px] text-center text-[#5C0A1F] mb-16">
             <span className="text-[28px] sm:text-[64px]"> Enhance Your Look With</span> <br /> Tarangi

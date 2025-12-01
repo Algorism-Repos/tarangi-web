@@ -1,4 +1,5 @@
-import React from "react";
+import { useEffect } from "react";
+
 
 // image
 import blogDescription_banner from "../assets/blog_description.png"
@@ -28,6 +29,9 @@ function Blog_Description() {
         },
     ];
 
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, []);
 
     return (
         <>

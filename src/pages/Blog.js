@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router";
 
 // Images
 import Search_icon from "../assets/search_icon_red.png";
@@ -160,24 +161,26 @@ function Blog() {
         {/* BLOG LIST */}
         <div className="max-w-[1320px] mx-auto px-4 my-[50px] flex flex-wrap gap-x-[15px] gap-y-[60px] justify-between">
           {blogData.map((items, i) => (
-            <div key={i} className="max-w-[410px] mx-auto font-[poppins]">
-              <img
-                className="w-full object-cover rounded-[18px]"
-                src={items.src}
-                alt="Blog"
-              />
+            <Link to="/blogdescription">
+              <div key={i} className="max-w-[410px] mx-auto font-[poppins]">
+                <img
+                  className="w-full object-cover rounded-[18px]"
+                  src={items.src}
+                  alt="Blog"
+                />
 
-              <p className="text-[#6E6E6E] text-[14px] mt-[24px]">
-                {items.date}
-              </p>
-              <h1 className="text-[#404040] text-[24px] mt-2">
-                {items.heading}
-              </h1>
-              <p className="text-[#6E0027] text-[16px]">{items.description}</p>
-              <button className="text-[#6E0027] font-semibold mt-2">
-                Read more
-              </button>
-            </div>
+                <p className="text-[#6E6E6E] text-[14px] mt-[24px]">
+                  {items.date}
+                </p>
+                <h1 className="text-[#404040] text-[24px] mt-2">
+                  {items.heading}
+                </h1>
+                <p className="text-[#6E0027] text-[16px]">{items.description}</p>
+                <button className="text-[#6E0027] font-semibold mt-2">
+                  Read more
+                </button>
+              </div>
+            </Link>
           ))}
         </div>
       </div>

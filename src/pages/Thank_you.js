@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
+import { Link } from "react-router";
 
 // Images 
 // import craftedby from '../assets/craftedby.png'
@@ -42,13 +43,16 @@ function ThankYou() {
 
                         {/* Buttons */}
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-[16px] mt-6 xl:justify-start">
-                            <button className="flex items-center justify-center gap-x-[8px] bg-[#4B001A] w-[220px] h-[56px] rounded-full text-white text-[18px] font-medium ">
-                                Continue Shopping
-                            </button>
-
-                            <button className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-[210px] h-[56px] rounded-full text-primary text-[18px] font-medium ">
-                                View my Orders
-                            </button>
+                            <Link to="/products">
+                                <button className="flex items-center justify-center gap-x-[8px] bg-[#4B001A] w-[220px] h-[56px] rounded-full text-white text-[18px] font-medium ">
+                                    Continue Shopping
+                                </button>
+                            </Link>
+                            <Link to="/home">
+                                <button className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-[210px] h-[56px] rounded-full text-primary text-[18px] font-medium ">
+                                    Back to Home
+                                </button>
+                            </Link>
                         </div>
                     </div>
 
