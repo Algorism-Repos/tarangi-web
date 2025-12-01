@@ -28,7 +28,7 @@ import offer_product_2 from "../assets/offer_product_2.png";
 import offer_product_3 from "../assets/offer_product_3.png";
 import men_design from "../assets/men_design.png";
 import women_design from "../assets/women_1.png";
-import couple_design from "../assets/couple_design.png";
+import couple_design from "../assets/couple_designpng.png";
 import pink_collection from "../assets/pink_collection_design.png";
 import statement_earrings from "../assets/statement_earrings_design.png";
 import dangers from "../assets/dangers_design.png";
@@ -382,7 +382,7 @@ function Home() {
           </h1>
           <div className="flex flex-wrap gap-y-[160px] items-center justify-center gap-x-12 relative my-36 sm:my-56">
             <div
-              className="border-2 border-white w-[360px] h-[374px] relative z-0 overflow-hidden"
+              className="border-2 border-white w-[360px] h-[374px] relative z-0"
               onClick={() => {
                 toggle();
               }}
@@ -390,7 +390,7 @@ function Home() {
               <img
                 src={men_design}
                 alt="men-image"
-                className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
+                className="w-[359px] h-[539px] sm:w-[340px] sm:h-[400px] h-fit mx-auto transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
               />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/3 ">
                 Men
@@ -413,7 +413,7 @@ function Home() {
               </h2>
             </div>
             <div
-              className="border-2 border-white w-[360px] h-[374.15px] relative z-0 overflow-hidden"
+              className="border-2 border-white w-[360px] h-[374.15px] relative z-0"
               onClick={() => {
                 toggle();
               }}
@@ -421,7 +421,7 @@ function Home() {
               <img
                 src={couple_design}
                 alt="men-image"
-                className="w-[360px] h-[360px] sm:w-[374px] sm:h-[374px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute z-10"
+                className="w-[360px] h-[360px] sm:w-[380px] sm:h-[420px] object-cover h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px]  z-10"
               />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-[-15px] left-1/4 ">
                 Couples

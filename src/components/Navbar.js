@@ -20,9 +20,12 @@ import cart_icon_empty from "../assets/Cart_white.png";
 import cart_icon_filled from "../assets/cart_filled.png";
 import profile_icon from "../assets/profile_icon.png";
 import new_product_1 from "../assets/Frame 29.png";
-
 import down_arrow from "../assets/down_arrow.png";
 import up_arrow from "../assets/up_arrow.png";
+import women from '../assets/Navbar/women_catergory.png'
+import men from '../assets/Navbar/men_catergory.png'
+import couples from "../assets/Navbar/couples_catergory.png"
+import gifts from '../assets/Navbar/gift_catergory.png'
 
 function Navbar() {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -47,22 +50,22 @@ function Navbar() {
   // Catergory
   const productCatergory = [
     {
-      img: new_product_1,
+      img: women,
       name: "Women",
       link: "#"
     },
     {
-      img: new_product_1,
+      img: men,
       name: "Men",
       link: "#"
     },
     {
-      img: new_product_1,
+      img: couples,
       name: "Couples",
       link: "#"
     },
     {
-      img: new_product_1,
+      img: gifts,
       name: "Gifts",
       link: "#"
     },

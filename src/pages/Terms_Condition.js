@@ -133,18 +133,8 @@ function Terms_Condition() {
                         <h2 className="text-[#313131] font-medium text-[20px] mb-[8px]">27. Contact Information</h2>
                         <p>For any questions, clarifications or concerns relating to these Terms, you may contact:</p>
                     </div>
+                    
 
-                    {/* Address */}
-                    <div className="text-[#313131] font-medium text-[20px]">
-                        <h4>Grievance Officer — Tarangi</h4>
-                        {/* <h4>Grievance Officer — Tarangi</h4> */}
-                        <a href="mailto:tarangijewelsindia@gmail.com"><p>Email: tarangijewelsindia@gmail.com</p></a>
-                        <a href="tel:9003058300"><p>Phone: +91 90030 58300</p></a>
-                        <a href="https://share.google/6f6U8XByQoc0FWsBP" target="_blank">
-                            <p>431-435,VNA Complex, NSR Road</p>
-                            <p>Saibaba Colony, Coimbatore-641011</p>
-                        </a>
-                    </div>
                 </div>
             </div>
 
