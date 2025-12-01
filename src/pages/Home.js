@@ -122,8 +122,8 @@ function Home() {
     };
 
     // Initial position (centered at 50%)
-    updateSlider(50);
-    slider.value = 50;
+    updateSlider(0);
+    slider.value = 0;
 
     slider.addEventListener("input", (e) => {
       const value = e.target.value;
@@ -861,7 +861,7 @@ function Home() {
       {/* Before After Slider */}
       <div className="before-after-section ">
         <div className="max-w-7xl mx-auto py-0 sm:py-10 px-3 sm:px-0">
-          <h1 className="font-atteron section-heading text-[26px]  sm:text-[64px] text-center text-[#5C0A1F] mb-16">
+          <h1 className="font-atteron section-heading text-[26px]  sm:text-[64px] text-center text-[#5C0A1F] mb-[80px]">
             <span className="text-[28px] sm:text-[64px]"> Enhance Your Look With</span> <br /> Tarangi
           </h1>
 
@@ -881,9 +881,9 @@ function Home() {
             <input
               ref={sliderRef}
               type="range"
-              min={2}
-              max={98}
-              defaultValue={50}
+              min={0}
+              max={100}
+              defaultValue={0}
               className="slider"
             />
             <div className="slider-line"></div>

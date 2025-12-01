@@ -178,7 +178,7 @@ function Cart() {
 
             {/* Summary Box (Desktop) */}
             {cartItems.length > 0 && (
-              <div className="w-[466px] mx-auto xl:mx-0 max-[425px]:w-full hidden lg:block">
+              <div className="w-[466px] mx-auto xl:mx-0 max-[425px]:w-full hidden xl:block">
                 <Pincode_Input />
 
                 <div className="bg-[#FFFAF3] p-[24px] rounded-[16px] shadow-2xl mt-[25px]">
@@ -293,7 +293,7 @@ function Cart() {
 
           {/* Mobile Version Summary */}
           {cartItems.length > 0 && (
-            <div className="block lg:hidden">
+            <div className="block xl:hidden">
               {showSummary && (
                 <div className="bg-[#FFFAF3] p-4 max-w-[361px] rounded-[12px] shadow-lg mt-4 m-auto my-9 transition-all duration-300 ease-in-out">
                   <h3 className="text-[15px] font-semibold text-[#404040] mb-3">

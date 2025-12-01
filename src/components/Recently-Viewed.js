@@ -20,7 +20,7 @@ const IMAGE_BY_COLOR = (item) => ({
 function Recently_Viewed() {
   const { recentlyViewed, setRecentlyViewed } = useContext(AppContext);
 
-  // 🎨 Color change – only update selectedColor
+  //  Color change – only update selectedColor
   const handleColorChange = (id, color) => {
     setRecentlyViewed((prev) =>
       prev.map((item) =>
@@ -34,7 +34,7 @@ function Recently_Viewed() {
     );
   };
 
-  // ❤️ Like toggle
+  //  Like toggle
   const toggleLike = (id) => {
     setRecentlyViewed((prev) =>
       prev.map((item) =>
@@ -63,7 +63,7 @@ function Recently_Viewed() {
             >
               {/* Product image based on selectedColor */}
               <img
-                className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[24px] transition-all duration-300 ease-in-out group-hover:shadow-lg"
+                className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px]  rounded-[24px] transition-all duration-300 ease-in-out group-hover:shadow-lg"
                 src={imageSrc}
                 alt={item.alt || "Product image"}
               />

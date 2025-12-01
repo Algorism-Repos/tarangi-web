@@ -44,7 +44,7 @@ function Navbar() {
 
   // Product dropdown - desktop
   const [productDropdown, setProductDropdown] = useState(false);
-  const [showOverlay, setShowOverlay] = useState(false);
+  // const [showOverlay, setShowOverlay] = useState(false);
 
 
   // Catergory
@@ -82,7 +82,7 @@ function Navbar() {
   const handleMouseLeave = () => {
     closeTimer.current = setTimeout(() => {
       setProductDropdown(false);
-      setShowOverlay(true);
+      // setShowOverlay(true);
     }, 500);
   };
   const handleClose = () => {
@@ -254,9 +254,9 @@ function Navbar() {
             </Link>
 
             {/* Dropdown */}
-            {productDropdown && (
+            {/* {productDropdown && (
               <div className="fixed inset-0 z-20 bg-black/40"></div>
-            )}
+            )} */}
             {productDropdown && (
               <div className="absolute top-[111px] left-1/2 transform -translate-x-1/2 min-w-[1000px] h-fit bg-[#FFF5E8] px-10 py-8 shadow-2xl z-30 rounded-lg">
                 <h2 className="font-atteron text-primary text-[32px] text-center mb-8">Product Caterogry</h2>
