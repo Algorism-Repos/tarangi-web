@@ -6,7 +6,7 @@ import { useLocation } from "react-router";
 import { FetchAllProductByCollections } from "../handler/api Handler";
 
 function Product_page() {
-  const { setProductListFromShopify } = useContext(AppContext);
+  const { setProductListFromShopify,setallproduct } = useContext(AppContext);
   const location = useLocation();
 
   const { category, collectionId } = location.state || {};
@@ -35,10 +35,11 @@ function Product_page() {
             product_id: productId,
             title: variant.title || "",
             price: variant.price,
+            compareAtPrice: variant.compareAtPrice,
             inventory_quantity: variant.inventoryQuantity,
             selected_options: variant.selectedOptions || [],
             // variant level image
-            image: variant.image?.url || null, 
+            image: variant.image?.url || null,
             position: index + 1,
             created_at: node.createdAt,
             updated_at: node.createdAt,
@@ -137,8 +138,7 @@ function Product_page() {
     return acc;
   }, {});
   console.log(categorized);
-
-  useEffect(() => {
+ useEffect(() => {
     if (collectionId) {
       productList(collectionId);
     }
@@ -147,7 +147,9 @@ function Product_page() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-
+  useEffect(() => {
+    setallproduct(categorized)
+  }, [productListData]);
   return (
     <>
       <div className="bg-[#FFF5E8] py-[50px] relative">

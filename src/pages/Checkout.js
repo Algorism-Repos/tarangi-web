@@ -19,6 +19,7 @@ function CheckoutPage() {
   const navigate = useNavigate();
   const { cartItems, removeFromCart } = useContext(AppContext);
   const [showSummary, setShowSummary] = useState(false);
+  const[formValues,setFormValues]=useState([])
   // Yup validation schema
   const validationSchema = Yup.object({
     // Contact
@@ -127,7 +128,7 @@ function CheckoutPage() {
       }
     },
   });
-  console.log("formValues", formValues);
+  // console.log("formValues", formValues);
 
   const handlePlaceOrder = async (values, customerId) => {
     console.log(cartItems);

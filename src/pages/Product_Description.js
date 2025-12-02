@@ -29,11 +29,10 @@ import Wishlist_Popup from "../components/Wishlist_Popup";
 function Product_Description() {
   const location = useLocation();
   const { product } = location.state || {};
-  const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } =
-    useContext(AppContext);
-  const [quantity, setQuantity] = useState(1);
+  const{addToWishlist}=useContext(AppContext)
   const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
+   const{allproduct}=useContext(AppContext)
   const swiperRef = useRef(null);
   const clean = product
     ? {
@@ -65,8 +64,65 @@ function Product_Description() {
         vendor: product.vendor,
       }
     : null;
+  console.log(allproduct);
 
-  console.log("cleaned json data", clean);
+  // function formatVariants(product) {
+  //   if (!product || !product.variants) return [];
+
+  //   return product.variants.map((variant) => ({
+  //     variant_id: variant.id,
+  //     image: variant.image || product.image?.src || "",
+  //     price: variant.price,
+  //     compareAtPrice: variant.compareAtPrice,
+  //     inventory_quantity: variant.inventory_quantity,
+  //     product_id: variant.product_id,
+  //     color:
+  //       variant.selected_options?.find((opt) => opt.name === "Color")?.value ||
+  //       "",
+  //     description: product.description || "",
+  //   }));
+  // }
+
+
+function formatVariants(product) {
+  if (!product || !product.variants) return [];
+
+  return product.variants.map((variant) => {
+    const variantImages = [];
+
+    if (variant.image) {
+      variantImages.push(variant.image);
+    }
+
+    
+    if (product.images && Array.isArray(product.images)) {
+      product.images.forEach((img) => {
+        if (img.src) variantImages.push(img.src);
+      });
+    }
+
+    const uniqueImages = [...new Set(variantImages)];
+
+    return {
+      variant_id: variant.id,
+      images: uniqueImages, 
+      price: variant.price,
+      compareAtPrice: variant.compareAtPrice,
+      inventory_quantity: variant.inventory_quantity,
+      product_id: variant.product_id,
+      color:
+        variant.selected_options?.find((opt) => opt.name === "Color")?.value ||
+        "",
+      description: product.description || "",
+    };
+  });
+}
+
+
+
+  const formattedVariants = formatVariants(product);
+  console.log(formattedVariants);
+
   const uniqueColors = [
     ...new Set(clean?.variants?.map((v) => v.selected_options[0]?.value)),
   ];
@@ -83,6 +139,29 @@ function Product_Description() {
       setActiveVariant(found);
     }
   };
+
+  const handleAddToWish = (product) => {
+     console.log(product)
+    addToWishlist({
+      id: product.variants[0].id,
+      title: product.title,
+      price: parseInt(product.variants[0].price),
+      image: product.image.src,
+    });
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -125,13 +204,16 @@ function Product_Description() {
                 // }}
               >
                 {/* {clean?.images?.map((img, index) => ( */}
-                <SwiperSlide>
-                  <img
-                    className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
-                    src={activeVariant?.image}
-                    alt="Product"
-                  />
-                </SwiperSlide>
+                {formattedVariants.map((variant) => (
+                  <SwiperSlide key={variant.variant_id}>
+                    <img
+                      className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
+                      src={variant.image}
+                      alt={variant.color || "Product"}
+                    />
+                  </SwiperSlide>
+                ))}
+
                 {/* ))} */}
               </Swiper>
             </div>
@@ -203,7 +285,7 @@ function Product_Description() {
 
                 <PincodeInput />
 
-                <div className="flex items-center gap-x-[8px]">
+                {/* <div className="flex items-center gap-x-[8px]">
                   <img
                     className="w-[18px] h-[22px]"
                     src={shopping_bag}
@@ -212,10 +294,10 @@ function Product_Description() {
                   <h3 className="text-[#6F6F6F] text-[14px] font-medium ">
                     Expected Delivery Date
                   </h3>
-                </div>
-                <p className="text-[#484848] text-[15px] font-medium ">
+                </div> */}
+                {/* <p className="text-[#484848] text-[15px] font-medium ">
                   Delivered by Oct 10
-                </p>
+                </p> */}
               </div>
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
               Color Options
@@ -254,21 +336,24 @@ function Product_Description() {
               {/* Buttons */}
               <div className="max-w-[500px] ">
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
-                  <AddToCartButton />
-
+                  <AddToCartButton product={product} />
+                    <Link to="/favourites" state={{ product }}>
                   <button
                     className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[52px] rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
                     onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
                     onMouseLeave={() => setWishIconSrc(favorie_icon)}
-                    onClick={() => setShowWishlistPopup(true)}
+                    // onClick={() => setShowWishlistPopup(true)}
+                                        onClick={handleAddToWish}
+
                   >
                     <img
                       className="w-[32px] h-[32px]"
                       src={wishIconSrc}
                       alt="like_icon"
                     />
-                    Add to Wishlist
+                    Add to Wishlist 
                   </button>
+                  </Link>
                 </div>
               </div>
             </div>

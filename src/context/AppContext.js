@@ -4,6 +4,8 @@ export const AppContext = createContext();
 
 export function AppProvider({ children }) {
   const [loading, setLoading] = useState(true);
+  const [collection, setCollections] = useState(false);
+  const [allproduct, setallproduct] = useState();
 
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loggedCustomerId, setLoggedCustomerId] = useState(() => {
@@ -136,6 +138,9 @@ export function AppProvider({ children }) {
         setIsLoggedIn,
         loading,
         setLoading,
+        collection,
+        setCollections,
+        allproduct, setallproduct
       }}
     >
       {children}

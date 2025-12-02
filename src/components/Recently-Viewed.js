@@ -34,7 +34,7 @@ function Recently_Viewed() {
     );
   };
 
-  // ❤️ Like toggle
+  //  Like toggle
   const toggleLike = (id) => {
     setRecentlyViewed((prev) =>
       prev.map((item) =>
@@ -50,7 +50,7 @@ function Recently_Viewed() {
       </h1>
 
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
-        {recentlyViewed.map((item) => {
+        {recentlyViewed.slice(0,8).map((item) => {
           const colorImages = IMAGE_BY_COLOR(item);
           const selectedColor = item.selectedColor || "gold";
           const imageSrc =

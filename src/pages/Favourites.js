@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
 
@@ -12,8 +12,11 @@ import RestockSuccessModal from "../components/RestockSuccessModal";
 import gold_ellipse from "../assets/Products/gold_ellipse.png";
 import silver_ellipse from "../assets/Products/silver_ellipse.png";
 import brown_ellipse from "../assets/Products/brown_ellipse.png";
+import { AppContext } from "../context/AppContext";
 
 function Favourites() {
+    const { wishlistItems, removeFromWishlist, addToCart } =
+    useContext(AppContext);
   const initialProducts = [
     {
       id: 1,
@@ -139,26 +142,7 @@ function Favourites() {
       )
     );
   };
-
-  // keep localStorage + Navbar in sync with favourites
-  // useEffect(() => {
-  //   const updatedFavourites = likedProducts;
-
-  //   // store the list
-  //   localStorage.setItem(
-  //     "favourites",
-  //     JSON.stringify(updatedFavourites)
-  //   );
-
-  //   // optional flag (if you still want it)
-  //   localStorage.setItem(
-  //     "hasFavourites",
-  //     updatedFavourites.length > 0 ? "true" : "false"
-  //   );
-
-  //   // notify Navbar in same tab
-  //   window.dispatchEvent(new Event("favouritesUpdated"));
-  // }, [likedProducts]);
+    console.log(wishlistItems);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -179,7 +163,7 @@ function Favourites() {
           ) : (
 
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
-              {likedProducts.map((item) => (
+              {likedProducts.slice(0,8).map((item) => (
 
                 <div key={item.id} className="max-w-[304px] mx-auto group">
                   <div

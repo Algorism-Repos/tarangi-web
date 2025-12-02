@@ -1,104 +1,134 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router";
 import location_icon from "../assets/Products/location.png";
-
+import shopping_bag from "../assets/Products/shopping_bag.png";
+import { FetchDeliveryByPincode } from "../handler/api Handler";
 function Pincode_Input() {
   const [pincode, setPincode] = useState("");
   const [isEditable, setIsEditable] = useState(true);
   const [savedPincode, setSavedPincode] = useState("");
   const [error, setError] = useState("");
+  const [handleReSubmit, setHandleReSubmit] = useState(false);
+  const pageLocation = useLocation();
+  const location = pageLocation.pathname.split("/");
+  const pathname = location[1];
+  const [deliveryInfo, setDeliveryInfo] = useState("");
 
-  // only digits, max 6
   const handleChange = (e) => {
     const value = e.target.value.replace(/\D/g, "");
-    if (value.length <= 6) {
-      setPincode(value);
-      setError("");
-    }
+    setPincode(value);
+    setError(""); // clear error while typing
+    setHandleReSubmit(true);
   };
 
-  const submitPincode = () => {
-    if (pincode.length !== 6) {
-      setError("Please enter a valid 6-digit pincode");
-      return;
-    }
-    setSavedPincode(pincode);
-    setIsEditable(false);
-    setError("");
-  };
+  // Automatic Submitting
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      submitPincode();
+  const getPincode = async (pincode) => {
+    try {
+      const response = await FetchDeliveryByPincode(pincode);
+      console.log(response);
+      setDeliveryInfo(response);
+    } catch (error) {
+      console.log("error fetching pincode", error);
     }
   };
-
-  const handleButtonClick = () => {
-    if (isEditable) {
-      // "Locate Me" acts like submit (no API)
-      submitPincode();
+  const tatHours = deliveryInfo.TAT;
+  const now = new Date();
+  const estimatedDelivery = new Date(now.getTime() + tatHours * 60 * 60 * 1000);
+  const estimatedDate = estimatedDelivery
+    .toLocaleDateString("en-IN")
+    .split("T")[0];
+  useEffect(() => {
+    if (pincode.length === 6) {
+      setIsEditable(false);
+      setSavedPincode(pincode);
     } else {
-      // "Change Pincode"
-      setIsEditable(true);
-      setPincode(savedPincode);
-      setError("");
+      const timer = setTimeout(() => {
+        if (pincode.length > 0 && pincode.length < 6) {
+          setError("Please enter a valid 6-digit pincode.");
+        }
+      }, 2000);
+
+      return () => clearTimeout(timer);
     }
+    getPincode(pincode);
+  }, [pincode]);
+  const enableEdit = () => {
+    setIsEditable(true);
+    setPincode(savedPincode);
+    setHandleReSubmit(false);
   };
-
+  console.log(deliveryInfo);
   return (
-    <div className="w-full bg-[#FFFAF3] border border-[#E6D5C2] mx-auto mt-2 rounded-xl">
-      <div className="flex flex-col px-4 py-3 gap-1">
-        {/* Main Row */}
-        <div className="flex items-center justify-between gap-3">
-          {/* Left: icon + input / text */}
-          <div className="flex items-center flex-1 gap-2">
-            <img
-              className="w-[24px] h-[24px]"
-              src={location_icon}
-              alt="location_icon"
-            />
-
-            {isEditable ? (
-              <input
-                type="text"
-                placeholder="Enter Pincode"
-                maxLength={6}
-                value={pincode}
-                onChange={handleChange}
-                onKeyDown={handleKeyPress}
-                className={`flex-1 bg-transparent focus:outline-none text-[#333333] placeholder-[#979797]
-                  placeholder:font-normal text-[16px] ${
-                    error ? "text-red-500" : ""
-                  }`}
-              />
-            ) : (
-              <p className="text-[#333333] text-[14px] truncate">
-                Delivering to{" "}
-                <span className="font-semibold">{savedPincode}</span>
-              </p>
-            )}
-          </div>
-
-          {/* Right: single button */}
-          <button
-            type="button"
-            onClick={handleButtonClick}
-            className="whitespace-nowrap px-2 py-1.5 text-[14px] font-semibold
-                        text-[#6E0027] transition"
+    <>
+      <div
+        className={`w-full bg-[#FFFAF3] border-2 border-[#F6EFE6] mx-auto shadow-md mt-2 rounded-xl ${
+          error ? "border-2 border-red-400" : "border-2 border-[#F6EFE6]"
+        }`}
+      >
+        <div className="flex flex-col px-4 py-3">
+          {/* Main Row */}
+          <div
+            className="flex items-center justify-between"
+            onClick={!isEditable ? enableEdit : undefined}
           >
-            {isEditable ? "Locate Me" : "Change Pincode"}
-          </button>
+            <div className="flex items-center gap-2">
+              <img
+                className="w-[24px] h-[24px]"
+                src={location_icon}
+                alt="location_icon"
+              />
+              {isEditable ? (
+                <input
+                  type="text"
+                  placeholder="Enter Pincode"
+                  maxLength="6"
+                  value={pincode}
+                  onChange={handleChange}
+                  className={`bg-transparent focus:outline-none text-[#333333] placeholder-[#979797]
+                  placeholder:font-semibold text-[16px] `}
+                />
+              ) : (
+                <p className="text-[#333333] text-[14px] cursor-pointer">
+                  Delivering to <span className="font-semibold">{pincode}</span>
+                </p>
+              )}
+            </div>
+          </div>
         </div>
-
-        {/* Error Message */}
-        {error && (
-          <p className="text-red-500 text-[12px] mt-1 font-medium">
-            {error}
-          </p>
-        )}
       </div>
-    </div>
+      {/* Error Message */}
+      {error && (
+        <p className="text-red-500 text-[12px] leading-none !mt-2 ml-2 font-medium">
+          {error}
+        </p>
+      )}
+      {/* Delivery Date - product-description page */}
+      <div
+        className={
+          pathname === "productdescription" && pincode.length === 6
+            ? "block ml-2"
+            : "hidden"
+        }
+      >
+        <div className="flex items-center gap-x-[8px] mt-4 ml-2 ">
+          <img
+            className="w-[18px] h-[22px]"
+            src={shopping_bag}
+            alt="Shopping bag icon"
+          />
+          {deliveryInfo && (
+            <p className="text-[#484848] text-[15px] font-medium">
+              Expected to deliver by{" "}
+              <span className="font-bold">{estimatedDate} </span>
+              <span className="text-[12px] text-gray-600">
+                {deliveryInfo.CPINCODE}, {deliveryInfo.CSTATE}
+              </span>
+            </p>
+          )}
+        </div>
+      </div>
+    </>
   );
 }
-
 export default Pincode_Input;

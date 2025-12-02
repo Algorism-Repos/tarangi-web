@@ -12,7 +12,7 @@ import RestockModal from "./RestockModal";
 import CartToast from "./CartToast";
 
 
-function AddToCartButton({ product, quantity,  isOutOfStock, 
+function AddToCartButton({ product,  isOutOfStock, 
   isRestocking, 
   isFavouritesPage = false,
   onRemoveFromFavourites  }) {
@@ -28,7 +28,6 @@ function AddToCartButton({ product, quantity,  isOutOfStock,
       title: product.title,
       price: parseInt(product.variants[0].price),
       image: product.image?.src,
-      quantity: quantity,
     });
   };
 

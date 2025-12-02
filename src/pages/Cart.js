@@ -13,54 +13,36 @@ import { AppContext } from "../context/AppContext";
 
 function Cart() {
   const [showSummary, setShowSummary] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
   const toggleSummary = () => {
     setShowSummary(!showSummary);
   };
   const { cartItems, removeFromCart, updateCartItemQuantity } =
     useContext(AppContext);
-  const [quantity, setQuantity] = useState(1);
 
-  const subtotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+const subtotal = cartItems.reduce((total, item) => {
+  const price = Number(item.price) || 0;
+  const qty = Number(item.quantity) || 1;
+  return total + price * qty;
+}, 0);
+
   const tax = subtotal * 0.03;
   const shipping = 40;
   const total = subtotal + tax + shipping;
 
-  // ✅ Load from localStorage first, else use initialCartItems
-  // const [cartItems, setCartItems] = useState(() => {
-  //   const stored = JSON.parse(localStorage.getItem("cartItems"));
-  //   if (Array.isArray(stored) && stored.length > 0) {
-  //     return stored;
-  //   }
-  //   return initialCartItems;
-  // });
-
-  // Delete modal states
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
 
-  // Keep localStorage in sync + notify Navbar
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
-
-  //   // optional: simple flag if you want
-  //   localStorage.setItem(
-  //     "hasCartItems",
-  //     cartItems.length > 0 ? "true" : "false"
-  //   );
-
-  //   // Notify Navbar (and others) in this tab
-  //   window.dispatchEvent(new Event("cartUpdated"));
   }, [cartItems]);
-
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
+
+   console.log(cartItems)
   return (
     <>
       <div className="font-poppins bg-light-sandal pt-[35px] sm:py-[70px]">
@@ -86,12 +68,12 @@ function Cart() {
                     key={item.id}
                     className="bg-[#FFFAF3] max-w-[694px] p-[24px] rounded-[16px] shadow-2xl mb-[25px] max-[425px]:p-[16px]"
                   >
-                    {/* ❌ DELETE ICON (opens modal) */}
+                    {/*  DELETE ICON (opens modal) */}
                     <img
                       className="float-right w-[29px] h-[29px] cursor-pointer max-[425px]:w-[22px] max-[425px]:h-[22px]"
                       src={close_icon}
                       alt="close icon"
-                      onClick={() => {
+                      onClick={() => { removeFromCart(item.id)
                         setProductToDelete(item.id);
                         setIsDeleteModalOpen(true);
                       }}
