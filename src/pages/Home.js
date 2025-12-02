@@ -122,8 +122,8 @@ function Home() {
     };
 
     // Initial position (centered at 50%)
-    updateSlider(0);
-    slider.value = 0;
+    updateSlider(50);
+    slider.value = 50;
 
     slider.addEventListener("input", (e) => {
       const value = e.target.value;

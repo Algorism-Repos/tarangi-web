@@ -190,7 +190,7 @@ function Product_Description() {
             </div>
 
             {/* Product Detail */}
-            <div className="lg:max-w-[640px] mx-auto">
+            <div className="sm:max-w-[640px] w-full mx-auto">
               <div className="space-y-[3px]">
                 <h1 className="font-atteron text-primary text-[26px] sm:text-[32px] tracking-[1px]">
                   {product?.title}

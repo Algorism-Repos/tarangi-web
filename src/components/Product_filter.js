@@ -369,7 +369,7 @@ function Product_Filter({ productCatergory }) {
             </div>
 
             {/* Mobile Version Filter bar */}
-            <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden px-4 z-10 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
+            <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden z-10 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
               <div className="flex justify-between ">
                 {/* SORT BUTTON */}
                 <div
@@ -398,7 +398,7 @@ function Product_Filter({ productCatergory }) {
                     src={sort_icon}
                     alt="Sort Icon"
                   />
-                  <button className="text-primary text-[18px] font-semibold">
+                  <button className="text-primary text-[16px] font-semibold">
                     Sort
                   </button>
                 </div>
@@ -428,7 +428,7 @@ function Product_Filter({ productCatergory }) {
                     src={filter_icon}
                     alt="Filter Icon"
                   />
-                  <button className="text-primary text-[18px] font-semibold">
+                  <button className="text-primary text-[16px] font-semibold">
                     Filter
                   </button>
                 </div>

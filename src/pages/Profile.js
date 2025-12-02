@@ -415,7 +415,7 @@ const Profile = () => {
                   <img
                     src={isActive ? item.activeIcon : item.icon}
                     alt={item.name}
-                    className="w-[30px] h-[30px] transition-all"
+                    className="w-[32px] h-[32px] transition-all"
                   />
                   {item.name}
                 </button>
