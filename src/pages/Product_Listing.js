@@ -121,7 +121,8 @@ function Product_Listing({ productCatergory }) {
     <>
       <div className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-y-10 sm:gap-x-[30px] px-1.5 ">
         {products.map((item) => {
-          const isOutOfStock = item.variants[0].inventory_quantity === 0;
+          // const isOutOfStock = item.variants[0].inventory_quantity === 0;
+          const isOutOfStock = "";
           const isRestocking = item.restock === true;
 
           const colorImages = IMAGE_BY_COLOR(item);

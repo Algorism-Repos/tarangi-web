@@ -4,6 +4,7 @@ export const AppContext = createContext();
 
 export function AppProvider({ children }) {
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const[categorizedProduct,setCategorizedProduct]=useState()
 const [loggedCustomerId, setLoggedCustomerId] = useState(() => {
   return localStorage.getItem("loggedCustomerId") || null;
 });
@@ -130,7 +131,8 @@ useEffect(() => {
         updateCartItemQuantity,
         setRecentlyViewed,
         loggedCustomerId,
-        setLoggedCustomerId,isLoggedIn,setIsLoggedIn
+        setLoggedCustomerId,isLoggedIn,setIsLoggedIn,
+        categorizedProduct,setCategorizedProduct
       }}
     >
       {children}

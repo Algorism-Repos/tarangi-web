@@ -108,7 +108,7 @@ function Pincode_Input() {
             alt="Shopping bag icon"
           />
           <p className="text-[#484848] text-[15px] font-medium">
-            Expected to deliver by <span className="font-bold">Oct 10</span>
+            Expected to deliver by <span className="font-bold">Dec 10</span>
           </p>
         </div>
 

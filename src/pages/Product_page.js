@@ -5,7 +5,7 @@ import { AppContext } from "../context/AppContext";
 import { useLocation } from "react-router";
 import { FetchAllProductByCollections } from "../handler/api_Handler";
 function Product_page() {
-  const { setProductListFromShopify } = useContext(AppContext);
+  const { setProductListFromShopify, setCategorizedProduct } = useContext(AppContext);
   const location = useLocation();
   const { category, collectionId } = location.state || {};
   const [productListData, setProductListData] = useState([]);
@@ -30,6 +30,7 @@ function Product_page() {
             product_id: productId,
             title: variant.title || "",
             price: variant.price,
+            compareAtPrice: variant.compareAtPrice,
             inventory_quantity: variant.inventoryQuantity,
             selected_options: variant.selectedOptions || [],
             // variant level image
@@ -103,6 +104,7 @@ function Product_page() {
           node.variants?.edges?.map((v) => ({
             id: v.node.id,
             price: v.node.price,
+            compareAtPrice: v.node.compareAtPrice,
             image: v.node.image?.url,
             options: v.node.selectedOptions,
           })) || [],
@@ -119,7 +121,9 @@ function Product_page() {
     acc[type].push(product);
     return acc;
   }, {});
+
   console.log(categorized);
+
   useEffect(() => {
     if (collectionId) {
       productList(collectionId);
@@ -128,6 +132,10 @@ function Product_page() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
+  useEffect(() => {
+    setCategorizedProduct(categorized)
+  }, [productListData]);
   return (
     <>
       <div className="bg-[#FFF5E8] py-[50px] relative">

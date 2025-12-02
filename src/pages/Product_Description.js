@@ -28,13 +28,11 @@ import Wishlist_Popup from "../components/Wishlist_Popup";
 function Product_Description() {
   const location = useLocation();
   const { product } = location.state || {};
-  const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed } =
-    useContext(AppContext);
+  const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed,categorizedProduct} = useContext(AppContext);
+
+  const [colorSelected, setColorSelected] = useState("Gold");
 
   const swiperRef = useRef(null);
-
- 
-
 
   const [quantity, setQuantity] = useState(1);
   const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
@@ -80,17 +78,11 @@ function Product_Description() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  // click on a color toggle
-  // const handleColorChange = () => {
-  //   if (swiperRef.current) {
-  //     swiperRef.current.slideTo(colorObj.slideIndex);
-  //   }
-  // };
+  
 
   function normalizeProduct(raw) {
     return {
       admin_graphql_api_id: raw.admin_graphql_api_id,
-      colors: raw.colors || [],
       created_at: raw.created_at,
       description: raw.description,
       id: raw.id,
@@ -99,7 +91,6 @@ function Product_Description() {
       liked: raw.liked || false,
       options: raw.options || [],
       product_type: raw.product_type,
-      selectedColor: raw.selectedColor,
       status: raw.status,
       tags: raw.tags || [],
       title: raw.title,
@@ -120,75 +111,117 @@ function Product_Description() {
     };
   }
 
+  function formatVariants(product) {
+    if (!product || !product.variants) return [];
+    return product.variants.map(variant => ({
+      variant_id: variant.id,
+      image: variant.image || product.image?.src || "",
+      title: product.title,
+      product_type: product.product_type,
+      price: variant.price,
+      compareAtPrice: variant.compareAtPrice,
+      inventory_quantity: variant.inventory_quantity,
+      product_id: variant.product_id,
+      color: variant.selected_options?.find(opt => opt.name === "Color")?.value || "",
+      description: product.description || "",
+    }));
+  }
+  const productDetails = formatVariants(product);
+  console.log(productDetails);
+
+  const activeVariant = productDetails.find(element => element.color === colorSelected) || productDetails?.[0];
+  // console.log(activeVariant);
+
+  // click on a color toggle
+  function handleColorChange(color) {
+    setColorSelected(color);
+    const id = productDetails.indexOf(color);
+    console.log(id);
+  }
+
   const clean = normalizeProduct(product);
 
-  const variantColors = clean?.variants?.map(v => 
-  v.selected_options?.find(opt => opt.name === "Color")?.value
-);
+  //Extracting colors into an array from the variants
+  const colorAssets = [
+    {
+      value: "Gold",
+      imgUrl: gold_ellipse
+    },
+    {
+      value: "Silver",
+      imgUrl: silver_ellipse
+    },
+    {
+      value: "RoseGold",
+      imgUrl: brown_ellipse
+    },
+  ];
 
-  console.log(clean);
+  const variantColors = productDetails.map(element => element.color)
+  console.log(variantColors);
+  const availableColors = colorAssets.filter(element => variantColors.includes(element.value))
+  console.log(availableColors);
+
+  console.log(`Selected Color: ${colorSelected}`);
+    console.log(categorizedProduct);
+
+  
 
   return (
     <>
       {/* Backgound */}
-      <div className="bg-light-sandal font-poppins py-[30px] sm:py-[70px]">
+      <div className="bg-[#FFF5E8] font-poppins py-[30px] sm:py-[70px]">
         {/* Container */}
-        <div className="max-w-[1300px] mx-auto px-5 sm:px-0">
+        <div className="max-w-7xl mx-auto px-5 sm:px-0">
           {/* Product path */}
           <div className="flex items-center justify-center gap-x-[8px] text-[#6F6F6F] text-[16px] xl:justify-start">
-            <p>{product?.product_type}</p>
+            <p>{productDetails?.[0]?.product_type}</p>
             <img
               className="w-[30px] h-[30px]"
               src={grey_arrow}
               alt="Arrow Icon"
             />
-            <p> {product?.title}</p>
+            <p> {productDetails?.[0]?.title}</p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-12 my-[20px] sm:my-[40px] xl:my-[70px]">
+          <div className="flex flex-wrap items-start justify-around my-[20px] sm:my-[40px] xl:my-[70px]">
             {/* Product Image */}
-            <div className="max-w-full sm:max-w-[525px] mx-auto">
+            <div className="max-w-[400px] lg:mt-20">
               <Swiper
-                spaceBetween={0}
-                slidesPerView={1}
-                pagination={{ dynamicBullets: true }}
-                modules={[Pagination]}
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
                 onSlideChange={(swiper) => {
-                  const idx = swiper.activeIndex;
-                  // const colorForSlide = visibleColors.find(
-                  //   (c) => c.slideIndex === idx
-                  // );
-                  // if (colorForSlide) {
-                  //   setActiveColor(colorForSlide.id);
-                  //   setSelectedImage(colorForSlide.mainImage);
-                  // }
+                  const id = swiper.activeIndex
+                  setColorSelected(productDetails?.[id].color);
                 }}
+                spaceBetween={0}
+                pagination={{ dynamicBullets: true }}
+                modules={[Pagination]}
               >
-              {clean?.images?.map((img, index) => (
-                <SwiperSlide>
 
-                  <img
-                    className="w-full sm:w-[388px] sm:h-[399px] mx-auto rounded-[18px]"
-                    src={img?.src}
-                    alt="Product"
-                  />
-                </SwiperSlide>))}
+                {productDetails.map((item) => ( 
+                  <SwiperSlide>
+                    <img src={item.image} className="sm:w-[388px] sm:h-[399px] rounded-[18px]" />
+                  </SwiperSlide>
+                ))}
+
               </Swiper>
+
+              
             </div>
 
             {/* Product Detail */}
-            <div className="lg:max-w-[640px] mx-auto">
+            <div className="lg:min-w-[633px]">
               <div className="space-y-[3px]">
                 <h1 className="font-atteron text-primary text-[26px] sm:text-[32px] tracking-[1px]">
-                  {product?.title}
+                  {activeVariant?.title}
                 </h1>
                 <h2 className="text-[26px] font-semibold sm:text-[32px]">
-                  ₹{parseInt(product.variants[0].price).toLocaleString("en-IN")}
+                  ₹{parseInt(activeVariant?.price).toLocaleString("en-IN")}
                 </h2>
-                <p className="text-[#878787] text-[14px]">
-                  MRP Incl. of all taxes
+                <p className="text-[#878787] text-[14px] font-poppins ">
+                  <span class="underline">Tax included</span>. Shipping calculated at checkout
                 </p>
+
               </div>
 
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
@@ -199,7 +232,7 @@ function Product_Description() {
                   Description
                 </h3>
                 <p className="text-[#484848] text-[16px] font-medium ">
-                  {product?.description}
+                  {activeVariant?.description}
                 </p>
 
                 <div className="max-w-[305px] flex flex-wrap justify-between  font-[poppins] text-center text-[#313131] my-5">
@@ -246,29 +279,32 @@ function Product_Description() {
                 </h3>
 
                 <PincodeInput />
+
+              
               </div>
 
-              <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
+              {/*Colors Available Section */}
+              <div className={clean?.variants.length >= 1 ? "block" : "hidden"}>
 
-              {/* Color Options */}
-              {/* <div className="mt-2 flex justify-start gap-x-4">
-                {variantColors.map((color) => (
-                  <img
-                    key={color.id}
-                    onClick={() => handleColorChange(color)}
-                    className={`w-[45px] h-[45px] rounded-full bg-white transition-all duration-200 cursor-pointer
-                      ${
-                        activeColor === color.id
-                          ? "border-[4px] border-primary p-[2px]"
-                          : "border-[2px] border-transparent hover:border-primary hover:p-[2px]"
-                      }`}
-                    src={color.ellipse}
-                    alt={color.id}
-                  />
-                ))}
-              </div> */}
+                <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
-              <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
+                {/* Color Icons */}
+                <h3 className="font-poppins font-medium text-[14px] leading-normal text-[#6F6F6F] mt-3">Colors Available</h3>
+                <div className="flex flex-row items-center mt-1 gap-x-3">
+                  {availableColors.map((item) => (
+                    <img
+                      className={colorSelected === item.value ? "w-[40px] sm:h-[40px] border-4 rounded-full border-primary cursor-pointer" : "w-[40px] sm:h-[40px] hover:border-4 rounded-full border-primary cursor-pointer"}
+                      src={item.imgUrl}
+                      alt={`image_${item.value}`}
+                      onClick={() => { handleColorChange(item.value) }}
+
+                    />
+                  ))}
+                </div>
+
+                <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
+              </div>
+
 
               {/* Buttons */}
               <div className="max-w-[500px] ">
