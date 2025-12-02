@@ -40,8 +40,8 @@ function DisclaimerPolicy() {
 
     return (
         <>
-            <div className="bg-light-sandal py-[70px] font-poppins">
-                <h1 className="font-atteron text-[42px] text-primary text-center tracking-[1px] font-semibold">DISCLAIMER POLICY</h1>
+            <div className="bg-light-sandal py-[35px] sm:py-[70px] font-poppins">
+                <h1 className="font-atteron text-[28px] text-primary text-center tracking-[1px] font-semibold sm:text-[42px]">DISCLAIMER POLICY</h1>
 
                 <div className="max-w-[1286px] text-[#595959] px-5 space-y-[40px] mx-auto mt-[80px]">
                     <p className="font-normal text-[16px] sm:text-[19px]">This website is owned and operated by Tarangi Jewels (“Tarangi”, “we”, “our”, “us”). By accessing or using our website, you acknowledge and agree to the terms of this Disclaimer.</p>

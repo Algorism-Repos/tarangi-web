@@ -115,8 +115,8 @@ function CookiePolicy() {
 
     return (
         <>
-            <div className="bg-light-sandal py-[70px] font-poppins">
-                <h1 className="font-atteron text-[42px] text-primary text-center tracking-[1px] font-semibold">COOKIE POLICY</h1>
+            <div className="bg-light-sandal py-[35px] sm:py-[70px] font-poppins">
+                <h1 className="font-atteron text-[28px] text-primary text-center tracking-[1px] font-semibold sm:text-[42px]">COOKIE POLICY</h1>
 
                 <div className="max-w-[1286px] text-[#595959] px-5 space-y-[40px] mx-auto mt-[80px]">
 
@@ -139,7 +139,7 @@ function CookiePolicy() {
                         <p><span className="font-semibold">Phone:</span> +91 90030 58300</p>
                         <p><span className="font-semibold">Address:</span> 431-435,VNA Complex, NSR Road Saibaba Colony, Coimbatore-641011</p>
                         <p><span className="font-semibold">Working Hours:</span> 10:30 AM – 8:00 PM IST</p>
-                        
+
                         <p className="mt-3">Tarangi will acknowledge concerns within the legally mandated timeframe and work diligently to resolve them in accordance with applicable law.</p>
                     </div>
                 </div>

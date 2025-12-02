@@ -83,9 +83,9 @@ function Footer() {
                 {/* Muhil */}
                 <div className="flex flex-col gap-y-16 xl:flex-row sm:items-center sm:justify-between px-3 pt-5 pb-12 sm:py-0 sm:pt-0 sm:px-[70px]">
 
-                    <div className="flex flex-wrap gap-x-[60px] gap-y-10">
+                    <div className="flex flex-wrap gap-x-[60px] gap-y-10 ">
                         {/* Logo & Social */}
-                        <div>
+                        <div className="sm:mx-auto">
                             <img src={logo} alt="brand-logo" className="w-[231px] h-fit" />
 
                             <div className=" flex flex-row items-center gap-x-6 w-fit mx-auto ">
@@ -94,7 +94,7 @@ function Footer() {
                             </div>
                         </div>
 
-                        <div className="flex gap-x-[25px] sm:gap-x-[65px] gap-y-10">
+                        <div className="flex gap-x-[25px] sm:gap-x-[65px] gap-y-10 sm:mx-auto">
 
                             {/* Subpages */}
                             <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] ml-6 sm:ml-0 md:border-l border-[#D6A76F] md:pl-[54px]">

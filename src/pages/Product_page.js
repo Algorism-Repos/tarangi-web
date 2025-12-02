@@ -26,9 +26,8 @@ function Product_page() {
   return (
     <>
       <div className="bg-[#FFF5E8] py-[50px] relative ">
-        <div className="max-w-[1350px] mx-auto lg:fle gap-x-[40px] my-[50px]">
+        <div className="max-w-[1350px] mx-auto lg:fle gap-x-[40px] my-[10px] sm:my-[50px]">
           <Product_Filter productCatergory={categorizedProducts} />
-          
         </div>
       </div>
     </>
