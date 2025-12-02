@@ -346,7 +346,7 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.setItem("isLoggedIn", "false");
+    localStorage.setItem("isLoggedIn", "true");
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");
     localStorage.removeItem("favourites");
