@@ -18,8 +18,8 @@ function CheckoutPage() {
   const [useDifferentBilling, setUseDifferentBilling] = useState(false);
   const navigate = useNavigate();
   const { cartItems, removeFromCart } = useContext(AppContext);
-  const [formValues, setFormValues] = useState({});
   const [showSummary, setShowSummary] = useState(false);
+  const[formValues,setFormValues]=useState([])
   // Yup validation schema
   const validationSchema = Yup.object({
     // Contact
@@ -62,7 +62,7 @@ function CheckoutPage() {
     }),
     billingState: Yup.string().when("useDifferentBilling", {
       is: true,
-      then: (schema) => schema.required("tate is required"),
+      then: (schema) => schema.required("State is required"),
       otherwise: (schema) => schema.notRequired(),
     }),
     billingCountry: Yup.string().when("useDifferentBilling", {
@@ -128,7 +128,7 @@ function CheckoutPage() {
       }
     },
   });
-  console.log("formValues", formValues);
+  // console.log("formValues", formValues);
 
   const handlePlaceOrder = async (values, customerId) => {
     console.log(cartItems);
@@ -555,7 +555,6 @@ function CheckoutPage() {
 
                 <div
                   onClick={() => {
-                    setUseDifferentBilling(false);
                     formik.setFieldValue("useDifferentBilling", false);
                   }}
                   className={`cursor-pointer w-full p-4 rounded-md border transition-all duration-300
@@ -585,7 +584,6 @@ function CheckoutPage() {
 
                 <div
                   onClick={() => {
-                    setUseDifferentBilling(true);
                     formik.setFieldValue("useDifferentBilling", true);
                   }}
                   className={`cursor-pointer w-full p-4 mt-3 rounded-md border transition-all duration-300
@@ -600,7 +598,9 @@ function CheckoutPage() {
                     </span>
                     <span
                       className={`w-[22px] h-[22px] border-2 rounded-full flex items-center justify-center
-        ${useDifferentBilling ? "border-[#6E0027]" : "border-[#6E0027]"}`}
+        ${
+          useDifferentBilling ? "border-[#6E0027]" : "border-[#6E0027]"
+        }`}
                     >
                       {useDifferentBilling && (
                         <span className="w-3 h-3 rounded-full bg-[#6E0027]" />
@@ -621,11 +621,13 @@ function CheckoutPage() {
                       name="address"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.address}
-                      className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${formik.errors.address && formik.touched.address
-                        ? "border-red-500"
-                        : "border-[#efe6e6]"
-                        }
+                      value={formik.values.billingAddress}
+                      className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${
+                        formik.errors.billingAddress &&
+                        formik.touched.billingAddress
+                          ? "border-red-500"
+                          : "border-[#efe6e6]"
+                      }
                      focus:outline-none focus:border-[#8C455E]`}
                       placeholder="Address (Flat No./ House No./Street/Area))"
                     />
@@ -657,11 +659,13 @@ function CheckoutPage() {
                         name="city"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.city}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.city && formik.touched.city
-                          ? "border-red-500"
-                          : "border-[#efe6e6]"
-                          }
+                        value={formik.values.billingCity}
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                          formik.errors.billingCity &&
+                          formik.touched.billingCity
+                            ? "border-red-500"
+                            : "border-[#efe6e6]"
+                        }
                        focus:outline-none focus:border-[#8C455E]`}
                         placeholder="City"
                       />
@@ -675,35 +679,48 @@ function CheckoutPage() {
                     <div className="flex-1 min-w-[45%]">
                       <label className="text-sm block mb-1">Pincode</label>
                       <input
-                        name="pincode"
-                        onChange={formik.handleChange}
+                        type="tel"
+                        name="billingPincode"
+                        inputMode="numeric"
+                        maxLength={6}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, "");
+                          formik.setFieldValue("billingPincode", value);
+                        }}
                         onBlur={formik.handleBlur}
-                        value={formik.values.pincode}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.pincode && formik.touched.pincode
-                          ? "border-red-500"
-                          : "border-[#efe6e6]"
-                          }
-                      focus:outline-none focus:border-[#8C455E]`}
+                        value={formik.values.billingPincode}
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                          formik.errors.billingPincode &&
+                          formik.touched.billingPincode
+                            ? "border-red-500"
+                            : "border-[#efe6e6]"
+                        } focus:outline-none focus:border-[#8C455E]`}
                         placeholder="Pincode"
                       />
-                      {formik.touched.pincode && formik.errors.pincode && (
-                        <p className="text-xs text-red-500 mt-1">
-                          {formik.errors.pincode}
-                        </p>
-                      )}
+
+                      {formik.touched.billingPincode &&
+                        formik.errors.billingPincode && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {formik.errors.billingPincode}
+                          </p>
+                        )}
                     </div>
 
                     <div className="flex-1 min-w-[45%]">
-                      <label className="text-sm block mb-1">State</label>
+                      <label className="text-sm block mb-1 mt-2.5">
+                        State
+                      </label>
                       <select
-                        name="state"
+                        name="billingState"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.state}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${formik.errors.state && formik.touched.state
-                          ? "border-red-500"
-                          : "border-[#efe6e6]"
-                          }
+                        value={formik.values.billingState}
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${
+                          formik.errors.billingState &&
+                          formik.touched.billingState
+                            ? "border-red-500"
+                            : "border-[#efe6e6]"
+                        }
                      focus:outline-none focus:border-[#8C455E]`}
                       >
                         <option value="">Select State</option>

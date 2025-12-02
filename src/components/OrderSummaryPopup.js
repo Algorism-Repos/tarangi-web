@@ -19,7 +19,7 @@ export default function OrderSummaryPopup({
 
   if (!open || !order) return null;
 
-  const isDelivered = !!order.deliveredOn; // deliveredOrders have deliveredOn
+  const isDelivered = !!order.deliveredOn; 
   const deliveryText = isDelivered
     ? `Delivered on ${order.deliveredOn}`
     : `Est. delivery by ${order.delivery}`;

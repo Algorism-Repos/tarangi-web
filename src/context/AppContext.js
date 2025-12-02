@@ -3,27 +3,30 @@ import { createContext, useEffect, useState } from "react";
 export const AppContext = createContext();
 
 export function AppProvider({ children }) {
+  const [loading, setLoading] = useState(true);
+  const [collection, setCollections] = useState(false);
+  const [allproduct, setallproduct] = useState();
+
   const [filteredProducts, setFilteredProducts] = useState([]);
   const[categorizedProduct,setCategorizedProduct]=useState()
 const [loggedCustomerId, setLoggedCustomerId] = useState(() => {
   return localStorage.getItem("loggedCustomerId") || null;
 });
 
-const [isLoggedIn, setIsLoggedIn] = useState(() => {
-  return localStorage.getItem("isLoggedIn") === "true";
-});
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem("isLoggedIn") === "true";
+  });
 
-useEffect(() => {
-  if (loggedCustomerId) {
-    localStorage.setItem("loggedCustomerId", loggedCustomerId);
-  }
-}, [loggedCustomerId]);
+  useEffect(() => {
+    if (loggedCustomerId) {
+      localStorage.setItem("loggedCustomerId", loggedCustomerId);
+    }
+  }, [loggedCustomerId]);
 
-useEffect(() => {
-  localStorage.setItem("isLoggedIn", isLoggedIn);
-}, [isLoggedIn]);
+  useEffect(() => {
+    localStorage.setItem("isLoggedIn", isLoggedIn);
+  }, [isLoggedIn]);
 
- 
   const [productListFromShopify, setProductListFromShopify] = useState(() => {
     const saved = localStorage.getItem("productListFromShopify");
     return saved ? JSON.parse(saved) : [];
@@ -131,8 +134,14 @@ useEffect(() => {
         updateCartItemQuantity,
         setRecentlyViewed,
         loggedCustomerId,
-        setLoggedCustomerId,isLoggedIn,setIsLoggedIn,
-        categorizedProduct,setCategorizedProduct
+        setLoggedCustomerId,
+        isLoggedIn,
+        setIsLoggedIn,
+        loading,
+        setLoading,
+        collection,
+        setCollections,
+        allproduct, setallproduct
       }}
     >
       {children}

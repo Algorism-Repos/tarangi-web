@@ -112,3 +112,16 @@ export async function FetchOrderByMail(email) {
   //   console.error("fetchings orders  failed:", error);
   // }
 };
+
+export async function FetchDeliveryByPincode(pincode) {
+  try {
+    const response = await axios.get(
+      `http://localhost:8080/api/shopify/pincode/${pincode}`
+    );
+ console.log(response.data)
+    return response.data || null;
+  } catch (error) {
+    console.error("Error fetching delivery details:", error);
+    return null;
+  }
+}

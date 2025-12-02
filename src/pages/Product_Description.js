@@ -28,7 +28,7 @@ import Wishlist_Popup from "../components/Wishlist_Popup";
 function Product_Description() {
   const location = useLocation();
   const { product } = location.state || {};
-  const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed,categorizedProduct} = useContext(AppContext);
+  const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed, categorizedProduct } = useContext(AppContext);
 
   const [colorSelected, setColorSelected] = useState("Gold");
 
@@ -37,48 +37,108 @@ function Product_Description() {
   const [quantity, setQuantity] = useState(1);
   const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
+  const { allproduct } = useContext(AppContext)
 
-  const handleAddToCart = () => {
-    addToCart({
-      id: product.variants[0].id,
-      title: product.title,
-      price: parseInt(product.variants[0].price),
-      image: product.image.src,
-      quantity: quantity,
-    });
+  function formatVariants(product) {
+    if (!product || !product.variants) return [];
+
+    return product.variants.map((variant) => ({
+      variant_id: variant.id,
+      image: variant.image || product.image?.src || "",
+      price: variant.price,
+      compareAtPrice: variant.compareAtPrice,
+      inventory_quantity: variant.inventory_quantity,
+      product_id: variant.product_id,
+      color:
+        variant.selected_options?.find((opt) => opt.name === "Color")?.value ||
+        "",
+      description: product.description || "",
+    }));
+  }
+
+
+  // function formatVariants(product) {
+  //   if (!product || !product.variants) return [];
+
+  //   return product.variants.map((variant) => {
+  //     const variantImages = [];
+
+  //     if (variant.image) {
+  //       variantImages.push(variant.image);
+  //     }
+
+
+  //     if (product.images && Array.isArray(product.images)) {
+  //       product.images.forEach((img) => {
+  //         if (img.src) variantImages.push(img.src);
+  //       });
+  //     }
+
+  //     const uniqueImages = [...new Set(variantImages)];
+
+  //     return {
+  //       variant_id: variant.id,
+  //       images: uniqueImages,
+  //       price: variant.price,
+  //       compareAtPrice: variant.compareAtPrice,
+  //       inventory_quantity: variant.inventory_quantity,
+  //       product_id: variant.product_id,
+  //       color:
+  //         variant.selected_options?.find((opt) => opt.name === "Color")?.value ||
+  //         "",
+  //       description: product.description || "",
+  //     };
+  //   });
+  // }
+
+
+
+  const formattedVariants = formatVariants(product);
+  console.log(formattedVariants);
+
+  const uniqueColors = [
+    ...new Set(clean?.variants?.map((v) => v.selected_options[0]?.value)),
+  ];
+
+  const [selectedColor, setselectedColor] = useState(uniqueColors[0]);
+  const handleColorChange = (color) => {
+    const found = clean.variants.find(
+      (v) => v.selected_options[0]?.value === color
+    );
+
+    if (found) {
+      setActiveVariant(found);
+    }
   };
 
-  const matchingProducts = filteredProducts?.filter(
-    (item) =>
-      item.product_type === product.product_type && item.id !== product.id
-  );
-
-  const handleAddToWish = () => {
+  const handleAddToWish = (product) => {
+    console.log(product)
     addToWishlist({
       id: product.variants[0].id,
       title: product.title,
       price: parseInt(product.variants[0].price),
       image: product.image.src,
-      quantity: quantity,
     });
   };
 
-  useEffect(() => {
-    if (product) {
-      addToRecentlyViewed({
-        id: product.variants[0].id,
-        title: product.title,
-        image: product.image.src,
-        price: parseInt(product.variants[0].price),
-      });
-    }
-  }, []);
+
+
+
+
+
+
+
+
+
+
+
+
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  
+
 
   function normalizeProduct(raw) {
     return {
@@ -163,9 +223,9 @@ function Product_Description() {
   console.log(availableColors);
 
   console.log(`Selected Color: ${colorSelected}`);
-    console.log(categorizedProduct);
+  console.log(categorizedProduct);
 
-  
+
 
   return (
     <>
@@ -198,7 +258,7 @@ function Product_Description() {
                 modules={[Pagination]}
               >
 
-                {productDetails.map((item) => ( 
+                {productDetails.map((item) => (
                   <SwiperSlide>
                     <img src={item.image} className="sm:w-[388px] sm:h-[399px] rounded-[18px]" />
                   </SwiperSlide>
@@ -206,7 +266,7 @@ function Product_Description() {
 
               </Swiper>
 
-              
+
             </div>
 
             {/* Product Detail */}
@@ -217,16 +277,14 @@ function Product_Description() {
                 </h1>
                 <h2 className="text-[26px] font-semibold sm:text-[32px]">
                   ₹{parseInt(activeVariant?.price).toLocaleString("en-IN")}
-                </h2>
-                <p className="text-[#878787] text-[14px] font-poppins ">
-                  <span class="underline">Tax included</span>. Shipping calculated at checkout
-                </p>
+                </h2 >
+    <p className="text-[#878787] text-[14px] font-poppins ">
+      <span class="underline">Tax included</span>. Shipping calculated at checkout
+    </p>
 
-              </div>
-
-              <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
-
-              {/* Description */}
+              </div >
+    <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
+  {/* Description */ }
               <div>
                 <h3 className="text-[#6F6F6F] text-[14px] font-medium">
                   Description
@@ -269,26 +327,25 @@ function Product_Description() {
                   </div>
                 </div>
               </div>
-
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
-              {/* Pincode */}
-              <div className="space-y-6 sm:space-y-3">
-                <h3 className="text-[#6F6F6F] text-[14px] font-medium">
-                  Check estimated delivery date with Pincode
-                </h3>
+  {/* Pincode */ }
+  <div className="space-y-6 sm:space-y-3">
+    <h3 className="text-[#6F6F6F] text-[14px] font-medium">
+      Check estimated delivery date with Pincode
+    </h3>
 
-                <PincodeInput />
+    <PincodeInput />
 
               
-              </div>
+              </div >
 
-              {/*Colors Available Section */}
-              <div className={clean?.variants.length >= 1 ? "block" : "hidden"}>
+    {/*Colors Available Section */ }
+    < div className = { clean?.variants.length >= 1 ? "block" : "hidden" } >
 
-                <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
+      <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
-                {/* Color Icons */}
+  {/* Color Icons */ }
                 <h3 className="font-poppins font-medium text-[14px] leading-normal text-[#6F6F6F] mt-3">Colors Available</h3>
                 <div className="flex flex-row items-center mt-1 gap-x-3">
                   {availableColors.map((item) => (
@@ -303,42 +360,45 @@ function Product_Description() {
                 </div>
 
                 <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
-              </div>
+              </div >
 
 
-              {/* Buttons */}
-              <div className="max-w-[500px] ">
-                <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
-                  <AddToCartButton />
+    {/* Buttons */ }
+    < div className = "max-w-[500px] " >
+      <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
+        <AddToCartButton product={product} />
+        <Link to="/favourites" state={{ product }}>
+          <button
+            className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[52px] rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
+            onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
+            onMouseLeave={() => setWishIconSrc(favorie_icon)}
+            // onClick={() => setShowWishlistPopup(true)}
+            onClick={handleAddToWish}
 
-                  <button
-                    className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[52px] rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
-                    onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
-                    onMouseLeave={() => setWishIconSrc(favorie_icon)}
-                    onClick={() => setShowWishlistPopup(true)}
-                  >
-                    <img
-                      className="w-[32px] h-[32px]"
-                      src={wishIconSrc}
-                      alt="like_icon"
-                    />
-                    Add to Wishlist
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          >
+            <img
+              className="w-[32px] h-[32px]"
+              src={wishIconSrc}
+              alt="like_icon"
+            />
+            Add to Wishlist
+          </button>
+        </Link>
+      </div>
+              </div >
+            </div >
+          </div >
+        </div >
 
-        {/* Suggested products */}
-        <div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 sm:px-0">
+    {/* Suggested products */ }
+    < div className = "max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 sm:px-0" >
           <div>
             <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
               you may also like
             </h1>
 
             <div className="flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
-              {matchingProducts.map((item) => {
+              {/* {matchingProducts.map((item) => {
                 return (
                   <div
                     key={item.id}
@@ -382,18 +442,18 @@ function Product_Description() {
                     </div>
                   </div>
                 );
-              })}
+              })} */}
             </div>
           </div>
 
           <Recently_Viewed />
-        </div>
-      </div>
+        </div >
+      </div >
 
-      <Wishlist_Popup
-        show={showWishlistPopup}
-        onClose={() => setShowWishlistPopup(false)}
-      />
+    <Wishlist_Popup
+      show={showWishlistPopup}
+      onClose={() => setShowWishlistPopup(false)}
+    />
     </>
   );
 }

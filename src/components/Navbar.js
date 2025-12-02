@@ -8,6 +8,7 @@ import Trending_up from "../assets/Trending_up.png";
 import Search_icon from "../assets/search_icon.png";
 import Search_icon_white from "../assets/search_icon_white.png";
 import Back_Arrow from "../assets/close_iconwhite.png";
+import logout from "../assets/logout.png";
 
 // Assets
 import logo from "../assets/logo.png";
@@ -19,51 +20,65 @@ import cart_icon_empty from "../assets/Cart_white.png";
 import cart_icon_filled from "../assets/cart_filled.png";
 import profile_icon from "../assets/profile_icon.png";
 import new_product_1 from "../assets/Frame 29.png";
-import { AppContext } from "../context/AppContext";
 
 import down_arrow from "../assets/down_arrow.png";
 import up_arrow from "../assets/up_arrow.png";
+import { AppContext } from "../context/AppContext";
 
 function Navbar() {
   const [menuVisible, setMenuVisible] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
-  const [cartItems, setCartItems] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
- const {isLoggedIn,setIsLoggedIn}=useContext(AppContext)
-  const favourites = JSON.parse(localStorage.getItem("favourites")) || [];
-  
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
-  const hasFavourites = favourites.length > 0;
-  const hasCartItems = cartItems.length > 0;
+  const { collection } = useContext(AppContext);
+  const [cartItems, setCartItems] = useState([]);
+  const [hasCartItems, setHasCartItems] = useState(true);
+
+  const [favourites, setFavourites] = useState([]);
+  const [hasFavourites, setHasFavourites] = useState(true);
+
+  // Product dropdown - desktop
+  const [productDropdown, setProductDropdown] = useState(false);
+
+  // console.log(collection);
+
+  // Timer function
+  const closeTimer = useRef(null);
+  const handleMouseEnter = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+    setProductDropdown(true);
+  };
+  const handleMouseLeave = () => {
+    closeTimer.current = setTimeout(() => {
+      setProductDropdown(false);
+    }, 500);
+  };
+  const handleClose = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+    setProductDropdown(false);
+  };
+  const handleSubMenuClick = () => {
+    handleClose();
+  };
 
   const location = useLocation();
   const navigate = useNavigate();
 
   const mobileSearchRef = useRef(null);
-  const [productDropdown, setProductDropdown] = useState(false);
-  const [activeTab, setActiveTab] = useState("women");
-  const productDropdownRef = useRef(null);
 
-  // NEW: mobile products dropdown state
+  // mobile products dropdown
   const [mobileProductDropdown, setMobileProductDropdown] = useState(false);
+  const [mobileActiveTab, setMobileActiveTab] = useState("men"); // for mobile pills
 
   // Product dropdown datas
-  const productCategory = ["women", "men", "couples", "gifts"];
-
-  const products = {
-    women: [
-      { img: new_product_1, name: "Emerald Pendant" },
-      { img: new_product_1, name: "Diamond Necklace" },
-      { img: new_product_1, name: "Tulip Brooch" },
-      { img: new_product_1, name: "Emerald Pendant" },
-    ],
-    men: [{ img: new_product_1, name: "Emerald Pendant" }],
-    couples: [
-      { img: new_product_1, name: "Emerald Pendant" },
-      { img: new_product_1, name: "Emerald Pendant" },
-    ],
-    gifts: [{ img: new_product_1, name: "Emerald Pendant" }],
-  };
+  const mobileCategories = ["men", "women", "couples"]; // to match your design
 
   const TRENDING_PRODUCTS = [
     { img: new_product_1, name: "Emerald Pendant" },
@@ -76,22 +91,21 @@ function Navbar() {
 
   const isActive = (path) => location.pathname === path;
   const cartIcon = hasCartItems ? cart_icon_filled : cart_icon_empty;
+  const isProductsRoute = location.pathname.startsWith("/products");
 
   useEffect(() => {
     const syncFromStorage = () => {
       // login check
-      const storedLogin = localStorage.getItem("isLoggedIn") === "true";
+      const storedLogin = localStorage.getItem("isLoggedIn") === "false";
       setIsLoggedIn(storedLogin);
 
-      // cart
-      const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-      setCartItems(storedCart);
+      // // cart
+      // const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      // setCartItems(storedCart);
 
-      // favourites
-      const storedFav = JSON.parse(localStorage.getItem("favourites")) || [];
+      // // favourites
+      // const storedFav = JSON.parse(localStorage.getItem("favourites")) || [];
       // setFavourites(storedFav);
-
-
     };
 
     syncFromStorage();
@@ -137,29 +151,6 @@ function Navbar() {
     };
   }, []);
 
-  useEffect(() => {
-    setProductDropdown(false);
-    setMobileProductDropdown(false); // close mobile dropdown when route changes
-  }, [location.pathname]);
-
-  useEffect(() => {
-    if (!productDropdown) return;
-
-    const handleClickOutside = (e) => {
-      if (
-        productDropdownRef.current &&
-        !productDropdownRef.current.contains(e.target)
-      ) {
-        setProductDropdown(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [productDropdown]);
-
   // Lock body scroll when mobile menu open
   useEffect(() => {
     if (menuVisible) {
@@ -172,6 +163,13 @@ function Navbar() {
       document.body.style.overflow = "auto";
     };
   }, [menuVisible]);
+
+  const handleLogout = () => {
+    localStorage.setItem("isLoggedIn", "false");
+    setIsLoggedIn(false);
+    setMenuVisible(false);
+    navigate("/login");
+  };
 
   return (
     <>
@@ -186,39 +184,84 @@ function Navbar() {
         <div className="font-poppins text-[16px] flex flex-row gap-x-[40px] ml-[70px] xl:gap-x-[55px] items-center xl:ml-[170px] ">
           <Link
             to="/home"
-            className={`rounded-full py-2.5 px-4 text-white ${isActive("/home")
-              ? "bg-[#CFA266] cursor-default "
-              : "hover:bg-[#D6A76F] opacity-[0.5]"
-              }`}
+            className={`rounded-full py-2.5 px-4 text-white ${
+              isActive("/home")
+                ? "bg-[#CFA266] cursor-default "
+                : "hover:bg-[#D6A76F] opacity-[0.5]"
+            }`}
           >
             Home
           </Link>
 
           <Link
             to="/about"
-            className={`rounded-full py-2.5 px-4 text-white ${isActive("/about")
-              ? "bg-[#CFA266] cursor-default"
-              : "hover:bg-[#D6A76F] opacity-[0.5]"
-              }`}
+            className={`rounded-full py-2.5 px-4 text-white ${
+              isActive("/about")
+                ? "bg-[#CFA266] cursor-default"
+                : "hover:bg-[#D6A76F] opacity-[0.5]"
+            }`}
           >
             About Us
           </Link>
 
-          {/* Product dropdown trigger */}
-          <button
-            onClick={() => setProductDropdown((prev) => !prev)}
-            className={`rounded-full py-2.5 px-4 text-white transition-all duration-200 ${productDropdown ? "bg-[#CFA266]" : "hover:bg-[#D6A76F] opacity-50"
+          {/* Product dropdown */}
+          <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+            <Link
+              to="#"
+              className={`rounded-full py-2.5 px-4 text-white transition-all duration-200 flex items-center ${
+                isActive("/products")
+                  ? "bg-[#CFA266]"
+                  : "hover:bg-[#D6A76F] opacity-50"
               }`}
-          >
-            Products
-          </button>
+            >
+              Products
+              <img className="w-[28px] h-[28px]" src={down_arrow} alt="" />
+            </Link>
+            {/* Dropdown */}
+            {productDropdown && (
+              <div className="absolute top-[111px] left-1/2 transform -translate-x-1/2 min-w-[1000px] h-fit bg-[#FFF5E8] px-10 py-8 shadow-2xl z-30 rounded-lg">
+                <h2 className="font-atteron text-primary text-[32px] text-center mb-8">
+                  Product Caterogry
+                </h2>
+                <div className="grid grid-cols-4 gap-4">
+                  {collection &&
+                    collection
+                      ?.filter((item) => item.handle !== "best_seller")
+                      .map((item) => (
+                        <Link
+                          to={`/products/${item.handle}`}
+                          state={{
+                            category: item.handle,
+                            collectionId: item.id,
+                          }}
+                          onClick={handleSubMenuClick}
+                          className="group transition-transform duration-300 hover:scale-105 "
+                        >
+                          <div className="w-[200px] h-fit text-center">
+                            <img
+                              className="w-[200px] h-[200px] rounded-[8px] object-cover"
+                              src={item.image?.src}
+                              
+                            />
+                            <p className="text-[18px] text-[#6D6D6D] font-poppins mt-2 font-normal group-hover:text-primary group-hover:font-medium">
+                              {item.handle}
+                            </p>
+                          </div>
+                        </Link>
+                      ))}
+                </div>
+                {/* <Link className="w-full  text-center border" to="/products">View All Products</Link> */}
+              </div>
+            )}
+          </div>
 
           <Link
             to="/blog"
-            className={`rounded-full py-2.5 px-4 text-white ${isActive("/blog")
-              ? "bg-[#CFA266] cursor-default"
-              : "hover:bg-[#D6A76F] opacity-[0.5]"
-              }`}
+            className={`rounded-full py-2.5 px-4 text-white ${
+              isActive("/blog")
+                ? "bg-[#CFA266] cursor-default"
+                : "hover:bg-[#D6A76F] opacity-[0.5]"
+            }`}
           >
             Blog
           </Link>
@@ -230,8 +273,7 @@ function Navbar() {
           <div
             onClick={() => setShowSearch((prev) => !prev)}
             className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] transition search-icon
-                      ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
-              }
+                      ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"}
         `}
           >
             <img src={Search_icon_white} className="w-[42px] h-[42px]" />
@@ -239,10 +281,11 @@ function Navbar() {
 
           <Link to="/favourites">
             <img
-              className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/favourites")
-                ? "bg-[#CFA266]"
-                : "hover:bg-[#D6A76F4F]"
-                }`}
+              className={`w-[42px] h-[42px] rounded-[8px] transition ${
+                isActive("/favourites")
+                  ? "bg-[#CFA266]"
+                  : "hover:bg-[#D6A76F4F]"
+              }`}
               src={hasFavourites ? favouriteFilled : favouriteUnfilled}
               alt="favourite icon"
             />
@@ -250,8 +293,9 @@ function Navbar() {
 
           <Link to="/cart">
             <img
-              className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/cart") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
-                }`}
+              className={`w-[42px] h-[42px] rounded-[8px] transition ${
+                isActive("/cart") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+              }`}
               src={cartIcon}
               alt="cart"
             />
@@ -260,10 +304,9 @@ function Navbar() {
           {isLoggedIn ? (
             <Link to="/profile">
               <img
-                className={`w-[48px] h-[48px] rounded-[8px] transition ${isActive("/profile")
-                  ? "bg-[#CFA266]"
-                  : "hover:bg-[#D6A76F4F]"
-                  }`}
+                className={`w-[48px] h-[48px] rounded-[8px] transition ${
+                  isActive("/profile") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+                }`}
                 src={profile_icon}
                 alt="profile"
               />
@@ -283,69 +326,6 @@ function Navbar() {
             </>
           )}
         </div>
-
-        {/* Product Dropdown (desktop) */}
-        <AnimatePresence>
-          {productDropdown && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-              className="absolute top-[100px] left-0 w-full bg-[#FFF5E8] px-10 py-16 shadow-lg z-30"
-            >
-              <div
-                ref={productDropdownRef}
-                className="max-w-[1200px] mx-auto flex"
-              >
-                {/* Product category */}
-                <div className="w-[170px] space-y-[20px] font-poppins text-[16px]">
-                  {productCategory.map((tab) => (
-                    <div
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`cursor-pointer py-2.5 px-3 rounded-[8px] ${activeTab === tab
-                        ? "bg-primary text-white"
-                        : "text-gray-700 hover:bg-gray-100"
-                        }`}
-                    >
-                      {tab}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Similar Products */}
-                <div className="max-w-[1000px] mx-auto">
-                  <div className="grid grid-cols-4 gap-4">
-                    {products[activeTab]?.map((item, i) => (
-                      <div key={i} className="text-center">
-                        <img
-                          className="w-[203px] h-[200px] rounded-[8px] object-cover"
-                          src={item.img}
-                          alt={item.name}
-                        />
-                        <p className="text-sm text-primary mt-2 font-medium">
-                          {item.name}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* VIEW MORE */}
-                  <div className="float-right mt-4 mr-2">
-                    <Link
-                      to="/products"
-                      className="text-[#7A0A1E] font-medium"
-                      onClick={() => setProductDropdown(false)}
-                    >
-                      View more →
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* Search Dropdown (desktop) */}
         <AnimatePresence>
@@ -450,10 +430,11 @@ function Navbar() {
         <div className="flex gap-x-2">
           <Link to="/favourites">
             <img
-              className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites")
-                ? "bg-[#CFA266]"
-                : "hover:bg-[#D6A76F4F]"
-                }`}
+              className={`w-[32px] h-[32px] rounded-[8px] transition ${
+                isActive("/favourites")
+                  ? "bg-[#CFA266]"
+                  : "hover:bg-[#D6A76F4F]"
+              }`}
               src={hasFavourites ? favouriteFilled : favouriteUnfilled}
               alt="favourite icon"
             />
@@ -461,8 +442,9 @@ function Navbar() {
 
           <Link to="/cart">
             <img
-              className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/cart") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
-                }`}
+              className={`w-[32px] h-[32px] rounded-[8px] transition ${
+                isActive("/cart") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+              }`}
               src={cartIcon}
               alt="Cart icon"
             />
@@ -471,10 +453,9 @@ function Navbar() {
           {isLoggedIn && (
             <Link to="/profile">
               <img
-                className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/profile")
-                  ? "bg-[#CFA266]"
-                  : "hover:bg-[#D6A76F4F]"
-                  }`}
+                className={`w-[32px] h-[32px] rounded-[8px] transition ${
+                  isActive("/profile") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+                }`}
                 src={profile_icon}
                 alt="profile"
               />
@@ -502,10 +483,11 @@ function Navbar() {
               <div className="flex gap-x-2">
                 <Link to="/favourites">
                   <img
-                    className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites")
-                      ? "bg-[#CFA266]"
-                      : "hover:bg-[#D6A76F4F]"
-                      }`}
+                    className={`w-[32px] h-[32px] rounded-[8px] transition ${
+                      isActive("/favourites")
+                        ? "bg-[#CFA266]"
+                        : "hover:bg-[#D6A76F4F]"
+                    }`}
                     src={hasFavourites ? favouriteFilled : favouriteUnfilled}
                     alt="favourite icon"
                     onClick={() => setMenuVisible(false)}
@@ -514,29 +496,31 @@ function Navbar() {
 
                 <Link to="/cart">
                   <img
-                    className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/cart")
-                      ? "bg-[#CFA266]"
-                      : "hover:bg-[#D6A76F4F]"
-                      }`}
+                    className={`w-[32px] h-[32px] rounded-[8px] transition ${
+                      isActive("/cart")
+                        ? "bg-[#CFA266]"
+                        : "hover:bg-[#D6A76F4F]"
+                    }`}
                     src={cartIcon}
                     alt="Cart icon"
                     onClick={() => setMenuVisible(false)}
                   />
                 </Link>
 
-                {isLoggedIn && (
+                {/* {isLoggedIn && (
                   <Link to="/profile">
                     <img
-                      className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/profile")
-                        ? "bg-[#CFA266]"
-                        : "hover:bg-[#D6A76F4F]"
-                        }`}
+                      className={`w-[32px] h-[32px] rounded-[8px] transition ${
+                        isActive("/profile")
+                          ? "bg-[#CFA266]"
+                          : "hover:bg-[#D6A76F4F]"
+                      }`}
                       src={profile_icon}
                       alt="profile"
                       onClick={() => setMenuVisible(false)}
                     />
                   </Link>
-                )}
+                )} */}
               </div>
             </div>
 
@@ -625,22 +609,22 @@ function Navbar() {
               </div>
 
               {/* PAGE LINKS + MOBILE PRODUCTS DROPDOWN */}
-              <div className="w-full flex flex-col items-center gap-y-8">
-                {/* Simple page links (without Products) */}
-                {["/home", "/about", "/blog"].map((path) => (
-                  <Link to={path} key={path}>
+              <div className="w-full flex flex-col items-center  gap-y-[40px]">
+                {/* Simple page links (Home, About) */}
+                {["/home", "/about"].map((path) => (
+                  <Link
+                    to={path}
+                    key={path}
+                    onClick={() => setMenuVisible(false)}
+                  >
                     <h2
-                      className={`font-poppins text-[16px] leading-normal text-center ${location.pathname === path
-                        ? "text-white font-semibold"
-                        : "text-[#A0A0A0]"
-                        }`}
-                      onClick={() => setMenuVisible(false)}
+                      className={`font-poppins text-[18px] leading-normal text-center ${
+                        location.pathname === path
+                          ? "text-white font-semibold"
+                          : "text-[#A0A0A0]"
+                      }`}
                     >
-                      {path === "/home"
-                        ? "Home"
-                        : path === "/about"
-                          ? "About Us"
-                          : "Blog"}
+                      {path === "/home" ? "Home" : "About Us"}
                     </h2>
                   </Link>
                 ))}
@@ -649,13 +633,14 @@ function Navbar() {
                 <div className="w-full">
                   <button
                     onClick={() => setMobileProductDropdown((prev) => !prev)}
-                    className="w-full flex items-center justify-center gap-3 px-1"
+                    className="w-full flex items-center justify-center relative px-1 ml-2"
                   >
                     <span
-                      className={`font-poppins text-[16px] ${mobileProductDropdown
-                        ? "text-white font-semibold"
-                        : "text-[#A0A0A0]"
-                        }`}
+                      className={`font-poppins text-[18px] ${
+                        mobileProductDropdown || isProductsRoute
+                          ? "text-white font-semibold"
+                          : "text-[#A0A0A0]"
+                      }`}
                     >
                       Products
                     </span>
@@ -663,10 +648,9 @@ function Navbar() {
                     <img
                       src={mobileProductDropdown ? up_arrow : down_arrow}
                       alt="dropdown arrow"
-                      className="w-4 h-4"
+                      className="w-6 h-6  top-0 left-0"
                     />
                   </button>
-
 
                   <AnimatePresence>
                     {mobileProductDropdown && (
@@ -675,35 +659,90 @@ function Navbar() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: 0.2 }}
-                        className="mt-4"
+                        className="mt-4 flex flex-col items-center"
                       >
-                        {/* Categories */}
-                        <div className="flex flex-col gap-3 justify-center overflow-x-auto mb-4">
-                          {productCategory.map((tab) => (
-                            <button
-                              key={tab}
-                              onClick={() => {
-                                navigate("/products");
-                                setMenuVisible(false);
-                                setMobileProductDropdown(false);
-                              }}
-                              className="px-4 py-2 rounded-[999px] text-[14px] font-poppins capitalize whitespace-nowrap text-white bg-[#FFFFFF1A] hover:bg-[#CFA266]" 
-      
-                            >
-                              {tab}
-                            </button>
-                          ))}
+                        {/* Pills */}
+                        <div className="flex flex-col gap-3 mt-2 w-full max-w-[260px]">
+                          {collection &&
+                            collection
+                              ?.filter((item) => item.handle !== "best_seller")
+                              .map((item) => (
+                                <button
+                                  key={item.id}
+                                  onClick={() => {
+                                    setMobileActiveTab(item);
+                                    navigate(`/products/${item.handle}`, {
+                                      state: {
+                                        category: item.handle,
+                                        collectionId: item.id,
+                                      },
+                                    });
+                                    setMenuVisible(false);
+                                    setMobileProductDropdown(true);
+                                  }}
+                                  className={`w-full py-3 rounded-[999px] font-poppins text-[15px] capitalize ${
+                                    mobileActiveTab === item.handle
+                                      ? "bg-[#CFA266] text-white"
+                                      : "bg-[#FFEFE0] text-[#4B001A]"
+                                  }`}
+                                >
+                                  {item.handle}
+                                </button>
+                              ))}
                         </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
+
+                {/* Blog */}
+                <Link to="/blog" onClick={() => setMenuVisible(false)}>
+                  <h2
+                    className={`font-poppins text-[18px] leading-normal text-center ${
+                      location.pathname === "/blog"
+                        ? "text-white font-semibold"
+                        : "text-[#A0A0A0]"
+                    }`}
+                  >
+                    Blog
+                  </h2>
+                </Link>
+
+                {/* User Profile text link (like your design) */}
+                {isLoggedIn && (
+                  <Link to="/profile" onClick={() => setMenuVisible(false)}>
+                    <h2
+                      className={`font-poppins text-[18px] leading-normal text-center ${
+                        location.pathname === "/profile"
+                          ? "text-white font-semibold"
+                          : "text-[#A0A0A0]"
+                      }`}
+                    >
+                      User Profile
+                    </h2>
+                  </Link>
+                )}
               </div>
+
+              {/* LOGOUT BUTTON */}
+              {isLoggedIn && (
+                <button
+                  onClick={handleLogout}
+                  className="mt-36 mb-4 rounded-[32px] bg-[#CFA266] w-[319px] h-[52px] font-poppins text-[18px] text-white flex items-center justify-center gap-2"
+                >
+                  <img
+                    src={logout}
+                    alt="logout_icon"
+                    className="w-[30px] h-[30px]"
+                  />
+                  Logout
+                </button>
+              )}
 
               {/* LOGIN / SIGNUP */}
               {!isLoggedIn && (
                 <div
-                  className="flex flex-col items-center gap-y-[25px]"
+                  className="flex flex-col mt-32 items-center gap-y-[25px]"
                   onClick={() => setMenuVisible(false)}
                 >
                   <button

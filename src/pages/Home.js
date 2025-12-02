@@ -39,18 +39,19 @@ import {
   FetchAllProductFromShopify,
 } from "../handler/api_Handler";
 import { AppContext } from "../context/AppContext";
+import LoadingScreen from "../components/LoadingScreen";
 
 function Home() {
   const [silverPrice, SetSilverPrice] = useState();
   const [silverPriceUpdatedTime, setSilverPriceUpdatedTime] = useState();
   const [animate, setAnimate] = useState(false);
-  const [collection, setCollections] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
   const [FestiveFiltered, setFestiveFiltered] = useState([]);
+  const { collection, setCollections, loading, setLoading } =
+    useContext(AppContext);
   function toggle(product) {
     setSelectedType(product);
-    setModalToggle(!modalToggle);
   }
   const prevRef = useRef(null);
   const nextRef = useRef(null);
@@ -63,6 +64,8 @@ function Home() {
       console.log(response);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -172,14 +175,14 @@ function Home() {
     // fetchMetalRates();
   }, []);
 
-// Silvar prices logic
+  // Silvar prices logic
   const [pricePerGram, setPricePerGram] = useState(169.9);
   const [pricePerKg, setPricePerKg] = useState(169900);
   const [lastUpdated, setLastUpdated] = useState("27 Oct 2025, 11:00 AM");
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = async () => {
-    if (isRefreshing) return; 
+    if (isRefreshing) return;
 
     setIsRefreshing(true);
 
@@ -320,27 +323,28 @@ function Home() {
           </div>
         </SwiperSlide>
 
+        {/* Women banner */}
         <SwiperSlide>
           <div className="banner-2">
-            <h1 className="font-atteron uppercase text-[40px] leading-[60px] text-center sm:text-left sm:text-[65px] text-[#5B3A09] sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
-              Born from tradition Designed for today
+            <h1 className="font-atteron uppercase text-[40px] leading-[60px] text-center sm:text-left sm:text-[65px] text-[#5B3A09] sm:leading-[80px] font-normal w-full sm:max-w-[780px] tracking-[1px]">
+              Embrace your beauty Shine with Elegance
             </h1>
             <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-[#5B3A09] text-center sm:text-left mt-3 sm:mt-8 max-w-[640px]">
-              Because exculsive 925 silver jewelry should feel as unique as the
-              one who wears it.
+              Because every exquisite 925 silver jewelry should perfectly
+              reflect the grace of its wearer.
             </h4>
             <a
               href="#launchOffers"
               className="w-fit hover:scale-110 transition duration-300"
             >
-              <button className=" mt-4 sm:mt-12 rounded-[32px] bg-[#5B3A09] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
-                View our Best Sellers
+              <button className=" mt-4 sm:mt-12 rounded-[32px] bg-[#5B3A09] font-poppins text-[16px] font-normal text-white py-[16px] px-[25px] cursor-pointer">
+                View our womens Collections
               </button>
             </a>
           </div>
         </SwiperSlide>
 
-        <SwiperSlide>
+        {/* <SwiperSlide>
           <div className="banner-4">
             <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
               Born from tradition Designed for today
@@ -357,22 +361,23 @@ function Home() {
               </button>
             </a>
           </div>
-        </SwiperSlide>
+        </SwiperSlide> */}
 
         <SwiperSlide>
           <div className="banner-5">
-            <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
-              Born from tradition Designed for today
+            <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[850px] tracking-[1px]">
+              Heritage of Strength Crafted for Character
             </h1>
             <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+              Because distinguished 925 silver jewelry should feel as commanding
+              as the one who wears it.
             </h4>
             <a
               href="#launchOffers"
               className="w-fit hover:scale-110 transition duration-300"
             >
-              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
-                View our Collections
+              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#8F103B] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
+                View our mens Collections
               </button>
             </a>
           </div>
@@ -405,148 +410,70 @@ function Home() {
           </p>
         </div>
       </div>
+      {loading ? (
+        <LoadingScreen />
+      ) : (
+        <>
+          {/* Collections - Section */}
+          <div className="design-section py-40 relative">
+            <div className="max-w-7xl mx-auto tracking-[1px]">
+              <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white ">
+                Our Curations
+              </h1>
 
-      {/* Collections - Section */}
-      <div className="design-section py-40 relative">
-        <div className="max-w-7xl mx-auto tracking-[1px]">
-          <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white ">
-            Our Curations
-          </h1>
+              <div className="flex flex-col gap-y-[160px] sm:gap-y-0 sm:flex-row items-center justify-center gap-x-12 relative my-36 sm:my-56">
+                {collection &&
+                  collection
+                    ?.filter((item) => item.handle !== "best_seller")
+                    .map((type) => (
+                      <Link
+                        to={`/products/${type.handle}`}
+                        state={{ category: type.handle, collectionId: type.id }}
+                      >
+                        <div className="border-2 border-white w-[360px] h-[374px] relative z-0 overflow-hidden">
+                          <img
+                            src={type.image?.src}
+                            alt="men-image"
+                            className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
+                          />
+                          <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/3 ">
+                            {type.handle}
+                          </h2>
+                        </div>
+                      </Link>
+                    ))}
+              </div>
 
-          <div className="flex flex-col gap-y-[160px] sm:gap-y-0 sm:flex-row items-center justify-center gap-x-12 relative my-36 sm:my-56">
-            {collection &&
-              collection
-                .filter(
-                  (type) =>
-                    type.handle?.toLowerCase().includes("men") ||
-                    type.handle?.toLowerCase().includes("women") ||
-                    type.handle?.toLowerCase().includes("gifts") ||
-                    type.handle?.toLowerCase().includes("couples")
-                )
-                .map((type) => (
-                  <Link
-                    to="/products"
-                    state={{ category: type.handle, collectionId: type.id }}
-                  >
-                    <div className="border-2 border-white w-[360px] h-[374px] relative z-0 overflow-hidden">
-                      <img
-                        src={type.image?.src}
-                        alt="men-image"
-                        className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
-                      />
-                      <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/3 ">
-                        {type.handle}
-                      </h2>
-                    </div>
-                  </Link>
-                ))}
-          </div>
+              {/* Best Sellers */}
+              <div id="launchOffers" className="max-w-full">
+                <h1 className="section-heading !text-white tracking-[1px] text-center">
+                  Best Sellers
+                </h1>
 
-          {/* Best Sellers */}
-          <div id="launchOffers" className="max-w-full">
-            <h1 className="section-heading !text-white tracking-[1px] text-center">
-              Best Sellers
-            </h1>
-
-            <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-between mt-20 sm:mt-36">
-              {FestiveFiltered.map((type) => (
-                <Link to={`/product_description/${type.title.replace(/\s+/g, "-")}`} state={{ product: type }}>                  <div
-                  className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
-                  onClick={() => {
-                    toggle(type?.title);
-                  }}
-                >
-                  <img
-                    src={type?.image?.src}
-                    alt={type?.name}
-                    className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] "
-                  />
-                  <h5 className="font-poppins text-[22px] font-normal leading-normal text-white mt-6">
-                    {type?.title}
-                  </h5>
-                  <h4 className="font-poppins text-[20px] font-semibold leading-normal text-[#FCD99F]">
-                    ₹
-                    {Number(type.variants[0]?.price).toLocaleString("en-IN", {
-                      maximumFractionDigits: 0,
-                    })}
-                  </h4>
-                </div>
-                </Link>
-              ))}
-            </div>
-
-            {/* Mobile View slider */}
-            <div className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden">
-              {/* Custom navigation buttons */}
-              {showNavigation && (
-                <div className="absolute -bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
-                  <div className="">
-                    <button
-                      ref={prevRef}
-                      className="swiper-button-prev-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-between mt-20 sm:mt-36">
+                  {FestiveFiltered.map((type) => (
+                    <Link
+                      to={`/productdescription/${type.title.replace(
+                        /\s+/g,
+                        "-"
+                      )}`}
+                      state={{ product: type }}
                     >
-                      <img
-                        src={left_arrow}
-                        alt="Previous"
-                        className="w-[42px] h-[42px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
-                      />
-                    </button>
-                  </div>
-                  <div className="">
-                    <button
-                      ref={nextRef}
-                      className="swiper-button-next-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
-                    >
-                      <img
-                        src={right_arrow}
-                        alt="Next"
-                        className="w-[42px] h-[42px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
-                      />
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              <Swiper
-                modules={[Navigation]}
-                spaceBetween={12}
-                slidesPerView={1.1}
-                breakpoints={{
-                  320: { slidesPerView: 1, spaceBetween: 12 },
-                  480: { slidesPerView: 1, spaceBetween: 16 },
-                  640: { slidesPerView: 1, spaceBetween: 20 },
-                  768: { slidesPerView: 2, spaceBetween: 24 },
-                  1024: { slidesPerView: 2, spaceBetween: 28 },
-                  1280: { slidesPerView: 3, spaceBetween: 32 },
-                  1536: { slidesPerView: 3, spaceBetween: 36 },
-                  1920: { slidesPerView: 3, spaceBetween: 40 },
-                }}
-                onBeforeInit={(swiper) => {
-                  if (showNavigation) {
-                    swiper.params.navigation.prevEl = prevRef.current;
-                    swiper.params.navigation.nextEl = nextRef.current;
-                    swiper.navigation.init();
-                    swiper.navigation.update();
-                  }
-                }}
-                className="!overflow-hidden  !h-[515px]"
-              >
-                {FestiveFiltered.length > 0 ? (
-                  FestiveFiltered.map((type, index) => (
-                    <SwiperSlide key={index}>
                       <div
-                        className="w-[360px] h-[450px] mx-auto flex flex-col items-center gap-y-2 transform transition-transform duration-300 ease-out hover:scale-105 cursor-pointer"
-                        onClick={() => toggle(type?.title)}
+                        className="flex flex-col items-center gap-y-1 transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
+                        onClick={() => {
+                          toggle(type?.title);
+                        }}
                       >
                         <img
                           src={type?.image?.src}
                           alt={type?.name}
-                          className="px-2 sm:px-0 w-[360px] h-[460px]"
+                          className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] "
                         />
-                        <h5 className="font-poppins text-[18px] sm:text-[20px] md:text-[22px] font-normal leading-normal text-white mt-4 sm:mt-6">
+                        <h5 className="font-poppins text-[22px] font-normal leading-normal text-white mt-6">
                           {type?.title}
                         </h5>
-                        <h4 className="font-poppins text-[16px] sm:text-[18px] md:text-[20px] font-semibold leading-normal text-[#FCD99F]">
+                        <h4 className="font-poppins text-[20px] font-semibold leading-normal text-[#FCD99F]">
                           ₹
                           {Number(type.variants[0]?.price).toLocaleString(
                             "en-IN",
@@ -556,18 +483,105 @@ function Home() {
                           )}
                         </h4>
                       </div>
-                    </SwiperSlide>
-                  ))
-                ) : (
-                  <div className="text-white text-center py-10">
-                    No products available
-                  </div>
-                )}
-              </Swiper>
+                    </Link>
+                  ))}
+                </div>
+
+                {/* Mobile View slider */}
+                <div className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden">
+                  {/* Custom navigation buttons */}
+                  {showNavigation && (
+                    <div className="absolute -bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
+                      <div className="">
+                        <button
+                          ref={prevRef}
+                          className="swiper-button-prev-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                        >
+                          <img
+                            src={left_arrow}
+                            alt="Previous"
+                            className="w-[42px] h-[42px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                          />
+                        </button>
+                      </div>
+                      <div className="">
+                        <button
+                          ref={nextRef}
+                          className="swiper-button-next-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                        >
+                          <img
+                            src={right_arrow}
+                            alt="Next"
+                            className="w-[42px] h-[42px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  <Swiper
+                    modules={[Navigation]}
+                    spaceBetween={12}
+                    slidesPerView={1.1}
+                    breakpoints={{
+                      320: { slidesPerView: 1, spaceBetween: 12 },
+                      480: { slidesPerView: 1, spaceBetween: 16 },
+                      640: { slidesPerView: 1, spaceBetween: 20 },
+                      768: { slidesPerView: 2, spaceBetween: 24 },
+                      1024: { slidesPerView: 2, spaceBetween: 28 },
+                      1280: { slidesPerView: 3, spaceBetween: 32 },
+                      1536: { slidesPerView: 3, spaceBetween: 36 },
+                      1920: { slidesPerView: 3, spaceBetween: 40 },
+                    }}
+                    onBeforeInit={(swiper) => {
+                      if (showNavigation) {
+                        swiper.params.navigation.prevEl = prevRef.current;
+                        swiper.params.navigation.nextEl = nextRef.current;
+                        swiper.navigation.init();
+                        swiper.navigation.update();
+                      }
+                    }}
+                    className="!overflow-hidden  !h-[515px]"
+                  >
+                    {FestiveFiltered.length > 0 ? (
+                      FestiveFiltered.map((type, index) => (
+                        <SwiperSlide key={index}>
+                          <div
+                            className="w-[360px] h-[450px] mx-auto flex flex-col items-center gap-y-2 transform transition-transform duration-300 ease-out hover:scale-105 cursor-pointer"
+                            onClick={() => toggle(type?.title)}
+                          >
+                            <img
+                              src={type?.image?.src}
+                              alt={type?.name}
+                              className="px-2 sm:px-0 w-[360px] h-[460px]"
+                            />
+                            <h5 className="font-poppins text-[18px] sm:text-[20px] md:text-[22px] font-normal leading-normal text-white mt-4 sm:mt-6">
+                              {type?.title}
+                            </h5>
+                            <h4 className="font-poppins text-[16px] sm:text-[18px] md:text-[20px] font-semibold leading-normal text-[#FCD99F]">
+                              ₹
+                              {Number(type.variants[0]?.price).toLocaleString(
+                                "en-IN",
+                                {
+                                  maximumFractionDigits: 0,
+                                }
+                              )}
+                            </h4>
+                          </div>
+                        </SwiperSlide>
+                      ))
+                    ) : (
+                      <div className="text-white text-center py-10">
+                        No products available
+                      </div>
+                    )}
+                  </Swiper>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
 
       {/* Gold vs Gold Plated Silver Section */}
       <div className="bg-secondary">

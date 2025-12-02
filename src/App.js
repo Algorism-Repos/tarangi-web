@@ -10,7 +10,6 @@ import Product_page from './pages/Product_page.js';
 import Product_Description from './pages/Product_Description.js';
 import Favourites from './pages/Favourites.js'
 import Checkout from './pages/Checkout.js'
-import Payment from './pages/payment.js';
 import Profile from './pages/Profile.js';
 import Error from './pages/Error.js';
 import Login from './pages/Login.js';
@@ -30,11 +29,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path='/home' element={<Home />} />
           <Route path='/about' element={<About />} />
-          <Route path='/products' element={<Product_page />} />
+          <Route path='/products/:handle' element={<Product_page />} />
           <Route path='/product_description/:productName' element={<Product_Description />} />
           <Route path='/favourites' element={<Favourites />} />
           <Route path='/checkout' element={<Checkout />} />
-          <Route path='/payment' element={<Payment/>} />
           <Route path='/thankyou' element={<ThankYou />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/profile' element={<Profile />} />
@@ -42,7 +40,7 @@ function App() {
           <Route path="login" element={<Login />}/>
           <Route path="signup" element={<Signup/>}/>
           <Route path="blog" element={<Blog />} />
-          <Route path="terms&conditions" element={<Terms_Condition/>}/>
+          <Route path="terms" element={<Terms_Condition/>}/>
         </Routes>
       <Footer />
     </>

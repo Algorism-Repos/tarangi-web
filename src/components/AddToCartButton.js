@@ -27,7 +27,6 @@ function AddToCartButton({ product, quantity, isOutOfStock, isRestocking, isFavo
       title: product.title,
       price: parseInt(product.variants[0].price),
       image: product.image?.src,
-      quantity: quantity,
     });
   };
 

@@ -123,8 +123,7 @@ function Product_page() {
   }, {});
 
   console.log(categorized);
-
-  useEffect(() => {
+ useEffect(() => {
     if (collectionId) {
       productList(collectionId);
     }
