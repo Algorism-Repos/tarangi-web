@@ -274,7 +274,7 @@ function Home() {
             <h1 className="font-atteron uppercase text-[40px] text-center xl:text-left sm:text-[50px] xl:text-[65px] text-white font-normal w-full sm:max-w-[720px] mx-auto tracking-[1px] xl:mx-0">
               Born from tradition Designed for today
             </h1>
-            <h4 className="font-poppins text-[13px] max-w-[260px]  sm:text-[22px] font-normal leading-normal text-white text-center xl:text-left mt-8 max-w-[640px] mx-auto xl:mx-0">
+            <h4 className="font-poppins text-[13px] w-[270px]  sm:text-[22px] font-normal leading-normal text-white text-center xl:text-left mt-8 max-w-[640px] mx-auto xl:mx-0">
               Because exculsive 925 silver jewelry should feel as unique as the
               one who wears it.
             </h4>
@@ -409,7 +409,7 @@ function Home() {
               <img
                 src={gift_collection}
                 alt="couple-image"
-                className="w-[360px] h-[360px] sm:w-[380px] sm:h-[410px] object-cover h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px]  z-10"
+                className="w-[360px] h-[360px] sm:w-[380px] sm:h-[410px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px]  z-10"
               />
               <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-[-15px] left-1/4 ">
                 Gifts

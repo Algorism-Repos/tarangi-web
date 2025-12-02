@@ -1,5 +1,10 @@
 import React, { useEffect } from "react";
 
+// Import Components
+import DisclaimerPolicy from "../components/DisclaimerPolicy";
+import CookiePolicy from "./CookiePolicy";
+
+
 function Terms_Condition() {
 
     const termsData = [
@@ -115,13 +120,13 @@ function Terms_Condition() {
 
     return (
         <>
-            <div className=" blog-banner text-white">
-                <h1 className=" font-atteron text-[52px] sm:text-[80px] mt-32 sm:mt-0 text-center font-normal  ">Terms &<br/> Conditions</h1>
+            <div className="blog-banner text-white">
+                <h1 className=" font-atteron text-[52px] sm:text-[80px] mt-32 sm:mt-0 text-center font-normal">Terms &<br/> Conditions</h1>
                 {/* <p className="font-[poppins] text-[16px] sm:text-[20px] px-5 mt-[20px] text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p> */}
             </div>
 
             <div className="bg-light-sandal py-[50px]">
-                <div className="max-w-[1286px] text-[#595959] px-5 space-y-[40px] mx-auto ">
+                <div className="max-w-[1286px] text-[#595959] px-5 pt-[30px] space-y-[40px] mx-auto">
                     {termsData.map((item) => (
                         <div className="font-[poppins] font-normal text-[16px] sm:text-[19px]">
                             <h2 className="text-[#313131] font-medium text-[18px] mb-[8px] sm:text-[20px]">{item.title}</h2>
@@ -140,10 +145,13 @@ function Terms_Condition() {
 
                         <p className="mt-3">Tarangi will acknowledge all complaints within 48 hours and endeavour to resolve them within the prescribed statutory timeframe.</p>
                     </div>
-                    
-
                 </div>
+                
             </div>
+            
+            <DisclaimerPolicy />
+
+            <CookiePolicy />
 
         </>
     );

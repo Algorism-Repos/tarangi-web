@@ -173,22 +173,7 @@ function Privacy_Policy() {
                 "Tarangi reserves the right to amend or update this Privacy Policy from time to time to reflect operational changes, legal developments or improvements in our privacy practices. The updated version will be published on the website with the revised effective date. Continued use of the website implies acceptance of the amended Privacy Policy."
             ]
         },
-        // {
-        //     title: "19. Contact Details and Grievance Redressal",
-        //     content: [
-        //         "For questions regarding this Privacy Policy, or to exercise your data rights, you may contact our",
-        //         "Data Protection and Grievance Officer:",
-        //         "Data Protection/Grievance Officer — Tarangi",
-        //         "Email: tarangijewelsindia@gmail.com",
-        //         "Phone: +91 90030 58300",
-        //         "Address: 431-435,VNA Complex, NSR Road,Saibaba Colony, Coimbatore-641011",
-        //         "Working Hours: 10:30 AM – 8:00 PM IST",
-        //     ],
-        //     content2: [
-        //         "Tarangi will acknowledge all complaints within 48 hours and endeavour to resolve them within the prescribed statutory timeframe."
-        //     ]
-        // },
-
+        
 
     ];
 
