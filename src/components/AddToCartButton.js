@@ -75,7 +75,7 @@ function AddToCartButton({ product, quantity, isOutOfStock, isRestocking, isFavo
     <>
       <button
         className={`cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]
-          w-full h-[52px] rounded-full text-primary text-[16px] font-medium mt-2
+          w-full sm:w-[205px] h-[56px] rounded-full text-primary text-[16px] font-medium mt-2
           transition-all duration-300 ease-in-out 
           ${isDisabledInFavourites ? "hover:bg-[#4B001A] hover:text-white" : "hover:bg-[#4B001A] hover:text-white"}
         `}

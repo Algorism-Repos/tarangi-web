@@ -207,7 +207,7 @@ function Navbar() {
           {/* Product dropdown */}
           <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <Link
-              to="#"
+              to=""
               className={`rounded-full py-2.5 px-4 text-white transition-all duration-200 flex items-center ${
                 isActive("/products")
                   ? "bg-[#CFA266]"

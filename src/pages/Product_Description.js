@@ -57,59 +57,9 @@ function Product_Description() {
   }
 
 
-  // function formatVariants(product) {
-  //   if (!product || !product.variants) return [];
-
-  //   return product.variants.map((variant) => {
-  //     const variantImages = [];
-
-  //     if (variant.image) {
-  //       variantImages.push(variant.image);
-  //     }
-
-
-  //     if (product.images && Array.isArray(product.images)) {
-  //       product.images.forEach((img) => {
-  //         if (img.src) variantImages.push(img.src);
-  //       });
-  //     }
-
-  //     const uniqueImages = [...new Set(variantImages)];
-
-  //     return {
-  //       variant_id: variant.id,
-  //       images: uniqueImages,
-  //       price: variant.price,
-  //       compareAtPrice: variant.compareAtPrice,
-  //       inventory_quantity: variant.inventory_quantity,
-  //       product_id: variant.product_id,
-  //       color:
-  //         variant.selected_options?.find((opt) => opt.name === "Color")?.value ||
-  //         "",
-  //       description: product.description || "",
-  //     };
-  //   });
-  // }
-
-
 
   const formattedVariants = formatVariants(product);
   console.log(formattedVariants);
-
-  const uniqueColors = [
-    ...new Set(clean?.variants?.map((v) => v.selected_options[0]?.value)),
-  ];
-
-  const [selectedColor, setselectedColor] = useState(uniqueColors[0]);
-  const handleColorChange = (color) => {
-    const found = clean.variants.find(
-      (v) => v.selected_options[0]?.value === color
-    );
-
-    if (found) {
-      setActiveVariant(found);
-    }
-  };
 
   const handleAddToWish = (product) => {
     console.log(product)
@@ -120,19 +70,6 @@ function Product_Description() {
       image: product.image.src,
     });
   };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -188,18 +125,9 @@ function Product_Description() {
   }
   const productDetails = formatVariants(product);
   console.log(productDetails);
-
+  //selected variant of the product by the client based on the color.
   const activeVariant = productDetails.find(element => element.color === colorSelected) || productDetails?.[0];
-  // console.log(activeVariant);
 
-  // click on a color toggle
-  function handleColorChange(color) {
-    setColorSelected(color);
-    const id = productDetails.indexOf(color);
-    console.log(id);
-  }
-
-  const clean = normalizeProduct(product);
 
   //Extracting colors into an array from the variants
   const colorAssets = [
@@ -217,24 +145,28 @@ function Product_Description() {
     },
   ];
 
-  const variantColors = productDetails.map(element => element.color)
+  //Organising the colors that are available for the product
+  const variantColors = productDetails.map(element => element.color).filter(color => color);
   console.log(variantColors);
   const availableColors = colorAssets.filter(element => variantColors.includes(element.value))
-  console.log(availableColors);
 
-  console.log(`Selected Color: ${colorSelected}`);
-  console.log(categorizedProduct);
+  // click on a color toggle
+  function handleColorChangeByButton(color) {
+    setColorSelected(color);
+    const idx = productDetails.findIndex(element => element.color === color);
+    console.log(idx);
 
-
+    swiperRef.current.slideTo(idx);
+  }
 
   return (
     <>
       {/* Backgound */}
       <div className="bg-[#FFF5E8] font-poppins py-[30px] sm:py-[70px]">
         {/* Container */}
-        <div className="max-w-7xl mx-auto px-5 sm:px-0">
+        <div className="max-w-7xl mx-auto px-5 sm:px-0 ">
           {/* Product path */}
-          <div className="flex items-center justify-center gap-x-[8px] text-[#6F6F6F] text-[16px] xl:justify-start">
+          <div className="sm:flex sm:flex-row items-center justify-center gap-x-[8px] text-[#6F6F6F] text-[16px] xl:justify-start hidden">
             <p>{productDetails?.[0]?.product_type}</p>
             <img
               className="w-[30px] h-[30px]"
@@ -244,9 +176,9 @@ function Product_Description() {
             <p> {productDetails?.[0]?.title}</p>
           </div>
 
-          <div className="flex flex-wrap items-start justify-around my-[20px] sm:my-[40px] xl:my-[70px]">
+          <div className="flex flex-wrap items-start justify-around  sm:my-[40px] xl:my-[70px] ">
             {/* Product Image */}
-            <div className="max-w-[400px] lg:mt-20">
+            <div className="w-[380px] overflow-hidden sm:max-w-[400px] lg:mt-20 mb-5">
               <Swiper
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
                 onSlideChange={(swiper) => {
@@ -260,7 +192,7 @@ function Product_Description() {
 
                 {productDetails.map((item) => (
                   <SwiperSlide>
-                    <img src={item.image} className="sm:w-[388px] sm:h-[399px] rounded-[18px]" />
+                    <img src={item.image} className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]" />
                   </SwiperSlide>
                 ))}
 
@@ -272,28 +204,48 @@ function Product_Description() {
             {/* Product Detail */}
             <div className="lg:min-w-[633px]">
               <div className="space-y-[3px]">
-                <h1 className="font-atteron text-primary text-[26px] sm:text-[32px] tracking-[1px]">
+                <h1 className="font-atteron text-primary text-[24px] sm:text-[32px] tracking-[1px] mt-3 sm:mt-0">
                   {activeVariant?.title}
                 </h1>
-                <h2 className="text-[26px] font-semibold sm:text-[32px]">
+                <h2 className="text-[24px] font-semibold sm:text-[32px]">
                   ₹{parseInt(activeVariant?.price).toLocaleString("en-IN")}
                 </h2 >
-    <p className="text-[#878787] text-[14px] font-poppins ">
-      <span class="underline">Tax included</span>. Shipping calculated at checkout
-    </p>
+                <p className="text-[#878787] text-[12px] font-poppins ">MRP Excl.of all taxes</p>
 
               </div >
-    <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
-  {/* Description */ }
+              <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px] sm:block hidden" />
+              {/* Description */}
               <div>
-                <h3 className="text-[#6F6F6F] text-[14px] font-medium">
+                <h3 className="text-[#6F6F6F] text-[14px] font-medium mt-5 sm:mt-0">
                   Description
                 </h3>
                 <p className="text-[#484848] text-[16px] font-medium ">
                   {activeVariant?.description}
                 </p>
 
-                <div className="max-w-[305px] flex flex-wrap justify-between  font-[poppins] text-center text-[#313131] my-5">
+                {/*Colors Available Section - Mobile  */}
+                < div className={variantColors.length >= 1 ? "sm:hidden block" : "hidden"} >
+
+                  <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
+
+                  {/* Color Icons */}
+                  <h3 className="font-poppins font-medium text-[14px] leading-normal text-[#6F6F6F] mt-3">Colors Available</h3>
+                  <div className="flex flex-row items-center mt-1 gap-x-3">
+                    {availableColors.map((item) => (
+                      <img
+                        className={colorSelected === item.value ? "w-[40px] sm:h-[40px] border-4 rounded-full border-primary cursor-pointer" : "w-[40px] sm:h-[40px] hover:border-4 rounded-full border-primary cursor-pointer"}
+                        src={item.imgUrl}
+                        alt={`image_${item.value}`}
+                        onClick={() => { handleColorChangeByButton(item.value) }}
+
+                      />
+                    ))}
+                  </div>
+
+                  <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
+                </div >
+
+                <div className=" max-w-full sm:max-w-[305px] flex flex-wrap justify-between  font-[poppins] text-center text-[#313131] mt-9 sm:my-5">
                   <div className="max-w-[75px] ">
                     <img
                       className="w-[42px] h-[42px] mx-auto"
@@ -329,23 +281,21 @@ function Product_Description() {
               </div>
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
-  {/* Pincode */ }
-  <div className="space-y-6 sm:space-y-3">
-    <h3 className="text-[#6F6F6F] text-[14px] font-medium">
-      Check estimated delivery date with Pincode
-    </h3>
+              {/* Pincode */}
+              <div className="space-y-2 sm:space-y-3">
+                <h3 className="text-[#6F6F6F] text-[14px] font-medium">
+                  Check estimated delivery date with Pincode
+                </h3>
+                <PincodeInput />
+              </div>
+              <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px] sm:hidden block" />
 
-    <PincodeInput />
+              {/*Colors Available Section - Above Mobile (large screens) */}
+              < div className={variantColors.length >= 1 ? "sm:block hidden" : "hidden"} >
 
-              
-              </div >
+                <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
-    {/*Colors Available Section */ }
-    < div className = { clean?.variants.length >= 1 ? "block" : "hidden" } >
-
-      <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
-
-  {/* Color Icons */ }
+                {/* Color Icons */}
                 <h3 className="font-poppins font-medium text-[14px] leading-normal text-[#6F6F6F] mt-3">Colors Available</h3>
                 <div className="flex flex-row items-center mt-1 gap-x-3">
                   {availableColors.map((item) => (
@@ -353,7 +303,7 @@ function Product_Description() {
                       className={colorSelected === item.value ? "w-[40px] sm:h-[40px] border-4 rounded-full border-primary cursor-pointer" : "w-[40px] sm:h-[40px] hover:border-4 rounded-full border-primary cursor-pointer"}
                       src={item.imgUrl}
                       alt={`image_${item.value}`}
-                      onClick={() => { handleColorChange(item.value) }}
+                      onClick={() => { handleColorChangeByButton(item.value) }}
 
                     />
                   ))}
@@ -363,35 +313,37 @@ function Product_Description() {
               </div >
 
 
-    {/* Buttons */ }
-    < div className = "max-w-[500px] " >
-      <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
-        <AddToCartButton product={product} />
-        <Link to="/favourites" state={{ product }}>
-          <button
-            className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[52px] rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
-            onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
-            onMouseLeave={() => setWishIconSrc(favorie_icon)}
-            // onClick={() => setShowWishlistPopup(true)}
-            onClick={handleAddToWish}
+              {/* Buttons */}
+              < div className="max-w-[500px] mt-5" >
+                <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
 
-          >
-            <img
-              className="w-[32px] h-[32px]"
-              src={wishIconSrc}
-              alt="like_icon"
-            />
-            Add to Wishlist
-          </button>
-        </Link>
-      </div>
+                  <AddToCartButton product={product} />
+
+                  <Link to="/favourites" className="w-full sm:max-w-[195px]" state={{ activeVariant }}>
+                    <button
+                      className=" w-full sm:w-[190px] h-[56px] flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]  rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
+                      onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
+                      onMouseLeave={() => setWishIconSrc(favorie_icon)}
+                      // onClick={() => setShowWishlistPopup(true)}
+                      onClick={handleAddToWish}
+
+                    >
+                      <img
+                        className="w-[32px] h-[32px]"
+                        src={wishIconSrc}
+                        alt="like_icon"
+                      />
+                      Add to Wishlist
+                    </button>
+                  </Link>
+                </div>
               </div >
             </div >
           </div >
         </div >
 
-    {/* Suggested products */ }
-    < div className = "max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 sm:px-0" >
+        {/* Suggested products */}
+        < div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 sm:px-0" >
           <div>
             <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
               you may also like
@@ -450,10 +402,10 @@ function Product_Description() {
         </div >
       </div >
 
-    <Wishlist_Popup
-      show={showWishlistPopup}
-      onClose={() => setShowWishlistPopup(false)}
-    />
+      <Wishlist_Popup
+        show={showWishlistPopup}
+        onClose={() => setShowWishlistPopup(false)}
+      />
     </>
   );
 }

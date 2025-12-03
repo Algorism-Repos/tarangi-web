@@ -141,7 +141,7 @@ const [loggedCustomerId, setLoggedCustomerId] = useState(() => {
         setLoading,
         collection,
         setCollections,
-        allproduct, setallproduct
+       categorizedProduct,setCategorizedProduct
       }}
     >
       {children}
