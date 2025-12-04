@@ -9,8 +9,6 @@ import { AppContext } from "../context/AppContext";
 import { ref } from "yup";
 
 function Product_Filter({ productCatergory }) {
-    //  console.log(productCatergory)
-
   const [productCount, setProductCount] = useState(0);
   const [selectedOccasions, setSelectedOccasions] = useState([]);
 
@@ -22,6 +20,9 @@ function Product_Filter({ productCatergory }) {
   const [tab, setTab] = useState("productCatergory");
   const { productListFromShopify, filteredProducts, setFilteredProducts } =
     useContext(AppContext);
+
+
+    
   const SortOptions = ["Price High to Low", "Price Low to High"];
   const priceRanges = [
     { label: "₹10,000 – ₹15,000" },
@@ -118,10 +119,7 @@ function Product_Filter({ productCatergory }) {
     }
     return sorted;
   };
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
-
+ 
   const handleSortSelection = (option) => {
     setSortOption(option);
 
@@ -179,7 +177,6 @@ function Product_Filter({ productCatergory }) {
     const sorted = sortProducts(productListFromShopify, sortOption);
     setFilteredProducts(sorted);
   }, [productListFromShopify, sortOption]);
-  //  console.log(productListFromShopify)
   const refreshpage = () => {
     window.location.reload(false);
   };
@@ -190,8 +187,11 @@ function Product_Filter({ productCatergory }) {
     setProductCount(filteredProducts.length);
   }, [filteredProducts]);
 
-  // console.log("Total Products:", productCatergory);
-
+  
+ useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+ console.log(productCatergory)
   return (
     <>
       <div>

@@ -26,15 +26,18 @@ import AddToCartButton from "../components/AddToCartButton";
 import Wishlist_Popup from "../components/Wishlist_Popup";
 
 function Product_Description() {
+  const swiperRef = useRef(null);
   const location = useLocation();
   const { product } = location.state || {};
-  const { addToCart, filteredProducts, addToWishlist, addToRecentlyViewed, categorizedProduct } = useContext(AppContext);
-
+  console.log("product", product)
+  const {
+    addToCart,
+    filteredProducts,
+    addToWishlist,
+    addToRecentlyViewed,
+    categorizedProduct,
+  } = useContext(AppContext);
   const [colorSelected, setColorSelected] = useState("Gold");
-
-  const swiperRef = useRef(null);
-
-  const [quantity, setQuantity] = useState(1);
   const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const { allproduct } = useContext(AppContext)
@@ -78,7 +81,7 @@ function Product_Description() {
 
   function formatVariants(product) {
     if (!product || !product.variants) return [];
-    return product.variants.map(variant => ({
+    return product.variants.map((variant) => ({
       variant_id: variant.id,
       image: variant.image || product.image?.src || "",
       title: product.title,
@@ -87,7 +90,9 @@ function Product_Description() {
       compareAtPrice: variant.compareAtPrice,
       inventory_quantity: variant.inventory_quantity,
       product_id: variant.product_id,
-      color: variant.selected_options?.find(opt => opt.name === "Color")?.value || "",
+      color:
+        variant.selected_options?.find((opt) => opt.name === "Color")?.value ||
+        "",
       description: product.description || "",
     }));
   }
@@ -101,15 +106,15 @@ function Product_Description() {
   const colorAssets = [
     {
       value: "Gold",
-      imgUrl: gold_ellipse
+      imgUrl: gold_ellipse,
     },
     {
       value: "Silver",
-      imgUrl: silver_ellipse
+      imgUrl: silver_ellipse,
     },
     {
       value: "RoseGold",
-      imgUrl: brown_ellipse
+      imgUrl: brown_ellipse,
     },
   ];
 
@@ -127,6 +132,10 @@ function Product_Description() {
     swiperRef.current.slideTo(idx);
   }
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+  console.log("categorizedProduct", categorizedProduct);
   return (
     <>
       {/* Backgound */}
@@ -150,23 +159,19 @@ function Product_Description() {
               <Swiper
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
                 onSlideChange={(swiper) => {
-                  const id = swiper.activeIndex
+                  const id = swiper.activeIndex;
                   setColorSelected(productDetails?.[id].color);
                 }}
                 spaceBetween={0}
                 pagination={{ dynamicBullets: true }}
                 modules={[Pagination]}
               >
-
                 {productDetails.map((item) => (
                   <SwiperSlide>
                     <img src={item.image} className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]" />
                   </SwiperSlide>
                 ))}
-
               </Swiper>
-
-
             </div>
 
             {/* Product Detail */}
@@ -268,7 +273,11 @@ function Product_Description() {
                 <div className="flex flex-row items-center mt-1 gap-x-3">
                   {availableColors.map((item) => (
                     <img
-                      className={colorSelected === item.value ? "w-[40px] sm:h-[40px] border-4 rounded-full border-primary cursor-pointer" : "w-[40px] sm:h-[40px] hover:border-4 rounded-full border-primary cursor-pointer"}
+                      className={
+                        colorSelected === item.value
+                          ? "w-[40px] sm:h-[40px] border-4 rounded-full border-primary cursor-pointer"
+                          : "w-[40px] sm:h-[40px] hover:border-4 rounded-full border-primary cursor-pointer"
+                      }
                       src={item.imgUrl}
                       alt={`image_${item.value}`}
                       onClick={() => { handleColorChangeByButton(item.value) }}
@@ -278,23 +287,19 @@ function Product_Description() {
                 </div>
 
                 <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
-              </div >
-
+              </div>
 
               {/* Buttons */}
-              < div className="max-w-[500px] mt-5" >
+              <div className="max-w-[500px] ">
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
-
                   <AddToCartButton product={product} />
-
-                  <Link to="/favourites" className="w-full sm:max-w-[195px]" state={{ activeVariant }}>
+                  <Link to="/favourites" state={{ product }}>
                     <button
-                      className=" w-full sm:w-[190px] h-[56px] flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]  rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
+                      className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[52px] rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
                       onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
                       onMouseLeave={() => setWishIconSrc(favorie_icon)}
                       // onClick={() => setShowWishlistPopup(true)}
                       onClick={handleAddToWish}
-
                     >
                       <img
                         className="w-[32px] h-[32px]"
@@ -305,70 +310,108 @@ function Product_Description() {
                     </button>
                   </Link>
                 </div>
-              </div >
-            </div >
-          </div >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Buttons */}
+        <div className="max-w-[500px] mt-5" >
+          <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
+
+            <AddToCartButton product={product} />
+
+            <Link to="/favourites" className="w-full sm:max-w-[195px]" state={{ activeVariant }}>
+              <button
+                className=" w-full sm:w-[190px] h-[56px] flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]  rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
+                onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
+                onMouseLeave={() => setWishIconSrc(favorie_icon)}
+                // onClick={() => setShowWishlistPopup(true)}
+                onClick={handleAddToWish}
+
+              >
+                <img
+                  className="w-[32px] h-[32px]"
+                  src={wishIconSrc}
+                  alt="like_icon"
+                />
+                Add to Wishlist
+              </button>
+            </Link>
+          </div>
         </div >
+      </div >
 
-        {/* Suggested products */}
-        < div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 sm:px-0" >
-          <div>
-            <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
-              you may also like
-            </h1>
+      {/* Suggested products */}
+      <div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 sm:px-0" >
+        <div>
+          <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
+            you may also like
+          </h1>
 
-            <div className="flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
-              {/* {matchingProducts.map((item) => {
-                return (
-                  <div
-                    key={item.id}
-                    className="font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0"
+          <div className="flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
+            {categorizedProduct?.slice(0, 4).map((item) => {
+              return (
+                <div
+                  key={item.id}
+                  className="font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0"
+                >
+                  <Link
+                    to={`/product_description/${item.title.replace(
+                      /\s+/g,
+                      "-"
+                    )}`}
+                    state={{ product: item }}
                   >
                     <img
                       className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[24px]"
-                      src={item?.image?.src}
+                      src={item?.image}
                       alt={item?.alt || item?.title}
                     />
+                  </Link>
 
-                    <div className="mt-2 flex flex-wrap items-center justify-between sm:mt-4">
-                      <div>
-                        <h3 className="text-[16px] font-semibold sm:text-[20px]">
-                          ₹{parseInt(item.variants[0].price)}
-                        </h3>
-                        <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">
-                          {item?.title}
-                        </p>
-                      </div>
+                  <div className="mt-2 flex flex-wrap items-center justify-between sm:mt-4">
+                    <div>
+                      <h3 className="text-[16px] font-semibold sm:text-[20px]">
+                        ₹ {(item?.price
+                          ? parseInt(item.price)
+                          : parseInt(item?.variants?.[0]?.price)
+                        )?.toLocaleString("en-IN")}
+                      </h3>
+                      <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">
+                        {item?.title}
+                      </p>
+                    </div>
 
-                      <div className="hidden sm:block">
-                        <div className="mt-1 flex justify-end gap-x-3">
-                          <img
-                            className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
-                            src={gold_ellipse}
-                            alt="gold ellipse"
-                          />
-                          <img
-                            className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
-                            src={silver_ellipse}
-                            alt="Silver ellipse"
-                          />
-                          <img
-                            className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
-                            src={brown_ellipse}
-                            alt="brown ellipse"
-                          />
-                        </div>
+                    <div className="hidden sm:block">
+                      <div className="mt-1 flex justify-end gap-x-3">
+                        <img
+                          className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                          src={gold_ellipse}
+                          alt="gold ellipse"
+                        />
+                        <img
+                          className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                          src={silver_ellipse}
+                          alt="Silver ellipse"
+                        />
+                        <img
+                          className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                          src={brown_ellipse}
+                          alt="brown ellipse"
+                        />
                       </div>
                     </div>
                   </div>
-                );
-              })} */}
-            </div>
+                </div>
+              );
+            })}
           </div>
+        </div>
 
-          <Recently_Viewed />
-        </div >
+        <Recently_Viewed />
       </div >
+    
 
       <Wishlist_Popup
         show={showWishlistPopup}

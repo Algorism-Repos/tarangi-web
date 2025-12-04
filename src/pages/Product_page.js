@@ -5,135 +5,125 @@ import { AppContext } from "../context/AppContext";
 import { useLocation } from "react-router";
 import { FetchAllProductByCollections } from "../handler/api_Handler";
 function Product_page() {
-  const { setProductListFromShopify, setCategorizedProduct } = useContext(AppContext);
+  const { setProductListFromShopify, setCategorizedProduct } =
+    useContext(AppContext);
   const location = useLocation();
-  const { category, collectionId } = location.state || {};
+  const { collectionId } = location.state || {};
   const [productListData, setProductListData] = useState([]);
-  // converted graphql to rest
-  const formatProducts = (edges) => {
-    return edges.map(({ node }) => {
-      const productId = Number(node.id.replace("gid://shopify/Product/", ""));
-      //  images
-      const productImages =
-        node.images?.edges?.map((img, index) => ({
-          id: Number(`${productId}${index + 1}`),
-          product_id: productId,
-          src: img.node.url,
-          position: index + 1,
-        })) || [];
-      // variants
-      const variants =
-        node.variants?.edges?.map((variantEdge, index) => {
-          const variant = variantEdge.node;
-          return {
-            id: Number(variant.id.replace("gid://shopify/ProductVariant/", "")),
-            product_id: productId,
-            title: variant.title || "",
-            price: variant.price,
-            compareAtPrice: variant.compareAtPrice,
-            inventory_quantity: variant.inventoryQuantity,
-            selected_options: variant.selectedOptions || [],
-            // variant level image
-            image: variant.image?.url || null,
-            position: index + 1,
-            created_at: node.createdAt,
-            updated_at: node.createdAt,
-          };
-        }) || [];
-      // color
-      const optionValues = [
-        ...new Set(
-          variants.flatMap(
-            (v) => v?.selected_options?.map((o) => o.value) || []
-          )
-        ),
-      ];
-      return {
-        id: productId,
-        admin_graphql_api_id: node.id,
-        title: node.title,
-        vendor: node.vendor,
-        description: node.description,
-        product_type: node.productType || "Uncategorized",
-        tags: node.tags || [],
-        created_at: node.createdAt,
-        updated_at: node.updatedAt,
-        status: "active",
-        // Featured image for main listing
-        image: {
-          id: productId + 1,
-          product_id: productId,
-          src: node.featuredImage?.url || null,
-          position: 1,
-        },
-        //  all product images and  variants
-        images: productImages,
-        variants,
-        options: [
-          {
-            id: productId + 1000,
-            product_id: productId,
-            name: "Variant Options",
-            position: 1,
-            values: optionValues,
-          },
-        ],
-      };
-    });
-  };
-  // fetch product list
+
+
+  useEffect(() => {
+    if (collectionId) {
+      productList(collectionId);
+    }
+  }, [collectionId]);
   const productList = async (collectionId) => {
     try {
       const response = await FetchAllProductByCollections(collectionId);
-      const edges = response?.data?.collection?.products?.edges || [];
-      // format  REST
-      const formatted = formatProducts(edges);
-      // Save in Context
-      setProductListFromShopify(formatted);
-      // Also store minimal list for filtering/UI
-      const liteProducts = edges.map(({ node }) => ({
-        id: node.id,
-        title: node.title,
-        vendor: node.vendor,
-        created_at: node.createdAt,
-        description: node.description,
-        product_type: node.productType || "Uncategorized",
-        tags: node.tags || [],
-        image: node.featuredImage?.url,
-        variants:
-          node.variants?.edges?.map((v) => ({
-            id: v.node.id,
-            price: v.node.price,
-            compareAtPrice: v.node.compareAtPrice,
-            image: v.node.image?.url,
-            options: v.node.selectedOptions,
-          })) || [],
-      }));
-      setProductListData(liteProducts);
+      console.log(
+        "respons from product_list fetch all products by collection",
+        response
+      );
+       
+      const productEdges = response?.data?.collection?.products?.edges ?? [];
+      
+      const formattedProducts = productEdges.map((item) =>
+        formatProduct(item.node)
+      );
+       setProductListData(formattedProducts);
+       setProductListFromShopify(formattedProducts)
+
+      console.log("Formatted Products ", formattedProducts);
     } catch (error) {
       console.log(error);
     }
   };
+
+function formatProduct(productNode) {
+  const {
+    id,
+    title,
+    description,
+    images,
+    variants,
+    featuredImage,
+    vendor,
+    productType,
+    tags,
+    createdAt,
+  } = productNode;
+
+  const allImages = images?.edges?.map((img) => img.node.url) || [];
+  const variantEdges = variants?.edges || [];
+  const firstVariant = variantEdges[0]?.node;
+
+  const isSimpleProduct =
+    variantEdges.length === 1 &&
+    variantEdges[0].node.selectedOptions?.[0]?.value === "Default Title";
+
+  if (isSimpleProduct) {
+    return {
+      productId: id,
+      title,
+      description,
+      vendor,
+      productType,
+      tags,
+      createdAt,
+      type: "simple",
+      price: firstVariant?.price,
+      compareAtPrice:
+        firstVariant?.compareAtPrice !== undefined
+          ? firstVariant.compareAtPrice
+          : null,
+      image: featuredImage?.url || allImages[0],
+      images: allImages,
+      variants: null,
+    };
+  }
+
+  const formattedVariants = variantEdges.map((v) => ({
+    variantId: v.node.id,
+    price: v.node.price,
+    compareAtPrice:
+      v.node.compareAtPrice !== undefined ? v.node.compareAtPrice : null,
+    inventoryQuantity: v.node.inventoryQuantity,
+    image: v.node.image?.url || featuredImage?.url,
+    colorVariant: Object.fromEntries(
+      v.node.selectedOptions.map((opt) => [opt.name, opt.value])
+    ),
+  }));
+
+  return {
+    productId: id,
+    title,
+    description,
+    vendor,
+    productType,
+    tags,
+    createdAt,
+    type: "variant",
+    featuredImage: featuredImage?.url,
+    images: allImages,
+    variants: formattedVariants,
+  };
+}
   // product catogory
   const categorized = productListData.reduce((acc, product) => {
-    const type = product.product_type || "Uncategorized";
+    const type = product.productType || "Uncategorized";
     if (!acc[type]) acc[type] = [];
     acc[type].push(product);
     return acc;
   }, {});
 
-  console.log(categorized);
- useEffect(() => {
-    if (collectionId) {
-      productList(collectionId);
-    }
-  }, [collectionId]);
+  console.log("categorized productListData ",categorized);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   useEffect(() => {
-    setCategorizedProduct(categorized)
+    setCategorizedProduct(productListData);
   }, [productListData]);
   return (
     <>
@@ -145,4 +135,4 @@ function Product_page() {
     </>
   );
 }
-export default Product_page
+export default Product_page;

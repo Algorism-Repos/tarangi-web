@@ -55,13 +55,11 @@ function Home() {
   }
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-
   const showNavigation = FestiveFiltered.length > 1;
   const collectionsList = async () => {
     try {
       const response = await FetchAllCollectionsFromShopify();
       setCollections(response);
-      console.log(response);
     } catch (error) {
       console.log(error);
     } finally {
