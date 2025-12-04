@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router";
 import location_icon from "../assets/Products/location.png";
 import shopping_bag from "../assets/Products/shopping_bag.png";
-import { FetchDeliveryByPincode } from "../handler/api Handler";
+import { FetchDeliveryByPincode } from "../handler/api_Handler";
 function Pincode_Input() {
   const [pincode, setPincode] = useState("");
   const [isEditable, setIsEditable] = useState(true);
@@ -12,7 +12,7 @@ function Pincode_Input() {
   const pageLocation = useLocation();
   const location = pageLocation.pathname.split("/");
   const pathname = location[1];
-  const [deliveryInfo, setDeliveryInfo] = useState("");
+  const [deliveryInfo, setDeliveryInfo] = useState({});
 
   const handleChange = (e) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -32,12 +32,24 @@ function Pincode_Input() {
       console.log("error fetching pincode", error);
     }
   };
-  const tatHours = deliveryInfo.TAT;
-  const now = new Date();
-  const estimatedDelivery = new Date(now.getTime() + tatHours * 60 * 60 * 1000);
-  const estimatedDate = estimatedDelivery
-    .toLocaleDateString("en-IN")
-    .split("T")[0];
+  const tatHours = deliveryInfo?.TAT;
+  let estimatedDate = null;
+
+  if (tatHours !== null) {
+    const now = new Date();
+    const estimatedDelivery = new Date(
+      now.getTime() + tatHours * 60 * 60 * 1000
+    );
+
+    const day = estimatedDelivery.getDate().toString().padStart(2, "0");
+    const month = (estimatedDelivery.getMonth() + 1)
+      .toString()
+      .padStart(2, "0");
+    const year = estimatedDelivery.getFullYear();
+
+    estimatedDate = `${day}-${month}-${year}`;
+  }
+
   useEffect(() => {
     if (pincode.length === 6) {
       setIsEditable(false);
@@ -59,9 +71,10 @@ function Pincode_Input() {
           console.log(pincode);
           setPincode(pincode);
         }
-      }, 6000)
+      }, 6000);
       return () => clearTimeout(timer);
     }
+    getPincode(pincode);
   }, [pincode, handleReSubmit]);
 
   const enableEdit = () => {
@@ -84,7 +97,11 @@ function Pincode_Input() {
             onClick={!isEditable ? enableEdit : undefined}
           >
             <div className="flex items-center gap-2">
-              <img className="w-[24px] h-[24px]" src={location_icon} alt="location_icon" />
+              <img
+                className="w-[24px] h-[24px]"
+                src={location_icon}
+                alt="location_icon"
+              />
 
               {isEditable ? (
                 <input
@@ -114,7 +131,7 @@ function Pincode_Input() {
       {/* Delivery Date - product-description page */}
       <div
         className={
-          pathname === "productdescription" && pincode.length === 6
+          pathname === "product_description" && pincode.length === 6
             ? "block ml-2"
             : "hidden"
         }
@@ -125,13 +142,14 @@ function Pincode_Input() {
             src={shopping_bag}
             alt="Shopping bag icon"
           />
-          {deliveryInfo && (
+          {deliveryInfo ? (
             <p className="text-[#484848] text-[15px] font-medium">
               Expected to deliver by{" "}
               <span className="font-bold">{estimatedDate} </span>
-              <span className="text-[12px] text-gray-600">
-                {deliveryInfo.CPINCODE}, {deliveryInfo.CSTATE}
-              </span>
+            </p>
+          ) : (
+            <p className="text-[#484848] text-[15px] font-medium">
+              We Don't deliver at your location
             </p>
           )}
         </div>

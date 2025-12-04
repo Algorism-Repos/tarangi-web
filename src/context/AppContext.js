@@ -4,14 +4,17 @@ export const AppContext = createContext();
 
 export function AppProvider({ children }) {
   const [loading, setLoading] = useState(true);
-  const [collection, setCollections] = useState(false);
+const [collection, setCollections] = useState(() => {
+  const saved = localStorage.getItem("collection");
+  return saved ? JSON.parse(saved) : [];
+});
   const [allproduct, setallproduct] = useState();
 
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const[categorizedProduct,setCategorizedProduct]=useState()
-const [loggedCustomerId, setLoggedCustomerId] = useState(() => {
-  return localStorage.getItem("loggedCustomerId") || null;
-});
+  const [categorizedProduct, setCategorizedProduct] = useState();
+  const [loggedCustomerId, setLoggedCustomerId] = useState(() => {
+    return localStorage.getItem("loggedCustomerId") || null;
+  });
 
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem("isLoggedIn") === "true";
@@ -67,6 +70,12 @@ const [loggedCustomerId, setLoggedCustomerId] = useState(() => {
   useEffect(() => {
     localStorage.setItem("wishlistItems", JSON.stringify(wishlistItems));
   }, [wishlistItems]);
+  useEffect(() => {
+  if (collection && collection.length > 0) {
+    localStorage.setItem("collection", JSON.stringify(collection));
+  }
+}, [collection]);
+
   const addToCart = (product) => {
     setCartItems((prev) => {
       const existing = prev.find(
@@ -141,7 +150,8 @@ const [loggedCustomerId, setLoggedCustomerId] = useState(() => {
         setLoading,
         collection,
         setCollections,
-        allproduct, setallproduct
+        categorizedProduct,
+        setCategorizedProduct,
       }}
     >
       {children}

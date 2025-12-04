@@ -228,6 +228,7 @@ const subtotal = cartItems.reduce((total, item) => {
               <div className="bg-[#FFFAF3] max-w-[580px] p-[24px] rounded-[16px] shadow-2xl mt-[25px] max-[425px]:p-[16px] ">
                 <div className="flex gap-x-[15px] sm:gap-x-[50px] items-center justify-between max-[425px]:gap-x-[10px]">
                   {/* Product 1 */}
+                  { }
                   <div className="relative space-y-[10px]">
                     <input
                       type="checkbox"
@@ -244,27 +245,6 @@ const subtotal = cartItems.reduce((total, item) => {
                       </h3>
                       <h3 className="text-[16px] font-semibold sm:text-[20px] max-[425px]:text-[15px]">
                         ₹10,000
-                      </h3>
-                    </div>
-                  </div>
-
-                  {/* Product 2 */}
-                  <div className="relative space-y-[10px]">
-                    <input
-                      type="checkbox"
-                      className="absolute top-5 right-3 w-[18px] h-[18px] accent-[#6E0027] border-2 border-[#6E0027] rounded-sm cursor-pointer"
-                    />
-                    <img
-                      className="w-[148px] sm:w-[233px] rounded-[12px]"
-                      src={product_2}
-                      alt="product image"
-                    />
-                    <div>
-                      <h3 className="text-[14px] font-medium text-[#6F6F6F] sm:text-[16px] max-[425px]:text-[13px]">
-                        Tulip Brooch
-                      </h3>
-                      <h3 className="text-[16px] font-semibold sm:text-[20px] max-[425px]:text-[15px]">
-                        ₹2,000
                       </h3>
                     </div>
                   </div>

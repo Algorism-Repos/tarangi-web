@@ -10,16 +10,21 @@ import truck_icon from "../assets/truck_icon.png";
 import LineImg from "../assets/line.png";
 import red_arrow from "../assets/Products/down_arrow_red.png";
 import downArrow from "../assets/arrowDown.png";
-import { checkOrCreateCustomer } from "../handler/api_Handler";
+import {
+  checkOrCreateCustomer,
+  FetchDeliveryByPincode,
+} from "../handler/api_Handler";
 
 function CheckoutPage() {
   const location = useLocation();
   const { subtotal, shipping, tax, total } = location.state || {};
   const [useDifferentBilling, setUseDifferentBilling] = useState(false);
   const navigate = useNavigate();
+  const [giftWrapPrice, setGiftWrapPrice] = useState(0);
+
   const { cartItems, removeFromCart } = useContext(AppContext);
   const [showSummary, setShowSummary] = useState(false);
-  const[formValues,setFormValues]=useState([])
+  const [formValues, setFormValues] = useState([]);
   // Yup validation schema
   const validationSchema = Yup.object({
     // Contact
@@ -128,9 +133,9 @@ function CheckoutPage() {
       }
     },
   });
-  // console.log("formValues", formValues);
+      console.log(cartItems);
 
-  const handlePlaceOrder = async (values, customerId) => {
+  const handlePlaceOrder = async (formValues, customerId) => {
     console.log(cartItems);
     if (!cartItems || cartItems.length === 0) return;
 
@@ -147,6 +152,7 @@ function CheckoutPage() {
           last_name: formValues.lastName,
           address1: formValues.address,
           city: formValues.city,
+          province: formValues.state,
           country: formValues.country,
           zip: formValues.pincode,
           phone: formValues.mobile,
@@ -156,6 +162,7 @@ function CheckoutPage() {
           last_name: formValues.lastName,
           address1: formValues.address,
           city: formValues.city,
+          province: formValues.state,
           country: formValues.country,
           zip: formValues.pincode,
           phone: formValues.mobile,
@@ -164,9 +171,14 @@ function CheckoutPage() {
         financial_status: "paid",
       },
     };
+
     try {
       console.log(orderData);
-      const response = await axios.post("http://localhost:8080/api/shopify/order", orderData);
+      const response = await axios.post(
+        "http://localhost:8080/api/shopify/order",
+        orderData
+      );
+      navigate("/thankyou");
       console.log("Order placed successfully:", response.data);
     } catch (error) {
       console.error(
@@ -175,13 +187,31 @@ function CheckoutPage() {
       );
     }
   };
+
+  const handlePincodeCheck = async () => {
+    const PinCode = formik.values.pincode;
+    if (PinCode.length !== 6) return;
+    try {
+      const response = await FetchDeliveryByPincode(PinCode);
+      console.log(response);
+      const state = response?.CSTATE || response?.data?.CSTATE;
+      const city = response?.CITY || response?.data?.CITY;
+
+      if (state || city) {
+        formik.setFieldValue("state", state);
+        formik.setFieldValue("city", city);
+      }
+    } catch (error) {
+      console.log("error fetching pincode", error);
+    }
+  };
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.async = true;
     document.body.appendChild(script);
   }, []);
-  console.log(cartItems);
   return (
     <div className="min-h-screen bg-[#FFF5E8] text-[#979797]  font-poppins overflow-x-hidden px-3 sm:px-6">
       <div className="max-w-[1440px] mx-auto py-10 space-y-10 ">
@@ -227,13 +257,14 @@ function CheckoutPage() {
               <img
                 src={downArrow}
                 alt="Dropdown Arrow"
-                className={`w-[11px] h-[7px] transition-transform duration-300 ${showSummary ? "rotate-180" : "rotate-0"
-                  }`}
+                className={`w-[11px] h-[7px] transition-transform duration-300 ${
+                  showSummary ? "rotate-180" : "rotate-0"
+                }`}
               />
             </div>
 
             <span className="font-semibold text-[#404040]">
-              {/* ₹{total.toLocaleString()} */}
+              ₹{total.toLocaleString()}
             </span>
           </button>
 
@@ -258,7 +289,7 @@ function CheckoutPage() {
                         Quantity: {item.quantity}
                       </div>
                       <div className="text-[14px] text-[#313131] font-semibold">
-                        {/* {item.free ? "Free" : `₹${item.price.toLocaleString()}`} */}
+                        {item.free ? "Free" : `₹${item.price.toLocaleString()}`}
                       </div>
                     </div>
                   </div>
@@ -293,10 +324,16 @@ function CheckoutPage() {
                     {shipping === 0 ? "Free" : `₹${shipping}`}
                   </span>
                 </div>
+                {giftWrapPrice > 0 && (
+                  <div className="flex justify-between">
+                    <span>Gift Wrap Price</span>
+                    <span>₹{giftWrapPrice.toLocaleString()}</span>
+                  </div>
+                )}
                 <div className="border-t border-[#EDEDED] my-2" />
                 <div className="flex justify-between text-[15px] font-semibold text-[#1E1E1E]">
                   <span>Total</span>
-                  {/* <span>₹{total.toLocaleString()}</span> */}
+                  <span>₹{(total + giftWrapPrice).toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -325,10 +362,11 @@ function CheckoutPage() {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.firstName}
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.firstName && formik.touched.firstName
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                        formik.errors.firstName && formik.touched.firstName
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                        }
+                      }
                       focus:outline-none focus:border-[#8C455E]`}
                       placeholder="First Name"
                     />
@@ -346,10 +384,11 @@ function CheckoutPage() {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.lastName}
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.lastName && formik.touched.lastName
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                        formik.errors.lastName && formik.touched.lastName
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                        }
+                      }
                              focus:outline-none focus:border-[#8C455E]`}
                       placeholder="Last Name"
                     />
@@ -364,10 +403,11 @@ function CheckoutPage() {
                 <div>
                   <label className="text-sm block mb-1">Mobile Number</label>
                   <div
-                    className={`flex items-center w-full h-[44px] px-3 border rounded-md text-[16px] bg-white ${formik.errors.mobile && formik.touched.mobile
+                    className={`flex items-center w-full h-[44px] px-3 border rounded-md text-[16px] bg-white ${
+                      formik.errors.mobile && formik.touched.mobile
                         ? "border-red-500"
                         : "border-[#efe6e6]"
-                      }
+                    }
                     focus:outline-none focus:border-[#8C455E]`}
                   >
                     <span className="text-[#800020] font-semibold mr-2 whitespace-nowrap">
@@ -400,10 +440,11 @@ function CheckoutPage() {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.email}
-                    className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.email && formik.touched.email
+                    className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                      formik.errors.email && formik.touched.email
                         ? "border-red-500"
                         : "border-[#efe6e6]"
-                      } focus:outline-none focus:border-[#8C455E]`}
+                    } focus:outline-none focus:border-[#8C455E]`}
                     placeholder="Email Id"
                   />
 
@@ -428,10 +469,11 @@ function CheckoutPage() {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.address}
-                    className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${formik.errors.address && formik.touched.address
+                    className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${
+                      formik.errors.address && formik.touched.address
                         ? "border-red-500"
                         : "border-[#efe6e6]"
-                      }
+                    }
                      focus:outline-none focus:border-[#8C455E]`}
                     placeholder="Address (Flat No./ House No./Street/Area))"
                   />
@@ -464,10 +506,11 @@ function CheckoutPage() {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.city}
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.city && formik.touched.city
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                        formik.errors.city && formik.touched.city
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                        }
+                      }
                        focus:outline-none focus:border-[#8C455E]`}
                       placeholder="City"
                     />
@@ -490,12 +533,16 @@ function CheckoutPage() {
                         const value = e.target.value.replace(/\D/g, "");
                         formik.setFieldValue("pincode", value);
                       }}
-                      onBlur={formik.handleBlur}
+                      onBlur={(e) => {
+                        formik.handleBlur(e);
+                        handlePincodeCheck();
+                      }}
                       value={formik.values.pincode}
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.pincode && formik.touched.pincode
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                        formik.errors.pincode && formik.touched.pincode
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                        }
+                      }
                       focus:outline-none focus:border-[#8C455E]`}
                       placeholder="Pincode"
                     />
@@ -509,22 +556,18 @@ function CheckoutPage() {
 
                   <div className="flex-1 min-w-[45%]">
                     <label className="text-sm block mb-1">State</label>
-                    <select
+                    <input
                       name="state"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.state}
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${formik.errors.state && formik.touched.state
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${
+                        formik.errors.state && formik.touched.state
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                        }
+                      }
                      focus:outline-none focus:border-[#8C455E]`}
-                    >
-                      <option value="">Select State</option>
-                      <option value="Tamil Nadu">Tamil Nadu</option>
-                      <option value="Kerala">Kerala</option>
-                      <option value="Karnataka">Karnataka</option>
-                    </select>
+                    />
                     {formik.touched.state && formik.errors.state && (
                       <p className="text-xs text-red-500 mt-1">
                         {formik.errors.state}
@@ -558,10 +601,11 @@ function CheckoutPage() {
                     formik.setFieldValue("useDifferentBilling", false);
                   }}
                   className={`cursor-pointer w-full p-4 rounded-md border transition-all duration-300
-              ${!useDifferentBilling
-                      ? "bg-gradient-to-r from-[#f8e3e3] to-[#ffffff] border-[#8C455E] shadow-md"
-                      : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
-                    }`}
+              ${
+                !useDifferentBilling
+                  ? "bg-gradient-to-r from-[#f8e3e3] to-[#ffffff] border-[#8C455E] shadow-md"
+                  : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
+              }`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-16px font-Poppins text-[#313131]">
@@ -569,10 +613,11 @@ function CheckoutPage() {
                     </span>
                     <span
                       className={`w-[22px] h-[22px] border-2 rounded-full flex items-center justify-center
-                  ${!useDifferentBilling
-                          ? "border-[#6E0027]"
-                          : "border-[#6E0027]"
-                        }
+                  ${
+                    !useDifferentBilling
+                      ? "border-[#6E0027]"
+                      : "border-[#6E0027]"
+                  }
                      `}
                     >
                       {!useDifferentBilling && (
@@ -587,10 +632,11 @@ function CheckoutPage() {
                     formik.setFieldValue("useDifferentBilling", true);
                   }}
                   className={`cursor-pointer w-full p-4 mt-3 rounded-md border transition-all duration-300
-              ${useDifferentBilling
-                      ? "bg-gradient-to-r from-[#DAB3C14F] to-[#ffffff]  border-[#8C455E] shadow-md"
-                      : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
-                    }`}
+              ${
+                useDifferentBilling
+                  ? "bg-gradient-to-r from-[#DAB3C14F] to-[#ffffff]  border-[#8C455E] shadow-md"
+                  : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
+              }`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-[16px] font-Poppins text-[#313131]">
@@ -598,9 +644,7 @@ function CheckoutPage() {
                     </span>
                     <span
                       className={`w-[22px] h-[22px] border-2 rounded-full flex items-center justify-center
-        ${
-          useDifferentBilling ? "border-[#6E0027]" : "border-[#6E0027]"
-        }`}
+        ${useDifferentBilling ? "border-[#6E0027]" : "border-[#6E0027]"}`}
                     >
                       {useDifferentBilling && (
                         <span className="w-3 h-3 rounded-full bg-[#6E0027]" />
@@ -707,9 +751,7 @@ function CheckoutPage() {
                     </div>
 
                     <div className="flex-1 min-w-[45%]">
-                      <label className="text-sm block mb-1 mt-2.5">
-                        State
-                      </label>
+                      <label className="text-sm block mb-1 mt-2.5">State</label>
                       <select
                         name="billingState"
                         onChange={formik.handleChange}
@@ -748,7 +790,6 @@ function CheckoutPage() {
                       </select>
                     </div>
                   </div>
-
                 </div>
               )}
 
@@ -760,7 +801,14 @@ function CheckoutPage() {
                       type="checkbox"
                       name="addGiftWrap"
                       checked={formik.values.addGiftWrap}
-                      onChange={formik.handleChange}
+                      onChange={(e) => {
+                        formik.handleChange(e);
+                        if (e.target.checked) {
+                          setGiftWrapPrice(50);
+                        } else {
+                          setGiftWrapPrice(0);
+                        }
+                      }}
                       onBlur={formik.handleBlur}
                     />
                     <span className="checkmark"></span>
@@ -876,11 +924,11 @@ function CheckoutPage() {
               <div className="text-[14px] space-y-3">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  {/* <span>₹{subtotal.toLocaleString()}</span> */}
+                  <span>₹{subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Tax</span>
-                  {/* <span>₹{tax.toLocaleString()}</span> */}
+                  <span>₹{tax.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
@@ -888,10 +936,16 @@ function CheckoutPage() {
                     {shipping === 0 ? "Free" : `₹${shipping}`}
                   </span>
                 </div>
+                {giftWrapPrice > 0 && (
+                  <div className="flex justify-between">
+                    <span>Gift Wrap Price</span>
+                    <span>₹{giftWrapPrice.toLocaleString()}</span>
+                  </div>
+                )}
                 <div className="border-t border-[#EDEDED] my-3" />
                 <div className="flex justify-between text-base font-semibold text-[#1E1E1E]">
                   <span>Total</span>
-                  {/* <span>₹{total.toLocaleString()}</span> */}
+                  <span>₹{(total + giftWrapPrice).toLocaleString()}</span>
                 </div>
               </div>
             </div>

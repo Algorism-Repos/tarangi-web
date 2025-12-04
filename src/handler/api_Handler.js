@@ -29,7 +29,6 @@ export async function FetchAllProductByCollections(collectionId) {
     const response = await axios.get(
       `${url}/products/${collectionId}`
     );
-    console.log(response.data)
     return response.data || [];
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -46,7 +45,6 @@ export async function checkCustomer(logincredential) {
         contact: logincredential.contact
       }
     );
-    console.log(response.data)
     return response;
   } catch (error) {
     console.error("Customer check  failed:", error);
@@ -79,14 +77,11 @@ export async function CustomersOrders(customerId) {
         customerId: customerId
       }
     );
-    console.log(response.data)
     return response;
   } catch (error) {
     console.error("CustomersOrders check  failed:", error);
   }
 }
-
-
 
 export async function FetchAllBlogsFromShopify() {
   try {
@@ -118,7 +113,6 @@ export async function FetchDeliveryByPincode(pincode) {
     const response = await axios.get(
       `http://localhost:8080/api/shopify/pincode/${pincode}`
     );
- console.log(response.data)
     return response.data || null;
   } catch (error) {
     console.error("Error fetching delivery details:", error);

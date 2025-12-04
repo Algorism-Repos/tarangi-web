@@ -27,13 +27,12 @@ const IMAGE_BY_COLOR = (item) => ({
 });
 
 function Product_Listing({ productCatergory }) {
-  //  console.log(productCatergory)
   const [products, setProducts] = useState([]);
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const { loading,setLoading } = useContext(AppContext);
+  const { loading, setLoading } = useContext(AppContext);
   // after form success
   const handleSuccess = () => {
     setShowRestockModal(false);
@@ -68,6 +67,7 @@ function Product_Listing({ productCatergory }) {
       setLoading(false);
     }
   }, [productCatergory]);
+  console.log(" Product_Listing", productCatergory);
 
   //  Like button toggle
   const toggleLike = (id) => {
@@ -123,6 +123,7 @@ function Product_Listing({ productCatergory }) {
       </>
     );
   }
+  console.log(products);
   return (
     <>
       <div className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-y-10 sm:gap-x-[30px] px-1.5 ">
@@ -136,7 +137,11 @@ function Product_Listing({ productCatergory }) {
           return (
             <Link
               key={item.id}
-              to={!isOutOfStock && !isRestocking ? `/product_description/${item.title.replace(/\s+/g, "-")}` : "#"}
+              to={
+                !isOutOfStock && !isRestocking
+                  ? `/product_description/${item.title.replace(/\s+/g, "-")}`
+                  : "#"
+              }
               state={!isOutOfStock && !isRestocking ? { product: item } : {}}
               onClick={
                 isOutOfStock
@@ -154,8 +159,8 @@ function Product_Listing({ productCatergory }) {
                 } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
                 src={
                   (item.selectedColor && colorImages[item.selectedColor]) ||
-                  item.image?.src ||
-                  product_1
+                  item.image ||
+                  item.variants?.[0]?.image
                 }
                 alt={item?.title}
               />
@@ -192,7 +197,11 @@ function Product_Listing({ productCatergory }) {
 
                 <div className="mt-1.5 flex items-center justify-between w-full">
                   <h3 className="text-[13px] text-[#4E4E4E] font-medium sm:text-[18px] mt-1">
-                    ₹{parseInt(item.variants[0].price).toLocaleString("en-IN")}
+                    ₹
+                    {(item?.price
+                      ? parseInt(item.price)
+                      : parseInt(item?.variants?.[0]?.price)
+                    )?.toLocaleString("en-IN")}
                   </h3>
 
                   {/*  COLOR TOGGLE BUTTONS */}

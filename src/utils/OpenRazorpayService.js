@@ -1,5 +1,8 @@
 export const OpenRazorpayService = async (formValues, total) => {
   console.log("total", total);
+
+  let LIVE_KEY ="rzp_live_Rn4qnpr6YvvPQB"
+  
   return new Promise((resolve, reject) => {
     if (!window.Razorpay) {
       reject("Razorpay SDK not loaded");
@@ -38,3 +41,5 @@ export const OpenRazorpayService = async (formValues, total) => {
     rzp.open();
   });
 };
+
+
