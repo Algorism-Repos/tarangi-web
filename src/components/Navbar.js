@@ -243,7 +243,7 @@ function Navbar() {
                               src={item.image?.src}
                               
                             />
-                            <p className="text-[18px] text-[#6D6D6D] font-poppins mt-2 font-normal group-hover:text-primary group-hover:font-medium">
+                            <p className="capitalize text-[18px] text-[#6D6D6D] font-poppins mt-2 font-normal group-hover:text-primary group-hover:font-medium">
                               {item.handle}
                             </p>
                           </div>

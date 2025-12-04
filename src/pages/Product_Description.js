@@ -76,38 +76,6 @@ function Product_Description() {
   }, []);
 
 
-
-  function normalizeProduct(raw) {
-    return {
-      admin_graphql_api_id: raw.admin_graphql_api_id,
-      created_at: raw.created_at,
-      description: raw.description,
-      id: raw.id,
-      image: raw.image,
-      images: raw.images || [],
-      liked: raw.liked || false,
-      options: raw.options || [],
-      product_type: raw.product_type,
-      status: raw.status,
-      tags: raw.tags || [],
-      title: raw.title,
-      updated_at: raw.updated_at || null,
-      variants: (raw.variants || []).map((v) => ({
-        id: v.id,
-        product_id: v.product_id,
-        title: v.title || "",
-        price: v.price,
-        position: v.position,
-        image: v.image,
-        inventory_quantity: v.inventory_quantity,
-        selected_options: v.selected_options || [],
-        created_at: v.created_at,
-        updated_at: v.updated_at,
-      })),
-      vendor: raw.vendor,
-    };
-  }
-
   function formatVariants(product) {
     if (!product || !product.variants) return [];
     return product.variants.map(variant => ({
