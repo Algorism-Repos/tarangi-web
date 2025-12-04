@@ -140,7 +140,6 @@ function Product_Filter({ productCatergory }) {
 
   const handleCheckbox = (type, filterType) => {
 
-    //  console.log(type,filterType)
     let updated;
     if (filterType === "category") {
       updated = selectedCategories.includes(type)
@@ -191,7 +190,7 @@ function Product_Filter({ productCatergory }) {
  useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
- console.log(productCatergory)
+
   return (
     <>
       <div>

@@ -3,6 +3,9 @@ import { useLocation } from "react-router";
 import location_icon from "../assets/Products/location.png";
 import shopping_bag from "../assets/Products/shopping_bag.png";
 import { FetchDeliveryByPincode } from "../handler/api_Handler";
+
+
+
 function Pincode_Input() {
   const [pincode, setPincode] = useState("");
   const [isEditable, setIsEditable] = useState(true);
@@ -85,7 +88,7 @@ function Pincode_Input() {
   return (
     <>
       <div
-        className={`w-full bg-[#FFFAF3] border-2 border-[#F6EFE6] mx-auto shadow-md mt-2 rounded-xl ${
+        className={`w-full bg-[#FFFAF3] border-2 border-[#F6EFE6]  shadow-md mt-2 rounded-xl ${
           error ? "border-2 border-red-400" : "border-2 border-[#F6EFE6]"
         }`}
       >
@@ -110,7 +113,7 @@ function Pincode_Input() {
                   value={pincode}
                   onChange={handleChange}
                   className={`bg-transparent focus:outline-none text-[#333333] placeholder-[#979797]
-                  placeholder:font-semibold text-[16px] `}
+                  placeholder:font-semibold text-[16px] !w-full `}
                 />
               ) : (
                 <p className="text-[#333333] text-[14px] cursor-pointer">

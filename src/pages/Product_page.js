@@ -4,6 +4,9 @@ import Product_Listing from "./Product_Listing";
 import { AppContext } from "../context/AppContext";
 import { useLocation } from "react-router";
 import { FetchAllProductByCollections } from "../handler/api_Handler";
+
+
+
 function Product_page() {
   const { setProductListFromShopify, setCategorizedProduct } =
     useContext(AppContext);
@@ -20,10 +23,10 @@ function Product_page() {
   const productList = async (collectionId) => {
     try {
       const response = await FetchAllProductByCollections(collectionId);
-      console.log(
-        "respons from product_list fetch all products by collection",
-        response
-      );
+      // console.log(
+      //   "respons from product_list fetch all products by collection",
+      //   response
+      // );
        
       const productEdges = response?.data?.collection?.products?.edges ?? [];
       
@@ -32,8 +35,6 @@ function Product_page() {
       );
        setProductListData(formattedProducts);
        setProductListFromShopify(formattedProducts)
-
-      console.log("Formatted Products ", formattedProducts);
     } catch (error) {
       console.log(error);
     }
@@ -89,9 +90,9 @@ function formatProduct(productNode) {
       v.node.compareAtPrice !== undefined ? v.node.compareAtPrice : null,
     inventoryQuantity: v.node.inventoryQuantity,
     image: v.node.image?.url || featuredImage?.url,
-    colorVariant: Object.fromEntries(
-      v.node.selectedOptions.map((opt) => [opt.name, opt.value])
-    ),
+    // colorVariant: v.node.selectedOptions.map((opt) => [opt.name, opt.value]),
+    colorVariant: v.node.selectedOptions[0].value,
+
   }));
 
   return {
@@ -116,8 +117,6 @@ function formatProduct(productNode) {
     return acc;
   }, {});
 
-  console.log("categorized productListData ",categorized);
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -128,7 +127,7 @@ function formatProduct(productNode) {
   return (
     <>
       <div className="bg-[#FFF5E8] py-[50px] relative">
-        <div className="max-w-[1350px] mx-auto lg:flex gap-x-[40px] my-[50px]">
+        <div className="max-w-[1350px] mx-auto lg:flex justify-between gap-x-[40px] my-[50px]">
           <Product_Filter productCatergory={categorized} />
         </div>
       </div>

@@ -32,7 +32,6 @@ function Product_Description() {
   console.log("product", product)
   const {
     addToCart,
-    filteredProducts,
     addToWishlist,
     addToRecentlyViewed,
     categorizedProduct,
@@ -40,29 +39,10 @@ function Product_Description() {
   const [colorSelected, setColorSelected] = useState("Gold");
   const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
-  const { allproduct } = useContext(AppContext)
 
-  function formatVariants(product) {
-    if (!product || !product.variants) return [];
-
-    return product.variants.map((variant) => ({
-      variant_id: variant.id,
-      image: variant.image || product.image?.src || "",
-      price: variant.price,
-      compareAtPrice: variant.compareAtPrice,
-      inventory_quantity: variant.inventory_quantity,
-      product_id: variant.product_id,
-      color:
-        variant.selected_options?.find((opt) => opt.name === "Color")?.value ||
-        "",
-      description: product.description || "",
-    }));
-  }
+  const [activeVariant, setactiveVariant] = useState();
 
 
-
-  const formattedVariants = formatVariants(product);
-  console.log(formattedVariants);
 
   const handleAddToWish = (product) => {
     console.log(product)
@@ -76,30 +56,15 @@ function Product_Description() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
 
-
-  function formatVariants(product) {
-    if (!product || !product.variants) return [];
-    return product.variants.map((variant) => ({
-      variant_id: variant.id,
-      image: variant.image || product.image?.src || "",
-      title: product.title,
-      product_type: product.product_type,
-      price: variant.price,
-      compareAtPrice: variant.compareAtPrice,
-      inventory_quantity: variant.inventory_quantity,
-      product_id: variant.product_id,
-      color:
-        variant.selected_options?.find((opt) => opt.name === "Color")?.value ||
-        "",
-      description: product.description || "",
-    }));
-  }
-  const productDetails = formatVariants(product);
-  console.log(productDetails);
-  //selected variant of the product by the client based on the color.
-  const activeVariant = productDetails.find(element => element.color === colorSelected) || productDetails?.[0];
+    //selected variant of the product by the client based on the color.
+    if (product?.variants != null) {
+      setactiveVariant(product?.variants?.find(element => element.colorVariant === colorSelected));
+    } else if(product?.variants === null) {
+      setactiveVariant(product);
+    }
+  }, [colorSelected]);
+  console.log(activeVariant);
 
 
   //Extracting colors into an array from the variants
@@ -119,14 +84,14 @@ function Product_Description() {
   ];
 
   //Organising the colors that are available for the product
-  const variantColors = productDetails.map(element => element.color).filter(color => color);
+  const variantColors = product.variants?.map(element => element.colorVariant);
   console.log(variantColors);
-  const availableColors = colorAssets.filter(element => variantColors.includes(element.value))
+  const availableColors = colorAssets.filter(element => variantColors?.includes(element.value))
 
   // click on a color toggle
   function handleColorChangeByButton(color) {
     setColorSelected(color);
-    const idx = productDetails.findIndex(element => element.color === color);
+    const idx = product.variants.findIndex(element => element.colorVariant === color);
     console.log(idx);
 
     swiperRef.current.slideTo(idx);
@@ -135,7 +100,8 @@ function Product_Description() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-  console.log("categorizedProduct", categorizedProduct);
+
+
   return (
     <>
       {/* Backgound */}
@@ -144,13 +110,13 @@ function Product_Description() {
         <div className="max-w-7xl mx-auto px-5 sm:px-0 ">
           {/* Product path */}
           <div className="sm:flex sm:flex-row items-center justify-center gap-x-[8px] text-[#6F6F6F] text-[16px] xl:justify-start hidden">
-            <p>{productDetails?.[0]?.product_type}</p>
+            <p>{product.productType}</p>
             <img
               className="w-[30px] h-[30px]"
               src={grey_arrow}
               alt="Arrow Icon"
             />
-            <p> {productDetails?.[0]?.title}</p>
+            <p> {product.title}</p>
           </div>
 
           <div className="flex flex-wrap items-start justify-around  sm:my-[40px] xl:my-[70px] ">
@@ -160,17 +126,27 @@ function Product_Description() {
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
                 onSlideChange={(swiper) => {
                   const id = swiper.activeIndex;
-                  setColorSelected(productDetails?.[id].color);
+                  if(product.variants != null){
+                    setColorSelected(product.variants[id].colorVariant);
+                  } 
                 }}
                 spaceBetween={0}
                 pagination={{ dynamicBullets: true }}
                 modules={[Pagination]}
               >
-                {productDetails.map((item) => (
+
+                {product.variant != null ? product.variants.map((item) => (<SwiperSlide>
+                    <img src={item.image} className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]" />
+                  </SwiperSlide>)): product.images.map((item) => (<SwiperSlide>
+                    <img src={item} className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]" />
+                  </SwiperSlide>))}
+                
+                
+                {/* {product.variants.map((item) => (
                   <SwiperSlide>
                     <img src={item.image} className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]" />
                   </SwiperSlide>
-                ))}
+                ))} */}
               </Swiper>
             </div>
 
@@ -178,10 +154,10 @@ function Product_Description() {
             <div className="lg:min-w-[633px]">
               <div className="space-y-[3px]">
                 <h1 className="font-atteron text-primary text-[24px] sm:text-[32px] tracking-[1px] mt-3 sm:mt-0">
-                  {activeVariant?.title}
+                  {product.title}
                 </h1>
                 <h2 className="text-[24px] font-semibold sm:text-[32px]">
-                  ₹{parseInt(activeVariant?.price).toLocaleString("en-IN")}
+                  ₹{parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}
                 </h2 >
                 <p className="text-[#878787] text-[12px] font-poppins ">MRP Excl.of all taxes</p>
 
@@ -193,11 +169,11 @@ function Product_Description() {
                   Description
                 </h3>
                 <p className="text-[#484848] text-[16px] font-medium ">
-                  {activeVariant?.description}
+                  {product.description}
                 </p>
 
                 {/*Colors Available Section - Mobile  */}
-                < div className={variantColors.length >= 1 ? "sm:hidden block" : "hidden"} >
+                < div className={product.variants !== null ? "sm:hidden block" : "hidden"} >
 
                   <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
@@ -264,7 +240,7 @@ function Product_Description() {
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px] sm:hidden block" />
 
               {/*Colors Available Section - Above Mobile (large screens) */}
-              < div className={variantColors.length >= 1 ? "sm:block hidden" : "hidden"} >
+              < div className={product.variant !== null ? "sm:block hidden" : "hidden"} >
 
                 <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
@@ -290,16 +266,19 @@ function Product_Description() {
               </div>
 
               {/* Buttons */}
-              <div className="max-w-[500px] ">
+              <div className="max-w-[500px] mt-5" >
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
+
                   <AddToCartButton product={product} />
-                  <Link to="/favourites" state={{ product }}>
+
+                  <Link to="/favourites" className="w-full sm:max-w-[195px]" state={{ activeVariant }}>
                     <button
-                      className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-full h-[52px] rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
+                      className=" w-full sm:w-[190px] h-[56px] flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]  rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
                       onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
                       onMouseLeave={() => setWishIconSrc(favorie_icon)}
                       // onClick={() => setShowWishlistPopup(true)}
                       onClick={handleAddToWish}
+
                     >
                       <img
                         className="w-[32px] h-[32px]"
@@ -310,114 +289,92 @@ function Product_Description() {
                     </button>
                   </Link>
                 </div>
-              </div>
+              </div >
             </div>
           </div>
         </div>
 
-        {/* Buttons */}
-        <div className="max-w-[500px] mt-5" >
-          <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
 
-            <AddToCartButton product={product} />
 
-            <Link to="/favourites" className="w-full sm:max-w-[195px]" state={{ activeVariant }}>
-              <button
-                className=" w-full sm:w-[190px] h-[56px] flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]  rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
-                onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
-                onMouseLeave={() => setWishIconSrc(favorie_icon)}
-                // onClick={() => setShowWishlistPopup(true)}
-                onClick={handleAddToWish}
 
-              >
-                <img
-                  className="w-[32px] h-[32px]"
-                  src={wishIconSrc}
-                  alt="like_icon"
-                />
-                Add to Wishlist
-              </button>
-            </Link>
-          </div>
-        </div >
-      </div >
+        {/* Suggested products */}
+        <div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 sm:px-0" >
+          <div>
+            <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
+              you may also like
+            </h1>
 
-      {/* Suggested products */}
-      <div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 sm:px-0" >
-        <div>
-          <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
-            you may also like
-          </h1>
-
-          <div className="flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
-            {categorizedProduct?.slice(0, 4).map((item) => {
-              return (
-                <div
-                  key={item.id}
-                  className="font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0"
-                >
-                  <Link
-                    to={`/product_description/${item.title.replace(
-                      /\s+/g,
-                      "-"
-                    )}`}
-                    state={{ product: item }}
+            <div className="flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
+              {categorizedProduct?.slice(0, 4).map((item) => {
+                return (
+                  <div
+                    key={item.id}
+                    className="font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0"
                   >
-                    <img
-                      className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[24px]"
-                      src={item?.image}
-                      alt={item?.alt || item?.title}
-                    />
-                  </Link>
+                    <Link
+                      to={`/product_description/${item.title.replace(
+                        /\s+/g,
+                        "-"
+                      )}`}
+                      state={{ product: item }}
+                    >
+                      <img
+                        className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[24px]"
+                        src={item?.image}
+                        alt={item?.alt || item?.title}
+                      />
+                    </Link>
 
-                  <div className="mt-2 flex flex-wrap items-center justify-between sm:mt-4">
-                    <div>
-                      <h3 className="text-[16px] font-semibold sm:text-[20px]">
-                        ₹ {(item?.price
-                          ? parseInt(item.price)
-                          : parseInt(item?.variants?.[0]?.price)
-                        )?.toLocaleString("en-IN")}
-                      </h3>
-                      <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">
-                        {item?.title}
-                      </p>
-                    </div>
+                    <div className="mt-2 flex flex-wrap items-center justify-between sm:mt-4">
+                      <div>
+                        <h3 className="text-[16px] font-semibold sm:text-[20px]">
+                          ₹ {(item?.price
+                            ? parseInt(item.price)
+                            : parseInt(item?.variants?.[0]?.price)
+                          )?.toLocaleString("en-IN")}
+                        </h3>
+                        <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">
+                          {item?.title}
+                        </p>
+                      </div>
 
-                    <div className="hidden sm:block">
-                      <div className="mt-1 flex justify-end gap-x-3">
-                        <img
-                          className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
-                          src={gold_ellipse}
-                          alt="gold ellipse"
-                        />
-                        <img
-                          className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
-                          src={silver_ellipse}
-                          alt="Silver ellipse"
-                        />
-                        <img
-                          className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
-                          src={brown_ellipse}
-                          alt="brown ellipse"
-                        />
+                      <div className="hidden sm:block">
+                        <div className="mt-1 flex justify-end gap-x-3">
+                          <img
+                            className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                            src={gold_ellipse}
+                            alt="gold ellipse"
+                          />
+                          <img
+                            className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                            src={silver_ellipse}
+                            alt="Silver ellipse"
+                          />
+                          <img
+                            className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
+                            src={brown_ellipse}
+                            alt="brown ellipse"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
 
-        <Recently_Viewed />
-      </div >
-    
+          <Recently_Viewed />
+        </div >
 
-      <Wishlist_Popup
-        show={showWishlistPopup}
-        onClose={() => setShowWishlistPopup(false)}
-      />
+
+        <Wishlist_Popup
+          show={showWishlistPopup}
+          onClose={() => setShowWishlistPopup(false)}
+        />
+      </div>
     </>
+
   );
 }
 
