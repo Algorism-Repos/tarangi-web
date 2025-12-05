@@ -409,9 +409,9 @@ function Home() {
               <img
                 src={gift_collection}
                 alt="couple-image"
-                className="w-[360px] h-[360px] sm:w-[380px] sm:h-[410px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px]  z-10"
+                className="w-[360px] h-[360px] sm:w-[380px] sm:h-[360px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[50px] z-10 "
               />
-              <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-[-15px] left-1/4 ">
+              <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-[-15px] left-1/2 transform -translate-x-1/2 ">
                 Gifts
               </h2>
             </div>

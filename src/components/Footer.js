@@ -78,14 +78,14 @@ function Footer() {
 
 
             {/* Footer */}
-            <div className="footer-section z-40 font-[poppins] text-white">
+            <div className="footer-section z-40 font-[poppins] text-white sm:py-14 ">
 
                 {/* Muhil */}
                 <div className="flex flex-col gap-y-16 xl:flex-row sm:items-center sm:justify-between px-3 pt-5 pb-12 sm:py-0 sm:pt-0 sm:px-[70px]">
 
                     <div className="flex flex-wrap gap-x-[60px] gap-y-10 ">
                         {/* Logo & Social */}
-                        <div className="sm:mx-auto">
+                        <div className="sm:m-auto xl:m-0">
                             <img src={logo} alt="brand-logo" className="w-[231px] h-fit" />
 
                             <div className=" flex flex-row items-center gap-x-6 w-fit mx-auto ">

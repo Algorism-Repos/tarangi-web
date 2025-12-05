@@ -151,7 +151,7 @@ function Terms_Condition() {
             
             <DisclaimerPolicy />
 
-            <CookiePolicy />
+            
 
         </>
     );

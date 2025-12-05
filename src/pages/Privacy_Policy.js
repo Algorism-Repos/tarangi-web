@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import bullet_icon from "../assets/bullet_point.png";
 
+// Imports
+import CookiePolicy from "./CookiePolicy";
+
 
 
 function Privacy_Policy() {
@@ -242,6 +245,8 @@ function Privacy_Policy() {
 
 
                 </div>
+
+                <CookiePolicy />
             </div>
         </>
     );

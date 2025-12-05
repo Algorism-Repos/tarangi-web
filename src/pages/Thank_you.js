@@ -18,12 +18,12 @@ function ThankYou() {
         {
             img: muthukrishan,
             name: "Muthukrishnan",
-            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+            content: "A second-generation artisan who blends creativity and precision to craft exquisite jewels that reflect timeless craftsmanship and meticulous attention to detail."
         },
         {
             img: ramesh,
             name: "Ramesh",
-            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+            content: "A master craftsman who can infuse tradition with innovation, creating jewels that embody precision, novel artistry and generations of refined skillsets."
         }
     ]
 
@@ -68,17 +68,7 @@ function ThankYou() {
                             onSlideChange={() => console.log('slide change')}
                             onSwiper={(swiper) => console.log(swiper)}
                         >
-                            {/* <SwiperSlide>
-                                <div className="sm:w-[472px] h-fit mx-auto bg-[#FFFAF3] rounded-[24px] shadow-2xl p-[25px] sm:p-[35px] z-10">
-                                    <img className="w-[399px] sm:h-[420px] " src={craftedby} alt='Handcrafeted' />
 
-                                    <div className="space-y-[3px] mt-[20px]">
-                                        <p className="text-[#6E6E6E] text-[16px]">This piece was handcrafted by</p>
-                                        <h2 className="text-[#404040] text-[24px] font-medium">Ramakrishana</h2>
-                                        <p className="text-primary text-[16px]">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                    </div>
-                                </div>
-                            </SwiperSlide> */}
                             {
                                 data.map((items) => {
                                     return (

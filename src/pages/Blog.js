@@ -40,6 +40,13 @@ function Blog() {
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incidi...",
     },
+    {
+      src: blog_1,
+      date: "Nov 11, 2025",
+      heading: "Lorem ipsum dolor",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incidi...",
+    },
   ];
 
 
@@ -159,7 +166,7 @@ function Blog() {
         )}
 
         {/* BLOG LIST */}
-        <div className="max-w-[1320px] mx-auto px-4 my-[50px] flex flex-wrap gap-x-[15px] gap-y-[60px] justify-between">
+        <div className="max-w-[1320px] mx-auto px-4 my-[50px] grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-[15px] gap-y-[60px] justify-between">
           {blogData.map((items, i) => (
             <Link to="/blogdescription">
               <div key={i} className="max-w-[410px] mx-auto font-[poppins]">
