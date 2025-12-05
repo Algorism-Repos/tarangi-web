@@ -95,10 +95,10 @@ function Product_Listing({ productCatergory }) {
 
   //Organising the colors that are available for the product
   const variantColors = products?.map(element => element?.variants?.map(item => item.colorVariant));
-  console.log(variantColors);
+  // console.log(variantColors);
   // const availableColors = colorAssets.filter(element => variantColors?.includes(element.value))
   const availableColors = variantColors.map(color => colorAssets.find(asset => asset.value == color)).filter(Boolean);
-  console.log(availableColors);
+  // console.log(availableColors);
 
 
   //  Like button toggle
@@ -195,11 +195,7 @@ function Product_Listing({ productCatergory }) {
               <img
                 className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "grayscale" : ""
                   } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
-                src={
-                  (item.selectedColor && colorImages[item.selectedColor]) ||
-                  item.image ||
-                  item.variants?.[0]?.image
-                }
+                src={item.variants != null ? item.variants.map(item => item.image) : item.images}
                 alt={item?.title}
               />
 
@@ -235,32 +231,14 @@ function Product_Listing({ productCatergory }) {
 
                 <div className="mt-1.5 flex items-center justify-between w-full">
                   <h3 className="text-[13px] text-[#4E4E4E] font-medium sm:text-[18px] mt-1">
-                    ₹
-                    {(item?.price
-                      ? parseInt(item.price)
-                      : parseInt(item?.variants?.[0]?.price)
-                    )?.toLocaleString("en-IN")}
+                    ₹ {item.variants != null ? parseInt(item.variants?.[0]?.price).toLocaleString("en-IN") : parseInt(item.price).toLocaleString("en-in") }
                   </h3>
 
                   {/*  COLOR TOGGLE BUTTONS */}
-                  {/* <div className="flex justify-center gap-x-2.5 mr-1">
-                    {item.variants?.map((color) => (
-                      <img
-                        key={color}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          // handleColorChange(item.id, color);
-                        }}
-                        className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all ${
-                          item.selectedColor === color
-                            ? "border-[3px] border-primary shadow-md"
-                            : "border border-gray-300 hover:border-primary"
-                        }`}
-                        src={ELLIPSE_BY_COLOR[color]}
-                        alt={`${color} ellipse`}
-                      />
-                    ))}
-                  </div> */}
+                  <div className="flex flex-row items-center">
+                    {/* {item?.variants?.map((color) => color?.colorVariant)} */}
+                  </div>
+                  
                 </div>
               </div>
             </Link>
