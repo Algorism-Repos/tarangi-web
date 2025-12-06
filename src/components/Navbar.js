@@ -28,10 +28,9 @@ import { AppContext } from "../context/AppContext";
 function Navbar() {
   const [menuVisible, setMenuVisible] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
-  const { collection } = useContext(AppContext);
+  const { collection,isLoggedIn, setIsLoggedIn } = useContext(AppContext);
   const [cartItems, setCartItems] = useState([]);
   const [hasCartItems, setHasCartItems] = useState(true);
 
@@ -41,7 +40,7 @@ function Navbar() {
   // Product dropdown - desktop
   const [productDropdown, setProductDropdown] = useState(false);
 
-  // console.log(collection);
+   console.log(isLoggedIn);
 
   // Timer function
   const closeTimer = useRef(null);
@@ -78,7 +77,6 @@ function Navbar() {
   const [mobileActiveTab, setMobileActiveTab] = useState("men"); // for mobile pills
 
   // Product dropdown datas
-  const mobileCategories = ["men", "women", "couples"]; // to match your design
 
   const TRENDING_PRODUCTS = [
     { img: new_product_1, name: "Emerald Pendant" },
@@ -99,13 +97,7 @@ function Navbar() {
       const storedLogin = localStorage.getItem("isLoggedIn") === "false";
       setIsLoggedIn(storedLogin);
 
-      // // cart
-      // const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-      // setCartItems(storedCart);
-
-      // // favourites
-      // const storedFav = JSON.parse(localStorage.getItem("favourites")) || [];
-      // setFavourites(storedFav);
+ 
     };
 
     syncFromStorage();

@@ -80,17 +80,16 @@ function Home() {
     const fetchBestSellerProducts = async () => {
       try {
         const response = await FetchAllProductByCollections(bestSeller.id);
-        console.log(`${bestSeller.id} && ${response}`);
+        console.log(`${bestSeller.id} && ${response?.data}`);
 
-        const edges = response?.data?.collection?.products?.edges || [];
+       const productEdges = response?.data?.collection?.products?.edges ?? [];
+      
+      const formattedProducts = productEdges.map((item) =>
+        formatProduct(item.node)
+      );
 
-        const formattedProducts = edges.map(({ node }) => ({
-          title: node.title,
-          image: { src: node.featuredImage?.url },
-          variants: node.variants.edges.map((v) => ({
-            price: v.node.price,
-          })),
-        }));
+
+       
 
         setFestiveFiltered(formattedProducts);
       } catch (err) {
@@ -99,6 +98,87 @@ function Home() {
     };
     fetchBestSellerProducts();
   }, [collection]);
+
+
+  function formatProduct(productNode) {
+  const {
+    id,
+    title,
+    description,
+    images,
+    variants,
+    featuredImage,
+    vendor,
+    productType,
+    tags,
+    createdAt,
+  } = productNode;
+
+  const allImages = images?.edges?.map((img) => img.node.url) || [];
+  const variantEdges = variants?.edges || [];
+  const firstVariant = variantEdges[0]?.node;
+
+  const isSimpleProduct =
+    variantEdges.length === 1 &&
+    variantEdges[0].node.selectedOptions?.[0]?.value === "Default Title";
+
+  if (isSimpleProduct) {
+    return {
+      productId: id,
+      title,
+      description,
+      vendor,
+      productType,
+      tags,
+      createdAt,
+      type: "simple",
+      price: firstVariant?.price,
+      compareAtPrice:
+        firstVariant?.compareAtPrice !== undefined
+          ? firstVariant.compareAtPrice
+          : null,
+      image: featuredImage?.url || allImages[0],
+      images: allImages,
+      variants: null,
+    };
+  }
+
+  const formattedVariants = variantEdges.map((v) => ({
+    variantId: v.node.id,
+    price: v.node.price,
+    compareAtPrice:
+      v.node.compareAtPrice !== undefined ? v.node.compareAtPrice : null,
+    inventoryQuantity: v.node.inventoryQuantity,
+    image: v.node.image?.url || featuredImage?.url,
+    // colorVariant: v.node.selectedOptions.map((opt) => [opt.name, opt.value]),
+    colorVariant: v.node.selectedOptions[0].value,
+
+  }));
+
+  return {
+    productId: id,
+    title,
+    description,
+    vendor,
+    productType,
+    tags,
+    createdAt,
+    type: "variant",
+    featuredImage: featuredImage?.url,
+    images: allImages,
+    variants: formattedVariants,
+  };
+}
+  // product catogory
+  const categorized = FestiveFiltered.reduce((acc, product) => {
+    const type = product.productType || "Uncategorized";
+    if (!acc[type]) acc[type] = [];
+    acc[type].push(product);
+    return acc;
+  }, {});
+
+ console.log(FestiveFiltered)
+
 
   async function fetchMetalRates() {
     const url =
@@ -451,7 +531,7 @@ function Home() {
                 <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-between mt-20 sm:mt-36">
                   {FestiveFiltered.map((type) => (
                     <Link
-                      to={`/productdescription/${type.title.replace(
+                      to={`/product_description/${type.title.replace(
                         /\s+/g,
                         "-"
                       )}`}

@@ -44,38 +44,9 @@ function Product_Listing({ productCatergory }) {
       setProducts(productCatergory);
       setLoading(false);
     }
-  }, [productCatergory])
+  }, [productCatergory]);
 
   console.log(products);
-
-
-
-  //  useEffect(() => {
-  //   if (productCatergory && productCatergory.length > 0) {
-  //     const prepared = productCatergory.map((item) => {
-  //       const colorsFromData =
-  //         Array.isArray(item.colors) && item.colors.length > 0
-  //           ? item.colors
-  //           : ["gold", "silver", "brown"];
-
-  //       return {
-  //         ...item,
-  //         liked: false,
-  //         colors: colorsFromData,
-  //         selectedColor: colorsFromData[0],
-  //       };
-  //     });
-
-  //     setProducts(prepared);
-  //     setLoading(false);
-  //   } else {
-  //     setProducts([]);
-  //     setLoading(false);
-  //   }
-  // }, [productCatergory]);
-
-
-
 
   //Extracting colors into an array from the variants
   const colorAssets = [
@@ -94,11 +65,27 @@ function Product_Listing({ productCatergory }) {
   ];
 
   //Organising the colors that are available for the product
-  const variantColors = products?.map(element => element?.variants?.map(item => item.colorVariant));
-  console.log(variantColors);
+  const variantColors = products?.map((element) =>
+    element?.variants?.map((item) => item.colorVariant)
+  );
+
+  const Colors = variantColors.filter((item) => Array.isArray(item))
+
+ 
+const matchedColors  = products
+  ?.flatMap((product) => product.variants?.map((variant) => variant.colorVariant))
+  .filter(Boolean);
+ console.log(variantColors);
+  console.log(Colors);
+  console.log("variant:", matchedColors );
+
   // const availableColors = colorAssets.filter(element => variantColors?.includes(element.value))
-  const availableColors = variantColors.map(color => colorAssets.find(asset => asset.value == color)).filter(Boolean);
-  console.log(availableColors);
+  // const Colors = variantColors.filter((item) => Array.isArray(item))
+  // const productAvailableColors = item.variants.map((v) => v.colorVariant);
+  // const matchedColors = colorAssets.filter((c) =>
+  //   productAvailableColors.includes(c.value)
+  // );
+
 
 
   //  Like button toggle
@@ -136,7 +123,6 @@ function Product_Listing({ productCatergory }) {
     return <LoadingScreen />;
   }
 
-
   if (products.length === 0) {
     return (
       <>
@@ -161,8 +147,6 @@ function Product_Listing({ productCatergory }) {
     );
   }
 
-
-
   return (
     <>
       <div className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-y-10 sm:gap-x-[30px] px-1.5 ">
@@ -186,15 +170,16 @@ function Product_Listing({ productCatergory }) {
                 isOutOfStock
                   ? handleOutOfStockClick
                   : isRestocking
-                    ? handleRestockClick
-                    : undefined
+                  ? handleRestockClick
+                  : undefined
               }
               className="font-poppins w-[170px] sm:w-[310px] mx-auto relative hover:scale-105 transition duration-300 ease-in-out group"
             >
               {/* MAIN PRODUCT IMAGE */}
               <img
-                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "grayscale" : ""
-                  } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
+                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${
+                  isOutOfStock ? "grayscale" : ""
+                } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
                 src={
                   (item.selectedColor && colorImages[item.selectedColor]) ||
                   item.image ||
@@ -240,27 +225,7 @@ function Product_Listing({ productCatergory }) {
                       ? parseInt(item.price)
                       : parseInt(item?.variants?.[0]?.price)
                     )?.toLocaleString("en-IN")}
-                  </h3>
-
-                  {/*  COLOR TOGGLE BUTTONS */}
-                  {/* <div className="flex justify-center gap-x-2.5 mr-1">
-                    {item.variants?.map((color) => (
-                      <img
-                        key={color}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          // handleColorChange(item.id, color);
-                        }}
-                        className={`w-[20px] sm:w-[24px] bg-white rounded-full cursor-pointer transition-all ${
-                          item.selectedColor === color
-                            ? "border-[3px] border-primary shadow-md"
-                            : "border border-gray-300 hover:border-primary"
-                        }`}
-                        src={ELLIPSE_BY_COLOR[color]}
-                        alt={`${color} ellipse`}
-                      />
-                    ))}
-                  </div> */}
+                  </h3>                
                 </div>
               </div>
             </Link>
