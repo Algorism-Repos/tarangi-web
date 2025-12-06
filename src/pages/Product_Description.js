@@ -60,7 +60,7 @@ function Product_Description() {
     //selected variant of the product by the client based on the color.
     if (product?.variants != null) {
       setactiveVariant(product?.variants?.find(element => element.colorVariant === colorSelected));
-    } else if(product?.variants === null) {
+    } else if (product?.variants === null) {
       setactiveVariant(product);
     }
   }, [colorSelected]);
@@ -126,9 +126,9 @@ function Product_Description() {
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
                 onSlideChange={(swiper) => {
                   const id = swiper.activeIndex;
-                  if(product.variants != null){
+                  if (product.variants != null) {
                     setColorSelected(product.variants[id].colorVariant);
-                  } 
+                  }
                 }}
                 spaceBetween={0}
                 pagination={{ dynamicBullets: true }}
@@ -136,10 +136,10 @@ function Product_Description() {
               >
 
                 {product.variant != null ? product.variants.map((item) => (<SwiperSlide>
-                    <img src={item.image} className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]" />
-                  </SwiperSlide>)): product.images.map((item) => (<SwiperSlide>
-                    <img src={item} className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]" />
-                  </SwiperSlide>))}
+                  <img src={item.image} className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]" />
+                </SwiperSlide>)) : product.images.map((item) => (<SwiperSlide>
+                  <img src={item} className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]" />
+                </SwiperSlide>))}
               </Swiper>
             </div>
 
@@ -149,11 +149,20 @@ function Product_Description() {
                 <h1 className="font-atteron text-primary text-[24px] sm:text-[32px] tracking-[1px] mt-3 sm:mt-0">
                   {product.title}
                 </h1>
-                <h2 className="text-[24px] font-semibold sm:text-[32px]">
+                {/* Price Section */}
+                {/* Price alone */}
+                <h2 className={activeVariant?.compareAtPrice === null || product.compareAtPrice === null ? "block text-[24px] font-semibold sm:text-[32px]" : "hidden"}>
                   ₹{parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}
                 </h2 >
-                <p className="text-[#878787] text-[12px] font-poppins ">MRP Excl.of all taxes</p>
 
+                {/* Price with Discounted Price */}
+                <div className={activeVariant?.compareAtPrice !== null  ? "flex flex-row flex-nowrap items-center gap-x-3 w-fit" : "hidden"}>
+                  <h2 className="text-[16px] font-semibold text-red-500 sm:text-[22px] line-through"> ₹{parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}</h2 >
+                  <h2 className="text-[24px] font-semibold sm:text-[32px]"> ₹{parseInt(activeVariant?.compareAtPrice).toLocaleString("en-IN") || product.compareAtPrice}</h2 >
+
+                </div>
+                <p className="text-[#878787] text-[12px] font-poppins ">MRP Excl.of all taxes</p>
+                {/* ----------------------------------------------------------------------------------------- */}
               </div >
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px] sm:block hidden" />
               {/* Description */}
@@ -233,7 +242,7 @@ function Product_Description() {
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px] sm:hidden block" />
 
               {/*Colors Available Section - Above Mobile (large screens) */}
-              < div className={product.variant !== null ? "sm:block hidden" : "hidden"} >
+              < div className={product.variants !== null ? "sm:block hidden" : "hidden"} >
 
                 <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 

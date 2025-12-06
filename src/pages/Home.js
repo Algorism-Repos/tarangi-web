@@ -446,7 +446,7 @@ function Home() {
                 Our Curations
               </h1>
 
-              <div className="flex flex-col gap-y-[100px] sm:gap-y-20 sm:flex-row sm:flex-wrap items-center justify-center gap-x-12 relative my-36 sm:my-56">
+              <div className="flex flex-col gap-y-[100px] sm:gap-y-20 sm:flex-row sm:flex-wrap items-center justify-center  gap-x-12 my-36 sm:mt-40 sm:mb-56 relative ">
                 {collection &&
                   collection?.filter((item) => item.handle !== "best_seller").map((item) => (
                     <Link
@@ -473,7 +473,7 @@ function Home() {
                   Best Sellers
                 </h1>
 
-                <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-center gap-x-20 mt-20 sm:mt-36 sm:px-12">
+                <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center gap-x-9 justify-center  mt-20 sm:mt-36 ">
                   {FestiveFiltered?.map((type) => (
                     <Link
                       to={`/product_description/${type.title.replace(
@@ -491,7 +491,7 @@ function Home() {
                         <img
                           src={type?.image}
                           alt={type?.name}
-                          className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] "
+                          className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] " 
                         />
                         <h5 className="font-poppins text-[22px] font-normal leading-normal text-white mt-6">
                           {type?.title}

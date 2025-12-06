@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import shoppingCart_red from "../assets/Products/shoppingcart_red.png";
 import shoppingCart_white from "../assets/Products/shoppingcart_white.png";
 import { AppContext } from "../context/AppContext";
@@ -18,7 +19,7 @@ function AddToCartButton({ product, quantity, isOutOfStock, isRestocking, isFavo
   const [showToast, setShowToast] = useState(false);
   const [cartIconSrc, setCartIconSrc] = useState(shoppingCart_red);
   const { addToCart } = useContext(AppContext);
-
+  const navigate = useNavigate();
   const handleAddToCart = () => {
     if (!product?.variants?.[0]) return;
     console.log(product);
@@ -28,6 +29,7 @@ function AddToCartButton({ product, quantity, isOutOfStock, isRestocking, isFavo
       price: parseInt(product.variants[0].price),
       image: product.image?.src,
     });
+    navigate("/cart")
   };
 
   const [showRestockModal, setShowRestockModal] = useState(false);
@@ -39,12 +41,10 @@ function AddToCartButton({ product, quantity, isOutOfStock, isRestocking, isFavo
     isFavouritesPage && (isOutOfStock || isRestocking);
 
   const handleClick = () => {
-   
-    setShowToast(true);
-
     // Disable page scroll
     document.body.style.overflow = "hidden";
-
+    setShowToast(true);
+  
     setTimeout(() => {
       setShowToast(false);
       document.body.style.overflow = "auto"; // Enable scroll again
