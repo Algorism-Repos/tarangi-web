@@ -65,27 +65,11 @@ function Product_Listing({ productCatergory }) {
   ];
 
   //Organising the colors that are available for the product
-  const variantColors = products?.map((element) =>
-    element?.variants?.map((item) => item.colorVariant)
-  );
-
-  const Colors = variantColors.filter((item) => Array.isArray(item))
-
- 
-const matchedColors  = products
-  ?.flatMap((product) => product.variants?.map((variant) => variant.colorVariant))
-  .filter(Boolean);
- console.log(variantColors);
-  console.log(Colors);
-  console.log("variant:", matchedColors );
-
+  const variantColors = products?.map(element => element?.variants?.map(item => item.colorVariant));
+  // console.log(variantColors);
   // const availableColors = colorAssets.filter(element => variantColors?.includes(element.value))
-  // const Colors = variantColors.filter((item) => Array.isArray(item))
-  // const productAvailableColors = item.variants.map((v) => v.colorVariant);
-  // const matchedColors = colorAssets.filter((c) =>
-  //   productAvailableColors.includes(c.value)
-  // );
-
+  const availableColors = variantColors.map(color => colorAssets.find(asset => asset.value == color)).filter(Boolean);
+  // console.log(availableColors);
 
 
   //  Like button toggle
@@ -177,14 +161,9 @@ const matchedColors  = products
             >
               {/* MAIN PRODUCT IMAGE */}
               <img
-                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${
-                  isOutOfStock ? "grayscale" : ""
-                } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
-                src={
-                  (item.selectedColor && colorImages[item.selectedColor]) ||
-                  item.image ||
-                  item.variants?.[0]?.image
-                }
+                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "grayscale" : ""
+                  } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
+                src={item.variants != null ? item.variants.map(item => item.image) : item.images}
                 alt={item?.title}
               />
 
@@ -220,12 +199,14 @@ const matchedColors  = products
 
                 <div className="mt-1.5 flex items-center justify-between w-full">
                   <h3 className="text-[13px] text-[#4E4E4E] font-medium sm:text-[18px] mt-1">
-                    ₹
-                    {(item?.price
-                      ? parseInt(item.price)
-                      : parseInt(item?.variants?.[0]?.price)
-                    )?.toLocaleString("en-IN")}
-                  </h3>                
+                    ₹ {item.variants != null ? parseInt(item.variants?.[0]?.price).toLocaleString("en-IN") : parseInt(item.price).toLocaleString("en-in") }
+                  </h3>
+
+                  {/*  COLOR TOGGLE BUTTONS */}
+                  <div className="flex flex-row items-center">
+                    {/* {item?.variants?.map((color) => color?.colorVariant)} */}
+                  </div>
+                  
                 </div>
               </div>
             </Link>

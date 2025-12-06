@@ -48,13 +48,17 @@ function Home() {
   const [modalToggle, setModalToggle] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
   const [FestiveFiltered, setFestiveFiltered] = useState([]);
-  const { collection, setCollections, loading, setLoading } =
-    useContext(AppContext);
+  const { collection, setCollections, loading, setLoading } = useContext(AppContext);
+
+
   function toggle(product) {
     setSelectedType(product);
   }
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
+  const bestsellerprevRef = useRef(null);
+  const bestsellernextRef = useRef(null);
+  const tarangispecialprevRef = useRef(null);
+  const tarangisepecialnextRef = useRef(null);
+
   const showNavigation = FestiveFiltered.length > 1;
   const collectionsList = async () => {
     try {
@@ -81,16 +85,10 @@ function Home() {
       try {
         const response = await FetchAllProductByCollections(bestSeller.id);
         console.log(`${bestSeller.id} && ${response?.data}`);
-
-       const productEdges = response?.data?.collection?.products?.edges ?? [];
-      
-      const formattedProducts = productEdges.map((item) =>
-        formatProduct(item.node)
-      );
-
-
-       
-
+        const productEdges = response?.data?.collection?.products?.edges ?? [];
+        const formattedProducts = productEdges.map((item) =>
+          formatProduct(item.node)
+        );
         setFestiveFiltered(formattedProducts);
       } catch (err) {
         console.log(err);
@@ -98,6 +96,77 @@ function Home() {
     };
     fetchBestSellerProducts();
   }, [collection]);
+  function formatProduct(productNode) {
+    const {
+      id,
+      title,
+      description,
+      images,
+      variants,
+      featuredImage,
+      vendor,
+      productType,
+      tags,
+      createdAt,
+    } = productNode;
+    const allImages = images?.edges?.map((img) => img.node.url) || [];
+    const variantEdges = variants?.edges || [];
+    const firstVariant = variantEdges[0]?.node;
+    const isSimpleProduct =
+      variantEdges.length === 1 &&
+      variantEdges[0].node.selectedOptions?.[0]?.value === "Default Title";
+    if (isSimpleProduct) {
+      return {
+        productId: id,
+        title,
+        description,
+        vendor,
+        productType,
+        tags,
+        createdAt,
+        type: "simple",
+        price: firstVariant?.price,
+        compareAtPrice:
+          firstVariant?.compareAtPrice !== undefined
+            ? firstVariant.compareAtPrice
+            : null,
+        image: featuredImage?.url || allImages[0],
+        images: allImages,
+        variants: null,
+      };
+    }
+    const formattedVariants = variantEdges.map((v) => ({
+      variantId: v.node.id,
+      price: v.node.price,
+      compareAtPrice:
+        v.node.compareAtPrice !== undefined ? v.node.compareAtPrice : null,
+      inventoryQuantity: v.node.inventoryQuantity,
+      image: v.node.image?.url || featuredImage?.url,
+      // colorVariant: v.node.selectedOptions.map((opt) => [opt.name, opt.value]),
+      colorVariant: v.node.selectedOptions[0].value,
+    }));
+    return {
+      productId: id,
+      title,
+      description,
+      vendor,
+      productType,
+      tags,
+      createdAt,
+      type: "variant",
+      featuredImage: featuredImage?.url,
+      images: allImages,
+      variants: formattedVariants,
+    };
+  }
+  // product catogory
+  const categorized = FestiveFiltered.reduce((acc, product) => {
+    const type = product.productType || "Uncategorized";
+    if (!acc[type]) acc[type] = [];
+    acc[type].push(product);
+    return acc;
+  }, {});
+  console.log(FestiveFiltered);
 
 
   function formatProduct(productNode) {
@@ -253,7 +322,7 @@ function Home() {
     // fetchMetalRates();
   }, []);
 
-  // Silvar prices logic
+  // Silver prices logic
   const [pricePerGram, setPricePerGram] = useState(169.9);
   const [pricePerKg, setPricePerKg] = useState(169900);
   const [lastUpdated, setLastUpdated] = useState("27 Oct 2025, 11:00 AM");
@@ -295,8 +364,7 @@ function Home() {
         />
       </a>
 
-      {/* Silver price */}
-      {/* Mobile */}
+      {/* Silver price -Mobile */}
       <div className="w-full bg-[#FCE8CD] font-poppins lg:hidden">
         <p className="bg-[#CFA266] text-white font-medium text-center py-4 text-[18px]">
           Silver Price Today
@@ -325,7 +393,7 @@ function Home() {
         </div>
       </div>
 
-      {/* Desktop */}
+      {/* Silver price - Desktop */}
       <div className="w-full bg-[#FCE8CD] font-poppins hidden lg:block">
         <div className="flex justify-between">
           <div className="flex items-center gap-x-[25px]">
@@ -369,18 +437,6 @@ function Home() {
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"
       >
-        {/* <SwiperSlide>
-          <div className="festive-banner relative">
-            <a
-              href="#launchOffers"
-              className="hover:scale-110 transition duration-300 absolute bottom-8 sm:bottom-16 sm:left-[24%]  "
-            >
-              <button className="rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
-                View our Best Sellers
-              </button>
-            </a>
-          </div>
-        </SwiperSlide> */}
         <SwiperSlide>
           <div className="banner-section">
             <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
@@ -422,25 +478,6 @@ function Home() {
           </div>
         </SwiperSlide>
 
-        {/* <SwiperSlide>
-          <div className="banner-4">
-            <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
-              Born from tradition Designed for today
-            </h1>
-            <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            </h4>
-            <a
-              href="#launchOffers"
-              className="w-fit hover:scale-110 transition duration-300"
-            >
-              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
-                View our Collections
-              </button>
-            </a>
-          </div>
-        </SwiperSlide> */}
-
         <SwiperSlide>
           <div className="banner-5">
             <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[850px] tracking-[1px]">
@@ -461,15 +498,6 @@ function Home() {
           </div>
         </SwiperSlide>
       </Swiper>
-
-      {/* Home Banner */}
-      {/* <div className="banner-section">
-                <h1 className="font-atteron uppercase text-[52px] leading-[70px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px]">Born from tradition Designed for today</h1>
-                <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">Because exculsive 925 silver jewelry should feel as unique as the one who wears it.</h4>
-                <a href="#launchOffers" className="w-fit">
-                    <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[16px] cursor-pointer">View our Collection</button>
-                </a>
-            </div> */}
 
       <div className="whyus">
         <h1 className="font-atteron text-[52px] sm:text-[72px] text-center text-[#5C0A1F] leading-normal">
@@ -495,41 +523,39 @@ function Home() {
           {/* Collections - Section */}
           <div className="design-section py-40 relative">
             <div className="max-w-7xl mx-auto tracking-[1px]">
-              <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white ">
+              <h1 className="section-heading px-3 !text-[47px]  !text-white">
                 Our Curations
               </h1>
 
-              <div className="flex flex-col gap-y-[160px] sm:gap-y-0 sm:flex-row items-center justify-center gap-x-12 relative my-36 sm:my-56">
+              <div className="flex flex-col gap-y-[100px] sm:gap-y-20 sm:flex-row sm:flex-wrap items-center justify-center gap-x-12 relative my-36 sm:my-56">
                 {collection &&
-                  collection
-                    ?.filter((item) => item.handle !== "best_seller")
-                    .map((type) => (
-                      <Link
-                        to={`/products/${type.handle}`}
-                        state={{ category: type.handle, collectionId: type.id }}
-                      >
-                        <div className="border-2 border-white w-[360px] h-[374px] relative z-0 overflow-hidden">
-                          <img
-                            src={type.image?.src}
-                            alt="men-image"
-                            className="w-[359px] h-[539px] sm:w-[373px] sm:h-[459px] h-fit transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
-                          />
-                          <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-1/3 ">
-                            {type.handle}
-                          </h2>
-                        </div>
-                      </Link>
-                    ))}
+                  collection?.filter((item) => item.handle !== "best_seller").map((item) => (
+                    <Link
+                      to={`/products/${item.handle}`}
+                      state={{ category: item.handle, collectionId: item.id }}
+                    >
+                      <div className="border-2 border-white w-[360px] h-[361px] sm:h-[374px] relative z-0 overflow-hidden">
+                        <img
+                          src={item.image?.src}
+                          alt="men-image"
+                          className="w-[359px] h-[361px] sm:w-[373px] sm:h-[459px]  transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
+                        />
+                        <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-[50%] transform translate-x-[-50%]">
+                          {item.handle}
+                        </h2>
+                      </div>
+                    </Link>
+                  ))}
               </div>
 
-              {/* Best Sellers */}
-              <div id="launchOffers" className="max-w-full">
+              {/* Best Sellers - Desktop View */}
+              <div id="launchOffers" className="sm:block hidden">
                 <h1 className="section-heading !text-white tracking-[1px] text-center">
                   Best Sellers
                 </h1>
 
-                <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-between mt-20 sm:mt-36">
-                  {FestiveFiltered.map((type) => (
+                <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center justify-center gap-x-20 mt-20 sm:mt-36 sm:px-12">
+                  {FestiveFiltered?.map((type) => (
                     <Link
                       to={`/product_description/${type.title.replace(
                         /\s+/g,
@@ -544,7 +570,7 @@ function Home() {
                         }}
                       >
                         <img
-                          src={type?.image?.src}
+                          src={type?.image}
                           alt={type?.name}
                           className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] "
                         />
@@ -552,109 +578,99 @@ function Home() {
                           {type?.title}
                         </h5>
                         <h4 className="font-poppins text-[20px] font-semibold leading-normal text-[#FCD99F]">
-                          ₹
-                          {Number(type.variants[0]?.price).toLocaleString(
-                            "en-IN",
-                            {
-                              maximumFractionDigits: 0,
-                            }
-                          )}
+                          ₹{Number(type?.price).toLocaleString("en-IN", { maximumFractionDigits: 0, }) || type.variant?.[0]?.price}
+
                         </h4>
                       </div>
                     </Link>
                   ))}
                 </div>
+              </div>
 
-                {/* Mobile View slider */}
-                <div className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden">
-                  {/* Custom navigation buttons */}
-                  {showNavigation && (
-                    <div className="absolute -bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
-                      <div className="">
-                        <button
-                          ref={prevRef}
-                          className="swiper-button-prev-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
-                        >
-                          <img
-                            src={left_arrow}
-                            alt="Previous"
-                            className="w-[42px] h-[42px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
-                          />
-                        </button>
-                      </div>
-                      <div className="">
-                        <button
-                          ref={nextRef}
-                          className="swiper-button-next-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
-                        >
-                          <img
-                            src={right_arrow}
-                            alt="Next"
-                            className="w-[42px] h-[42px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
-                          />
-                        </button>
-                      </div>
+              {/* Best Sellers - Mobile View slider */}
+              <div className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden">
+
+                <h1 className="section-heading mb-9 !text-white tracking-[1px] text-center">
+                  Best Sellers
+                </h1>
+
+                {/* Custom navigation buttons */}
+                {showNavigation && (
+                  <div className="absolute -bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
+                    <div className="">
+                      <button
+                        ref={bestsellerprevRef}
+                        className="swiper-button-prev-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                      >
+                        <img
+                          src={left_arrow}
+                          alt="Previous"
+                          className="w-[42px] h-[42px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                        />
+                      </button>
                     </div>
-                  )}
+                    <div className="">
+                      <button
+                        ref={bestsellernextRef}
+                        className="swiper-button-next-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
+                      >
+                        <img
+                          src={right_arrow}
+                          alt="Next"
+                          className="w-[42px] h-[42px] sm:w-[34px] sm:h-[34px] md:w-[42px] md:h-[42px] lg:w-[46px] lg:h-[46px]"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                )}
 
-                  <Swiper
-                    modules={[Navigation]}
-                    spaceBetween={12}
-                    slidesPerView={1.1}
-                    breakpoints={{
-                      320: { slidesPerView: 1, spaceBetween: 12 },
-                      480: { slidesPerView: 1, spaceBetween: 16 },
-                      640: { slidesPerView: 1, spaceBetween: 20 },
-                      768: { slidesPerView: 2, spaceBetween: 24 },
-                      1024: { slidesPerView: 2, spaceBetween: 28 },
-                      1280: { slidesPerView: 3, spaceBetween: 32 },
-                      1536: { slidesPerView: 3, spaceBetween: 36 },
-                      1920: { slidesPerView: 3, spaceBetween: 40 },
-                    }}
-                    onBeforeInit={(swiper) => {
-                      if (showNavigation) {
-                        swiper.params.navigation.prevEl = prevRef.current;
-                        swiper.params.navigation.nextEl = nextRef.current;
-                        swiper.navigation.init();
-                        swiper.navigation.update();
-                      }
-                    }}
-                    className="!overflow-hidden  !h-[515px]"
-                  >
-                    {FestiveFiltered.length > 0 ? (
-                      FestiveFiltered.map((type, index) => (
-                        <SwiperSlide key={index}>
-                          <div
-                            className="w-[360px] h-[450px] mx-auto flex flex-col items-center gap-y-2 transform transition-transform duration-300 ease-out hover:scale-105 cursor-pointer"
-                            onClick={() => toggle(type?.title)}
-                          >
-                            <img
-                              src={type?.image?.src}
-                              alt={type?.name}
-                              className="px-2 sm:px-0 w-[360px] h-[460px]"
-                            />
+                <Swiper
+                  modules={[Navigation, Autoplay]}
+                  autoplay={{ "delay": 2000 }}
+                  navigation={{ prevEl: bestsellerprevRef.current, nextEl: bestsellernextRef.current }}
+                  spaceBetween={12}
+                  slidesPerView={1.1}
+                  breakpoints={{
+                    320: { slidesPerView: 1, spaceBetween: 12 },
+                    480: { slidesPerView: 1, spaceBetween: 16 },
+                    640: { slidesPerView: 1, spaceBetween: 20 },
+                    768: { slidesPerView: 2, spaceBetween: 24 },
+                    1024: { slidesPerView: 2, spaceBetween: 28 },
+                    1280: { slidesPerView: 3, spaceBetween: 32 },
+                    1536: { slidesPerView: 3, spaceBetween: 36 },
+                    1920: { slidesPerView: 3, spaceBetween: 40 },
+                  }}
+                  onBeforeInit={(swiper) => {
+                    if (showNavigation) {
+                      swiper.params.navigation.prevEl = bestsellerprevRef.current;
+                      swiper.params.navigation.nextEl = bestsellernextRef.current;
+                    }
+                  }}
+                  className="!overflow-hidden  !h-[515px]"
+                >
+                  {FestiveFiltered.length > 0 ? (
+                    FestiveFiltered.map((type, index) => (
+                      <SwiperSlide key={index}>
+                        <Link to={`/product_description/${type.title.replace(/\s+/g, "-")}`} state={{ product: type }} >
+                          <div className="w-[360px] h-[450px] mx-auto flex flex-col items-center gap-y-2 transform transition-transform duration-300 ease-out hover:scale-105 cursor-pointer">
+                            <img src={type?.image} alt={type?.name} className="px-2 sm:px-0 w-[360px] h-[460px]" />
                             <h5 className="font-poppins text-[18px] sm:text-[20px] md:text-[22px] font-normal leading-normal text-white mt-4 sm:mt-6">
                               {type?.title}
                             </h5>
                             <h4 className="font-poppins text-[16px] sm:text-[18px] md:text-[20px] font-semibold leading-normal text-[#FCD99F]">
                               ₹
-                              {Number(type.variants[0]?.price).toLocaleString(
-                                "en-IN",
-                                {
-                                  maximumFractionDigits: 0,
-                                }
-                              )}
+                              {Number(type?.price).toLocaleString("en-IN", { maximumFractionDigits: 0, }) || type.variant?.[0]?.price}
                             </h4>
                           </div>
-                        </SwiperSlide>
-                      ))
-                    ) : (
-                      <div className="text-white text-center py-10">
-                        No products available
-                      </div>
-                    )}
-                  </Swiper>
-                </div>
+                        </Link>
+                      </SwiperSlide>
+                    ))
+                  ) : (
+                    <div className="text-white text-center py-10">
+                      No products available
+                    </div>
+                  )}
+                </Swiper>
               </div>
             </div>
           </div>
@@ -681,7 +697,7 @@ function Home() {
             Enjoy stunning designs without the heavy price tag
           </h1>
 
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-y-12 sm:gap-y-28 w-full mt-16 sm:mt-20">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap items-center  justify-center gap-x-20 gap-y-12 sm:gap-y-12 w-full mt-16 sm:mt-20">
             <div className="relative border">
               <img
                 src={silver_jewel}
@@ -784,7 +800,7 @@ function Home() {
             <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-between px-6 sm:px-0">
               <div>
                 <button
-                  ref={prevRef}
+                  ref={tarangispecialprevRef}
                   className="swiper-button-prev-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
                 >
                   <img
@@ -796,7 +812,7 @@ function Home() {
               </div>
               <div>
                 <button
-                  ref={nextRef}
+                  ref={tarangisepecialnextRef}
                   className="swiper-button-next-custom bg-[#D9B16F] opacity-70 rounded-full p-2 sm:p-3 md:p-4 shadow-md hover:bg-[#d9b577] transition"
                 >
                   <img
@@ -810,7 +826,9 @@ function Home() {
           )}
 
           <Swiper
-            modules={[Navigation]}
+            modules={[Navigation, Autoplay]}
+            autoplay={{ "delay": 2000 }}
+            navigation={{ prevEl: tarangispecialprevRef.current, nextEl: tarangisepecialnextRef.current }}
             spaceBetween={12}
             slidesPerView={1.1}
             breakpoints={{
@@ -820,10 +838,8 @@ function Home() {
             }}
             onBeforeInit={(swiper) => {
               if (showNavigation) {
-                swiper.params.navigation.prevEl = prevRef.current;
-                swiper.params.navigation.nextEl = nextRef.current;
-                swiper.navigation.init();
-                swiper.navigation.update();
+                swiper.params.navigation.prevEl = tarangispecialprevRef.current;
+                swiper.params.navigation.nextEl = tarangisepecialnextRef.current;
               }
             }}
             className="!overflow-hidden !h-[620px]"

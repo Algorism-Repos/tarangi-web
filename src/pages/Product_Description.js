@@ -140,13 +140,6 @@ function Product_Description() {
                   </SwiperSlide>)): product.images.map((item) => (<SwiperSlide>
                     <img src={item} className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]" />
                   </SwiperSlide>))}
-                
-                
-                {/* {product.variants.map((item) => (
-                  <SwiperSlide>
-                    <img src={item.image} className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]" />
-                  </SwiperSlide>
-                ))} */}
               </Swiper>
             </div>
 
