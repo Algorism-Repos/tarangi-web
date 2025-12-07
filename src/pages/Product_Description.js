@@ -4,7 +4,6 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
 import { Link, useLocation } from "react-router";
-
 // images
 import grey_arrow from "../assets/Products/grey_arrow.png";
 import product_1 from "../assets/Products/product_1.png";
@@ -18,28 +17,20 @@ import { AppContext } from "../context/AppContext";
 import pure_silver from "../assets/pure_silver_icon.png";
 import shipping from "../assets/shipping_icon.png";
 import plating from "../assets/plating_icon.png";
-
 // components
 import PincodeInput from "../components/Pincode_Input";
 import Recently_Viewed from "../components/Recently-Viewed";
 import AddToCartButton from "../components/AddToCartButton";
 import Wishlist_Popup from "../components/Wishlist_Popup";
+import AddToWishlistButton from "../components/AddToWishlistButton";
 
 function Product_Description() {
   const swiperRef = useRef(null);
   const location = useLocation();
   const { product } = location.state || {};
-  console.log("product", product)
-  const {
-    addToCart,
-    addToWishlist,
-    addToRecentlyViewed,
-    categorizedProduct,
-  } = useContext(AppContext);
+  const { categorizedProduct } = useContext(AppContext);
   const [colorSelected, setColorSelected] = useState("Gold");
-  const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
-
   const [activeVariant, setactiveVariant] = useState();
 
 
@@ -68,6 +59,7 @@ function Product_Description() {
 
 
   //Extracting colors into an array from the variants
+  const[productToCart,setProductToCart]=useState()
   const colorAssets = [
     {
       value: "Gold",
@@ -84,23 +76,69 @@ function Product_Description() {
   ];
 
   //Organising the colors that are available for the product
-  const variantColors = product.variants?.map(element => element.colorVariant);
-  console.log(variantColors);
-  const availableColors = colorAssets.filter(element => variantColors?.includes(element.value))
-
+  const variantColors = product.variants?.map(
+    (element) => element.colorVariant
+  );
+  const availableColors = colorAssets.filter((element) =>
+    variantColors?.includes(element.value)
+  );
   // click on a color toggle
   function handleColorChangeByButton(color) {
     setColorSelected(color);
-    const idx = product.variants.findIndex(element => element.colorVariant === color);
+    const idx = product.variants.findIndex(
+      (element) => element.colorVariant === color
+    );
     console.log(idx);
-
     swiperRef.current.slideTo(idx);
   }
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+    //selected variant of the product by the client based on the color.
+    if (product?.variants != null) {
+      setactiveVariant(
+        product?.variants?.find(
+          (element) => element.colorVariant === colorSelected
+        )
+      );
+    } else if (product?.variants === null) {
+      setactiveVariant(product);
+    }
+  }, [colorSelected]);
 
+  // console.log("product", product);
+useEffect(() => {
+  if (product?.variants != null) {
+    const selected = product?.variants?.find(
+      (element) => element.colorVariant === colorSelected
+    );
+
+    setactiveVariant(selected);
+
+    if (selected) {
+      setProductToCart({
+        productId: product.productId,
+        variantId: selected.variantId,
+        colorVariant: selected.colorVariant,
+        image: selected.image,
+        price: selected.price,
+        title: product.title
+      });
+    }
+  } else {
+    // simple product (no variants)
+    setactiveVariant(product);
+
+    setProductToCart({
+      productId: product.productId,
+      variantId: null,
+      colorVariant: null,
+      image: product.featuredImage,
+      price: product.price,
+      title: product.title
+    });
+  }
+}, [colorSelected]);
+  console.log("product", productToCart);
 
   return (
     <>
@@ -175,26 +213,36 @@ function Product_Description() {
                 </p>
 
                 {/*Colors Available Section - Mobile  */}
-                < div className={product.variants !== null ? "sm:hidden block" : "hidden"} >
-
+                <div
+                  className={
+                    product.variants !== null ? "sm:hidden block" : "hidden"
+                  }
+                >
                   <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
                   {/* Color Icons */}
-                  <h3 className="font-poppins font-medium text-[14px] leading-normal text-[#6F6F6F] mt-3">Colors Available</h3>
+                  <h3 className="font-poppins font-medium text-[14px] leading-normal text-[#6F6F6F] mt-3">
+                    Colors Available
+                  </h3>
                   <div className="flex flex-row items-center mt-1 gap-x-3">
                     {availableColors.map((item) => (
                       <img
-                        className={colorSelected === item.value ? "w-[40px] sm:h-[40px] border-4 rounded-full border-primary cursor-pointer" : "w-[40px] sm:h-[40px] hover:border-4 rounded-full border-primary cursor-pointer"}
+                        className={
+                          colorSelected === item.value
+                            ? "w-[40px] sm:h-[40px] border-4 rounded-full border-primary cursor-pointer"
+                            : "w-[40px] sm:h-[40px] hover:border-4 rounded-full border-primary cursor-pointer"
+                        }
                         src={item.imgUrl}
                         alt={`image_${item.value}`}
-                        onClick={() => { handleColorChangeByButton(item.value) }}
-
+                        onClick={() => {
+                          handleColorChangeByButton(item.value);
+                        }}
                       />
                     ))}
                   </div>
 
                   <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
-                </div >
+                </div>
 
                 <div className=" max-w-full sm:max-w-[305px] flex flex-wrap justify-between  font-[poppins] text-center text-[#313131] mt-9 sm:my-5">
                   <div className="max-w-[75px] ">
@@ -247,7 +295,9 @@ function Product_Description() {
                 <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
                 {/* Color Icons */}
-                <h3 className="font-poppins font-medium text-[14px] leading-normal text-[#6F6F6F] mt-3">Colors Available</h3>
+                <h3 className="font-poppins font-medium text-[14px] leading-normal text-[#6F6F6F] mt-3">
+                  Colors Available
+                </h3>
                 <div className="flex flex-row items-center mt-1 gap-x-3">
                   {availableColors.map((item) => (
                     <img
@@ -258,8 +308,9 @@ function Product_Description() {
                       }
                       src={item.imgUrl}
                       alt={`image_${item.value}`}
-                      onClick={() => { handleColorChangeByButton(item.value) }}
-
+                      onClick={() => {
+                        handleColorChangeByButton(item.value);
+                      }}
                     />
                   ))}
                 </div>
@@ -268,39 +319,19 @@ function Product_Description() {
               </div>
 
               {/* Buttons */}
-              <div className="max-w-[500px] mt-5" >
+              <div className="max-w-[500px] mt-5">
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
+                  <AddToCartButton productToCart={productToCart} />
 
-                  <AddToCartButton product={product} />
-
-                  <Link to="/favourites" className="w-full sm:max-w-[195px]" state={{ activeVariant }}>
-                    <button
-                      className=" w-full sm:w-[190px] h-[56px] flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]  rounded-full text-primary text-[16px] font-medium mt-2  transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
-                      onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
-                      onMouseLeave={() => setWishIconSrc(favorie_icon)}
-                      // onClick={() => setShowWishlistPopup(true)}
-                      onClick={handleAddToWish}
-
-                    >
-                      <img
-                        className="w-[32px] h-[32px]"
-                        src={wishIconSrc}
-                        alt="like_icon"
-                      />
-                      Add to Wishlist
-                    </button>
-                  </Link>
+                  <AddToWishlistButton product={product} />
                 </div>
-              </div >
+              </div>
             </div>
           </div>
         </div>
 
-
-
-
         {/* Suggested products */}
-        <div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 sm:px-0" >
+        <div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 sm:px-0">
           <div>
             <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
               you may also like
@@ -330,7 +361,8 @@ function Product_Description() {
                     <div className="mt-2 flex flex-wrap items-center justify-between sm:mt-4">
                       <div>
                         <h3 className="text-[16px] font-semibold sm:text-[20px]">
-                          ₹ {(item?.price
+                          ₹{" "}
+                          {(item?.price
                             ? parseInt(item.price)
                             : parseInt(item?.variants?.[0]?.price)
                           )?.toLocaleString("en-IN")}
@@ -367,8 +399,7 @@ function Product_Description() {
           </div>
 
           <Recently_Viewed />
-        </div >
-
+        </div>
 
         <Wishlist_Popup
           show={showWishlistPopup}
@@ -376,7 +407,6 @@ function Product_Description() {
         />
       </div>
     </>
-
   );
 }
 

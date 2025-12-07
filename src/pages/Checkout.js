@@ -133,7 +133,7 @@ function CheckoutPage() {
       }
     },
   });
-      console.log(cartItems);
+  console.log(formValues);
 
   const handlePlaceOrder = async (formValues, customerId) => {
     console.log(cartItems);
@@ -142,7 +142,7 @@ function CheckoutPage() {
     const orderData = {
       order: {
         line_items: cartItems.map((item) => ({
-          variant_id: item.id,
+          variant_id: item.variantId.split("/").pop(),
           quantity: item.quantity,
           price: item.price,
         })),
@@ -160,11 +160,11 @@ function CheckoutPage() {
         billing_address: {
           first_name: formValues.firstName,
           last_name: formValues.lastName,
-          address1: formValues.address,
-          city: formValues.city,
-          province: formValues.state,
-          country: formValues.country,
-          zip: formValues.pincode,
+          address1: formValues.billingAddress,
+          city: formValues.billingCity,
+          province: formValues.billingState,
+          country: formValues.billingCountry,
+          zip: formValues.billingPincode,
           phone: formValues.mobile,
         },
         tags: "Estimated Delivery: 2025-10-30",
@@ -188,21 +188,25 @@ function CheckoutPage() {
     }
   };
 
-  const handlePincodeCheck = async () => {
-    const PinCode = formik.values.pincode;
-    if (PinCode.length !== 6) return;
+  const handlePincodeCheck = async (field) => {
+    console.log(field);
+    const pincode = formik.values[field];
+    if (!pincode || pincode.length !== 6) return;
     try {
-      const response = await FetchDeliveryByPincode(PinCode);
-      console.log(response);
-      const state = response?.CSTATE || response?.data?.CSTATE;
-      const city = response?.CITY || response?.data?.CITY;
+      const response = await FetchDeliveryByPincode(pincode);
+      const state = response?.CSTATE || response?.data?.CSTATE || "";
+      const city = response?.CITY || response?.data?.CITY || "";
 
-      if (state || city) {
-        formik.setFieldValue("state", state);
-        formik.setFieldValue("city", city);
-      }
+      if (!state || !city) return;
+
+      const mapping = {
+        pincode: { city: "city", state: "state" },
+        billingPincode: { city: "billingCity", state: "billingState" },
+      };
+      formik.setFieldValue(mapping[field].city, city);
+      formik.setFieldValue(mapping[field].state, state);
     } catch (error) {
-      console.log("error fetching pincode", error);
+      console.log("Error fetching pincode", error);
     }
   };
 
@@ -500,6 +504,38 @@ function CheckoutPage() {
                 {/* City, PIN, State, Country */}
                 <div className="flex flex-col sm:flex-wrap sm:flex-row gap-3">
                   <div className="flex-1 min-w-[45%]">
+                    <label className="text-sm block mb-1">Pincode</label>
+
+                    <input
+                      type="tel"
+                      name="pincode"
+                      inputMode="numeric"
+                      maxLength={6}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, "");
+                        formik.setFieldValue("pincode", value);
+                      }}
+                      onBlur={(e) => {
+                        formik.handleBlur(e);
+                        handlePincodeCheck("pincode", e.target.value);
+                      }}
+                      value={formik.values.pincode}
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                        formik.errors.pincode && formik.touched.pincode
+                          ? "border-red-500"
+                          : "border-[#efe6e6]"
+                      }
+                      focus:outline-none focus:border-[#8C455E]`}
+                      placeholder="Pincode"
+                    />
+
+                    {formik.touched.pincode && formik.errors.pincode && (
+                      <p className="text-xs text-red-500 mt-1">
+                        {formik.errors.pincode}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-[45%]">
                     <label className="text-sm block mb-1">City</label>
                     <input
                       name="city"
@@ -517,39 +553,6 @@ function CheckoutPage() {
                     {formik.touched.city && formik.errors.city && (
                       <p className="text-xs text-red-500 mt-1">
                         {formik.errors.city}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="flex-1 min-w-[45%]">
-                    <label className="text-sm block mb-1">Pincode</label>
-
-                    <input
-                      type="tel"
-                      name="pincode"
-                      inputMode="numeric"
-                      maxLength={6}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/\D/g, "");
-                        formik.setFieldValue("pincode", value);
-                      }}
-                      onBlur={(e) => {
-                        formik.handleBlur(e);
-                        handlePincodeCheck();
-                      }}
-                      value={formik.values.pincode}
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                        formik.errors.pincode && formik.touched.pincode
-                          ? "border-red-500"
-                          : "border-[#efe6e6]"
-                      }
-                      focus:outline-none focus:border-[#8C455E]`}
-                      placeholder="Pincode"
-                    />
-
-                    {formik.touched.pincode && formik.errors.pincode && (
-                      <p className="text-xs text-red-500 mt-1">
-                        {formik.errors.pincode}
                       </p>
                     )}
                   </div>
@@ -592,13 +595,13 @@ function CheckoutPage() {
 
               {/* Billing Address Section */}
               <div className="mb-6">
-                <label className="text-[14px] font-Poppins text-[#6E0027] mb-2 block">
+                {/* <label className="text-[14px] font-Poppins text-[#6E0027] mb-2 block">
                   Billing Address
-                </label>
+                </label> */}
 
                 <div
                   onClick={() => {
-                    formik.setFieldValue("useDifferentBilling", false);
+                    setUseDifferentBilling(false);
                   }}
                   className={`cursor-pointer w-full p-4 rounded-md border transition-all duration-300
               ${
@@ -608,9 +611,9 @@ function CheckoutPage() {
               }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-16px font-Poppins text-[#313131]">
+                    <p className="text-16px font-Poppins text-[#313131]">
                       Same as shipping address
-                    </span>
+                    </p>
                     <span
                       className={`w-[22px] h-[22px] border-2 rounded-full flex items-center justify-center
                   ${
@@ -629,7 +632,7 @@ function CheckoutPage() {
 
                 <div
                   onClick={() => {
-                    formik.setFieldValue("useDifferentBilling", true);
+                    setUseDifferentBilling(true);
                   }}
                   className={`cursor-pointer w-full p-4 mt-3 rounded-md border transition-all duration-300
               ${
@@ -662,7 +665,7 @@ function CheckoutPage() {
                   <div>
                     <label className="text-sm block mb-1">Address</label>
                     <input
-                      name="address"
+                      name="billingAddress"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.billingAddress}
@@ -698,6 +701,38 @@ function CheckoutPage() {
                   {/* City, PIN, State, Country */}
                   <div className="flex flex-col sm:flex-wrap sm:flex-row gap-3">
                     <div className="flex-1 min-w-[45%]">
+                      <label className="text-sm block mb-1">Pincode</label>
+                      <input
+                        type="tel"
+                        name="billingPincode"
+                        inputMode="numeric"
+                        maxLength={6}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, "");
+                          formik.setFieldValue("billingPincode", value);
+                        }}
+                        onBlur={(e) => {
+                          formik.handleBlur(e);
+                          handlePincodeCheck("billingPincode", e.target.value);
+                        }}
+                        value={formik.values.billingPincode}
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                          formik.errors.billingPincode &&
+                          formik.touched.billingPincode
+                            ? "border-red-500"
+                            : "border-[#efe6e6]"
+                        } focus:outline-none focus:border-[#8C455E]`}
+                        placeholder="billingPincode"
+                      />
+
+                      {formik.touched.billingPincode &&
+                        formik.errors.billingPincode && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {formik.errors.billingPincode}
+                          </p>
+                        )}
+                    </div>
+                    <div className="flex-1 min-w-[45%]">
                       <label className="text-sm block mb-1">City</label>
                       <input
                         name="city"
@@ -721,38 +756,8 @@ function CheckoutPage() {
                     </div>
 
                     <div className="flex-1 min-w-[45%]">
-                      <label className="text-sm block mb-1">Pincode</label>
-                      <input
-                        type="tel"
-                        name="billingPincode"
-                        inputMode="numeric"
-                        maxLength={6}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/\D/g, "");
-                          formik.setFieldValue("billingPincode", value);
-                        }}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.billingPincode}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                          formik.errors.billingPincode &&
-                          formik.touched.billingPincode
-                            ? "border-red-500"
-                            : "border-[#efe6e6]"
-                        } focus:outline-none focus:border-[#8C455E]`}
-                        placeholder="Pincode"
-                      />
-
-                      {formik.touched.billingPincode &&
-                        formik.errors.billingPincode && (
-                          <p className="text-xs text-red-500 mt-1">
-                            {formik.errors.billingPincode}
-                          </p>
-                        )}
-                    </div>
-
-                    <div className="flex-1 min-w-[45%]">
                       <label className="text-sm block mb-1 mt-2.5">State</label>
-                      <select
+                      <input
                         name="billingState"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -764,15 +769,10 @@ function CheckoutPage() {
                             : "border-[#efe6e6]"
                         }
                      focus:outline-none focus:border-[#8C455E]`}
-                      >
-                        <option value="">Select State</option>
-                        <option value="Tamil Nadu">Tamil Nadu</option>
-                        <option value="Kerala">Kerala</option>
-                        <option value="Karnataka">Karnataka</option>
-                      </select>
-                      {formik.touched.state && formik.errors.state && (
+                      />
+                      {formik.touched.billingState && formik.errors.state && (
                         <p className="text-xs text-red-500 mt-1">
-                          {formik.errors.state}
+                          {formik.errors.billingState}
                         </p>
                       )}
                     </div>

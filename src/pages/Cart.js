@@ -13,14 +13,13 @@ import { AppContext } from "../context/AppContext";
 
 function Cart() {
   const [showSummary, setShowSummary] = useState(false);
-  const [quantity, setQuantity] = useState(1);
-
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
+   const { cartItems, removeFromCart, updateCartItemQuantity } =
+    useContext(AppContext);
   const toggleSummary = () => {
     setShowSummary(!showSummary);
   };
-  const { cartItems, removeFromCart, updateCartItemQuantity } =
-    useContext(AppContext);
-
 const subtotal = cartItems.reduce((total, item) => {
   const price = Number(item.price) || 0;
   const qty = Number(item.quantity) || 1;
@@ -31,18 +30,13 @@ const subtotal = cartItems.reduce((total, item) => {
   const shipping = 40;
   const total = subtotal + tax + shipping;
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [productToDelete, setProductToDelete] = useState(null);
 
-  useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
 
-
-   console.log(cartItems)
   return (
     <>
       <div className="font-poppins bg-light-sandal pt-[35px] sm:py-[70px]">
@@ -89,10 +83,10 @@ const subtotal = cartItems.reduce((total, item) => {
                       <div className="space-y-[10px]">
                         <div>
                           <h3 className="text-[14px] font-medium text-[#6F6F6F] sm:text-[16px]">
-                            {item.name}
+                            {item.title}
                           </h3>
                           <h3 className="text-[16px] font-semibold sm:text-[20px]">
-                            ₹{item.price.toLocaleString("en-IN")}
+                            ₹{parseInt(item.price).toLocaleString("en-in")}
                           </h3>
                         </div>
 
@@ -101,7 +95,7 @@ const subtotal = cartItems.reduce((total, item) => {
                             Color chosen
                           </h3>
                           <h3 className="text-[15px] font-medium sm:text-[18px]">
-                            {item.color}
+                            {item.colorVariant}
                           </h3>
                         </div>
 

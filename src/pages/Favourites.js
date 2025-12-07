@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useLocation } from "react-router";
 import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
 
@@ -15,91 +16,18 @@ import brown_ellipse from "../assets/Products/brown_ellipse.png";
 import { AppContext } from "../context/AppContext";
 
 function Favourites() {
-    const { wishlistItems, removeFromWishlist, addToCart } =
-    useContext(AppContext);
-  const initialProducts = [
-    {
-      id: 1,
-      product_name: "Stone Necklace",
-      price: "₹10,000",
-      liked: true,
-      isOutOfStock: false,
-      isRestocking: true,
-      colorImages: {
-        gold: product_1,
-        silver: product_2,
-        brown: product_2,
-      },
-      colors: [
-        { id: "gold", img: gold_ellipse },
-        { id: "silver", img: silver_ellipse },
-        { id: "brown", img: brown_ellipse },
-      ],
-      selectedColor: "gold",
-    },
-    {
-      id: 2,
-      product_name: "Stone Kada",
-      price: "₹4,000",
-      liked: true,
-      isOutOfStock: false,
-      isRestocking: false,
-      colorImages: {
-        gold: product_1,
-        silver: product_2,
-        brown: product_2,
-      },
-      colors: [
-        { id: "gold", img: gold_ellipse },
-        { id: "silver", img: silver_ellipse },
-        { id: "brown", img: brown_ellipse },
-      ],
-      selectedColor: "gold",
-    },
-    {
-      id: 3,
-      product_name: "Stone Kada",
-      price: "₹4,000",
-      liked: true,
-      isOutOfStock: true,
-      isRestocking: false,
-      colorImages: {
-        gold: product_1,
-        silver: product_2,
-        brown: product_2,
-      },
-      colors: [
-        { id: "gold", img: gold_ellipse },
-        { id: "silver", img: silver_ellipse },
-        { id: "brown", img: brown_ellipse },
-      ],
-      selectedColor: "gold",
-    },
-    {
-      id: 4,
-      product_name: "Stone Kada",
-      price: "₹4,000",
-      liked: true,
-      isOutOfStock: false,
-      isRestocking: true,
-      colorImages: {
-        gold: product_1,
-        silver: product_2,
-        brown: product_2,
-      },
-      colors: [
-        { id: "gold", img: gold_ellipse },
-        { id: "silver", img: silver_ellipse },
-        { id: "brown", img: brown_ellipse },
-      ],
-      selectedColor: "gold",
-    },
-  ];
+  const { pathname } = useLocation();
+  console.log(pathname);
+  const isVisible = pathname === "/profile";
+
+  const initialProducts = [];
 
   const [products, setProducts] = useState(initialProducts);
+  const [favorites, setFavorites] = useState([]);
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
+  const { wishlistItems,removeFromWishlist } = useContext(AppContext);
 
   const handleProductClick = (item) => {
     if (item.isOutOfStock) {
@@ -115,16 +43,12 @@ function Favourites() {
     // Later → navigate to product page
   };
 
-  // toggle like
   const toggleLike = (id) => {
     setProducts((prev) =>
-      prev.map((p) =>
-        p.id === id ? { ...p, liked: !p.liked } : p
-      )
+      prev.map((p) => (p.id === id ? { ...p, liked: !p.liked } : p))
     );
   };
 
-  // color change
   const handleColorSelect = (productId, colorId) => {
     setProducts((prev) =>
       prev.map((p) =>
@@ -137,34 +61,49 @@ function Favourites() {
 
   const handleRemove = (id) => {
     setProducts((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, liked: false } : item
-      )
+      prev.map((item) => (item.id === id ? { ...item, liked: false } : item))
     );
   };
-    console.log(wishlistItems);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "hasFavourites",
+      likedProducts.length > 0 ? "true" : "false"
+    );
+  }, [likedProducts]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
+  console.log(wishlistItems);
   return (
     <>
       <div className="bg-light-sandal py-[70px]">
         <div className="max-w-[1300px] mx-auto px-2">
-          <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
+          <h1
+            className={
+              isVisible
+                ? "hidden"
+                : "font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left"
+            }
+          >
             Your Favourites
           </h1>
 
-          {likedProducts.length === 0 ? (
+          {wishlistItems.length === 0 ? (
             <p className="text-center text-[18px] text-[#4B001A] mt-6 font-poppins">
               No Products in the favourites page
             </p>
           ) : (
-
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
-              {likedProducts.slice(0,8).map((item) => (
-
+            <div
+              className={
+                isVisible
+                  ? "grid grid-cols-2 lg:grid-cols-3 gap-[15px] px-2 sm:gap-[25px]"
+                  : "grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]"
+              }
+            >
+              {wishlistItems.map((item) => (
                 <div key={item.id} className="max-w-[304px] mx-auto group">
                   <div
                     onClick={() => handleProductClick(item)}
@@ -173,10 +112,12 @@ function Favourites() {
                     {/* IMAGE */}
                     <div className="overflow-hidden rounded-2xl relative">
                       <img
-                        className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] ${item.isOutOfStock ? "grayscale" : ""
-                          } ${item.isRestocking ? "opacity-50" : ""
-                          }  transition-all duration-300 group-hover:scale-105`}
-                        src={item.colorImages[item.selectedColor]}
+                        className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] ${
+                          item.isOutOfStock ? "grayscale" : ""
+                        } ${
+                          item.isRestocking ? "opacity-50" : ""
+                        }  transition-all duration-300 group-hover:scale-105`}
+                        src={item.image}
                         alt={item.product_name}
                       />
 
@@ -214,7 +155,7 @@ function Favourites() {
                       </div>
 
                       {/* COLOR SELECTOR */}
-                      <div className="flex gap-x-2.5">
+                      {/* <div className="flex gap-x-2.5">
                         {item.colors.map((color) => (
                           <img
                             key={color.id}
@@ -228,7 +169,7 @@ function Favourites() {
                               }`}
                           />
                         ))}
-                      </div>
+                      </div> */}
                     </div>
                   </div>
 
@@ -238,40 +179,27 @@ function Favourites() {
                     isFavouritesPage={true}
                     onRemoveFromFavourites={() => handleRemove(item.id)}
                   />
-
-
-
-                  <AddToCartButton
-                    isOutOfStock={item.isOutOfStock}
-                    isRestocking={item.isRestocking}
-                    isFavouritesPage={true}
-                    onRemoveFromFavourites={() => handleRemove(item.id)}
-                  />
+                  <div>
+                    <button
+                      className="text-red-600 text-[14px] underline mt-2"
+                      onClick={() => removeFromWishlist(item.id)}
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        <Recently_Viewed />
+        <div className={isVisible ? "hidden" : "block"}>
+          <Recently_Viewed />
+        </div>
       </div>
       <OutOfStockModal
         open={showOutStockModal}
         onClose={() => setShowOutStockModal(false)}
-      />
-
-      <RestockModal
-        open={showRestockModal}
-        onClose={() => setShowRestockModal(false)}
-        onSuccess={() => {
-          setShowRestockModal(false);
-          setShowRestockSuccess(true);
-        }}
-      />
-
-      <RestockSuccessModal
-        open={showRestockSuccess}
-        onClose={() => setShowRestockSuccess(false)}
       />
 
       <RestockModal
