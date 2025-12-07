@@ -55,7 +55,7 @@ function Product_Listing({ productCatergory }) {
   //     const prepared = productCatergory.map((item) => {
   //       const colorsFromData =
   //         Array.isArray(item.colors) && item.colors.length > 0
-  //           ? item.colors
+  //           ? item.colors  
   //           : ["gold", "silver", "brown"];
 
   //       return {

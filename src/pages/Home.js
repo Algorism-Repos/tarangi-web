@@ -451,7 +451,7 @@ function Home() {
                   collection?.filter((item) => item.handle !== "best_seller").map((item) => (
                     <Link
                       to={`/products/${item.handle}`}
-                      state={{ category: item.handle, collectionId: item.id }}
+                      state={{ category: item.handle, collectionId: item.id}}
                     >
                       <div className="border-2 border-white w-[360px] h-[361px] sm:h-[374px] relative z-0 overflow-hidden">
                         <img

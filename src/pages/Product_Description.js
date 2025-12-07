@@ -58,13 +58,13 @@ function Product_Description() {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     //selected variant of the product by the client based on the color.
-    if (product?.variants != null) {
+    if (product?.variants !== null) {
       setactiveVariant(product?.variants?.find(element => element.colorVariant === colorSelected));
     } else if (product?.variants === null) {
       setactiveVariant(product);
     }
   }, [colorSelected]);
-  console.log(activeVariant);
+  console.log("variantActive", activeVariant);
 
 
   //Extracting colors into an array from the variants
@@ -151,12 +151,12 @@ function Product_Description() {
                 </h1>
                 {/* Price Section */}
                 {/* Price alone */}
-                <h2 className={activeVariant?.compareAtPrice === null || product.compareAtPrice === null ? "block text-[24px] font-semibold sm:text-[32px]" : "hidden"}>
+                <h2 className={activeVariant?.compareAtPrice === null  ? "block text-[24px] font-semibold sm:text-[32px]" : "hidden"}>
                   ₹{parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}
                 </h2 >
 
                 {/* Price with Discounted Price */}
-                <div className={activeVariant?.compareAtPrice !== null  ? "flex flex-row flex-nowrap items-center gap-x-3 w-fit" : "hidden"}>
+                <div className={activeVariant?.compareAtPrice !== null ? "flex flex-row flex-nowrap items-center gap-x-3 w-fit" : "hidden"}>
                   <h2 className="text-[16px] font-semibold text-red-500 sm:text-[22px] line-through"> ₹{parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}</h2 >
                   <h2 className="text-[24px] font-semibold sm:text-[32px]"> ₹{parseInt(activeVariant?.compareAtPrice).toLocaleString("en-IN") || product.compareAtPrice}</h2 >
 
