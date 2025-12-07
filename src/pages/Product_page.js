@@ -74,6 +74,7 @@ function formatProduct(productNode) {
       createdAt,
       type: "simple",
       price: firstVariant?.price,
+      variantId: firstVariant?.id,
       compareAtPrice:
         firstVariant?.compareAtPrice !== undefined
           ? firstVariant.compareAtPrice

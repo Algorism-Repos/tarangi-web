@@ -28,12 +28,11 @@ function Product_Description() {
   const swiperRef = useRef(null);
   const location = useLocation();
   const { product } = location.state || {};
-  const { categorizedProduct } = useContext(AppContext);
+  const { categorizedProduct, addToWishlist, deliveryDate } = useContext(AppContext);
   const [colorSelected, setColorSelected] = useState("Gold");
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
-  const [activeVariant, setactiveVariant] = useState();
-
-
+  const [activeVariant, setactiveVariant] = useState({});
+  const [productToCart, setProductToCart] = useState();
 
   const handleAddToWish = (product) => {
     console.log(product)
@@ -44,22 +43,28 @@ function Product_Description() {
       image: product.image.src,
     });
   };
-
+  console.log(product);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     //selected variant of the product by the client based on the color.
     if (product?.variants !== null) {
-      setactiveVariant(product?.variants?.find(element => element.colorVariant === colorSelected));
+      const variant = product?.variants?.find(element => element.colorVariant === colorSelected)
+      if (variant) {
+        const updatedVariant = { ...variant, title: product?.title, productId: product?.productId, deliveryDate: deliveryDate }
+        setactiveVariant(updatedVariant);
+      }
     } else if (product?.variants === null) {
-      setactiveVariant(product);
+      const updatedVariant = {...product, variantId: product?.variantId, deliveryDate: deliveryDate};
+      setactiveVariant(updatedVariant);
     }
-  }, [colorSelected]);
+  }, [colorSelected, deliveryDate]);
+
   console.log("variantActive", activeVariant);
 
 
+
   //Extracting colors into an array from the variants
-  const[productToCart,setProductToCart]=useState()
   const colorAssets = [
     {
       value: "Gold",
@@ -91,54 +96,41 @@ function Product_Description() {
     console.log(idx);
     swiperRef.current.slideTo(idx);
   }
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    //selected variant of the product by the client based on the color.
-    if (product?.variants != null) {
-      setactiveVariant(
-        product?.variants?.find(
-          (element) => element.colorVariant === colorSelected
-        )
-      );
-    } else if (product?.variants === null) {
-      setactiveVariant(product);
-    }
-  }, [colorSelected]);
 
-  // console.log("product", product);
-useEffect(() => {
-  if (product?.variants != null) {
-    const selected = product?.variants?.find(
-      (element) => element.colorVariant === colorSelected
-    );
+  // // console.log("product", product);
+  // useEffect(() => {
+  //   if (product?.variants != null) {
+  //     const selected = product?.variants?.find(
+  //       (element) => element.colorVariant === colorSelected
+  //     );
 
-    setactiveVariant(selected);
+  //     // setactiveVariant(selected);
 
-    if (selected) {
-      setProductToCart({
-        productId: product.productId,
-        variantId: selected.variantId,
-        colorVariant: selected.colorVariant,
-        image: selected.image,
-        price: selected.price,
-        title: product.title
-      });
-    }
-  } else {
-    // simple product (no variants)
-    setactiveVariant(product);
+  //     if (selected) {
+  //       setProductToCart({
+  //         productId: product.productId,
+  //         variantId: selected.variantId,
+  //         colorVariant: selected.colorVariant,
+  //         image: selected.image,
+  //         price: selected.price,
+  //         title: product.title
+  //       });
+  //     }
+  //   } else {
+  //     // simple product (no variants)
+  //     // setactiveVariant(product);
 
-    setProductToCart({
-      productId: product.productId,
-      variantId: null,
-      colorVariant: null,
-      image: product.featuredImage,
-      price: product.price,
-      title: product.title
-    });
-  }
-}, [colorSelected]);
-  console.log("product", productToCart);
+  //     setProductToCart({
+  //       productId: product.productId,
+  //       variantId: null,
+  //       colorVariant: null,
+  //       image: product.featuredImage,
+  //       price: product.price,
+  //       title: product.title
+  //     });
+  //   }
+  // }, [colorSelected]);
+  // console.log("product", productToCart);
 
   return (
     <>
@@ -189,7 +181,7 @@ useEffect(() => {
                 </h1>
                 {/* Price Section */}
                 {/* Price alone */}
-                <h2 className={activeVariant?.compareAtPrice === null  ? "block text-[24px] font-semibold sm:text-[32px]" : "hidden"}>
+                <h2 className={activeVariant?.compareAtPrice === null ? "block text-[24px] font-semibold sm:text-[32px]" : "hidden"}>
                   ₹{parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}
                 </h2 >
 
@@ -321,7 +313,7 @@ useEffect(() => {
               {/* Buttons */}
               <div className="max-w-[500px] mt-5">
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
-                  <AddToCartButton productToCart={productToCart} />
+                  <AddToCartButton productToCart={activeVariant} />
 
                   <AddToWishlistButton product={product} />
                 </div>
