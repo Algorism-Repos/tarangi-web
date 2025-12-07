@@ -9,6 +9,7 @@ const [collection, setCollections] = useState(() => {
   return saved ? JSON.parse(saved) : [];
 });
   const [allproduct, setallproduct] = useState();
+  const [deliveryDate, setdeliveryDate] = useState("");
 
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categorizedProduct, setCategorizedProduct] = useState();
@@ -152,6 +153,8 @@ const [collection, setCollections] = useState(() => {
         setCollections,
         categorizedProduct,
         setCategorizedProduct,
+        deliveryDate, 
+        setdeliveryDate
       }}
     >
       {children}

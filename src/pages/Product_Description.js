@@ -28,11 +28,43 @@ function Product_Description() {
   const swiperRef = useRef(null);
   const location = useLocation();
   const { product } = location.state || {};
-  const { categorizedProduct } = useContext(AppContext);
+  const { categorizedProduct, addToWishlist, deliveryDate } = useContext(AppContext);
   const [colorSelected, setColorSelected] = useState("Gold");
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
-  const [activeVariant, setactiveVariant] = useState();
-  const[productToCart,setProductToCart]=useState()
+  const [activeVariant, setactiveVariant] = useState({});
+  const [productToCart, setProductToCart] = useState();
+
+  const handleAddToWish = (product) => {
+    console.log(product)
+    addToWishlist({
+      id: product.variants[0].id,
+      title: product.title,
+      price: parseInt(product.variants[0].price),
+      image: product.image.src,
+    });
+  };
+  console.log(product);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    //selected variant of the product by the client based on the color.
+    if (product?.variants !== null) {
+      const variant = product?.variants?.find(element => element.colorVariant === colorSelected)
+      if (variant) {
+        const updatedVariant = { ...variant, title: product?.title, productId: product?.productId, deliveryDate: deliveryDate }
+        setactiveVariant(updatedVariant);
+      }
+    } else if (product?.variants === null) {
+      const updatedVariant = {...product, variantId: product?.variantId, deliveryDate: deliveryDate};
+      setactiveVariant(updatedVariant);
+    }
+  }, [colorSelected, deliveryDate]);
+
+  console.log("variantActive", activeVariant);
+
+
+
+  //Extracting colors into an array from the variants
   const colorAssets = [
     {
       value: "Gold",
@@ -64,58 +96,6 @@ function Product_Description() {
     console.log(idx);
     swiperRef.current.slideTo(idx);
   }
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    //selected variant of the product by the client based on the color.
-    if (product?.variants != null) {
-      setactiveVariant(
-        product?.variants?.find(
-          (element) => element.colorVariant === colorSelected
-        )
-      );
-    } else if (product?.variants === null) {
-      setactiveVariant(product);
-    }
-  }, [colorSelected]);
-
-  // console.log("product", product);
-useEffect(() => {
-  if (product?.variants != null) {
-    const selected = product?.variants?.find(
-      (element) => element.colorVariant === colorSelected
-    );
-
-    setactiveVariant(selected);
-
-    if (selected) {
-      setProductToCart({
-        productId: product.productId,
-        variantId: selected.variantId,
-        colorVariant: selected.colorVariant,
-        image: selected.image,
-        price: selected.price,
-        title: product.title
-      });
-    }
-  } else {
-    // simple product (no variants)
-    // setactiveVariant(product);
-
-    setProductToCart({
-      productId: product.productId,
-      variantId: null,
-      colorVariant: null,
-      image: product.image,
-      price: product.price,
-      title: product.title,
-      variantId:product.variantId
-    });
-  }
-}, [colorSelected]);
-  console.log("product", productToCart);
-    console.log("product", product);
-
-
   return (
     <>
       {/* Backgound */}
@@ -148,23 +128,12 @@ useEffect(() => {
                 pagination={{ dynamicBullets: true }}
                 modules={[Pagination]}
               >
-                {product.variant != null
-                  ? product.variants.map((item) => (
-                      <SwiperSlide>
-                        <img
-                          src={item.image}
-                          className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]"
-                        />
-                      </SwiperSlide>
-                    ))
-                  : product.images.map((item) => (
-                      <SwiperSlide>
-                        <img
-                          src={item}
-                          className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]"
-                        />
-                      </SwiperSlide>
-                    ))}
+
+                {product.variant != null ? product.variants.map((item) => (<SwiperSlide>
+                  <img src={item.image} className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]" />
+                </SwiperSlide>)) : product.images.map((item) => (<SwiperSlide>
+                  <img src={item} className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]" />
+                </SwiperSlide>))}
               </Swiper>
             </div>
 
@@ -174,15 +143,21 @@ useEffect(() => {
                 <h1 className="font-atteron text-primary text-[24px] sm:text-[32px] tracking-[1px] mt-3 sm:mt-0">
                   {product.title}
                 </h1>
-                <h2 className="text-[24px] font-semibold sm:text-[32px]">
-                  ₹
-                  {parseInt(activeVariant?.price).toLocaleString("en-IN") ||
-                    product.price}
-                </h2>
-                <p className="text-[#878787] text-[12px] font-poppins ">
-                  MRP Excl.of all taxes
-                </p>
-              </div>
+                {/* Price Section */}
+                {/* Price alone */}
+                <h2 className={activeVariant?.compareAtPrice === null ? "block text-[24px] font-semibold sm:text-[32px]" : "hidden"}>
+                  ₹{parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}
+                </h2 >
+
+                {/* Price with Discounted Price */}
+                <div className={activeVariant?.compareAtPrice !== null ? "flex flex-row flex-nowrap items-center gap-x-3 w-fit" : "hidden"}>
+                  <h2 className="text-[16px] font-semibold text-red-500 sm:text-[22px] line-through"> ₹{parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}</h2 >
+                  <h2 className="text-[24px] font-semibold sm:text-[32px]"> ₹{parseInt(activeVariant?.compareAtPrice).toLocaleString("en-IN") || product.compareAtPrice}</h2 >
+
+                </div>
+                <p className="text-[#878787] text-[12px] font-poppins ">MRP Excl.of all taxes</p>
+                {/* ----------------------------------------------------------------------------------------- */}
+              </div >
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px] sm:block hidden" />
               {/* Description */}
               <div>
@@ -271,11 +246,8 @@ useEffect(() => {
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px] sm:hidden block" />
 
               {/*Colors Available Section - Above Mobile (large screens) */}
-              <div
-                className={
-                  product.variant !== null ? "sm:block hidden" : "hidden"
-                }
-              >
+              < div className={product.variants !== null ? "sm:block hidden" : "hidden"} >
+
                 <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
                 {/* Color Icons */}
@@ -305,7 +277,7 @@ useEffect(() => {
               {/* Buttons */}
               <div className="max-w-[500px] mt-5">
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
-                  <AddToCartButton productToCart={productToCart} />
+                  <AddToCartButton productToCart={activeVariant} />
 
                   <AddToWishlistButton product={product} />
                 </div>

@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import shoppingCart_red from "../assets/Products/shoppingcart_red.png";
 import shoppingCart_white from "../assets/Products/shoppingcart_white.png";
 import { AppContext } from "../context/AppContext";
@@ -43,7 +44,8 @@ function AddToCartButton({
    
     // Disable page scroll
     document.body.style.overflow = "hidden";
-
+    setShowToast(true);
+  
     setTimeout(() => {
       setShowToast(false);
       document.body.style.overflow = "auto"; // Enable scroll again

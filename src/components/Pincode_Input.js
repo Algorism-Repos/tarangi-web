@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router";
 import location_icon from "../assets/Products/location.png";
 import shopping_bag from "../assets/Products/shopping_bag.png";
 import { FetchDeliveryByPincode } from "../handler/api_Handler";
+import { AppContext } from "../context/AppContext";
 
 
 
@@ -16,6 +17,7 @@ function Pincode_Input() {
   const location = pageLocation.pathname.split("/");
   const pathname = location[1];
   const [deliveryInfo, setDeliveryInfo] = useState({});
+  const { deliveryDate, setdeliveryDate } = useContext(AppContext);
 
   const handleChange = (e) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -51,6 +53,10 @@ function Pincode_Input() {
 
     estimatedDate = `${day}-${month}-${year}`;
   }
+  setdeliveryDate(estimatedDate);
+
+
+  console.log(deliveryDate);
 
   useEffect(() => {
     if (pincode.length === 6) {
@@ -88,9 +94,8 @@ function Pincode_Input() {
   return (
     <>
       <div
-        className={`w-full bg-[#FFFAF3] border-2 border-[#F6EFE6]  shadow-md mt-2 rounded-xl ${
-          error ? "border-2 border-red-400" : "border-2 border-[#F6EFE6]"
-        }`}
+        className={`w-full bg-[#FFFAF3] border-2 border-[#F6EFE6]  shadow-md mt-2 rounded-xl ${error ? "border-2 border-red-400" : "border-2 border-[#F6EFE6]"
+          }`}
       >
         <div className="flex flex-col px-4 py-3">
           {/* Main Row */}
@@ -147,7 +152,7 @@ function Pincode_Input() {
           {deliveryInfo ? (
             <p className="text-[#484848] text-[15px] font-medium">
               Expected to deliver by{" "}
-              <span className="font-bold">{estimatedDate} </span>
+              <span className="font-bold">{deliveryDate} </span>
             </p>
           ) : (
             <p className="text-[#484848] text-[15px] font-medium">

@@ -4,6 +4,7 @@ import Product_Listing from "./Product_Listing";
 import { AppContext } from "../context/AppContext";
 import { useLocation } from "react-router";
 import { FetchAllProductByCollections } from "../handler/api_Handler";
+import floating_up_arrow from "../assets/floating_up_arrow.png"
 
 
 
@@ -11,7 +12,7 @@ function Product_page() {
   const { setProductListFromShopify, setCategorizedProduct } =
     useContext(AppContext);
   const location = useLocation();
-  const { collectionId } = location.state || {};
+  const { collectionId, category} = location.state || {};
   const [productListData, setProductListData] = useState([]);
 
 
@@ -75,6 +76,7 @@ function formatProduct(productNode) {
       type: "simple",
       variantId: firstVariant?.id,
       price: firstVariant?.price,
+      variantId: firstVariant?.id,
       compareAtPrice:
         firstVariant?.compareAtPrice !== undefined
           ? firstVariant.compareAtPrice
@@ -119,6 +121,8 @@ function formatProduct(productNode) {
     return acc;
   }, {});
 
+
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -129,8 +133,9 @@ function formatProduct(productNode) {
   return (
     <>
       <div className="bg-[#FFF5E8] py-[50px] relative">
+        <img src={floating_up_arrow} alt="floating_up_arrow" className="w-[50px] h-[48px] z-50 sm:w-[70px] sm:h-[67px] fixed bottom-20 sm:bottom-3 right-3 transform animate-bounce cursor-pointer" onClick={() => { window.scrollTo({ top: 0, behavior: "smooth" })}} />
         <div className="max-w-[1350px] mx-auto lg:flex justify-between gap-x-[40px] my-[50px]">
-          <Product_Filter productCatergory={categorized} />
+          <Product_Filter productCatergory={categorized} collectionName={category} />
         </div>
       </div>
     </>

@@ -8,7 +8,7 @@ import Product_Listing from "../pages/Product_Listing";
 import { AppContext } from "../context/AppContext";
 import { ref } from "yup";
 
-function Product_Filter({ productCatergory }) {
+function Product_Filter({ productCatergory, collectionName }) {
   const [productCount, setProductCount] = useState(0);
   const [selectedOccasions, setSelectedOccasions] = useState([]);
 
@@ -22,7 +22,7 @@ function Product_Filter({ productCatergory }) {
     useContext(AppContext);
 
 
-    
+
   const SortOptions = ["Price High to Low", "Price Low to High"];
   const priceRanges = [
     { label: "₹10,000 – ₹15,000" },
@@ -63,17 +63,17 @@ function Product_Filter({ productCatergory }) {
       .map((p) => Number(p.trim()));
     return { min, max };
   };
- const occasions = Array.from(
-  new Set(
-    productListFromShopify
-      .flatMap(item => Array.isArray(item.tags) ? item.tags : [])
-      .filter(tag => tag && tag.trim() !== "")
-  )
-);
+  const occasions = Array.from(
+    new Set(
+      productListFromShopify
+        .flatMap(item => Array.isArray(item.tags) ? item.tags : [])
+        .filter(tag => tag && tag.trim() !== "")
+    )
+  );
 
 
 
-  const handleFilterChange = (categories = [], prices = [],occasionsSelected = []) => {
+  const handleFilterChange = (categories = [], prices = [], occasionsSelected = []) => {
     setSelectedCategories(categories);
     setSelectedPrices(prices);
     let filtered = productListFromShopify;
@@ -88,13 +88,13 @@ function Product_Filter({ productCatergory }) {
         return prices.some((range) => price >= range.min && price <= range.max);
       });
     }
-  if (occasionsSelected.length > 0) {
-    filtered = filtered.filter(
-      (p) =>
-        Array.isArray(p.tags) &&
-        p.tags.some((tag) => occasionsSelected.includes(tag))
-    );
-  }
+    if (occasionsSelected.length > 0) {
+      filtered = filtered.filter(
+        (p) =>
+          Array.isArray(p.tags) &&
+          p.tags.some((tag) => occasionsSelected.includes(tag))
+      );
+    }
     filtered = sortProducts(filtered, sortOption);
     setFilteredProducts(filtered);
   };
@@ -119,7 +119,7 @@ function Product_Filter({ productCatergory }) {
     }
     return sorted;
   };
- 
+
   const handleSortSelection = (option) => {
     setSortOption(option);
 
@@ -153,8 +153,8 @@ function Product_Filter({ productCatergory }) {
         (p) => p.min === range.min && p.max === range.max
       )
         ? selectedPrices.filter(
-            (p) => p.min !== range.min || p.max !== range.max
-          )
+          (p) => p.min !== range.min || p.max !== range.max
+        )
         : [...selectedPrices, range];
       setSelectedPrices(updated);
       handleFilterChange(selectedCategories, updated);
@@ -186,8 +186,8 @@ function Product_Filter({ productCatergory }) {
     setProductCount(filteredProducts.length);
   }, [filteredProducts]);
 
-  
- useEffect(() => {
+
+  useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
@@ -195,35 +195,37 @@ function Product_Filter({ productCatergory }) {
     <>
       <div>
         {/* Women Collection & Sort  */}
-        <div className="max-w-[1350px] mx-auto flex flex-wrap justify-between px-4">
-          <div className="lg:flex flex-wrap items-center gap-x-[18px]">
-            <h2 className="font-atteron text-[26px] text-primary tracking-[1px] sm:text-[36px]">
-              Collections
-            </h2>
-            <p className="font-poppins text-font-grey text-[14px] sm:mt-3 sm:text-[16px]">
-              {productCount} Designs
-            </p>
-          </div>
+        <div className="min-w-full">
+          <div className="max-w-[1350px] w-full mx-auto flex  justify-between px-4">
+            <div className="lg:flex flex-wrap items-center gap-x-[18px]">
+              <h2 className="font-atteron text-[26px] text-primary tracking-[1px] sm:text-[36px]">
+                {collectionName}  Collections
+              </h2>
+              <p className="font-poppins text-font-grey text-[14px] sm:mt-3 sm:text-[16px]">
+                {productCount} Designs
+              </p>
+            </div>
 
-          {/* Drop down */}
-          <div className="lg:flex items-center gap-4 bg-light-sandal p-4 rounded-md hidden">
-            <label className="font-poppins text-font-grey text-[18px]">
-              Sort by
-            </label>
+            {/* Drop down */}
+            <div className="lg:flex items-center gap-4 bg-light-sandal p-4 rounded-md hidden">
+              <label className="font-poppins text-font-grey text-[18px]">
+                Sort by
+              </label>
 
-            <div className="relative">
-              <select
-                className="appearance-none border border-[#B9B9B9] rounded-md py-2.5 pl-3 w-[155px] bg-white text-font-grey text-[14px] cursor-pointer outline-none"
-                onChange={(e) => handleSortChange(e.target.value)}
-              >
-                {SortOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-              <div className="absolute right-1 top-2.5 pointer-events-none">
-                <img src={down_arrow} alt="Down Arrow" />
+              <div className="relative">
+                <select
+                  className="appearance-none border border-[#B9B9B9] rounded-md py-2.5 pl-3 w-[155px] bg-white text-font-grey text-[14px] cursor-pointer outline-none"
+                  onChange={(e) => handleSortChange(e.target.value)}
+                >
+                  {SortOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-1 top-2.5 pointer-events-none">
+                  <img src={down_arrow} alt="Down Arrow" />
+                </div>
               </div>
             </div>
           </div>
@@ -289,9 +291,8 @@ function Product_Filter({ productCatergory }) {
                     className="flex mt-4 cursor-pointer gap-x-[8px] items-center select-none"
                   >
                     <img
-                      className={`w-[26px] transform transition-transform duration-300 ${
-                        showMore ? "rotate-180" : ""
-                      }`}
+                      className={`w-[26px] transform transition-transform duration-300 ${showMore ? "rotate-180" : ""
+                        }`}
                       src={showMore ? down_arrow_red : down_arrow_red}
                       alt="toggle_arrow"
                     />
@@ -338,9 +339,8 @@ function Product_Filter({ productCatergory }) {
                     onClick={() => setShowMoreCategory(!showMoreCategory)}
                   >
                     <img
-                      className={`w-[26px] transform transition-transform duration-300 ${
-                        showMoreCategory ? "rotate-180" : ""
-                      }`}
+                      className={`w-[26px] transform transition-transform duration-300 ${showMoreCategory ? "rotate-180" : ""
+                        }`}
                       src={showMore ? down_arrow_red : down_arrow_red}
                       alt="toggle_arrow"
                     />
@@ -359,20 +359,20 @@ function Product_Filter({ productCatergory }) {
                   Occasions
                 </h3>
                 <div className="mt-6 space-y-3">
-                                          {occasions.map(tag => (
+                  {occasions.map(tag => (
 
-                      <label className="flex items-center justify-between text-font-grey cursor-pointer">
-                        <div className="flex items-center space-x-3">
-                          <label className="custom-checkbox">
-                            <input type="checkbox" onChange={() =>
-                                    handleCheckbox(tag, "occasion")
-                                  } />
-                            <span class="checkmark"></span>
-                          </label>
-                          <span className="text-[18px]">{tag}</span>
-                        </div>
-                      </label>
-                    ))}
+                    <label className="flex items-center justify-between text-font-grey cursor-pointer">
+                      <div className="flex items-center space-x-3">
+                        <label className="custom-checkbox">
+                          <input type="checkbox" onChange={() =>
+                            handleCheckbox(tag, "occasion")
+                          } />
+                          <span class="checkmark"></span>
+                        </label>
+                        <span className="text-[18px]">{tag}</span>
+                      </div>
+                    </label>
+                  ))}
                 </div>
 
                 <hr className="border border-[#C8C8C8] my-[25px]" />
@@ -520,11 +520,10 @@ function Product_Filter({ productCatergory }) {
                 {/* Tabs */}
                 <div className="flex flex-col items-start text-[14px] space-y-6 text-[#747474]">
                   <button
-                    className={`${
-                      tab === "productCatergory"
-                        ? "text-primary font-medium"
-                        : ""
-                    }`}
+                    className={`${tab === "productCatergory"
+                      ? "text-primary font-medium"
+                      : ""
+                      }`}
                     onClick={() => setTab("productCatergory")}
                   >
                     Category
@@ -591,9 +590,8 @@ function Product_Filter({ productCatergory }) {
                         onClick={() => setShowMoreCategory(!showMoreCategory)}
                       >
                         <img
-                          className={`w-[26px] transform transition-transform duration-300 ${
-                            showMoreCategory ? "rotate-180" : ""
-                          }`}
+                          className={`w-[26px] transform transition-transform duration-300 ${showMoreCategory ? "rotate-180" : ""
+                            }`}
                           src={down_arrow_red}
                           alt="toggle_arrow"
                         />
@@ -639,9 +637,8 @@ function Product_Filter({ productCatergory }) {
                         onClick={() => setShowMorePrice(!showMorePrice)}
                       >
                         <img
-                          className={`w-[26px] transform transition-transform duration-300 ${
-                            showMorePrice ? "rotate-180" : ""
-                          }`}
+                          className={`w-[26px] transform transition-transform duration-300 ${showMorePrice ? "rotate-180" : ""
+                            }`}
                           src={down_arrow_red}
                           alt="toggle_arrow"
                         />
@@ -657,24 +654,24 @@ function Product_Filter({ productCatergory }) {
                 {tab === "occasion" && (
                   <div>
                     <div className="space-y-5">
-                         {occasions.map(tag => (
+                      {occasions.map(tag => (
 
-                          <label className="flex items-center justify-between text-font-grey cursor-pointer">
-                            <div className="flex items-center space-x-2">
-                              {/* Checkbox */}
-                              <label className="custom-checkbox ">
-                                <input
-                                  type="checkbox"
-                                  onChange={() =>
-                                    handleCheckbox(tag, "occasion")
-                                  }
-                                />
-                                <span class="checkmark"></span>
-                              </label>
-                              <span className="text-[15px]">{tag}</span>
-                            </div>
-                          </label>
-                        ))}
+                        <label className="flex items-center justify-between text-font-grey cursor-pointer">
+                          <div className="flex items-center space-x-2">
+                            {/* Checkbox */}
+                            <label className="custom-checkbox ">
+                              <input
+                                type="checkbox"
+                                onChange={() =>
+                                  handleCheckbox(tag, "occasion")
+                                }
+                              />
+                              <span class="checkmark"></span>
+                            </label>
+                            <span className="text-[15px]">{tag}</span>
+                          </div>
+                        </label>
+                      ))}
                     </div>
                   </div>
                 )}

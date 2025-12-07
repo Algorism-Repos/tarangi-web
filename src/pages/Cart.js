@@ -15,7 +15,7 @@ function Cart() {
   const [showSummary, setShowSummary] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
-   const { cartItems, removeFromCart, updateCartItemQuantity } =
+  const { cartItems, removeFromCart, updateCartItemQuantity } =
     useContext(AppContext);
   const toggleSummary = () => {
     setShowSummary(!showSummary);
@@ -31,6 +31,7 @@ const subtotal = cartItems.reduce((total, item) => {
   const total = subtotal + tax + shipping;
 
 
+    console.log(cartItems);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -90,7 +91,7 @@ const subtotal = cartItems.reduce((total, item) => {
                           </h3>
                         </div>
 
-                        <div>
+                        <div className={item.colorVariant ? "block" : "hidden"}>
                           <h3 className="text-[13px] text-[#6F6F6F] sm:text-[14px]">
                             Color chosen
                           </h3>
@@ -113,7 +114,7 @@ const subtotal = cartItems.reduce((total, item) => {
                         </div>
 
                         <h3 className="text-[13px] text-primary sm:text-[16px]">
-                          Delivered by Oct 10
+                          Delivered by {item.deliveryDate}
                         </h3>
                       </div>
                     </div>
