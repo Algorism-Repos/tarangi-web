@@ -22,7 +22,7 @@ function AddToCartButton({
   const [showToast, setShowToast] = useState(false);
   const [cartIconSrc, setCartIconSrc] = useState(shoppingCart_red);
   const { addToCart } = useContext(AppContext);
-    console.log(productToCart);
+    console.log("AddToCartButton",productToCart);
 
   const handleAddToCart = () => {
     addToCart(productToCart);

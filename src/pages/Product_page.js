@@ -23,10 +23,11 @@ function Product_page() {
   const productList = async (collectionId) => {
     try {
       const response = await FetchAllProductByCollections(collectionId);
-      // console.log(
-      //   "respons from product_list fetch all products by collection",
-      //   response
-      // );
+      
+      console.log(
+        "respons from product_list fetch all products by collection",
+        response
+      );
        
       const productEdges = response?.data?.collection?.products?.edges ?? [];
       
@@ -72,6 +73,7 @@ function formatProduct(productNode) {
       tags,
       createdAt,
       type: "simple",
+      variantId: firstVariant?.id,
       price: firstVariant?.price,
       compareAtPrice:
         firstVariant?.compareAtPrice !== undefined

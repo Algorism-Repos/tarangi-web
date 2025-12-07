@@ -99,19 +99,22 @@ useEffect(() => {
     }
   } else {
     // simple product (no variants)
-    setactiveVariant(product);
+    // setactiveVariant(product);
 
     setProductToCart({
       productId: product.productId,
       variantId: null,
       colorVariant: null,
-      image: product.featuredImage,
+      image: product.image,
       price: product.price,
-      title: product.title
+      title: product.title,
+      variantId:product.variantId
     });
   }
 }, [colorSelected]);
   console.log("product", productToCart);
+    console.log("product", product);
+
 
   return (
     <>
