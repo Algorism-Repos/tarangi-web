@@ -13,7 +13,7 @@ export function AppProvider({ children }) {
   const [pincodeDetails, setPincodeDetails] = useState({});
 
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [categorizedProduct, setCategorizedProduct] = useState();
+
   const [loggedCustomerId, setLoggedCustomerId] = useState(() => {
     return localStorage.getItem("loggedCustomerId") || null;
   });
@@ -21,6 +21,10 @@ export function AppProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem("isLoggedIn") === "true";
   });
+const [categorizedProduct, setCategorizedProduct] = useState(() => {
+  const saved = localStorage.getItem("categorizedProduct");
+  return saved ? JSON.parse(saved) : null;
+});
 
   useEffect(() => {
     if (loggedCustomerId) {
@@ -57,7 +61,14 @@ export function AppProvider({ children }) {
       )
     );
   };
-
+  useEffect(() => {
+    if (categorizedProduct !== null) {
+      localStorage.setItem(
+        "categorizedProduct",
+        JSON.stringify(categorizedProduct)
+      );
+    }
+  }, [categorizedProduct]);
   useEffect(() => {
     if (productListFromShopify && productListFromShopify.length > 0) {
       localStorage.setItem(
@@ -81,21 +92,22 @@ export function AppProvider({ children }) {
   const addToCart = (product) => {
     setCartItems((prev) => {
       const existing = prev.find(
-        (item) => item.id === product.id && item.color === product.color
+        (item) => item.variantId === product.variantId
       );
+
       if (existing) {
         return prev.map((item) =>
-          item.id === product.id && item.color === product.color
-            ? { ...item, quantity: item.quantity + product.quantity }
+          item.variantId === product.variantId
+            ? { ...item, quantity: item.quantity + (product.quantity || 1) }
             : item
         );
       }
-      return [...prev, product];
+
+      return [...prev, { ...product, quantity: product.quantity || 1 }];
     });
   };
-
-  const removeFromCart = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+  const removeFromCart = (variantId) => {
+    setCartItems((prev) => prev.filter((item) => item.variantId !== variantId));
   };
 
   const clearCart = () => setCartItems([]);
@@ -103,27 +115,46 @@ export function AppProvider({ children }) {
   // Wishlist operations
   const addToWishlist = (product) => {
     setWishlistItems((prev) => {
-      const exists = prev.find((item) => item.id === product.id);
-      if (exists) return prev; // avoid duplicates
+      const exists = prev.find(
+        (item) =>
+          item.productId === product.productId &&
+          item.variantId === product.variantId
+      );
+
+      if (exists) return prev;
+
       return [...prev, product];
     });
   };
 
-  const removeFromWishlist = (id) => {
-    setWishlistItems((prev) => prev.filter((item) => item.id !== id));
+  const removeFromWishlist = (variantId) => {
+    setWishlistItems((prev) =>
+      prev.filter((item) => item.variantId !== variantId)
+    );
   };
 
   const clearWishlist = () => setWishlistItems([]);
 
-  const addToRecentlyViewed = (product) => {
-    setRecentlyViewed((prev) => {
-      // Avoid duplicates
-      const filtered = prev.filter((item) => item.id !== product.id);
-      const updated = [product, ...filtered].slice(0, 10); // keep last 10
-      localStorage.setItem("recentlyViewed", JSON.stringify(updated));
-      return updated;
-    });
-  };
+const addToRecentlyViewed = (product) => {
+  setRecentlyViewed((prev) => {
+    const safePrev = Array.isArray(prev) ? prev : [];
+    const filtered = safePrev.filter(
+      (item) => item.variantId !== product.variantId
+    );
+    const updated = [product, ...filtered].slice(0, 10);
+    localStorage.setItem("recentlyViewed", JSON.stringify(updated));
+
+    return updated;
+  });
+};
+
+const clearRecentlyViewed = () => {
+  setRecentlyViewed([]);
+  localStorage.removeItem("recentlyViewed");
+};
+useEffect(() => {
+  localStorage.setItem("recentlyViewed", JSON.stringify(recentlyViewed));
+}, [recentlyViewed]);
 
   return (
     <AppContext.Provider

@@ -6,10 +6,9 @@ import { AppContext } from "../context/AppContext";
 import Wishlist_Popup from "./Wishlist_Popup";
 import { useNavigate } from "react-router";
 
-function AddToWishlistButton({ product }) {
+function AddToWishlistButton({ productToFavorites }) {
   const { addToWishlist } = useContext(AppContext);
   const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
-
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
 
   const navigate = useNavigate();

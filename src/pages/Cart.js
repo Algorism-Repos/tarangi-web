@@ -10,13 +10,18 @@ import product_2 from "../assets/Products/product_2.png";
 import close_icon from "../assets/Products/cart-close_icon.png";
 import Pincode_Input from "../components/Pincode_Input";
 import { AppContext } from "../context/AppContext";
+import AddToCartButton from "../components/AddToCartButton";
 
 function Cart() {
   const [showSummary, setShowSummary] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
-  const { cartItems, removeFromCart, updateCartItemQuantity } =
-    useContext(AppContext);
+  const {
+    cartItems,
+    removeFromCart,
+    updateCartItemQuantity,
+    categorizedProduct,
+  } = useContext(AppContext);
   const toggleSummary = () => {
     setShowSummary(!showSummary);
   };
@@ -25,18 +30,22 @@ function Cart() {
     const qty = Number(item.quantity) || 1;
     return total + price * qty;
   }, 0);
-
   const tax = subtotal * 0.03;
   const shipping = 40;
   const total = subtotal + tax + shipping;
-
-
-  console.log(cartItems);
-
+  console.log(categorizedProduct);
+  const boughtTogether = categorizedProduct
+    ?.filter((item) => item.variants === null)
+    .reverse();
+  console.log(boughtTogether);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
+    localStorage.setItem(
+      "categorizedProduct",
+      JSON.stringify(categorizedProduct)
+    );
+  }, [cartItems, categorizedProduct]);
 
   console.log("cartItems", cartItems);
 
@@ -66,7 +75,7 @@ function Cart() {
                       src={close_icon}
                       alt="close icon"
                       onClick={() => {
-                        removeFromCart(item.id)
+                        removeFromCart(item.variantId);
                         setProductToDelete(item.id);
                         setIsDeleteModalOpen(true);
                       }}
@@ -211,37 +220,34 @@ function Cart() {
               {cartItems.length > 0 ? "Frequently bought together" : "Our favourites, just for you"}
             </h1>
             <div className="sm:max-w-fit mx-auto xl:mx-0 ">
-              <div className="bg-[#FFFAF3] max-w-[580px] p-[24px] rounded-[16px] shadow-2xl mt-[25px] max-[425px]:p-[16px] ">
-                <div className="flex gap-x-[15px] sm:gap-x-[50px] items-center justify-between max-[425px]:gap-x-[10px]">
-                  {/* Product 1 */}
-                  { }
-                  <div className="relative space-y-[10px]">
-                    <input
-                      type="checkbox"
-                      className="absolute top-5 right-3 w-[18px] h-[18px] accent-[#6E0027] border-2 border-[#6E0027] outline-[#6E0027] rounded-sm cursor-pointer"
-                    />
-                    <img
-                      className="w-[148px] sm:w-[233px] rounded-[12px]"
-                      src={product_1}
-                      alt="product image"
-                    />
-                    <div>
-                      <h3 className="text-[14px] font-medium text-[#6F6F6F] sm:text-[16px] max-[425px]:text-[13px]">
-                        Stone Necklace
-                      </h3>
-                      <h3 className="text-[16px] font-semibold sm:text-[20px] max-[425px]:text-[15px]">
-                        ₹10,000
-                      </h3>
+              <div className="flex flex-row flex-wrap gap-x-12 gap-y-9 sm:gap-x-[50px] items-center justify-center max-[425px]:gap-x-[10px]">
+                {boughtTogether?.slice(0,6).map((item) => (
+                  <div className="bg-[#FFFAF3] max-w-[580px] p-[24px] rounded-[16px] shadow-2xl mt-[25px] max-[425px]:p-[16px] ">
+                    <div className="relative space-y-[10px]">
+                      {/* <input
+                        type="checkbox"
+                        className="absolute top-5 right-3 w-[18px] h-[18px] accent-[#6E0027] border-2 border-[#6E0027] outline-[#6E0027] rounded-sm cursor-pointer"
+                      /> */}
+                      <img
+                        className="w-[148px] sm:w-[233px] rounded-[12px]"
+                        src={item.image}
+                        alt="product image"
+                      />
+                      <div>
+                        <h3 className="text-[14px] font-medium text-[#6F6F6F] sm:text-[16px] max-[425px]:text-[13px]">
+                          {item.title}
+                        </h3>
+                        <h3 className="text-[16px] font-semibold sm:text-[20px] max-[425px]:text-[15px]">
+                          ₹{parseInt(item.price).toLocaleString("en-IN")}
+                        </h3>
+                      </div>
+                    </div>
+                    {/* Total Price */}
+                    <div className="mt-[24px]">
+                      <AddToCartButton productToCart={item}/>
                     </div>
                   </div>
-                </div>
-
-                {/* Total Price */}
-                <div className="mt-[24px]">
-                  <button className="bg-[#4B001A] w-full h-[51px] rounded-full text-white mt-[24px] max-[425px]:h-[46px] max-[425px]:text-[15px]">
-                    Add to cart : ₹12,000
-                  </button>
-                </div>
+                ))}
               </div>
             </div>
           </div>

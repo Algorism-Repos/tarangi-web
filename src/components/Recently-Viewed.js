@@ -19,8 +19,8 @@ const IMAGE_BY_COLOR = (item) => ({
 
 function Recently_Viewed() {
   const { recentlyViewed, setRecentlyViewed } = useContext(AppContext);
-
-  // 🎨 Color change – only update selectedColor
+  console.log(recentlyViewed)
+  //  Color change – only update selectedColor
   const handleColorChange = (id, color) => {
     setRecentlyViewed((prev) =>
       prev.map((item) =>
@@ -43,14 +43,17 @@ function Recently_Viewed() {
     );
   };
 
+
+  console.log(recentlyViewed)
+
   return (
     <div className="max-w-[1300px] mx-auto mt-[50px] lg:mt-[80px]">
       <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
         Recently Viewed
       </h1>
-
+        
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
-        {recentlyViewed.slice(0,8).map((item) => {
+        {recentlyViewed?.map((item) => {
           const colorImages = IMAGE_BY_COLOR(item);
           const selectedColor = item.selectedColor || "gold";
           const imageSrc =

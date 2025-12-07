@@ -27,7 +27,7 @@ function Favourites() {
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
-  const { wishlistItems,removeFromWishlist } = useContext(AppContext);
+  const { wishlistItems, removeFromWishlist } = useContext(AppContext);
 
   const handleProductClick = (item) => {
     if (item.isOutOfStock) {
@@ -174,15 +174,15 @@ function Favourites() {
                   </div>
 
                   <AddToCartButton
+                    productToCart={item}
                     isOutOfStock={item.isOutOfStock}
                     isRestocking={item.isRestocking}
                     isFavouritesPage={true}
-                    onRemoveFromFavourites={() => handleRemove(item.id)}
                   />
                   <div>
                     <button
                       className="text-red-600 text-[14px] underline mt-2"
-                      onClick={() => removeFromWishlist(item.id)}
+                      onClick={() => removeFromWishlist(item.variantId)}
                     >
                       Remove
                     </button>
