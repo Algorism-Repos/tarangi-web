@@ -11,23 +11,21 @@ import RestockSuccessModal from "./RestockSuccessModal";
 import RestockModal from "./RestockModal";
 import CartToast from "./CartToast";
 
-
-function AddToCartButton({ product, quantity, isOutOfStock, isRestocking, isFavouritesPage = false, onRemoveFromFavourites }) {
-
-
+function AddToCartButton({
+  productToCart,
+  quantity,
+  isOutOfStock,
+  isRestocking,
+  isFavouritesPage = false,
+  onRemoveFromFavourites,
+}) {
   const [showToast, setShowToast] = useState(false);
   const [cartIconSrc, setCartIconSrc] = useState(shoppingCart_red);
   const { addToCart } = useContext(AppContext);
+    console.log(productToCart);
 
   const handleAddToCart = () => {
-    if (!product?.variants?.[0]) return;
-    console.log(product);
-    addToCart({
-      id: product.variants[0].id,
-      title: product.title,
-      price: parseInt(product.variants[0].price),
-      image: product.image?.src,
-    });
+    addToCart(productToCart);
   };
 
   const [showRestockModal, setShowRestockModal] = useState(false);
@@ -39,9 +37,10 @@ function AddToCartButton({ product, quantity, isOutOfStock, isRestocking, isFavo
     isFavouritesPage && (isOutOfStock || isRestocking);
 
   const handleClick = () => {
-   
-    setShowToast(true);
+        handleAddToCart();
 
+    setShowToast(true);
+   
     // Disable page scroll
     document.body.style.overflow = "hidden";
 
@@ -49,7 +48,6 @@ function AddToCartButton({ product, quantity, isOutOfStock, isRestocking, isFavo
       setShowToast(false);
       document.body.style.overflow = "auto"; // Enable scroll again
     }, 2000); // 2 seconds
-     handleAddToCart()
     // If inside favourites & product unavailable → remove instead
     if (isDisabledInFavourites) {
       if (onRemoveFromFavourites) onRemoveFromFavourites();
@@ -77,7 +75,11 @@ function AddToCartButton({ product, quantity, isOutOfStock, isRestocking, isFavo
         className={`cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]
           w-full sm:w-[205px] h-[56px] rounded-full text-primary text-[16px] font-medium mt-2
           transition-all duration-300 ease-in-out 
-          ${isDisabledInFavourites ? "hover:bg-[#4B001A] hover:text-white" : "hover:bg-[#4B001A] hover:text-white"}
+          ${
+            isDisabledInFavourites
+              ? "hover:bg-[#4B001A] hover:text-white"
+              : "hover:bg-[#4B001A] hover:text-white"
+          }
         `}
         onMouseEnter={() =>
           !isDisabledInFavourites && setCartIconSrc(shoppingCart_white)
@@ -118,6 +120,5 @@ function AddToCartButton({ product, quantity, isOutOfStock, isRestocking, isFavo
     </>
   );
 }
-
 
 export default AddToCartButton;
