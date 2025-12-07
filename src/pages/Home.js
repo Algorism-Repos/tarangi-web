@@ -168,6 +168,87 @@ function Home() {
   }, {});
   console.log(FestiveFiltered);
 
+
+  function formatProduct(productNode) {
+  const {
+    id,
+    title,
+    description,
+    images,
+    variants,
+    featuredImage,
+    vendor,
+    productType,
+    tags,
+    createdAt,
+  } = productNode;
+
+  const allImages = images?.edges?.map((img) => img.node.url) || [];
+  const variantEdges = variants?.edges || [];
+  const firstVariant = variantEdges[0]?.node;
+
+  const isSimpleProduct =
+    variantEdges.length === 1 &&
+    variantEdges[0].node.selectedOptions?.[0]?.value === "Default Title";
+
+  if (isSimpleProduct) {
+    return {
+      productId: id,
+      title,
+      description,
+      vendor,
+      productType,
+      tags,
+      createdAt,
+      type: "simple",
+      price: firstVariant?.price,
+      compareAtPrice:
+        firstVariant?.compareAtPrice !== undefined
+          ? firstVariant.compareAtPrice
+          : null,
+      image: featuredImage?.url || allImages[0],
+      images: allImages,
+      variants: null,
+    };
+  }
+
+  const formattedVariants = variantEdges.map((v) => ({
+    variantId: v.node.id,
+    price: v.node.price,
+    compareAtPrice:
+      v.node.compareAtPrice !== undefined ? v.node.compareAtPrice : null,
+    inventoryQuantity: v.node.inventoryQuantity,
+    image: v.node.image?.url || featuredImage?.url,
+    // colorVariant: v.node.selectedOptions.map((opt) => [opt.name, opt.value]),
+    colorVariant: v.node.selectedOptions[0].value,
+
+  }));
+
+  return {
+    productId: id,
+    title,
+    description,
+    vendor,
+    productType,
+    tags,
+    createdAt,
+    type: "variant",
+    featuredImage: featuredImage?.url,
+    images: allImages,
+    variants: formattedVariants,
+  };
+}
+  // product catogory
+  const categorized = FestiveFiltered.reduce((acc, product) => {
+    const type = product.productType || "Uncategorized";
+    if (!acc[type]) acc[type] = [];
+    acc[type].push(product);
+    return acc;
+  }, {});
+
+ console.log(FestiveFiltered)
+
+
   async function fetchMetalRates() {
     const url =
       "https://api.metals.dev/v1/latest?api_key=TNJIKPQ4AYPHZUDTT0BS619DTT0BS&currency=INR&unit=g&symbols=XAG-COIM";

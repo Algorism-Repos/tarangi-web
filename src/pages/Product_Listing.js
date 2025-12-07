@@ -44,38 +44,9 @@ function Product_Listing({ productCatergory }) {
       setProducts(productCatergory);
       setLoading(false);
     }
-  }, [productCatergory])
+  }, [productCatergory]);
 
   console.log(products);
-
-
-
-  //  useEffect(() => {
-  //   if (productCatergory && productCatergory.length > 0) {
-  //     const prepared = productCatergory.map((item) => {
-  //       const colorsFromData =
-  //         Array.isArray(item.colors) && item.colors.length > 0
-  //           ? item.colors  
-  //           : ["gold", "silver", "brown"];
-
-  //       return {
-  //         ...item,
-  //         liked: false,
-  //         colors: colorsFromData,
-  //         selectedColor: colorsFromData[0],
-  //       };
-  //     });
-
-  //     setProducts(prepared);
-  //     setLoading(false);
-  //   } else {
-  //     setProducts([]);
-  //     setLoading(false);
-  //   }
-  // }, [productCatergory]);
-
-
-
 
   //Extracting colors into an array from the variants
   const colorAssets = [
@@ -136,7 +107,6 @@ function Product_Listing({ productCatergory }) {
     return <LoadingScreen />;
   }
 
-
   if (products.length === 0) {
     return (
       <>
@@ -161,8 +131,6 @@ function Product_Listing({ productCatergory }) {
     );
   }
 
-
-
   return (
     <>
       <div className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-y-10 sm:gap-x-[30px] px-1.5 ">
@@ -186,8 +154,8 @@ function Product_Listing({ productCatergory }) {
                 isOutOfStock
                   ? handleOutOfStockClick
                   : isRestocking
-                    ? handleRestockClick
-                    : undefined
+                  ? handleRestockClick
+                  : undefined
               }
               className="font-poppins w-[170px] sm:w-[310px] mx-auto relative hover:scale-105 transition duration-300 ease-in-out group"
             >
