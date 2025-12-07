@@ -28,7 +28,7 @@ function Product_Description() {
   const swiperRef = useRef(null);
   const location = useLocation();
   const { product } = location.state || {};
-  const { categorizedProduct, addToWishlist, deliveryDate } = useContext(AppContext);
+  const { categorizedProduct, addToWishlist, pincodeDetails } = useContext(AppContext);
   const [colorSelected, setColorSelected] = useState("Gold");
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});
@@ -51,14 +51,14 @@ function Product_Description() {
     if (product?.variants !== null) {
       const variant = product?.variants?.find(element => element.colorVariant === colorSelected)
       if (variant) {
-        const updatedVariant = { ...variant, title: product?.title, productId: product?.productId, deliveryDate: deliveryDate }
+        const updatedVariant = { ...variant, title: product?.title, productId: product?.productId, deliveryDetails: pincodeDetails  }
         setactiveVariant(updatedVariant);
       }
     } else if (product?.variants === null) {
-      const updatedVariant = {...product, variantId: product?.variantId, deliveryDate: deliveryDate};
+      const updatedVariant = {...product, variantId: product?.variantId, deliveryDetails: pincodeDetails};
       setactiveVariant(updatedVariant);
     }
-  }, [colorSelected, deliveryDate]);
+  }, [colorSelected, pincodeDetails]);
 
   console.log("variantActive", activeVariant);
 
@@ -97,40 +97,6 @@ function Product_Description() {
     swiperRef.current.slideTo(idx);
   }
 
-  // // console.log("product", product);
-  // useEffect(() => {
-  //   if (product?.variants != null) {
-  //     const selected = product?.variants?.find(
-  //       (element) => element.colorVariant === colorSelected
-  //     );
-
-  //     // setactiveVariant(selected);
-
-  //     if (selected) {
-  //       setProductToCart({
-  //         productId: product.productId,
-  //         variantId: selected.variantId,
-  //         colorVariant: selected.colorVariant,
-  //         image: selected.image,
-  //         price: selected.price,
-  //         title: product.title
-  //       });
-  //     }
-  //   } else {
-  //     // simple product (no variants)
-  //     // setactiveVariant(product);
-
-  //     setProductToCart({
-  //       productId: product.productId,
-  //       variantId: null,
-  //       colorVariant: null,
-  //       image: product.featuredImage,
-  //       price: product.price,
-  //       title: product.title
-  //     });
-  //   }
-  // }, [colorSelected]);
-  // console.log("product", productToCart);
 
   return (
     <>
@@ -187,8 +153,8 @@ function Product_Description() {
 
                 {/* Price with Discounted Price */}
                 <div className={activeVariant?.compareAtPrice !== null ? "flex flex-row flex-nowrap items-center gap-x-3 w-fit" : "hidden"}>
-                  <h2 className="text-[16px] font-semibold text-red-500 sm:text-[22px] line-through"> ₹{parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}</h2 >
-                  <h2 className="text-[24px] font-semibold sm:text-[32px]"> ₹{parseInt(activeVariant?.compareAtPrice).toLocaleString("en-IN") || product.compareAtPrice}</h2 >
+                  <h2 className="text-[16px] font-semibold text-red-500 sm:text-[22px] line-through"> ₹{parseInt(activeVariant?.compareAtPrice).toLocaleString("en-IN") || product.compareAtPrice}</h2 >
+                  <h2 className="text-[24px] font-semibold sm:text-[32px]"> ₹{parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}</h2 >
 
                 </div>
                 <p className="text-[#878787] text-[12px] font-poppins ">MRP Excl.of all taxes</p>

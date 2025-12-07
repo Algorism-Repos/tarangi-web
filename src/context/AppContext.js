@@ -1,15 +1,16 @@
 import PropTypes from "prop-types";
 import { createContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 export const AppContext = createContext();
 
 export function AppProvider({ children }) {
   const [loading, setLoading] = useState(true);
-const [collection, setCollections] = useState(() => {
-  const saved = localStorage.getItem("collection");
-  return saved ? JSON.parse(saved) : [];
-});
+  const [collection, setCollections] = useState(() => {
+    const saved = localStorage.getItem("collection");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [allproduct, setallproduct] = useState();
-  const [deliveryDate, setdeliveryDate] = useState("");
+  const [pincodeDetails, setPincodeDetails] = useState({});
 
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categorizedProduct, setCategorizedProduct] = useState();
@@ -72,10 +73,10 @@ const [collection, setCollections] = useState(() => {
     localStorage.setItem("wishlistItems", JSON.stringify(wishlistItems));
   }, [wishlistItems]);
   useEffect(() => {
-  if (collection && collection.length > 0) {
-    localStorage.setItem("collection", JSON.stringify(collection));
-  }
-}, [collection]);
+    if (collection && collection.length > 0) {
+      localStorage.setItem("collection", JSON.stringify(collection));
+    }
+  }, [collection]);
 
   const addToCart = (product) => {
     setCartItems((prev) => {
@@ -153,8 +154,8 @@ const [collection, setCollections] = useState(() => {
         setCollections,
         categorizedProduct,
         setCategorizedProduct,
-        deliveryDate, 
-        setdeliveryDate
+        pincodeDetails,
+        setPincodeDetails
       }}
     >
       {children}

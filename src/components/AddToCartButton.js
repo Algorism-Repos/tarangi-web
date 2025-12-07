@@ -23,7 +23,8 @@ function AddToCartButton({
   const [showToast, setShowToast] = useState(false);
   const [cartIconSrc, setCartIconSrc] = useState(shoppingCart_red);
   const { addToCart } = useContext(AppContext);
-    console.log(productToCart);
+  const navigate = useNavigate();
+  console.log(productToCart);
 
   const handleAddToCart = () => {
     addToCart(productToCart);
@@ -38,18 +39,15 @@ function AddToCartButton({
     isFavouritesPage && (isOutOfStock || isRestocking);
 
   const handleClick = () => {
-        handleAddToCart();
+    handleAddToCart();
+    setShowToast(true);
 
-    setShowToast(true);
-   
-    // Disable page scroll
-    document.body.style.overflow = "hidden";
-    setShowToast(true);
-  
     setTimeout(() => {
       setShowToast(false);
-      document.body.style.overflow = "auto"; // Enable scroll again
-    }, 2000); // 2 seconds
+      navigate("/cart");
+    }, 1000); // 1 seconds
+    
+
     // If inside favourites & product unavailable → remove instead
     if (isDisabledInFavourites) {
       if (onRemoveFromFavourites) onRemoveFromFavourites();
@@ -67,7 +65,7 @@ function AddToCartButton({
     }
 
     // Normal add to cart
-    setShowToast(true);
+    // setShowToast(true);
     setTimeout(() => setShowToast(false), 2000);
   };
 
@@ -77,10 +75,9 @@ function AddToCartButton({
         className={`cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]
           w-full sm:w-[205px] h-[56px] rounded-full text-primary text-[16px] font-medium mt-2
           transition-all duration-300 ease-in-out 
-          ${
-            isDisabledInFavourites
-              ? "hover:bg-[#4B001A] hover:text-white"
-              : "hover:bg-[#4B001A] hover:text-white"
+          ${isDisabledInFavourites
+            ? "hover:bg-[#4B001A] hover:text-white"
+            : "hover:bg-[#4B001A] hover:text-white"
           }
         `}
         onMouseEnter={() =>
@@ -90,7 +87,7 @@ function AddToCartButton({
           !isDisabledInFavourites && setCartIconSrc(shoppingCart_red)
         }
         onClick={handleClick}
-        // onClick={handleAddToCart}
+      // onClick={handleAddToCart}
       >
         {!isDisabledInFavourites && (
           <img className="w-[32px] h-[32px]" src={cartIconSrc} alt="" />
