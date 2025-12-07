@@ -5,11 +5,9 @@ import CartToast from "./CartToast";
 import { AppContext } from "../context/AppContext";
 import Wishlist_Popup from "./Wishlist_Popup";
 
-function AddToWishlistButton({ product }) {
+function AddToWishlistButton({ productToFavorites }) {
   const { addToWishlist } = useContext(AppContext);
   const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
-  //  console.log(product)
-
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
 
   const handleAddToWish = () => {
@@ -17,7 +15,7 @@ function AddToWishlistButton({ product }) {
     setShowWishlistPopup(true);
 
     // if (!product?.variants?.[0]||) return;
-    addToWishlist(product);
+    addToWishlist(productToFavorites);
   };
 
   return (

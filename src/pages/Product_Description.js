@@ -28,43 +28,11 @@ function Product_Description() {
   const swiperRef = useRef(null);
   const location = useLocation();
   const { product } = location.state || {};
-  const { categorizedProduct, addToWishlist, deliveryDate } = useContext(AppContext);
+  const { categorizedProduct, deliveryDate, addToRecentlyViewed } =
+    useContext(AppContext);
   const [colorSelected, setColorSelected] = useState("Gold");
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});
-  const [productToCart, setProductToCart] = useState();
-
-  const handleAddToWish = (product) => {
-    console.log(product)
-    addToWishlist({
-      id: product.variants[0].id,
-      title: product.title,
-      price: parseInt(product.variants[0].price),
-      image: product.image.src,
-    });
-  };
-  console.log(product);
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-    //selected variant of the product by the client based on the color.
-    if (product?.variants !== null) {
-      const variant = product?.variants?.find(element => element.colorVariant === colorSelected)
-      if (variant) {
-        const updatedVariant = { ...variant, title: product?.title, productId: product?.productId, deliveryDate: deliveryDate }
-        setactiveVariant(updatedVariant);
-      }
-    } else if (product?.variants === null) {
-      const updatedVariant = {...product, variantId: product?.variantId, deliveryDate: deliveryDate};
-      setactiveVariant(updatedVariant);
-    }
-  }, [colorSelected, deliveryDate]);
-
-  console.log("variantActive", activeVariant);
-
-
-
-  //Extracting colors into an array from the variants
   const colorAssets = [
     {
       value: "Gold",
@@ -79,6 +47,33 @@ function Product_Description() {
       imgUrl: brown_ellipse,
     },
   ];
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    //selected variant of the product by the client based on the color.
+    if (product?.variants !== null) {
+      const variant = product?.variants?.find(
+        (element) => element.colorVariant === colorSelected
+      );
+      if (variant) {
+        const updatedVariant = {
+          ...variant,
+          title: product?.title,
+          productId: product?.productId,
+          deliveryDate: deliveryDate,
+        };
+        setactiveVariant(updatedVariant);
+      }
+    } else if (product?.variants === null) {
+      const updatedVariant = {
+        ...product,
+        variantId: product?.variantId,
+        deliveryDate: deliveryDate,
+      };
+      setactiveVariant(updatedVariant);
+    }
+    addToRecentlyViewed(activeVariant);
+  }, [colorSelected, deliveryDate]);
 
   //Organising the colors that are available for the product
   const variantColors = product.variants?.map(
@@ -128,12 +123,23 @@ function Product_Description() {
                 pagination={{ dynamicBullets: true }}
                 modules={[Pagination]}
               >
-
-                {product.variant != null ? product.variants.map((item) => (<SwiperSlide>
-                  <img src={item.image} className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]" />
-                </SwiperSlide>)) : product.images.map((item) => (<SwiperSlide>
-                  <img src={item} className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]" />
-                </SwiperSlide>))}
+                {product.variant != null
+                  ? product.variants.map((item) => (
+                      <SwiperSlide>
+                        <img
+                          src={item.image}
+                          className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]"
+                        />
+                      </SwiperSlide>
+                    ))
+                  : product.images.map((item) => (
+                      <SwiperSlide>
+                        <img
+                          src={item}
+                          className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]"
+                        />
+                      </SwiperSlide>
+                    ))}
               </Swiper>
             </div>
 
@@ -145,19 +151,45 @@ function Product_Description() {
                 </h1>
                 {/* Price Section */}
                 {/* Price alone */}
-                <h2 className={activeVariant?.compareAtPrice === null ? "block text-[24px] font-semibold sm:text-[32px]" : "hidden"}>
-                  ₹{parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}
-                </h2 >
+                <h2
+                  className={
+                    activeVariant?.compareAtPrice === null
+                      ? "block text-[24px] font-semibold sm:text-[32px]"
+                      : "hidden"
+                  }
+                >
+                  ₹
+                  {parseInt(activeVariant?.price).toLocaleString("en-IN") ||
+                    product.price}
+                </h2>
 
                 {/* Price with Discounted Price */}
-                <div className={activeVariant?.compareAtPrice !== null ? "flex flex-row flex-nowrap items-center gap-x-3 w-fit" : "hidden"}>
-                  <h2 className="text-[16px] font-semibold text-red-500 sm:text-[22px] line-through"> ₹{parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}</h2 >
-                  <h2 className="text-[24px] font-semibold sm:text-[32px]"> ₹{parseInt(activeVariant?.compareAtPrice).toLocaleString("en-IN") || product.compareAtPrice}</h2 >
-
+                <div
+                  className={
+                    activeVariant?.compareAtPrice !== null
+                      ? "flex flex-row flex-nowrap items-center gap-x-3 w-fit"
+                      : "hidden"
+                  }
+                >
+                  <h2 className="text-[16px] font-semibold text-red-500 sm:text-[22px] line-through">
+                    {" "}
+                    ₹
+                    {parseInt(activeVariant?.price).toLocaleString("en-IN") ||
+                      product.price}
+                  </h2>
+                  <h2 className="text-[24px] font-semibold sm:text-[32px]">
+                    {" "}
+                    ₹
+                    {parseInt(activeVariant?.compareAtPrice).toLocaleString(
+                      "en-IN"
+                    ) || product.compareAtPrice}
+                  </h2>
                 </div>
-                <p className="text-[#878787] text-[12px] font-poppins ">MRP Excl.of all taxes</p>
+                <p className="text-[#878787] text-[12px] font-poppins ">
+                  MRP Excl.of all taxes
+                </p>
                 {/* ----------------------------------------------------------------------------------------- */}
-              </div >
+              </div>
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px] sm:block hidden" />
               {/* Description */}
               <div>
@@ -246,8 +278,11 @@ function Product_Description() {
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px] sm:hidden block" />
 
               {/*Colors Available Section - Above Mobile (large screens) */}
-              < div className={product.variants !== null ? "sm:block hidden" : "hidden"} >
-
+              <div
+                className={
+                  product.variants !== null ? "sm:block hidden" : "hidden"
+                }
+              >
                 <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
                 {/* Color Icons */}
@@ -278,8 +313,7 @@ function Product_Description() {
               <div className="max-w-[500px] mt-5">
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
                   <AddToCartButton productToCart={activeVariant} />
-
-                  <AddToWishlistButton product={product} />
+                  <AddToWishlistButton productToFavorites={activeVariant} />
                 </div>
               </div>
             </div>

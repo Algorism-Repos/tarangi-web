@@ -21,8 +21,6 @@ function Product_Filter({ productCatergory, collectionName }) {
   const { productListFromShopify, filteredProducts, setFilteredProducts } =
     useContext(AppContext);
 
-
-
   const SortOptions = ["Price High to Low", "Price Low to High"];
   const priceRanges = [
     { label: "₹10,000 – ₹15,000" },
@@ -66,25 +64,30 @@ function Product_Filter({ productCatergory, collectionName }) {
   const occasions = Array.from(
     new Set(
       productListFromShopify
-        .flatMap(item => Array.isArray(item.tags) ? item.tags : [])
-        .filter(tag => tag && tag.trim() !== "")
+        .flatMap((item) => (Array.isArray(item.tags) ? item.tags : []))
+        .filter((tag) => tag && tag.trim() !== "")
     )
   );
 
-
-
-  const handleFilterChange = (categories = [], prices = [], occasionsSelected = []) => {
+  const handleFilterChange = (
+    categories = [],
+    prices = [],
+    occasionsSelected = []
+  ) => {
     setSelectedCategories(categories);
     setSelectedPrices(prices);
     let filtered = productListFromShopify;
     if (categories.length > 0) {
       filtered = filtered.filter((p) =>
-        categories.includes(p.product_type || "Uncategorized")
+        categories.includes(p.productType || "Uncategorized")
       );
     }
     if (prices.length > 0) {
       filtered = filtered.filter((p) => {
-        const price = Number(p.variants?.[0]?.price);
+        const price =
+          p.type === "simple"
+            ? Number(p.price)
+            : Number(p.variants?.[0]?.price || 0);
         return prices.some((range) => price >= range.min && price <= range.max);
       });
     }
@@ -139,7 +142,6 @@ function Product_Filter({ productCatergory, collectionName }) {
   };
 
   const handleCheckbox = (type, filterType) => {
-
     let updated;
     if (filterType === "category") {
       updated = selectedCategories.includes(type)
@@ -153,8 +155,8 @@ function Product_Filter({ productCatergory, collectionName }) {
         (p) => p.min === range.min && p.max === range.max
       )
         ? selectedPrices.filter(
-          (p) => p.min !== range.min || p.max !== range.max
-        )
+            (p) => p.min !== range.min || p.max !== range.max
+          )
         : [...selectedPrices, range];
       setSelectedPrices(updated);
       handleFilterChange(selectedCategories, updated);
@@ -186,7 +188,6 @@ function Product_Filter({ productCatergory, collectionName }) {
     setProductCount(filteredProducts.length);
   }, [filteredProducts]);
 
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -199,7 +200,7 @@ function Product_Filter({ productCatergory, collectionName }) {
           <div className="max-w-[1350px] w-full mx-auto flex  justify-between px-4">
             <div className="lg:flex flex-wrap items-center gap-x-[18px]">
               <h2 className="font-atteron text-[26px] text-primary tracking-[1px] sm:text-[36px]">
-                {collectionName}  Collections
+                {collectionName} Collections
               </h2>
               <p className="font-poppins text-font-grey text-[14px] sm:mt-3 sm:text-[16px]">
                 {productCount} Designs
@@ -291,8 +292,9 @@ function Product_Filter({ productCatergory, collectionName }) {
                     className="flex mt-4 cursor-pointer gap-x-[8px] items-center select-none"
                   >
                     <img
-                      className={`w-[26px] transform transition-transform duration-300 ${showMore ? "rotate-180" : ""
-                        }`}
+                      className={`w-[26px] transform transition-transform duration-300 ${
+                        showMore ? "rotate-180" : ""
+                      }`}
                       src={showMore ? down_arrow_red : down_arrow_red}
                       alt="toggle_arrow"
                     />
@@ -339,8 +341,9 @@ function Product_Filter({ productCatergory, collectionName }) {
                     onClick={() => setShowMoreCategory(!showMoreCategory)}
                   >
                     <img
-                      className={`w-[26px] transform transition-transform duration-300 ${showMoreCategory ? "rotate-180" : ""
-                        }`}
+                      className={`w-[26px] transform transition-transform duration-300 ${
+                        showMoreCategory ? "rotate-180" : ""
+                      }`}
                       src={showMore ? down_arrow_red : down_arrow_red}
                       alt="toggle_arrow"
                     />
@@ -359,14 +362,14 @@ function Product_Filter({ productCatergory, collectionName }) {
                   Occasions
                 </h3>
                 <div className="mt-6 space-y-3">
-                  {occasions.map(tag => (
-
+                  {occasions.map((tag) => (
                     <label className="flex items-center justify-between text-font-grey cursor-pointer">
                       <div className="flex items-center space-x-3">
                         <label className="custom-checkbox">
-                          <input type="checkbox" onChange={() =>
-                            handleCheckbox(tag, "occasion")
-                          } />
+                          <input
+                            type="checkbox"
+                            onChange={() => handleCheckbox(tag, "occasion")}
+                          />
                           <span class="checkmark"></span>
                         </label>
                         <span className="text-[18px]">{tag}</span>
@@ -520,10 +523,11 @@ function Product_Filter({ productCatergory, collectionName }) {
                 {/* Tabs */}
                 <div className="flex flex-col items-start text-[14px] space-y-6 text-[#747474]">
                   <button
-                    className={`${tab === "productCatergory"
-                      ? "text-primary font-medium"
-                      : ""
-                      }`}
+                    className={`${
+                      tab === "productCatergory"
+                        ? "text-primary font-medium"
+                        : ""
+                    }`}
                     onClick={() => setTab("productCatergory")}
                   >
                     Category
@@ -590,8 +594,9 @@ function Product_Filter({ productCatergory, collectionName }) {
                         onClick={() => setShowMoreCategory(!showMoreCategory)}
                       >
                         <img
-                          className={`w-[26px] transform transition-transform duration-300 ${showMoreCategory ? "rotate-180" : ""
-                            }`}
+                          className={`w-[26px] transform transition-transform duration-300 ${
+                            showMoreCategory ? "rotate-180" : ""
+                          }`}
                           src={down_arrow_red}
                           alt="toggle_arrow"
                         />
@@ -637,8 +642,9 @@ function Product_Filter({ productCatergory, collectionName }) {
                         onClick={() => setShowMorePrice(!showMorePrice)}
                       >
                         <img
-                          className={`w-[26px] transform transition-transform duration-300 ${showMorePrice ? "rotate-180" : ""
-                            }`}
+                          className={`w-[26px] transform transition-transform duration-300 ${
+                            showMorePrice ? "rotate-180" : ""
+                          }`}
                           src={down_arrow_red}
                           alt="toggle_arrow"
                         />
@@ -654,17 +660,14 @@ function Product_Filter({ productCatergory, collectionName }) {
                 {tab === "occasion" && (
                   <div>
                     <div className="space-y-5">
-                      {occasions.map(tag => (
-
+                      {occasions.map((tag) => (
                         <label className="flex items-center justify-between text-font-grey cursor-pointer">
                           <div className="flex items-center space-x-2">
                             {/* Checkbox */}
                             <label className="custom-checkbox ">
                               <input
                                 type="checkbox"
-                                onChange={() =>
-                                  handleCheckbox(tag, "occasion")
-                                }
+                                onChange={() => handleCheckbox(tag, "occasion")}
                               />
                               <span class="checkmark"></span>
                             </label>

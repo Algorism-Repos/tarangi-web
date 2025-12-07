@@ -1,12 +1,7 @@
 import React, { useContext, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import shoppingCart_red from "../assets/Products/shoppingcart_red.png";
 import shoppingCart_white from "../assets/Products/shoppingcart_white.png";
 import { AppContext } from "../context/AppContext";
-import cartIcon from "../assets/Products/Check.png";
-import closeIcon from "../assets/Close.png";
-import flowerBg from "../assets/backgrounds/flower_bg.png";
 import OutOfStockModal from "./OutOfStockModal";
 import RestockSuccessModal from "./RestockSuccessModal";
 import RestockModal from "./RestockModal";
@@ -14,7 +9,6 @@ import CartToast from "./CartToast";
 
 function AddToCartButton({
   productToCart,
-  quantity,
   isOutOfStock,
   isRestocking,
   isFavouritesPage = false,
@@ -22,90 +16,65 @@ function AddToCartButton({
 }) {
   const [showToast, setShowToast] = useState(false);
   const [cartIconSrc, setCartIconSrc] = useState(shoppingCart_red);
-  const { addToCart } = useContext(AppContext);
-    console.log("AddToCartButton",productToCart);
-
-  const handleAddToCart = () => {
-    addToCart(productToCart);
-  };
-
   const [showRestockModal, setShowRestockModal] = useState(false);
-
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
-
+  const { addToCart } = useContext(AppContext);
   const isDisabledInFavourites =
     isFavouritesPage && (isOutOfStock || isRestocking);
-
-  const handleClick = () => {
-        handleAddToCart();
-
+  const handleAddToCart = () => {
+    addToCart(productToCart);
     setShowToast(true);
-   
-    // Disable page scroll
     document.body.style.overflow = "hidden";
-    setShowToast(true);
-  
     setTimeout(() => {
       setShowToast(false);
-      document.body.style.overflow = "auto"; // Enable scroll again
-    }, 2000); // 2 seconds
-    // If inside favourites & product unavailable → remove instead
+      document.body.style.overflow = "auto";
+    }, 1500);
+  };
+  const handleClick = () => {
     if (isDisabledInFavourites) {
-      if (onRemoveFromFavourites) onRemoveFromFavourites();
+      onRemoveFromFavourites && onRemoveFromFavourites();
       return;
     }
-
     if (isOutOfStock) {
       setShowOutStockModal(true);
       return;
     }
-
     if (isRestocking) {
       setShowRestockModal(true);
       return;
     }
 
-    // Normal add to cart
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 2000);
+    handleAddToCart();
   };
 
   return (
     <>
       <button
-        className={`cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]
-          w-full sm:w-[205px] h-[56px] rounded-full text-primary text-[16px] font-medium mt-2
-          transition-all duration-300 ease-in-out 
-          ${
-            isDisabledInFavourites
-              ? "hover:bg-[#4B001A] hover:text-white"
-              : "hover:bg-[#4B001A] hover:text-white"
-          }
-        `}
-        onMouseEnter={() =>
-          !isDisabledInFavourites && setCartIconSrc(shoppingCart_white)
-        }
-        onMouseLeave={() =>
-          !isDisabledInFavourites && setCartIconSrc(shoppingCart_red)
-        }
+        className="cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]
+        w-full sm:w-[205px] h-[56px] rounded-full text-primary text-[16px] font-medium mt-2
+        transition-all duration-300 hover:bg-[#4B001A] hover:text-white"
+        onMouseEnter={() => !isDisabledInFavourites && setCartIconSrc(shoppingCart_white)}
+        onMouseLeave={() => !isDisabledInFavourites && setCartIconSrc(shoppingCart_red)}
         onClick={handleClick}
-        // onClick={handleAddToCart}
       >
         {!isDisabledInFavourites && (
-          <img className="w-[32px] h-[32px]" src={cartIconSrc} alt="" />
+          <img className="w-[32px] h-[32px]" src={cartIconSrc} alt="cart icon" />
         )}
 
         {isDisabledInFavourites ? "Remove from favourites" : "Add to cart"}
       </button>
 
+      {/* Toast */}
       <CartToast show={showToast} onClose={() => setShowToast(false)} />
 
+      {/* Out of stock */}
       <OutOfStockModal
         open={showOutStockModal}
         onClose={() => setShowOutStockModal(false)}
       />
 
+      {/* Restock */}
       <RestockModal
         open={showRestockModal}
         onClose={() => setShowRestockModal(false)}
@@ -115,6 +84,7 @@ function AddToCartButton({
         }}
       />
 
+      {/* Restock success */}
       <RestockSuccessModal
         open={showRestockSuccess}
         onClose={() => setShowRestockSuccess(false)}

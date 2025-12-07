@@ -22,7 +22,7 @@ function CheckoutPage() {
   const navigate = useNavigate();
   const [giftWrapPrice, setGiftWrapPrice] = useState(0);
 
-  const { cartItems, removeFromCart } = useContext(AppContext);
+  const { cartItems, clearCart } = useContext(AppContext);
   const [showSummary, setShowSummary] = useState(false);
   const [formValues, setFormValues] = useState([]);
   // Yup validation schema
@@ -134,6 +134,7 @@ function CheckoutPage() {
     },
   });
   console.log(formValues);
+    console.log(cartItems);
 
   const handlePlaceOrder = async (formValues, customerId) => {
     console.log(cartItems);
@@ -178,6 +179,7 @@ function CheckoutPage() {
         "http://localhost:8080/api/shopify/order",
         orderData
       );
+      clearCart();
       navigate("/thankyou");
       console.log("Order placed successfully:", response.data);
     } catch (error) {
@@ -267,9 +269,9 @@ function CheckoutPage() {
               />
             </div>
 
-            <span className="font-semibold text-[#404040]">
+            <p className="font-semibold text-[#404040]">
               ₹{total.toLocaleString()}
-            </span>
+            </p>
           </button>
 
           {showSummary && (
@@ -287,7 +289,7 @@ function CheckoutPage() {
                     </div>
                     <div className="flex-11 space-y-1">
                       <div className="text-[14px] font-Poppins text-[#6F6F6F]">
-                        {item.product_name}
+                        {item.title}
                       </div>
                       <div className="text-[12px] font-Poppins text-[#6F6F6F]">
                         Quantity: {item.quantity}
@@ -897,14 +899,14 @@ function CheckoutPage() {
                     </div>
                     <div className="flex-1 w-[123px] h-[95px] space-y-1">
                       <div className=" text-14px font-Poppins text-[#6F6F6F]">
-                        {item.product_name}
+                        {item.title}
                       </div>
                       <div className="text-14px text-[#6F6F6F] ">
                         Quantity:{item.quantity}
                       </div>
-                      {/* <div className=" text-18px text-[#313131]   font-semibold">
-                        {item.free ? "Free" : `₹${item.price.toLocaleString()}`}
-                      </div> */}
+                      <div className=" text-18px text-[#313131]   font-semibold">
+                        ₹{parseInt(item.price).toLocaleString()}
+                      </div>
                     </div>
                   </div>
                 ))}
