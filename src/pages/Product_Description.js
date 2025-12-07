@@ -28,22 +28,14 @@ function Product_Description() {
   const swiperRef = useRef(null);
   const location = useLocation();
   const { product } = location.state || {};
-  const { categorizedProduct, addToWishlist, pincodeDetails } = useContext(AppContext);
+  const { categorizedProduct, addToWishlist, pincodeDetails, addToRecentlyViewed } = useContext(AppContext);
   const [colorSelected, setColorSelected] = useState("Gold");
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});
   const [productToCart, setProductToCart] = useState();
 
-  const handleAddToWish = (product) => {
-    console.log(product)
-    addToWishlist({
-      id: product.variants[0].id,
-      title: product.title,
-      price: parseInt(product.variants[0].price),
-      image: product.image.src,
-    });
-  };
   console.log(product);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -51,11 +43,11 @@ function Product_Description() {
     if (product?.variants !== null) {
       const variant = product?.variants?.find(element => element.colorVariant === colorSelected)
       if (variant) {
-        const updatedVariant = { ...variant, title: product?.title, productId: product?.productId, deliveryDetails: pincodeDetails  }
+        const updatedVariant = { ...variant, title: product?.title, productId: product?.productId, deliveryDetails: pincodeDetails }
         setactiveVariant(updatedVariant);
       }
     } else if (product?.variants === null) {
-      const updatedVariant = {...product, variantId: product?.variantId, deliveryDetails: pincodeDetails};
+      const updatedVariant = { ...product, variantId: product?.variantId, deliveryDetails: pincodeDetails };
       setactiveVariant(updatedVariant);
     }
   }, [colorSelected, pincodeDetails]);
@@ -92,7 +84,7 @@ function Product_Description() {
           ...variant,
           title: product?.title,
           productId: product?.productId,
-          deliveryDate: deliveryDate,
+          deliverDetails: pincodeDetails,
         };
         setactiveVariant(updatedVariant);
       }
@@ -100,12 +92,12 @@ function Product_Description() {
       const updatedVariant = {
         ...product,
         variantId: product?.variantId,
-        deliveryDate: deliveryDate,
+        deliverDetails: pincodeDetails,
       };
       setactiveVariant(updatedVariant);
     }
     addToRecentlyViewed(activeVariant);
-  }, [colorSelected, deliveryDate]);
+  }, [colorSelected, pincodeDetails]);
 
   //Organising the colors that are available for the product
   const variantColors = product.variants?.map(
@@ -159,21 +151,21 @@ function Product_Description() {
               >
                 {product.variant != null
                   ? product.variants.map((item) => (
-                      <SwiperSlide>
-                        <img
-                          src={item.image}
-                          className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]"
-                        />
-                      </SwiperSlide>
-                    ))
+                    <SwiperSlide>
+                      <img
+                        src={item.image}
+                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]"
+                      />
+                    </SwiperSlide>
+                  ))
                   : product.images.map((item) => (
-                      <SwiperSlide>
-                        <img
-                          src={item}
-                          className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]"
-                        />
-                      </SwiperSlide>
-                    ))}
+                    <SwiperSlide>
+                      <img
+                        src={item}
+                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]"
+                      />
+                    </SwiperSlide>
+                  ))}
               </Swiper>
             </div>
 

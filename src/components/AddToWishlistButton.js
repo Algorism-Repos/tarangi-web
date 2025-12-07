@@ -4,7 +4,7 @@ import favorie_icon_white from "../assets/Products/Unfilled_likeIcon.png";
 import CartToast from "./CartToast";
 import { AppContext } from "../context/AppContext";
 import Wishlist_Popup from "./Wishlist_Popup";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 function AddToWishlistButton({ productToFavorites }) {
   const { addToWishlist } = useContext(AppContext);
@@ -14,7 +14,7 @@ function AddToWishlistButton({ productToFavorites }) {
   const navigate = useNavigate();
 
   const handleAddToWish = () => {
-    addToWishlist(product);
+    addToWishlist(productToFavorites);
     setShowWishlistPopup(true);
     
     setTimeout(() => {
