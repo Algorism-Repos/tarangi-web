@@ -52,12 +52,11 @@ function Recently_Viewed() {
         Recently Viewed
       </h1>
         
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
         {recentlyViewed?.map((item) => {
           const colorImages = IMAGE_BY_COLOR(item);
           const selectedColor = item.selectedColor || "gold";
-          const imageSrc =
-            (selectedColor && colorImages[selectedColor]) || colorImages.gold;
+          const imageSrc =(selectedColor && colorImages[selectedColor]) || colorImages.gold;
 
           return (
             <div

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useLocation } from "react-router";
+import { Link, useLocation } from "react-router";
 import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
 
@@ -92,9 +92,11 @@ function Favourites() {
           </h1>
 
           {wishlistItems.length === 0 ? (
-            <p className="text-center text-[18px] text-[#4B001A] mt-6 font-poppins">
-              No items yet. Find something you'll love
-            </p>
+            <Link to ="/products/womens">
+              <p className="text-center text-[18px] text-[#4B001A] mt-6 font-poppins">
+                No items yet. Find something you'll love
+              </p>
+            </Link>
           ) : (
             <div
               className={
@@ -167,6 +169,7 @@ function Favourites() {
                     isRestocking={item.isRestocking}
                     isFavouritesPage={true}
                   />
+
                   {/* <div>
                     <button
                       className="text-red-600 text-[14px] underline mt-2"

@@ -1,4 +1,7 @@
 import { Link } from "react-router";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
 // Image
 import gold_ellipse from "../assets/Products/gold_ellipse.png";
 import silver_ellipse from "../assets/Products/silver_ellipse.png";
@@ -13,6 +16,7 @@ import product_2 from "../assets/Products/product_2.png";
 import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import LoadingScreen from "../components/LoadingScreen";
+import { Autoplay } from "swiper/modules";
 
 const ELLIPSE_BY_COLOR = {
   gold: gold_ellipse,
@@ -26,13 +30,15 @@ const IMAGE_BY_COLOR = (item) => ({
   brown: product_2,
 });
 
+
+
 function Product_Listing({ productCatergory }) {
   const [products, setProducts] = useState([]);
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const { loading, setLoading,addToWishlist,removeFromWishlist} = useContext(AppContext);
+  const { loading, setLoading, addToWishlist, removeFromWishlist } = useContext(AppContext);
   // after form success
   const handleSuccess = () => {
     setShowRestockModal(false);
@@ -47,6 +53,8 @@ function Product_Listing({ productCatergory }) {
   }, [productCatergory]);
 
   console.log(products);
+
+
 
   //Extracting colors into an array from the variants
   const colorAssets = [
@@ -66,14 +74,8 @@ function Product_Listing({ productCatergory }) {
 
   //Organising the colors that are available for the product
   const variantColors = products?.map((element) =>
-    element?.variants?.map((item) => item.colorVariant)
-  );
-  // console.log(variantColors);
-  // const availableColors = colorAssets.filter(element => variantColors?.includes(element.value))
-  const availableColors = variantColors
-    .map((color) => colorAssets.find((asset) => asset.value == color))
-    .filter(Boolean);
-  // console.log(availableColors);
+    element?.variants?.map((item) => item.colorVariant));
+    console.log("variantColors", variantColors);  
 
   //  Like button toggle
   const toggleLike = (productId) => {
@@ -157,7 +159,6 @@ function Product_Listing({ productCatergory }) {
           const isOutOfStock = "";
           const isRestocking = item.restock === true;
 
-          const colorImages = IMAGE_BY_COLOR(item);
 
           return (
             <Link
@@ -172,24 +173,32 @@ function Product_Listing({ productCatergory }) {
                 isOutOfStock
                   ? handleOutOfStockClick
                   : isRestocking
-                  ? handleRestockClick
-                  : undefined
+                    ? handleRestockClick
+                    : undefined
               }
               className="font-poppins w-[170px] sm:w-[310px] mx-auto relative hover:scale-105 transition duration-300 ease-in-out group"
             >
-              {/* MAIN PRODUCT IMAGE */}
-              <img
-                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${
-                  isOutOfStock ? "grayscale" : ""
-                } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
+              {/* <img
+                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "grayscale" : ""
+                  } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
                 src={
                   item.variants != null
                     ? item.variants.map((item) => item.image)
                     : item.images
                 }
                 alt={item?.title}
-              />
-
+              /> */}
+              {/* MAIN PRODUCT IMAGE */}
+              <Swiper
+                modules={Autoplay}
+              >
+                {(item?.variants?.map(v => v.image) || item.images).map((item, i) => (
+                  <SwiperSlide>
+                    <img src={item} alt="images" className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "grayscale" : ""
+                      } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
               {/*  Like Button */}
               <LikeButton
                 liked={item.liked}
@@ -213,9 +222,9 @@ function Product_Listing({ productCatergory }) {
               )}
 
               {/* PRODUCT DETAILS */}
-              <div className="mt-2 flex flex-wrap gap-2 justify-between sm:mt-3">
+              <div className="mt-2 flex flex-wrap justify-between sm:mt-3">
                 <div>
-                  <h1 className="text-[13px] font-semibold sm:text-[18px] text-[#313131]">
+                  <h1 className="text-[13px] font-semibold sm:text-[18px] text-wrap text-[#313131]">
                     {item?.title}
                   </h1>
                 </div>
@@ -225,14 +234,14 @@ function Product_Listing({ productCatergory }) {
                     ₹{" "}
                     {item.variants != null
                       ? parseInt(item.variants?.[0]?.price).toLocaleString(
-                          "en-IN"
-                        )
+                        "en-IN"
+                      )
                       : parseInt(item.price).toLocaleString("en-in")}
                   </h3>
 
                   {/*  COLOR TOGGLE BUTTONS */}
                   <div className="flex flex-row items-center">
-                    {/* {item?.variants?.map((color) => color?.colorVariant)} */}
+                    {item?.variants?.map((color) => color?.colorVariant)}
                   </div>
                 </div>
               </div>
