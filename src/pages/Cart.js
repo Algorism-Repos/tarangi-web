@@ -25,9 +25,10 @@ function Cart() {
   const toggleSummary = () => {
     setShowSummary(!showSummary);
   };
-  const subtotal = cartItems.reduce((total, item) => {
-    const price = Number(item.price) || 0;
-    const qty = Number(item.quantity) || 1;
+   console.log(cartItems)
+  const subtotal = cartItems?.reduce((total, item) => {
+    const price = Number(item?.price) || 0;
+    const qty = Number(item?.quantity) || 1;
     return total + price * qty;
   }, 0);
   const tax = subtotal * 0.03;
@@ -35,7 +36,7 @@ function Cart() {
   const total = subtotal + tax + shipping;
   console.log(categorizedProduct);
   const boughtTogether = categorizedProduct
-    ?.filter((item) => item.variants === null)
+    ?.filter((item) => item?.variants === null)
     .reverse();
   console.log(boughtTogether);
   useEffect(() => {
@@ -61,12 +62,12 @@ function Cart() {
           <div className="flex flex-wrap justify-between gap-y-14 px-3 my-[60px] sm:px-0 sm:my-[80px] max-[425px]:my-[40px] max-[375px]:my-[30px] ">
             {/* Selected Productlist */}
             <div className="w-[694px] mx-auto xl:mx-0 max-[425px]:w-full">
-              {cartItems.length === 0 ? (
+              {cartItems?.length === 0 ? (
                 <Link to="/products/womens"><h3 className="hover:underline text-center text-[18px] text-[#4B001A] mt-6 font-poppins">No items yet. Find something you'll love</h3></Link>
               ) : (
-                cartItems.map((item) => (
+                cartItems?.map((item) => (
                   <div
-                    key={item.id}
+                    key={item?.id}
                     className="bg-[#FFFAF3] max-w-[694px] p-[24px] rounded-[16px] shadow-2xl mb-[25px] max-[425px]:p-[16px]"
                   >
                     {/*  DELETE ICON (opens modal) */}
@@ -75,8 +76,8 @@ function Cart() {
                       src={close_icon}
                       alt="close icon"
                       onClick={() => {
-                        removeFromCart(item.variantId);
-                        setProductToDelete(item.id);
+                        removeFromCart(item?.variantId);
+                        setProductToDelete(item?.id);
                         setIsDeleteModalOpen(true);
                       }}
                     />
@@ -84,26 +85,26 @@ function Cart() {
                     <div className="flex gap-x-[15px] sm:gap-x-[50px] items-center max-[425px]:gap-x-[12px]">
                       <img
                         className="w-[140px] h-[148px] sm:w-[233px] sm:h-[239px] rounded-[16px] "
-                        src={item.image}
+                        src={item?.image}
                         alt="product image"
                       />
 
                       <div className="space-y-[3px] sm:space-y-[15px]">
                         <div>
                           <h3 className="text-[10px] font-medium text-[#6F6F6F] sm:text-[16px]">
-                            {item.title}
+                            {item?.title}
                           </h3>
                           <h3 className="text-[12px] font-semibold sm:text-[20px]">
-                            ₹{parseInt(item.price).toLocaleString("en-in")}
+                            ₹{parseInt(item?.price).toLocaleString("en-in")}
                           </h3>
                         </div>
 
-                        <div className={item.colorVariant ? "block" : "hidden"}>
+                        <div className={item?.colorVariant ? "block" : "hidden"}>
                           <h3 className="text-[10px] text-[#6F6F6F] sm:text-[14px]">
                             Color chosen
                           </h3>
                           <h3 className="text-[12px] font-medium sm:text-[18px]">
-                            {item.colorVariant}
+                            {item?.colorVariant}
                           </h3>
                         </div>
 
@@ -113,9 +114,9 @@ function Cart() {
                           </h3>
                           <QuantitySelector
                             maxQuantity={10}
-                            value={item.quantity}
+                            value={item?.quantity}
                             onChange={(newQty) =>
-                              updateCartItemQuantity(item.id, newQty)
+                              updateCartItemQuantity(item?.id, newQty)
                             }
                           />
                         </div>
@@ -123,7 +124,7 @@ function Cart() {
                     </div>
 
                     {/* Free silver cleaning kit */}
-                    {item.price > 2000 && (
+                    {item?.price > 2000 && (
                       <>
                         <hr className="border border-[#EDEDED] my-[14px]" />
                         <div className="flex items-center gap-x-[20px] justify-between">
@@ -154,7 +155,7 @@ function Cart() {
             </div>
 
             {/* Summary Box (Desktop) */}
-            {cartItems.length > 0 && (
+            {cartItems?.length > 0 && (
               <div className="w-[466px] mx-auto xl:mx-0 max-[425px]:w-full hidden sm:block">
                 <div className="bg-[#FFFAF3] p-[24px] rounded-[16px] shadow-2xl mt-[25px]">
                   <div className="space-y-[16px]">
@@ -217,7 +218,7 @@ function Cart() {
           {/* Recommended products */}
           <div className="my-[100px] px-5 md:px-0 max-[425px]:my-[60px]">
             <h1 className="font-atteron  text-primary text-[26px] text-center sm:text-[30px] xl:text-left max-[425px]:text-[22px] mx-auto">
-              {cartItems.length > 0 ? "Frequently bought together" : "Our favourites, just for you"}
+              {cartItems?.length > 0 ? "Frequently bought together" : "Our favourites, just for you"}
             </h1>
             <div className="sm:max-w-fit mx-auto xl:mx-0 ">
               <div className="flex flex-row flex-wrap gap-x-12 gap-y-9 sm:gap-x-[50px] items-center justify-center max-[425px]:gap-x-[10px]">
@@ -230,15 +231,15 @@ function Cart() {
                       /> */}
                       <img
                         className="w-[148px] sm:w-[233px] rounded-[12px]"
-                        src={item.image}
+                        src={item?.image}
                         alt="product image"
                       />
                       <div>
                         <h3 className="text-[14px] font-medium text-[#6F6F6F] sm:text-[16px] max-[425px]:text-[13px]">
-                          {item.title}
+                          {item?.title}
                         </h3>
                         <h3 className="text-[16px] font-semibold sm:text-[20px] max-[425px]:text-[15px]">
-                          ₹{parseInt(item.price).toLocaleString("en-IN")}
+                          ₹{parseInt(item?.price).toLocaleString("en-IN")}
                         </h3>
                       </div>
                     </div>
@@ -253,7 +254,7 @@ function Cart() {
           </div>
 
           {/* Mobile Version Summary */}
-          {cartItems.length > 0 && (
+          {cartItems?.length > 0 && (
             <div className="block sm:hidden">
               {showSummary && (
                 <div className="bg-[#FFFAF3] p-4 max-w-[361px] rounded-[12px] shadow-lg mt-4 m-auto my-9 transition-all duration-300 ease-in-out">

@@ -37,7 +37,7 @@ function Pincode_Input() {
     }
   };
   const tatHours = deliveryInfo?.TAT;
-
+let estimatedDate=null;
   useEffect(() => {
     const now = new Date();
     const estimatedDelivery = new Date(
@@ -158,7 +158,7 @@ function Pincode_Input() {
           {deliveryInfo ? (
             <p className="text-[#484848] text-[15px] font-medium">
               Expected to deliver by{" "}
-              <span className="font-bold"> {pincodeDetails.date} </span>
+              <span className="font-bold"> {estimatedDate} </span>
             </p>
           ) : (
             <p className="text-[#484848] text-[15px] font-medium">

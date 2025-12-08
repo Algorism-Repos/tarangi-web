@@ -29,10 +29,10 @@ function Product_Description() {
   const location = useLocation();
   const { product } = location.state || {};
   const { categorizedProduct, addToWishlist, pincodeDetails, addToRecentlyViewed } = useContext(AppContext);
-  const [colorSelected, setColorSelected] = useState("Gold");
+  const [colorSelected, setColorSelected] = useState(product?.variants?.[0].colorVariant || "");
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});
-  const [productToCart, setProductToCart] = useState();
+
 
   console.log(product);
 
@@ -116,6 +116,7 @@ function Product_Description() {
     swiperRef.current.slideTo(idx);
   }
 
+  console.log(activeVariant);
 
   return (
     <>
