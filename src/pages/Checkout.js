@@ -179,7 +179,6 @@ function CheckoutPage() {
         "http://localhost:8080/api/shopify/order",
         orderData
       );
-      clearCart();
       navigate("/thankyou");
       console.log("Order placed successfully:", response.data);
     } catch (error) {

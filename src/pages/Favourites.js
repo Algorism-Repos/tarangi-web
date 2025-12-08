@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useLocation } from "react-router";
+import { Link, useLocation } from "react-router";
 import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
 
@@ -28,43 +28,7 @@ function Favourites() {
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
   const { wishlistItems, removeFromWishlist } = useContext(AppContext);
-
-  const handleProductClick = (item) => {
-    if (item.isOutOfStock) {
-      setShowOutStockModal(true);
-      return;
-    }
-
-    if (item.isRestocking) {
-      setShowRestockModal(true);
-      return;
-    }
-
-    // Later → navigate to product page
-  };
-
-  const toggleLike = (id) => {
-    setProducts((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, liked: !p.liked } : p))
-    );
-  };
-
-  const handleColorSelect = (productId, colorId) => {
-    setProducts((prev) =>
-      prev.map((p) =>
-        p.id === productId ? { ...p, selectedColor: colorId } : p
-      )
-    );
-  };
-
   const likedProducts = products.filter((p) => p.liked);
-
-  const handleRemove = (id) => {
-    setProducts((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, liked: false } : item))
-    );
-  };
-
   useEffect(() => {
     localStorage.setItem(
       "hasFavourites",
@@ -76,7 +40,6 @@ function Favourites() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  console.log(wishlistItems);
   return (
     <>
       <div className="bg-[#FFF5E8] py-[70px]">
@@ -104,9 +67,16 @@ function Favourites() {
               }
             >
               {wishlistItems.map((item) => (
+                    <Link
+                      to={`/product_description/${item.title.replace(
+                        /\s+/g,
+                        "-"
+                      )}`}
+                      state={{ product: item }}
+                    >
                 <div key={item.id} className="max-w-[304px] mx-auto group">
                   <div
-                    onClick={() => handleProductClick(item)}
+                    // onClick={() => handleProductClick(item)}
                     className="cursor-pointer"
                   >
                     {/* IMAGE */}
@@ -115,7 +85,7 @@ function Favourites() {
                         className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] ${item.isOutOfStock ? "grayscale" : ""
                           } ${item.isRestocking ? "opacity-50" : ""
                           }  transition-all duration-300 group-hover:scale-105`}
-                        src={item.image}
+                        src={item.image||item.images[0]}
                         alt={item.title}
                       />
 
@@ -176,6 +146,7 @@ function Favourites() {
                     </button>
                   </div> */}
                 </div>
+                </Link>
               ))}
             </div>
           )}

@@ -57,7 +57,7 @@ const [categorizedProduct, setCategorizedProduct] = useState(() => {
   const updateCartItemQuantity = (id, newQty) => {
     setCartItems((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, quantity: newQty } : item
+        item.variantId  === id ? { ...item, quantity: newQty } : item
       )
     );
   };
@@ -99,7 +99,7 @@ const [categorizedProduct, setCategorizedProduct] = useState(() => {
       if (existing) {
         return prev.map((item) =>
           item.variantId === product.variantId
-            ? { ...item, quantity: item.quantity + (product.quantity || 1) }
+            ? { ...item, quantity: item.quantity + (product.quantity + 1) }
             : item
         );
       }

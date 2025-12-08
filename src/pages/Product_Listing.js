@@ -32,7 +32,7 @@ function Product_Listing({ productCatergory }) {
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const { loading, setLoading,addToWishlist,removeFromWishlist} = useContext(AppContext);
+  const { loading, setLoading,addToWishlist,removeFromWishlist,wishlistItems} = useContext(AppContext);
   // after form success
   const handleSuccess = () => {
     setShowRestockModal(false);
@@ -76,28 +76,27 @@ function Product_Listing({ productCatergory }) {
   // console.log(availableColors);
 
   //  Like button toggle
-  const toggleLike = (productId) => {
-    setProducts((prev) => {
-      const productToUpdate = prev.find((p) => p.productId === productId);
+const toggleLike = (productId, variantId) => {
+  setProducts((prev) => {
+    return prev.map((product) => {
+      if (product.productId !== productId) return product;
 
-      if (!productToUpdate) return prev;
+      const isLiked = product.liked;
 
-      const wasLiked = productToUpdate.liked;
-
-      if (!wasLiked) {
-        addToWishlist(productToUpdate);
+      if (isLiked) {
+       
+        removeFromWishlist(variantId);
       } else {
-        removeFromWishlist(productId);
+        
+        addToWishlist(product);
       }
 
-      // return updated products list
-      return prev.map((product) =>
-        product.productId === productId
-          ? { ...product, liked: !product.liked }
-          : product
-      );
+      return { ...product, liked: !product.liked };
     });
-  };
+  });
+};
+
+
 
   //  Color change handler
   const handleColorChange = (id, color) => {
@@ -109,7 +108,18 @@ function Product_Listing({ productCatergory }) {
       })
     );
   };
-
+useEffect(() => {
+  setProducts((prev) =>
+    prev.map((product) => ({
+      ...product,
+      liked: wishlistItems.some(
+        (w) =>
+          w.productId === product.productId &&
+          w.variantId === product.variantId
+      ),
+    }))
+  );
+}, [wishlistItems, productCatergory]);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -195,7 +205,7 @@ function Product_Listing({ productCatergory }) {
                 liked={item.liked}
                 isOutOfStock={isOutOfStock}
                 isRestocking={isRestocking}
-                onToggle={() => toggleLike(item.productId)}
+  onToggle={() => toggleLike(item.productId, item.variantId)}
               />
 
               {/* SOLD OUT LABEL */}
