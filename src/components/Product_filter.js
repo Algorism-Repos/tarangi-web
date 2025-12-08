@@ -39,10 +39,8 @@ function Product_Filter({ productCatergory, collectionName }) {
 
   const [showMorePrice, setShowMorePrice] = useState(false);
 
-  // Convert productCatergory object keys to array
   const categories = Object.keys(productCatergory);
 
-  // Limit display to 5 unless "show more" is active
   const visibleCategories = showMoreCategory
     ? categories
     : categories.slice(0, 5);
@@ -155,8 +153,8 @@ function Product_Filter({ productCatergory, collectionName }) {
         (p) => p.min === range.min && p.max === range.max
       )
         ? selectedPrices.filter(
-            (p) => p.min !== range.min || p.max !== range.max
-          )
+          (p) => p.min !== range.min || p.max !== range.max
+        )
         : [...selectedPrices, range];
       setSelectedPrices(updated);
       handleFilterChange(selectedCategories, updated);
@@ -382,9 +380,9 @@ function Product_Filter({ productCatergory, collectionName }) {
               </div>
             </div>
 
-            {/* Mobile Verion Filter */}
-            <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden px-4 z-10 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
-              <div className="flex justify-between">
+            {/* Mobile Version Filter bar */}
+            <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden z-10 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
+              <div className="flex justify-between ">
                 {/* SORT BUTTON */}
                 <div
                   className="group flex items-center gap-x-[8px] cursor-pointer"
@@ -409,7 +407,7 @@ function Product_Filter({ productCatergory, collectionName }) {
                     src={sort_icon}
                     alt="Sort Icon"
                   />
-                  <button className="text-primary text-[18px] font-semibold">
+                  <button className="text-primary text-[16px] font-semibold">
                     Sort
                   </button>
                 </div>
@@ -438,7 +436,7 @@ function Product_Filter({ productCatergory, collectionName }) {
                     src={filter_icon}
                     alt="Filter Icon"
                   />
-                  <button className="text-primary text-[18px] font-semibold">
+                  <button className="text-primary text-[16px] font-semibold">
                     Filter
                   </button>
                 </div>
@@ -684,7 +682,7 @@ function Product_Filter({ productCatergory, collectionName }) {
 
           <Product_Listing productCatergory={filteredProducts} />
         </div>
-      </div>
+      </div >
     </>
   );
 }

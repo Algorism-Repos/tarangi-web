@@ -51,6 +51,7 @@ function Navbar() {
   const handleMouseLeave = () => {
     closeTimer.current = setTimeout(() => {
       setProductDropdown(false);
+      // setShowOverlay(true);
     }, 500);
   };
   const handleClose = () => {
@@ -64,7 +65,6 @@ function Navbar() {
     handleClose();
   };
 
-  
 
   // mobile products dropdown
   const [mobileProductDropdown, setMobileProductDropdown] = useState(false);
@@ -162,22 +162,20 @@ function Navbar() {
         <div className="font-poppins text-[16px] flex flex-row gap-x-[40px] ml-[70px] xl:gap-x-[55px] items-center xl:ml-[170px] ">
           <Link
             to="/home"
-            className={`rounded-full py-2.5 px-4 text-white ${
-              isActive("/home")
+            className={`rounded-full py-2.5 px-4 text-white ${isActive("/home")
                 ? "bg-[#CFA266] cursor-default "
                 : "hover:bg-[#D6A76F] opacity-[0.5]"
-            }`}
+              }`}
           >
             Home
           </Link>
 
           <Link
             to="/about"
-            className={`rounded-full py-2.5 px-4 text-white ${
-              isActive("/about")
+            className={`rounded-full py-2.5 px-4 text-white ${isActive("/about")
                 ? "bg-[#CFA266] cursor-default"
                 : "hover:bg-[#D6A76F] opacity-[0.5]"
-            }`}
+              }`}
           >
             About Us
           </Link>
@@ -195,7 +193,11 @@ function Navbar() {
               Products
               <img className="w-[28px] h-[28px]" src={down_arrow} alt="" />
             </Link>
+
             {/* Dropdown */}
+            {/* {productDropdown && (
+              <div className="fixed inset-0 z-20 bg-black/40"></div>
+            )} */}
             {productDropdown && (
               <div className="absolute top-[111px] left-1/2 transform -translate-x-1/2 min-w-[1000px] h-fit bg-[#FFF5E8] px-10 py-8 shadow-2xl z-30 rounded-lg">
                 <h2 className="font-atteron text-primary text-[32px] text-center mb-8">
@@ -234,11 +236,10 @@ function Navbar() {
 
           <Link
             to="/blog"
-            className={`rounded-full py-2.5 px-4 text-white ${
-              isActive("/blog")
+            className={`rounded-full py-2.5 px-4 text-white ${isActive("/blog")
                 ? "bg-[#CFA266] cursor-default"
                 : "hover:bg-[#D6A76F] opacity-[0.5]"
-            }`}
+              }`}
           >
             Blog
           </Link>
@@ -258,8 +259,7 @@ function Navbar() {
 
           <Link to="/favourites">
             <img
-              className={`w-[42px] h-[42px] rounded-[8px] transition ${
-                isActive("/favourites")
+              className={`w-[42px] h-[42px] rounded-[8px] transition ${isActive("/favourites")
                   ? "bg-[#CFA266]"
                   : "hover:bg-[#D6A76F4F]"
               }`}
@@ -409,8 +409,7 @@ function Navbar() {
         <div className="flex gap-x-2">
           <Link to="/favourites">
             <img
-              className={`w-[32px] h-[32px] rounded-[8px] transition ${
-                isActive("/favourites")
+              className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites")
                   ? "bg-[#CFA266]"
                   : "hover:bg-[#D6A76F4F]"
               }`}
@@ -464,8 +463,7 @@ function Navbar() {
               <div className="flex gap-x-2">
                 <Link to="/favourites">
                   <img
-                    className={`w-[32px] h-[32px] rounded-[8px] transition ${
-                      isActive("/favourites")
+                    className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/favourites")
                         ? "bg-[#CFA266]"
                         : "hover:bg-[#D6A76F4F]"
                     }`}
@@ -481,8 +479,7 @@ function Navbar() {
 
                 <Link to="/cart">
                   <img
-                    className={`w-[32px] h-[32px] rounded-[8px] transition ${
-                      isActive("/cart")
+                    className={`w-[32px] h-[32px] rounded-[8px] transition ${isActive("/cart")
                         ? "bg-[#CFA266]"
                         : "hover:bg-[#D6A76F4F]"
                     }`}
@@ -632,7 +629,7 @@ function Navbar() {
                         mobileProductDropdown || isProductsRoute
                           ? "text-white font-semibold"
                           : "text-[#A0A0A0]"
-                      }`}
+                        }`}
                     >
                       Products
                     </button>
@@ -693,11 +690,10 @@ function Navbar() {
                 {/* Blog */}
                 <Link to="/blog" onClick={() => setMenuVisible(false)}>
                   <h2
-                    className={`font-poppins text-[18px] leading-normal text-center ${
-                      location.pathname === "/blog"
+                    className={`font-poppins text-[18px] leading-normal text-center ${location.pathname === "/blog"
                         ? "text-white font-semibold"
                         : "text-[#A0A0A0]"
-                    }`}
+                      }`}
                   >
                     Blog
                   </h2>
@@ -707,11 +703,10 @@ function Navbar() {
                 {isLoggedIn && (
                   <Link to="/profile" onClick={() => setMenuVisible(false)}>
                     <h2
-                      className={`font-poppins text-[18px] leading-normal text-center ${
-                        location.pathname === "/profile"
+                      className={`font-poppins text-[18px] leading-normal text-center ${location.pathname === "/profile"
                           ? "text-white font-semibold"
                           : "text-[#A0A0A0]"
-                      }`}
+                        }`}
                     >
                       User Profile
                     </h2>

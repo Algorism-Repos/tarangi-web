@@ -66,7 +66,7 @@ function Recently_Viewed() {
             >
               {/* Product image based on selectedColor */}
               <img
-                className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[24px] transition-all duration-300 ease-in-out group-hover:shadow-lg"
+                className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px]  rounded-[24px] transition-all duration-300 ease-in-out group-hover:shadow-lg"
                 src={imageSrc}
                 alt={item.alt || "Product image"}
               />

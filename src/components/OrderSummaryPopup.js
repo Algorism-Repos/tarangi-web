@@ -25,7 +25,7 @@ export default function OrderSummaryPopup({
     : `Est. delivery by ${order.delivery}`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/40 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/40 ">
       <div className="w-[466px] max-h-[90vh] overflow-y-auto bg-[#FFFAF3] rounded-[10px] shadow-md border border-[#EDEDED] p-5 relative animate-fadeIn">
 
         {/* Close */}
