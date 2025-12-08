@@ -83,7 +83,7 @@ function Blog() {
         <h1 className="font-atteron text-[80px] font-normal ">Blog</h1>
         <p className="font-[poppins] text-[20px] mt-[20px] text-center">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-        </p>
+        </p> */}
       </div>
 
       {/* Blogs */}

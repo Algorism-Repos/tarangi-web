@@ -857,7 +857,7 @@ function CheckoutPage() {
                       <span className="checkmark"></span>
                     </label>
                     <p className=" text-[16px] mx-2  text-[#313131] absolute top-0 left-6">
-                      I agree to the Terms & Conditions and Jewel Care
+                      I agree to the <Link to="/terms" className="underline text-primary">Terms & Conditions</Link> and Jewel Care
                       Instructions.
                     </p>
                   </div>

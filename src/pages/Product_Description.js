@@ -322,7 +322,7 @@ function Product_Description() {
         </div>
 
         {/* Suggested products */}
-        <div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 sm:px-0">
+        <div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-0 sm:px-0">
           <div>
             <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
               you may also like

@@ -254,7 +254,8 @@ function Navbar() {
           <div
             onClick={() => setShowSearch((prev) => !prev)}
             className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] transition search-icon
-                      ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"}
+                      ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
+              }
         `}
           >
             <img src={Search_icon_white} className="w-[42px] h-[42px]" />
