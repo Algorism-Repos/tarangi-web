@@ -17,7 +17,7 @@ function Pincode_Input() {
   const location = pageLocation.pathname.split("/");
   const pathname = location[1];
   const [deliveryInfo, setDeliveryInfo] = useState({});
-  const { deliveryDate, setdeliveryDate } = useContext(AppContext);
+  const { pincodeDetails, setPincodeDetails } = useContext(AppContext);
 
   const handleChange = (e) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -37,9 +37,8 @@ function Pincode_Input() {
     }
   };
   const tatHours = deliveryInfo?.TAT;
-  let estimatedDate = null;
 
-  if (tatHours !== null) {
+  useEffect(() => {
     const now = new Date();
     const estimatedDelivery = new Date(
       now.getTime() + tatHours * 60 * 60 * 1000
@@ -51,12 +50,19 @@ function Pincode_Input() {
       .padStart(2, "0");
     const year = estimatedDelivery.getFullYear();
 
-    estimatedDate = `${day}-${month}-${year}`;
-  }
-  setdeliveryDate(estimatedDate);
+    const estimatedDate = `${day}-${month}-${year}`;
+    console.log(estimatedDate);
 
+    setPincodeDetails(
+      {
+        date: estimatedDate,
+        pincode: pincode
+      }
+    )
 
-  console.log(deliveryDate);
+  }, [pincode, tatHours])
+  console.log(pincodeDetails);
+
 
   useEffect(() => {
     if (pincode.length === 6) {
@@ -152,7 +158,7 @@ function Pincode_Input() {
           {deliveryInfo ? (
             <p className="text-[#484848] text-[15px] font-medium">
               Expected to deliver by{" "}
-              <span className="font-bold">{deliveryDate} </span>
+              <span className="font-bold"> {pincodeDetails.date} </span>
             </p>
           ) : (
             <p className="text-[#484848] text-[15px] font-medium">

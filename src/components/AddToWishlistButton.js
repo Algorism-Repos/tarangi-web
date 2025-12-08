@@ -4,18 +4,24 @@ import favorie_icon_white from "../assets/Products/Unfilled_likeIcon.png";
 import CartToast from "./CartToast";
 import { AppContext } from "../context/AppContext";
 import Wishlist_Popup from "./Wishlist_Popup";
+import { useNavigate } from "react-router-dom";
 
 function AddToWishlistButton({ productToFavorites }) {
   const { addToWishlist } = useContext(AppContext);
   const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
 
-  const handleAddToWish = () => {
-    // your wishlist add logic here
-    setShowWishlistPopup(true);
+  const navigate = useNavigate();
 
-    // if (!product?.variants?.[0]||) return;
+  const handleAddToWish = () => {
     addToWishlist(productToFavorites);
+    setShowWishlistPopup(true);
+    
+    setTimeout(() => {
+      setShowWishlistPopup(false);
+      navigate("/favourites");
+    }, 1000) //1 second
+
   };
 
   return (

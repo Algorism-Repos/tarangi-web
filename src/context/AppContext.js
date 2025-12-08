@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { createContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 export const AppContext = createContext();
 
 export function AppProvider({ children }) {
@@ -9,7 +10,8 @@ export function AppProvider({ children }) {
     const saved = localStorage.getItem("collection");
     return saved ? JSON.parse(saved) : [];
   });
-  const [deliveryDate, setdeliveryDate] = useState("");
+  const [allproduct, setallproduct] = useState();
+  const [pincodeDetails, setPincodeDetails] = useState({});
 
   const [filteredProducts, setFilteredProducts] = useState([]);
 
@@ -188,7 +190,9 @@ useEffect(() => {
         deliveryDate,
         setdeliveryDate,
         clearRecentlyViewed,
-        trendingProduct,setTrendingProduct
+        trendingProduct,setTrendingProduct,
+        pincodeDetails,
+        setPincodeDetails
       }}
     >
       {children}

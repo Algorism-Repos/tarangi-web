@@ -79,7 +79,7 @@ function Favourites() {
   console.log(wishlistItems);
   return (
     <>
-      <div className="bg-light-sandal py-[70px]">
+      <div className="bg-[#FFF5E8] py-[70px]">
         <div className="max-w-[1300px] mx-auto px-2">
           <h1
             className={
@@ -93,7 +93,7 @@ function Favourites() {
 
           {wishlistItems.length === 0 ? (
             <p className="text-center text-[18px] text-[#4B001A] mt-6 font-poppins">
-              No Products in the favourites page
+              No items yet. Find something you'll love
             </p>
           ) : (
             <div
@@ -112,13 +112,11 @@ function Favourites() {
                     {/* IMAGE */}
                     <div className="overflow-hidden rounded-2xl relative">
                       <img
-                        className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] ${
-                          item.isOutOfStock ? "grayscale" : ""
-                        } ${
-                          item.isRestocking ? "opacity-50" : ""
-                        }  transition-all duration-300 group-hover:scale-105`}
+                        className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] ${item.isOutOfStock ? "grayscale" : ""
+                          } ${item.isRestocking ? "opacity-50" : ""
+                          }  transition-all duration-300 group-hover:scale-105`}
                         src={item.image}
-                        alt={item.product_name}
+                        alt={item.title}
                       />
 
                       {/* SOLD OUT LABEL */}
@@ -135,41 +133,31 @@ function Favourites() {
                         </p>
                       )}
 
-                      <LikeButton
+                      {/* <LikeButton
                         liked={item.liked}
                         isOutOfStock={item.isOutOfStock}
                         isRestocking={item.isRestocking}
                         onToggle={() => toggleLike(item.id)}
-                      />
+                      /> */}
                     </div>
 
                     {/* DETAILS */}
-                    <div className="flex justify-between items-center w-full my-3">
+                    <div className="flex justify-between items-end w-full my-3">
                       <div>
-                        <p className="text-[13px] font-semibold sm:text-[18px] text-[#313131]">
-                          {item.product_name}
+                        <p className="text-[13px] font-poppins font-semibold sm:text-[18px] text-[#313131]">
+                          {item.title}
                         </p>
-                        <p className="text-[#4E4E4E] font-semibold text-[16px]">
-                          {item.price}
+                        <p className="font-poppins text-[#4E4E4E] font-normal text-[16px]">
+                          ₹{parseInt(item.price).toLocaleString("en-IN")}
                         </p>
                       </div>
 
                       {/* COLOR SELECTOR */}
-                      {/* <div className="flex gap-x-2.5">
-                        {item.colors.map((color) => (
-                          <img
-                            key={color.id}
-                            src={color.img}
-                            onClick={() =>
-                              handleColorSelect(item.id, color.id)
-                            }
-                            className={`w-[20px] sm:w-[24px] rounded-full cursor-pointer transition-all ${item.selectedColor === color.id
-                              ? "border-2 border-primary p-[2px]"
-                              : "border bg-white"
-                              }`}
-                          />
-                        ))}
-                      </div> */}
+                      <div className="hidden sm:flex flex-row items-center gap-x-1">
+                        <img src={gold_ellipse} alt="color-selector" className="w-[24px] h-[24px]" />
+                        <img src={silver_ellipse} alt="color-selector" className="w-[24px] h-[24px]" />
+                        <img src={brown_ellipse} alt="color-selector" className="w-[24px] h-[24px]" />
+                      </div>
                     </div>
                   </div>
 
@@ -179,14 +167,14 @@ function Favourites() {
                     isRestocking={item.isRestocking}
                     isFavouritesPage={true}
                   />
-                  <div>
+                  {/* <div>
                     <button
                       className="text-red-600 text-[14px] underline mt-2"
                       onClick={() => removeFromWishlist(item.variantId)}
                     >
                       Remove
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               ))}
             </div>

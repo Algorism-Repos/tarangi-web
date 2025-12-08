@@ -28,11 +28,35 @@ function Product_Description() {
   const swiperRef = useRef(null);
   const location = useLocation();
   const { product } = location.state || {};
-  const { categorizedProduct, deliveryDate, addToRecentlyViewed } =
-    useContext(AppContext);
+  const { categorizedProduct, addToWishlist, pincodeDetails, addToRecentlyViewed } = useContext(AppContext);
   const [colorSelected, setColorSelected] = useState("Gold");
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});
+  const [productToCart, setProductToCart] = useState();
+
+  console.log(product);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    //selected variant of the product by the client based on the color.
+    if (product?.variants !== null) {
+      const variant = product?.variants?.find(element => element.colorVariant === colorSelected)
+      if (variant) {
+        const updatedVariant = { ...variant, title: product?.title, productId: product?.productId, deliveryDetails: pincodeDetails }
+        setactiveVariant(updatedVariant);
+      }
+    } else if (product?.variants === null) {
+      const updatedVariant = { ...product, variantId: product?.variantId, deliveryDetails: pincodeDetails };
+      setactiveVariant(updatedVariant);
+    }
+  }, [colorSelected, pincodeDetails]);
+
+  console.log("variantActive", activeVariant);
+
+
+
+  //Extracting colors into an array from the variants
   const colorAssets = [
     {
       value: "Gold",
@@ -60,7 +84,7 @@ function Product_Description() {
           ...variant,
           title: product?.title,
           productId: product?.productId,
-          deliveryDate: deliveryDate,
+          deliverDetails: pincodeDetails,
         };
         setactiveVariant(updatedVariant);
       }
@@ -68,12 +92,12 @@ function Product_Description() {
       const updatedVariant = {
         ...product,
         variantId: product?.variantId,
-        deliveryDate: deliveryDate,
+        deliverDetails: pincodeDetails,
       };
       setactiveVariant(updatedVariant);
     }
     addToRecentlyViewed(activeVariant);
-  }, [colorSelected, deliveryDate]);
+  }, [colorSelected, pincodeDetails]);
 
   //Organising the colors that are available for the product
   const variantColors = product.variants?.map(
@@ -126,21 +150,21 @@ function Product_Description() {
               >
                 {product.variant != null
                   ? product.variants.map((item) => (
-                      <SwiperSlide>
-                        <img
-                          src={item.image}
-                          className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]"
-                        />
-                      </SwiperSlide>
-                    ))
+                    <SwiperSlide>
+                      <img
+                        src={item.image}
+                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]"
+                      />
+                    </SwiperSlide>
+                  ))
                   : product.images.map((item) => (
-                      <SwiperSlide>
-                        <img
-                          src={item}
-                          className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]"
-                        />
-                      </SwiperSlide>
-                    ))}
+                    <SwiperSlide>
+                      <img
+                        src={item}
+                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]"
+                      />
+                    </SwiperSlide>
+                  ))}
               </Swiper>
             </div>
 
@@ -165,26 +189,10 @@ function Product_Description() {
                 </h2>
 
                 {/* Price with Discounted Price */}
-                <div
-                  className={
-                    activeVariant?.compareAtPrice !== null
-                      ? "flex flex-row flex-nowrap items-center gap-x-3 w-fit"
-                      : "hidden"
-                  }
-                >
-                  <h2 className="text-[16px] font-semibold text-red-500 sm:text-[22px] line-through">
-                    {" "}
-                    ₹
-                    {parseInt(activeVariant?.price).toLocaleString("en-IN") ||
-                      product.price}
-                  </h2>
-                  <h2 className="text-[24px] font-semibold sm:text-[32px]">
-                    {" "}
-                    ₹
-                    {parseInt(activeVariant?.compareAtPrice).toLocaleString(
-                      "en-IN"
-                    ) || product.compareAtPrice}
-                  </h2>
+                <div className={activeVariant?.compareAtPrice !== null ? "flex flex-row flex-nowrap items-center gap-x-3 w-fit" : "hidden"}>
+                  <h2 className="text-[16px] font-semibold text-red-500 sm:text-[22px] line-through"> ₹{parseInt(activeVariant?.compareAtPrice).toLocaleString("en-IN") || product.compareAtPrice}</h2 >
+                  <h2 className="text-[24px] font-semibold sm:text-[32px]"> ₹{parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}</h2 >
+
                 </div>
                 <p className="text-[#878787] text-[12px] font-poppins ">
                   MRP Excl.of all taxes

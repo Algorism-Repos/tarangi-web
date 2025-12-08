@@ -47,25 +47,22 @@ function Cart() {
     );
   }, [cartItems, categorizedProduct]);
 
+  console.log("cartItems", cartItems);
+
   return (
     <>
       <div className="font-poppins bg-light-sandal pt-[35px] sm:py-[70px]">
         <div className="max-w-[1300px] mx-auto">
           {/* Heading */}
-          <div className="lg:flex flex-auto justify-items-center  gap-x-[18px]">
-            <h2 className="font-atteron text-[24px] text-primary sm:text-[36px]">
-              your cart
-            </h2>
-          </div>
+          <h2 className="font-atteron text-[24px] text-primary sm:text-[36px] ml-2 xl:ml-0">Your Cart</h2>
+          <h5 className="font-poppins text-[12px] sm:text-[14px] ml-3 xl:ml-2 uppercase">TOTAL ITEMS IN BAG : <span className="font-bold">{String(cartItems.length).padStart(2, "0")}</span> </h5>
 
           {/* Main container */}
-          <div className="flex flex-wrap justify-between gap-y-14 px-5 my-[60px] sm:px-0 sm:my-[80px] max-[425px]:my-[40px] max-[375px]:my-[30px] ">
+          <div className="flex flex-wrap justify-between gap-y-14 px-3 my-[60px] sm:px-0 sm:my-[80px] max-[425px]:my-[40px] max-[375px]:my-[30px] ">
             {/* Selected Productlist */}
             <div className="w-[694px] mx-auto xl:mx-0 max-[425px]:w-full">
               {cartItems.length === 0 ? (
-                <h3 className="text-center text-[18px] text-[#4B001A] mt-6 font-poppins">
-                  No Products in the Cart
-                </h3>
+                <Link to="/products/womens"><h3 className="hover:underline text-center text-[18px] text-[#4B001A] mt-6 font-poppins">No items yet. Find something you'll love</h3></Link>
               ) : (
                 cartItems.map((item) => (
                   <div
@@ -86,46 +83,42 @@ function Cart() {
 
                     <div className="flex gap-x-[15px] sm:gap-x-[50px] items-center max-[425px]:gap-x-[12px]">
                       <img
-                        className="w-[140px] sm:w-[233px] sm:h-[239px] rounded-[12px] max-[425px]:w-[100px]"
+                        className="w-[140px] h-[148px] sm:w-[233px] sm:h-[239px] rounded-[16px] "
                         src={item.image}
                         alt="product image"
                       />
 
-                      <div className="space-y-[10px]">
+                      <div className="space-y-[3px] sm:space-y-[15px]">
                         <div>
-                          <h3 className="text-[14px] font-medium text-[#6F6F6F] sm:text-[16px]">
+                          <h3 className="text-[10px] font-medium text-[#6F6F6F] sm:text-[16px]">
                             {item.title}
                           </h3>
-                          <h3 className="text-[16px] font-semibold sm:text-[20px]">
+                          <h3 className="text-[12px] font-semibold sm:text-[20px]">
                             ₹{parseInt(item.price).toLocaleString("en-in")}
                           </h3>
                         </div>
 
                         <div className={item.colorVariant ? "block" : "hidden"}>
-                          <h3 className="text-[13px] text-[#6F6F6F] sm:text-[14px]">
+                          <h3 className="text-[10px] text-[#6F6F6F] sm:text-[14px]">
                             Color chosen
                           </h3>
-                          <h3 className="text-[15px] font-medium sm:text-[18px]">
+                          <h3 className="text-[12px] font-medium sm:text-[18px]">
                             {item.colorVariant}
                           </h3>
                         </div>
 
                         <div>
-                          <h3 className="text-[13px] text-[#6F6F6F] sm:text-[14px]">
+                          <h3 className="text-[10px] text-[#6F6F6F] sm:text-[14px] leading-none">
                             Quantity
                           </h3>
                           <QuantitySelector
-                            maxQuantity={50}
+                            maxQuantity={10}
                             value={item.quantity}
                             onChange={(newQty) =>
                               updateCartItemQuantity(item.id, newQty)
                             }
                           />
                         </div>
-
-                        <h3 className="text-[13px] text-primary sm:text-[16px]">
-                          Delivered by {item.deliveryDate}
-                        </h3>
                       </div>
                     </div>
 
@@ -133,26 +126,25 @@ function Cart() {
                     {item.price > 2000 && (
                       <>
                         <hr className="border border-[#EDEDED] my-[14px]" />
-                        <div className="sm:flex items-center gap-x-[20px]">
-                          <img
-                            className="w-[73px] h-[74px] rounded-[16px]"
-                            src={product_1}
-                            alt="free kit"
-                          />
-
-                          <div className="flex items-center justify-between w-full">
-                            <div>
-                              <h3 className="text-[#404040] text-[14px] font-medium sm:text-[18px]">
+                        <div className="flex items-center gap-x-[20px] justify-between">
+                          <div className="flex flex-row items-center gap-x-3 sm:gap-x-5">
+                            <img
+                              className="w-[37px] h-[38px] sm:w-[73px] sm:h-[74px] rounded-[4px] sm:rounded-[16px]"
+                              src={product_1}
+                              alt="free kit"
+                            />
+                            <div className="">
+                              <h3 className="text-[#404040] text-[12px] font-medium sm:text-[18px]  sm:mt-0">
                                 Free Silver Cleaning Kit
                               </h3>
-                              <h3 className="text-[12px] text-[#6E6E6E] sm:text-[16px]">
+                              <h3 className="text-[10px] text-[#6E6E6E] sm:text-[16px]">
                                 Added for products above ₹2000
                               </h3>
                             </div>
-                            <p className="bg-[#C5A881] px-4 py-1 rounded-full text-[#404040] text-[13px]">
-                              Free
-                            </p>
                           </div>
+                          <p className="bg-[#C5A881] px-4 py-1 rounded-full text-[#404040] text-[12px]">
+                            Free
+                          </p>
                         </div>
                       </>
                     )}
@@ -164,8 +156,6 @@ function Cart() {
             {/* Summary Box (Desktop) */}
             {cartItems.length > 0 && (
               <div className="w-[466px] mx-auto xl:mx-0 max-[425px]:w-full hidden sm:block">
-                <Pincode_Input />
-
                 <div className="bg-[#FFFAF3] p-[24px] rounded-[16px] shadow-2xl mt-[25px]">
                   <div className="space-y-[16px]">
                     <div className="flex items-center justify-between">
@@ -202,7 +192,7 @@ function Cart() {
                         Total
                       </h3>
                       <h3 className="text-[18px] text-[#404040] font-medium">
-                        ₹{total.toFixed(0)}
+                        ₹{total.toLocaleString("en-IN")}
                       </h3>
                     </div>
                     <Link
@@ -227,7 +217,7 @@ function Cart() {
           {/* Recommended products */}
           <div className="my-[100px] px-5 md:px-0 max-[425px]:my-[60px]">
             <h1 className="font-atteron  text-primary text-[26px] text-center sm:text-[30px] xl:text-left max-[425px]:text-[22px] mx-auto">
-              Frequently bought together
+              {cartItems.length > 0 ? "Frequently bought together" : "Our favourites, just for you"}
             </h1>
             <div className="sm:max-w-fit mx-auto xl:mx-0 ">
               <div className="flex flex-row flex-wrap gap-x-12 gap-y-9 sm:gap-x-[50px] items-center justify-center max-[425px]:gap-x-[10px]">
@@ -301,14 +291,12 @@ function Cart() {
                         Total
                       </p>
                       <p className="text-[15px] text-[#404040] font-semibold">
-                        {total.toFixed(0)}
+                        {total.toLocaleString("en-IN")}
                       </p>
                     </div>
                   </div>
                 </div>
               )}
-
-              <Pincode_Input />
               <div className="w-full bg-[#FFFAF3] flex items-center justify-between px-5 py-3 z-50 bottom-0 left-0">
                 <div>
                   <p className="text-[#404040] font-semibold text-[16px]">
