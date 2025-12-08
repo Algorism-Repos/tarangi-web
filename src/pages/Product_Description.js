@@ -100,23 +100,25 @@ function Product_Description() {
   }, [colorSelected, pincodeDetails]);
 
   //Organising the colors that are available for the product
-  const variantColors = product.variants?.map(
-    (element) => element.colorVariant
-  );
-  const availableColors = colorAssets.filter((element) =>
+const variantColors = (product?.variants || []).map(
+  (element) => element.colorVariant
+);
+
+  const availableColors = colorAssets?.filter((element) =>
     variantColors?.includes(element.value)
   );
   // click on a color toggle
   function handleColorChangeByButton(color) {
     setColorSelected(color);
-    const idx = product.variants.findIndex(
+    const idx = product?.variants?.findIndex(
       (element) => element.colorVariant === color
     );
     console.log(idx);
     swiperRef.current.slideTo(idx);
   }
-
-  console.log(activeVariant);
+  const isAlreadyInWishlist = wishlistItems.some(
+  (item) => item?.variantId === activeVariant?.variantId
+);
 
   return (
     <>
@@ -126,13 +128,13 @@ function Product_Description() {
         <div className="max-w-7xl mx-auto px-5 sm:px-0 ">
           {/* Product path */}
           <div className="sm:flex sm:flex-row items-center justify-center gap-x-[8px] text-[#6F6F6F] text-[16px] xl:justify-start hidden">
-            <p>{product.productType}</p>
+            <p>{product?.productType}</p>
             <img
               className="w-[30px] h-[30px]"
               src={grey_arrow}
               alt="Arrow Icon"
             />
-            <p> {product.title}</p>
+            <p> {product?.title}</p>
           </div>
 
           <div className="flex flex-wrap items-start justify-around  sm:my-[40px] xl:my-[70px] ">
@@ -142,16 +144,16 @@ function Product_Description() {
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
                 onSlideChange={(swiper) => {
                   const id = swiper.activeIndex;
-                  if (product.variants != null) {
-                    setColorSelected(product.variants[id].colorVariant);
+                  if (product?.variants != null) {
+                    setColorSelected(product?.variants[id]?.colorVariant);
                   }
                 }}
                 spaceBetween={0}
                 pagination={{ dynamicBullets: true }}
                 modules={[Pagination]}
               >
-                {product.variant != null
-                  ? product.variants.map((item) => (
+                {product?.variant != null
+                  ? product?.variants?.map((item) => (
                     <SwiperSlide>
                       <img
                         src={item.image}
@@ -159,7 +161,7 @@ function Product_Description() {
                       />
                     </SwiperSlide>
                   ))
-                  : product.images.map((item) => (
+                  : product?.images?.map((item) => (
                     <SwiperSlide>
                       <img
                         src={item}
@@ -174,7 +176,7 @@ function Product_Description() {
             <div className="lg:min-w-[633px]">
               <div className="space-y-[3px]">
                 <h1 className="font-atteron text-primary text-[24px] sm:text-[32px] tracking-[1px] mt-3 sm:mt-0">
-                  {product.title}
+                  {product?.title}
                 </h1>
                 {/* Price Section */}
                 {/* Price alone */}
@@ -208,13 +210,13 @@ function Product_Description() {
                   Description
                 </h3>
                 <p className="text-[#484848] text-[16px] font-medium ">
-                  {product.description}
+               At Tarangi Jewels, every piece of 92.5 silver jewellery reflects impeccable artistry and sophisticated charm. Experience jewellery that is as beautiful as it is timeless.
                 </p>
 
                 {/*Colors Available Section - Mobile  */}
                 <div
                   className={
-                    product.variants !== null ? "sm:hidden block" : "hidden"
+                    product?.variants !== null ? "sm:hidden block" : "hidden"
                   }
                 >
                   <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
@@ -224,17 +226,17 @@ function Product_Description() {
                     Colors Available
                   </h3>
                   <div className="flex flex-row items-center mt-1 gap-x-3">
-                    {availableColors.map((item) => (
+                    {availableColors?.map((item) => (
                       <img
                         className={
-                          colorSelected === item.value
+                          colorSelected === item?.value
                             ? "w-[40px] sm:h-[40px] border-4 rounded-full border-primary cursor-pointer"
                             : "w-[40px] sm:h-[40px] hover:border-4 rounded-full border-primary cursor-pointer"
                         }
-                        src={item.imgUrl}
-                        alt={`image_${item.value}`}
+                        src={item?.imgUrl}
+                        alt={`image_${item?.value}`}
                         onClick={() => {
-                          handleColorChangeByButton(item.value);
+                          handleColorChangeByButton(item?.value);
                         }}
                       />
                     ))}
@@ -291,7 +293,7 @@ function Product_Description() {
               {/*Colors Available Section - Above Mobile (large screens) */}
               <div
                 className={
-                  product.variants !== null ? "sm:block hidden" : "hidden"
+                  product?.variants !== null ? "sm:block hidden" : "hidden"
                 }
               >
                 <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
@@ -301,17 +303,17 @@ function Product_Description() {
                   Colors Available
                 </h3>
                 <div className="flex flex-row items-center mt-1 gap-x-3">
-                  {availableColors.map((item) => (
+                  {availableColors?.map((item) => (
                     <img
                       className={
-                        colorSelected === item.value
+                        colorSelected === item?.value
                           ? "w-[40px] sm:h-[40px] border-4 rounded-full border-primary cursor-pointer"
                           : "w-[40px] sm:h-[40px] hover:border-4 rounded-full border-primary cursor-pointer"
                       }
-                      src={item.imgUrl}
-                      alt={`image_${item.value}`}
+                      src={item?.imgUrl}
+                      alt={`image_${item?.value}`}
                       onClick={() => {
-                        handleColorChangeByButton(item.value);
+                        handleColorChangeByButton(item?.value);
                       }}
                     />
                   ))}
@@ -324,7 +326,8 @@ function Product_Description() {
               <div className="max-w-[500px] mt-5">
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
                   <AddToCartButton productToCart={activeVariant} />
-                  <AddToWishlistButton productToFavorites={activeVariant} />
+                  <AddToWishlistButton productToFavorites={activeVariant}   disabled={isAlreadyInWishlist}
+ />
                 </div>
               </div>
             </div>
@@ -332,7 +335,7 @@ function Product_Description() {
         </div>
 
         {/* Suggested products */}
-        <div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 sm:px-0">
+        <div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-0 sm:px-0">
           <div>
             <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
               you may also like
@@ -342,11 +345,11 @@ function Product_Description() {
               {categorizedProduct?.slice(0, 4).map((item) => {
                 return (
                   <div
-                    key={item.id}
+                    key={item?.id}
                     className="font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0"
                   >
                     <Link
-                      to={`/product_description/${item.title.replace(
+                      to={`/product_description/${item?.title.replace(
                         /\s+/g,
                         "-"
                       )}`}
@@ -364,7 +367,7 @@ function Product_Description() {
                         <h3 className="text-[16px] font-semibold sm:text-[20px]">
                           ₹{" "}
                           {(item?.price
-                            ? parseInt(item.price)
+                            ? parseInt(item?.price)
                             : parseInt(item?.variants?.[0]?.price)
                           )?.toLocaleString("en-IN")}
                         </h3>

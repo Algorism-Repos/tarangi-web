@@ -5,7 +5,7 @@ import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 
 // Images
 import red_arrow from "../assets/Products/down_arrow_red.png";
-import product_1 from "../assets/Products/product_1.png";
+import SilverCleaningKit from "../assets/Products/Silver Cleaning Kit.png";
 import product_2 from "../assets/Products/product_2.png";
 import close_icon from "../assets/Products/cart-close_icon.png";
 import Pincode_Input from "../components/Pincode_Input";
@@ -32,7 +32,7 @@ function Cart() {
     return total + price * qty;
   }, 0);
   const tax = subtotal * 0.03;
-  const shipping = 40;
+  const shipping = 0;
   const total = subtotal + tax + shipping;
   console.log(categorizedProduct);
   const boughtTogether = categorizedProduct
@@ -49,14 +49,26 @@ function Cart() {
   }, [cartItems, categorizedProduct]);
 
   console.log("cartItems", cartItems);
+  const totalCartQuantity = cartItems.reduce(
+    (sum, item) => sum + (Number(item.quantity) || 1),
+    0
+  );
 
   return (
     <>
       <div className="font-poppins bg-light-sandal pt-[35px] sm:py-[70px]">
         <div className="max-w-[1300px] mx-auto">
           {/* Heading */}
-          <h2 className="font-atteron text-[24px] text-primary sm:text-[36px] ml-2 xl:ml-0">Your Cart</h2>
-          <h5 className="font-poppins text-[12px] sm:text-[14px] ml-3 xl:ml-2 uppercase">TOTAL ITEMS IN BAG : <span className="font-bold">{String(cartItems.length).padStart(2, "0")}</span> </h5>
+          <h2 className="font-atteron text-[24px] text-primary sm:text-[36px] ml-2 xl:ml-0">
+            Your Cart
+          </h2>
+
+          <h5 className="font-poppins text-[12px] sm:text-[14px] ml-3 xl:ml-2 uppercase">
+            TOTAL ITEMS IN BAG :{" "}
+            <span className="font-bold">
+              {String(totalCartQuantity).padStart(2, "0")}
+            </span>
+          </h5>
 
           {/* Main container */}
           <div className="flex flex-wrap justify-between gap-y-14 px-3 my-[60px] sm:px-0 sm:my-[80px] max-[425px]:my-[40px] max-[375px]:my-[30px] ">
@@ -76,8 +88,7 @@ function Cart() {
                       src={close_icon}
                       alt="close icon"
                       onClick={() => {
-                        removeFromCart(item?.variantId);
-                        setProductToDelete(item?.id);
+                        setProductToDelete(item);
                         setIsDeleteModalOpen(true);
                       }}
                     />
@@ -116,7 +127,7 @@ function Cart() {
                             maxQuantity={10}
                             value={item?.quantity}
                             onChange={(newQty) =>
-                              updateCartItemQuantity(item?.id, newQty)
+                              updateCartItemQuantity(item.variantId, newQty)
                             }
                           />
                         </div>
@@ -131,7 +142,7 @@ function Cart() {
                           <div className="flex flex-row items-center gap-x-3 sm:gap-x-5">
                             <img
                               className="w-[37px] h-[38px] sm:w-[73px] sm:h-[74px] rounded-[4px] sm:rounded-[16px]"
-                              src={product_1}
+                              src={SilverCleaningKit}
                               alt="free kit"
                             />
                             <div className="">
@@ -211,6 +222,11 @@ function Cart() {
                     </Link>
                   </div>
                 </div>
+                <Link to={"/products/:handle"}>
+                  <h5 className="font-poppins text-[12px] sm:text-[14px] ml-3 xl:ml-2 uppercase  justify-item-end">
+                    CONTINUE SHOPPPING
+                  </h5>
+                </Link>
               </div>
             )}
           </div>
@@ -222,7 +238,7 @@ function Cart() {
             </h1>
             <div className="sm:max-w-fit mx-auto xl:mx-0 ">
               <div className="flex flex-row flex-wrap gap-x-12 gap-y-9 sm:gap-x-[50px] items-center justify-center max-[425px]:gap-x-[10px]">
-                {boughtTogether?.slice(0,6).map((item) => (
+                {boughtTogether?.slice(0, 6).map((item) => (
                   <div className="bg-[#FFFAF3] max-w-[580px] p-[24px] rounded-[16px] shadow-2xl mt-[25px] max-[425px]:p-[16px] ">
                     <div className="relative space-y-[10px]">
                       {/* <input
@@ -245,7 +261,7 @@ function Cart() {
                     </div>
                     {/* Total Price */}
                     <div className="mt-[24px]">
-                      <AddToCartButton productToCart={item}/>
+                      <AddToCartButton productToCart={item} />
                     </div>
                   </div>
                 ))}
@@ -320,22 +336,23 @@ function Cart() {
       </div>
 
       {/* DELETE CONFIRMATION MODAL */}
-      {/* <DeleteConfirmationModal
-        isOpen={isDeleteModalOpen}
-        title="Remove Item"
-        message="Are you sure you want to remove this product from your cart?"
-        onCancel={() => {
-          setIsDeleteModalOpen(false);
-          setProductToDelete(null);
-        }}
-        onConfirm={() => {
-          setCartItems((prev) =>
-            prev.filter((item) => item.id !== productToDelete)
-          );
-          setIsDeleteModalOpen(false);
-          setProductToDelete(null);
-        }}
-      /> */}
+  <DeleteConfirmationModal
+  isOpen={isDeleteModalOpen}
+  title="Remove Item"
+  message="Are you sure you want to remove this product from your cart?"
+  onCancel={() => {
+    setIsDeleteModalOpen(false);
+    setProductToDelete(null);
+  }}
+  onConfirm={() => {
+    if (productToDelete) {
+      removeFromCart(productToDelete.variantId); 
+    }
+    setIsDeleteModalOpen(false);
+    setProductToDelete(null);
+  }}
+/>
+
     </>
   );
 }

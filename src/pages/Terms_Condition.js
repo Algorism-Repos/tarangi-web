@@ -1,11 +1,16 @@
 import React, { useEffect } from "react";
 
+// Import Components
+import DisclaimerPolicy from "../components/DisclaimerPolicy";
+import CookiePolicy from "./CookiePolicy";
+
+
 function Terms_Condition() {
 
     const termsData = [
         {
             title: "1. Introduction",
-            content: "These Terms and Conditions (the “Terms”) govern the access and use of the website owned and operated by Tarangi Jewels (“Tarangi”, “the Company”, “we”, “our”, “us”). By visiting, accessing or using the website [Insert Website URL], purchasing products through our e-commerce platform, interacting with our digital properties, or engaging with any service offered by Tarangi, you agree to be bound by these Terms in their entirety. These Terms operate as a legally binding contract between you and Tarangi, and they apply to all users, including browsers, customers, vendors, merchants and any individual who accesses or interacts with the website in any manner. You acknowledge that you have reviewed these Terms, understood them and consent to comply with all applicable provisions. If you do not agree with any part of these Terms, you must immediately discontinue use of the website and refrain from placing any orders."
+            content: "These Terms and Conditions (the “Terms”) govern the access and use of the website owned and operated by Tarangi Jewels (“Tarangi”, “the Company”, “we”, “our”, “us”). By visiting, accessing or using the website, purchasing products through our e-commerce platform, interacting with our digital properties, or engaging with any service offered by Tarangi, you agree to be bound by these Terms in their entirety. These Terms operate as a legally binding contract between you and Tarangi, and they apply to all users, including browsers, customers, vendors, merchants and any individual who accesses or interacts with the website in any manner. You acknowledge that you have reviewed these Terms, understood them and consent to comply with all applicable provisions. If you do not agree with any part of these Terms, you must immediately discontinue use of the website and refrain from placing any orders."
         },
         {
             title: "2. Scope and Applicability of the Terms",
@@ -115,26 +120,38 @@ function Terms_Condition() {
 
     return (
         <>
-            <div className=" blog-banner  text-white">
-                <h1 className=" font-atteron text-[52px] sm:text-[80px] mt-32 sm:mt-0 text-center font-normal  ">Terms & Conditions</h1>
-                <p className="font-[poppins] text-[16px] sm:text-[20px] px-5 mt-[20px] text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
+            <div className="blog-banner text-white">
+                <h1 className=" font-atteron text-[52px] sm:text-[80px] mt-32 sm:mt-0 text-center font-normal">Terms &<br/> Conditions</h1>
+                {/* <p className="font-[poppins] text-[16px] sm:text-[20px] px-5 mt-[20px] text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p> */}
             </div>
 
             <div className="bg-light-sandal py-[50px]">
-                <div className="max-w-[1286px] text-[#595959] px-5 space-y-[40px] mx-auto ">
+                <div className="max-w-[1286px] text-[#595959] px-5 pt-[30px] space-y-[40px] mx-auto">
                     {termsData.map((item) => (
-                        <div className="font-[poppins] font-normal text-[16px] sm:text-[21px]">
-                            <h2 className="text-[#313131] font-medium text-[20px] mb-[8px]">{item.title}</h2>
+                        <div className="font-[poppins] font-normal text-[16px] sm:text-[19px]">
+                            <h2 className="text-[#313131] font-medium text-[18px] mb-[8px] sm:text-[20px]">{item.title}</h2>
                             <p>{item.content}</p>
                         </div>
                     ))}
-
-                    <div className="font-[poppins] font-normal text-[16px] sm:text-[21px]">
+                    {/* 27 Point */}
+                    <div className="font-[poppins] font-normal text-[16px] sm:text-[19px]">
                         <h2 className="text-[#313131] font-medium text-[20px] mb-[8px]">27. Contact Information</h2>
                         <p>For any questions, clarifications or concerns relating to these Terms, you may contact:</p>
+                        <h4 className="mt-3 font-semibold">Grievance Officer — Tarangi</h4>
+                        <p><span className="font-semibold">Email:</span> tarangijewelsindia@gmail.com</p>
+                        <p><span className="font-semibold">Phone:</span> +91 90030 58300</p>
+                        <p><span className="font-semibold">Address:</span> 431-435,VNA Complex, NSR Road Saibaba Colony, Coimbatore-641011</p>
+                        <p><span className="font-semibold">Working Hours:</span> 10:30 AM – 8:00 PM IST</p>
+
+                        <p className="mt-3">Tarangi will acknowledge all complaints within 48 hours and endeavour to resolve them within the prescribed statutory timeframe.</p>
                     </div>
                 </div>
+                
             </div>
+            
+            <DisclaimerPolicy />
+
+            
 
         </>
     );

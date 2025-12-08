@@ -48,7 +48,7 @@ function Home() {
   const [modalToggle, setModalToggle] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
   const [FestiveFiltered, setFestiveFiltered] = useState([]);
-  const { collection, setCollections, loading, setLoading } = useContext(AppContext);
+  const { collection, setCollections, loading, setLoading ,setTrendingProduct} = useContext(AppContext);
 
 
   function toggle(product) {
@@ -245,8 +245,9 @@ function Home() {
     };
   }, []);
   useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
     collectionsList();
-    // fetchMetalRates();
   }, []);
 
   // Silver prices logic
@@ -275,10 +276,11 @@ function Home() {
       setIsRefreshing(false);
     }, 1000);
   };
+useEffect(()=>{
+    setTrendingProduct(FestiveFiltered)
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+},[FestiveFiltered])
+
 
   return (
     <>
@@ -365,17 +367,17 @@ function Home() {
         className="mySwiper"
       >
         <SwiperSlide>
-          <div className="banner-section">
-            <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[720px] tracking-[1px]">
+          <div className="banner-section ">
+            <h1 className="font-atteron uppercase text-[40px] text-center xl:text-left sm:text-[50px] xl:text-[65px] text-white font-normal w-full sm:max-w-[720px] mx-auto tracking-[1px] xl:mx-0">
               Born from tradition Designed for today
             </h1>
-            <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">
+            <h4 className="font-poppins text-[13px] w-[270px]  sm:text-[22px] font-normal leading-normal text-white text-center xl:text-left mt-8 max-w-[640px] mx-auto xl:mx-0">
               Because exculsive 925 silver jewelry should feel as unique as the
               one who wears it.
             </h4>
             <a
               href="#launchOffers"
-              className="w-fit hover:scale-110 transition duration-300"
+              className="w-fit hover:scale-110 transition duration-300 mx-auto xl:mx-0"
             >
               <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
                 View our Best Sellers
@@ -385,9 +387,9 @@ function Home() {
         </SwiperSlide>
 
         {/* Women banner */}
-        <SwiperSlide>
-          <div className="banner-2">
-            <h1 className="font-atteron uppercase text-[40px] leading-[60px] text-center sm:text-left sm:text-[65px] text-[#5B3A09] sm:leading-[80px] font-normal w-full sm:max-w-[780px] tracking-[1px]">
+      <SwiperSlide>
+          <div className="women-banner-slider">
+            <h1 className="font-atteron uppercase text-[#5B3A09] text-[40px] text-center xl:text-left sm:text-[50px] xl:text-[65px] font-normal w-full sm:max-w-[780px] tracking-[1px]">
               Embrace your beauty Shine with Elegance
             </h1>
             <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-[#5B3A09] text-center sm:text-left mt-3 sm:mt-8 max-w-[640px]">
@@ -398,7 +400,7 @@ function Home() {
               href="#launchOffers"
               className="w-fit hover:scale-110 transition duration-300"
             >
-              <button className=" mt-4 sm:mt-12 rounded-[32px] bg-[#5B3A09] font-poppins text-[16px] font-normal text-white py-[16px] px-[25px] cursor-pointer">
+              <button className=" mt-4 sm:mt-7 xl:mt-12 rounded-[32px] bg-[#5B3A09] font-poppins text-[16px] font-normal text-white py-[16px] px-[25px] cursor-pointer">
                 View our womens Collections
               </button>
             </a>
@@ -406,8 +408,8 @@ function Home() {
         </SwiperSlide>
 
         <SwiperSlide>
-          <div className="banner-5">
-            <h1 className="font-atteron uppercase text-[45px] leading-[60px] text-center sm:text-left sm:text-[65px] text-white sm:leading-[80px] font-normal w-full sm:max-w-[850px] tracking-[1px]">
+          <div className="men-banner-slider">
+            <h1 className="font-atteron uppercase text-white text-[40px] text-center xl:text-left sm:text-[50px] xl:text-[62px] font-normal w-full sm:max-w-[780px] tracking-[1px]">
               Heritage of Strength Crafted for Character
             </h1>
             <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center sm:text-left mt-8 max-w-[640px]">
@@ -418,12 +420,12 @@ function Home() {
               href="#launchOffers"
               className="w-fit hover:scale-110 transition duration-300"
             >
-              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#8F103B] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
+              <button className=" mt-10 sm:mt-11 rounded-[32px] bg-[#8F103B] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
                 View our mens Collections
               </button>
             </a>
           </div>
-        </SwiperSlide>
+        </SwiperSlide> 
       </Swiper>
 
       <div className="whyus">

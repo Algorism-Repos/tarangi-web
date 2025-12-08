@@ -3,12 +3,13 @@ import { createContext, useEffect, useState } from "react";
 export const AppContext = createContext();
 export function AppProvider({ children }) {
   const [loading, setLoading] = useState(true);
-  const[pincodeDetails, setPincodeDetails]=useState()
+  const[trendingProduct,setTrendingProduct]=useState()
   const [collection, setCollections] = useState(() => {
     const saved = localStorage.getItem("collection");
     return saved ? JSON.parse(saved) : [];
   });
-  const [deliveryDate, setdeliveryDate] = useState("");
+  const [pincodeDetails, setPincodeDetails] = useState({});
+  const[deliveryDate,setdeliveryDate]=useState()
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loggedCustomerId, setLoggedCustomerId] = useState(() => {
     return localStorage.getItem("loggedCustomerId") || null;
@@ -47,7 +48,7 @@ const [categorizedProduct, setCategorizedProduct] = useState(() => {
   const updateCartItemQuantity = (id, newQty) => {
     setCartItems((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, quantity: newQty } : item
+        item.variantId  === id ? { ...item, quantity: newQty } : item
       )
     );
   };
@@ -80,14 +81,15 @@ const [categorizedProduct, setCategorizedProduct] = useState(() => {
     }
   }, [collection]);
   const addToCart = (product) => {
+    console.log(product)
     setCartItems((prev) => {
       const existing = prev.find(
         (item) => item?.variantId === product.variantId
       );
       if (existing) {
         return prev.map((item) =>
-          item?.variantId === product.variantId
-            ? { ...item, quantity: item?.quantity + (product.quantity || 1) }
+          item.variantId === product.variantId
+            ? { ...item, quantity: item.quantity + (product.quantity + 1) }
             : item
         );
       }
@@ -165,7 +167,10 @@ useEffect(() => {
         setCategorizedProduct,
         deliveryDate,
         setdeliveryDate,
-        clearRecentlyViewed,pincodeDetails, setPincodeDetails
+        clearRecentlyViewed,
+        trendingProduct,setTrendingProduct,
+        pincodeDetails,
+        setPincodeDetails
       }}
     >
       {children}

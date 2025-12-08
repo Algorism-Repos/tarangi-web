@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -13,7 +13,8 @@ import { useNavigate } from "react-router-dom";
 function ThankYou() {
     const navigate = useNavigate();
 
-  const { cartItems } = useContext(AppContext);
+  const { cartItems,clearCart } = useContext(AppContext);
+  console.log(cartItems)
 const data = [
         {
             img: muthukrishan,
@@ -38,6 +39,10 @@ const data = [
           ...item,
           productImage: cartItems[key]?.image,
         }));
+        useEffect(()=>{
+                clearCart();
+
+        },[])
   return (
     <>
       {/* Background */}
@@ -55,7 +60,7 @@ const data = [
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-[16px] mt-6 xl:justify-start">
               <button className="flex items-center justify-center gap-x-[8px] bg-[#4B001A] w-[220px] h-[56px] rounded-full text-white text-[18px] font-medium "  onClick={() => navigate("/home")}>
-                Continue Shopping
+                Back to home
               </button>
 
               <button className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-[210px] h-[56px] rounded-full text-primary text-[18px] font-medium ">

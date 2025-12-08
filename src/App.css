@@ -18,7 +18,7 @@
   padding: 0px 110px;
 }
 
-.banner-2 {
+.women-banner-slider {
   background: url("./assets/Home_banner/banner_2.png");
   height: 780px;
   background-size: cover;
@@ -32,20 +32,7 @@
   padding: 0px 110px;
 }
 
-.banner-4 {
-  background: url("./assets/Home_banner/banner_4.png");
-  height: 780px;
-  background-size: cover;
-  background-repeat: no-repeat;
-  min-height: 784px;
-  background-position: center center;
-  object-fit: contain;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0px 110px;
-}
-.banner-5 {
+.men-banner-slider {
   background: url("./assets/Home_banner/banner_5.png");
   height: 780px;
   background-size: cover;
@@ -404,7 +391,7 @@ input::placeholder {
     object-fit: contain;
   }
 
-  .banner-2 {
+  .women-banner-slider {
     background-image: url("./assets/Home_banner/banner_2_ipad.png");
     height: 780px;
     background-size: cover;
@@ -417,6 +404,19 @@ input::placeholder {
     padding: 110px 0px;
     background-position: center center;
   }
+   .men-banner-slider {
+  background: url("./assets/Home_banner/menbanner_ipad.png");
+  height: 780px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  object-fit: contain;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+   align-items: center;
+  padding: 110px 0px;
+}
 }
 
 @media only screen and (max-width: 620px) {
@@ -443,7 +443,7 @@ input::placeholder {
     background-position: center center;
   }
 
-  .banner-2 {
+  .women-banner-slider {
     background-image: url("./assets/Home_banner/banner_2_mobile.png");
     height: 780px;
     background-size: cover;
@@ -456,21 +456,10 @@ input::placeholder {
     padding: 110px 0px;
   }
 
-  .banner-4 {
-    background-image: url("./assets/Home_banner/banner_4.png");
-    height: 780px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 110px 0px;
-  }
+  
 
-  .banner-5 {
-  background: url("./assets/Home_banner/banner_5.png");
+  .men-banner-slider {
+  background: url("./assets/Home_banner/menbanner_mobile.png");
   height: 780px;
   background-size: cover;
   background-repeat: no-repeat;
@@ -481,6 +470,13 @@ input::placeholder {
   justify-content: flex-start;
    align-items: center;
   padding: 110px 0px;
+}
+
+.design-section {
+  background-image: url("./assets/backgrounds/designfor_background.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 0px;
 }
   
 

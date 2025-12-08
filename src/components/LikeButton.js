@@ -20,7 +20,7 @@ function LikeButton({ liked, onToggle, isOutOfStock, isRestocking }) {
         transition-opacity duration-300 ease-in-out focus:outline-none`}
     >
       <img
-        src={liked ? Filled_LikeIcon : LikeIcon}
+        src={liked ? Filled_LikeIcon : LikeIcon} 
         alt={liked ? "Liked" : "Unliked"}
         className="w-full h-full transition-transform duration-200 hover:scale-110"
       />
