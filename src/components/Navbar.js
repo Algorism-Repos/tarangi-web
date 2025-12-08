@@ -26,17 +26,23 @@ import up_arrow from "../assets/up_arrow.png";
 import { AppContext } from "../context/AppContext";
 
 function Navbar() {
-   const location = useLocation();
+  const location = useLocation();
   const navigate = useNavigate();
   const [menuVisible, setMenuVisible] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
-  const { collection, isLoggedIn, setIsLoggedIn, wishlistItems, cartItems } =
-    useContext(AppContext);
+  const {
+    collection,
+    isLoggedIn,
+    setIsLoggedIn,
+    wishlistItems,
+    cartItems,
+    trendingProduct,
+  } = useContext(AppContext);
   // Product dropdown - desktop
   const [productDropdown, setProductDropdown] = useState(false);
- 
+  console.log(trendingProduct);
 
   const mobileSearchRef = useRef(null);
   // Timer function
@@ -63,8 +69,6 @@ function Navbar() {
   const handleSubMenuClick = () => {
     handleClose();
   };
-
-  
 
   // mobile products dropdown
   const [mobileProductDropdown, setMobileProductDropdown] = useState(false);
@@ -365,21 +369,27 @@ function Navbar() {
                   <h3 className="text-white font-poppins text-[16px] mb-3">
                     Trending Products
                   </h3>
-                  <div className="flex gap-6 overflow-x-auto text-white text-[14px] items-center object-contain">
-                    {TRENDING_PRODUCTS.map((item, index) => (
-                      <div
-                        key={index}
-                        className="flex flex-col items-center min-w-[121px]"
+                  <div className="flex gap-6 overflow-x-auto text-white text-[14px]  object-contain">
+                    {trendingProduct?.map((item, index) => (
+                      <Link
+                        to={`/product_description/${item.title.replace(
+                          /\s+/g,
+                          "-"
+                        )}`}
+                        state={{ product: item }}
+                        onClick={() => setShowSearch(false)}
                       >
-                        <img
-                          src={item.img}
-                          alt={item.name}
-                          className="w-[121px] h-[78px] object-contain"
-                        />
-                        <span className="mt-2 text-[14px] font-poppins">
-                          {item.name}
-                        </span>
-                      </div>
+                        <div key={index} className="flex flex-col  w-[120px]">
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="w-[121px] h-[120px] object-cover rounded-[10px]"
+                          />
+                          <span className="mt-2 text-[12px] font-poppins text-center">
+                            {item.title}
+                          </span>
+                        </div>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -574,18 +584,27 @@ function Navbar() {
                             },
                           }}
                         >
-                          {TRENDING_PRODUCTS.map((item, index) => (
+                          {trendingProduct?.map((item, index) => (
                             <SwiperSlide key={index}>
-                              <div className="flex flex-col items-center">
-                                <img
-                                  src={item.img}
-                                  alt={item.name}
-                                  className="w-[121px] h-[109px] object-contain rounded-[12px] shadow-md"
-                                />
-                                <span className="mt-2 text-white text-[14px] font-poppins font-normal">
-                                  {item.name}
-                                </span>
-                              </div>
+                              <Link
+                                to={`/product_description/${item.title.replace(
+                                  /\s+/g,
+                                  "-"
+                                )}`}
+                                state={{ product: item }}
+                                onClick={() => setMenuVisible(false)}
+                              >
+                                <div className="flex flex-col items-center">
+                                  <img
+                                    src={item.image}
+                                    alt={item.name}
+                                    className="w-[100px] h-[100px] object-contain rounded-[12px] shadow-md"
+                                  />
+                                  <span className="mt-2 text-white text-center text-[11px] font-poppins font-normal">
+                                    {item.title}
+                                  </span>
+                                </div>
+                              </Link>
                             </SwiperSlide>
                           ))}
                         </Swiper>

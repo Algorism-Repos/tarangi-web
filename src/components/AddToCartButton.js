@@ -22,6 +22,7 @@ function AddToCartButton({
   const { addToCart } = useContext(AppContext);
   const isDisabledInFavourites =
     isFavouritesPage && (isOutOfStock || isRestocking);
+    console.log(productToCart)
   const handleAddToCart = () => {
     addToCart(productToCart);
     setShowToast(true);

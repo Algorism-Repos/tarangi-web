@@ -91,6 +91,7 @@ function Product_Description() {
     console.log(idx);
     swiperRef.current.slideTo(idx);
   }
+   console.log(activeVariant)
   return (
     <>
       {/* Backgound */}

@@ -48,7 +48,7 @@ function Home() {
   const [modalToggle, setModalToggle] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
   const [FestiveFiltered, setFestiveFiltered] = useState([]);
-  const { collection, setCollections, loading, setLoading } = useContext(AppContext);
+  const { collection, setCollections, loading, setLoading ,setTrendingProduct} = useContext(AppContext);
 
 
   function toggle(product) {
@@ -245,8 +245,9 @@ function Home() {
     };
   }, []);
   useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
     collectionsList();
-    // fetchMetalRates();
   }, []);
 
   // Silver prices logic
@@ -275,10 +276,11 @@ function Home() {
       setIsRefreshing(false);
     }, 1000);
   };
+useEffect(()=>{
+    setTrendingProduct(FestiveFiltered)
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+},[FestiveFiltered])
+
 
   return (
     <>

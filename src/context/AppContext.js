@@ -4,6 +4,7 @@ export const AppContext = createContext();
 
 export function AppProvider({ children }) {
   const [loading, setLoading] = useState(true);
+  const[trendingProduct,setTrendingProduct]=useState()
   const [collection, setCollections] = useState(() => {
     const saved = localStorage.getItem("collection");
     return saved ? JSON.parse(saved) : [];
@@ -88,6 +89,7 @@ const [categorizedProduct, setCategorizedProduct] = useState(() => {
   }, [collection]);
 
   const addToCart = (product) => {
+    console.log(product)
     setCartItems((prev) => {
       const existing = prev.find(
         (item) => item.variantId === product.variantId
@@ -185,7 +187,8 @@ useEffect(() => {
         setCategorizedProduct,
         deliveryDate,
         setdeliveryDate,
-        clearRecentlyViewed
+        clearRecentlyViewed,
+        trendingProduct,setTrendingProduct
       }}
     >
       {children}
