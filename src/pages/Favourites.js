@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router";
 import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
 
@@ -14,6 +15,13 @@ import silver_ellipse from "../assets/Products/silver_ellipse.png";
 import brown_ellipse from "../assets/Products/brown_ellipse.png";
 
 function Favourites() {
+
+  const { pathname } = useLocation();
+
+  console.log(pathname);
+
+  const isVisible = pathname === "/profile";
+
   const initialProducts = [
     // {
     //   id: 1,
@@ -172,7 +180,8 @@ function Favourites() {
     <>
       <div className="bg-light-sandal py-[70px]">
         <div className="max-w-[1300px] mx-auto px-2">
-          <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
+
+          <h1 className={isVisible ? "hidden" : "font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left" }>
             Your Favourites
           </h1>
 
@@ -182,7 +191,7 @@ function Favourites() {
             </p>
           ) : (
 
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
+            <div className={isVisible ? "grid grid-cols-2 lg:grid-cols-3 gap-[15px] px-2 sm:gap-[25px]" : "grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]" }>
               {likedProducts.map((item) => (
 
                 <div key={item.id} className="max-w-[304px] mx-auto group">
@@ -269,7 +278,10 @@ function Favourites() {
           )}
         </div>
 
-        <Recently_Viewed />
+        <div className={isVisible ?  "hidden" : "block"}>
+          <Recently_Viewed />
+        </div>
+
       </div>
       <OutOfStockModal
         open={showOutStockModal}

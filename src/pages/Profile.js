@@ -38,6 +38,8 @@ import RestockModal from "../components/RestockModal";
 import RestockSuccessModal from "../components/RestockSuccessModal";
 import OrderSummaryPopup from "../components/OrderSummaryPopup";
 
+import Favourites from './Favourites'
+
 
 // schema
 const addressValidationSchema = Yup.object({
@@ -799,7 +801,9 @@ const renderFavouritesSection = (
 ) => {
   return (
     <>
-      <div >
+
+      <Favourites />
+      <div className="hidden">
         {likedProducts.length === 0 ? (
           <p className="text-center text-[14px] text-[#4B0010] mt-6 font-poppins">
             No Products in the favourites page
@@ -950,6 +954,8 @@ const renderFavouritesSection = (
 //     )}
 //   </div>
 // );
+
+
 
 
 
