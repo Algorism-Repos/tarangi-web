@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router";
 import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
 
@@ -14,6 +15,13 @@ import silver_ellipse from "../assets/Products/silver_ellipse.png";
 import brown_ellipse from "../assets/Products/brown_ellipse.png";
 
 function Favourites() {
+
+  const { pathname } = useLocation();
+
+  console.log(pathname);
+
+  const isVisible = pathname === "/profile";
+
   const initialProducts = [
     {
       id: 1,
@@ -22,18 +30,22 @@ function Favourites() {
       liked: true,
       isOutOfStock: false,
       isRestocking: true,
+
       colorImages: {
         gold: product_1,
         silver: product_2,
         brown: product_2,
       },
+
       colors: [
         { id: "gold", img: gold_ellipse },
         { id: "silver", img: silver_ellipse },
         { id: "brown", img: brown_ellipse },
       ],
+
       selectedColor: "gold",
     },
+
     {
       id: 2,
       product_name: "Stone Kada",
@@ -41,18 +53,22 @@ function Favourites() {
       liked: true,
       isOutOfStock: false,
       isRestocking: false,
+
       colorImages: {
         gold: product_1,
         silver: product_2,
         brown: product_2,
       },
+
       colors: [
         { id: "gold", img: gold_ellipse },
         { id: "silver", img: silver_ellipse },
         { id: "brown", img: brown_ellipse },
       ],
+
       selectedColor: "gold",
     },
+
     {
       id: 3,
       product_name: "Stone Kada",
@@ -60,18 +76,22 @@ function Favourites() {
       liked: true,
       isOutOfStock: true,
       isRestocking: false,
+
       colorImages: {
         gold: product_1,
         silver: product_2,
         brown: product_2,
       },
+
       colors: [
         { id: "gold", img: gold_ellipse },
         { id: "silver", img: silver_ellipse },
         { id: "brown", img: brown_ellipse },
       ],
+
       selectedColor: "gold",
     },
+
     {
       id: 4,
       product_name: "Stone Kada",
@@ -79,24 +99,29 @@ function Favourites() {
       liked: true,
       isOutOfStock: false,
       isRestocking: true,
+
       colorImages: {
         gold: product_1,
         silver: product_2,
         brown: product_2,
       },
+
       colors: [
         { id: "gold", img: gold_ellipse },
         { id: "silver", img: silver_ellipse },
         { id: "brown", img: brown_ellipse },
       ],
+
       selectedColor: "gold",
     },
   ];
 
   const [products, setProducts] = useState(initialProducts);
+  const [favorites, setFavorites] = useState([]);
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
+
 
   const handleProductClick = (item) => {
     if (item.isOutOfStock) {
@@ -112,7 +137,6 @@ function Favourites() {
     // Later → navigate to product page
   };
 
-  // toggle like
   const toggleLike = (id) => {
     setProducts((prev) =>
       prev.map((p) =>
@@ -121,7 +145,6 @@ function Favourites() {
     );
   };
 
-  // color change
   const handleColorSelect = (productId, colorId) => {
     setProducts((prev) =>
       prev.map((p) =>
@@ -132,7 +155,6 @@ function Favourites() {
 
   const likedProducts = products.filter((p) => p.liked);
 
-  // remove from favourites (used by AddToCartButton)
   const handleRemove = (id) => {
     setProducts((prev) =>
       prev.map((item) =>
@@ -141,25 +163,14 @@ function Favourites() {
     );
   };
 
-  // keep localStorage + Navbar in sync with favourites
-  // useEffect(() => {
-  //   const updatedFavourites = likedProducts;
 
-  //   // store the list
-  //   localStorage.setItem(
-  //     "favourites",
-  //     JSON.stringify(updatedFavourites)
-  //   );
 
-  //   // optional flag (if you still want it)
-  //   localStorage.setItem(
-  //     "hasFavourites",
-  //     updatedFavourites.length > 0 ? "true" : "false"
-  //   );
-
-  //   // notify Navbar in same tab
-  //   window.dispatchEvent(new Event("favouritesUpdated"));
-  // }, [likedProducts]);
+  useEffect(() => {
+    localStorage.setItem(
+      "hasFavourites",
+      likedProducts.length > 0 ? "true" : "false"
+    );
+  }, [likedProducts]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -169,7 +180,8 @@ function Favourites() {
     <>
       <div className="bg-light-sandal py-[70px]">
         <div className="max-w-[1300px] mx-auto px-2">
-          <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
+
+          <h1 className={isVisible ? "hidden" : "font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left" }>
             Your Favourites
           </h1>
 
@@ -178,8 +190,10 @@ function Favourites() {
               No Products in the favourites page
             </p>
           ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
+
+            <div className={isVisible ? "grid grid-cols-2 lg:grid-cols-3 gap-[15px] px-2 sm:gap-[25px]" : "grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]" }>
               {likedProducts.map((item) => (
+
                 <div key={item.id} className="max-w-[304px] mx-auto group">
                   <div
                     onClick={() => handleProductClick(item)}
@@ -188,11 +202,9 @@ function Favourites() {
                     {/* IMAGE */}
                     <div className="overflow-hidden rounded-2xl relative">
                       <img
-                        className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] ${
-                          item.isOutOfStock ? "grayscale" : ""
-                        } ${
-                          item.isRestocking ? "opacity-50" : ""
-                        } transition-all duration-300 group-hover:scale-105`}
+                        className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] ${item.isOutOfStock ? "grayscale" : ""
+                          } ${item.isRestocking ? "opacity-50" : ""
+                          }  transition-all duration-300 group-hover:scale-105`}
                         src={item.colorImages[item.selectedColor]}
                         alt={item.product_name}
                       />
@@ -230,6 +242,7 @@ function Favourites() {
                         </p>
                       </div>
 
+
                       {/* COLOR SELECTOR */}
                       <div className="flex gap-x-2.5">
                         {item.colors.map((color) => (
@@ -239,11 +252,10 @@ function Favourites() {
                             onClick={() =>
                               handleColorSelect(item.id, color.id)
                             }
-                            className={`w-[20px] sm:w-[24px] rounded-full cursor-pointer transition-all ${
-                              item.selectedColor === color.id
-                                ? "border-2 border-primary p-[2px]"
-                                : "border bg-white"
-                            }`}
+                            className={`w-[20px] sm:w-[24px] rounded-full cursor-pointer transition-all ${item.selectedColor === color.id
+                              ? "border-2 border-primary p-[2px]"
+                              : "border bg-white"
+                              }`}
                           />
                         ))}
                       </div>
@@ -256,16 +268,21 @@ function Favourites() {
                     isFavouritesPage={true}
                     onRemoveFromFavourites={() => handleRemove(item.id)}
                   />
+
+
+
                 </div>
+
               ))}
             </div>
           )}
         </div>
 
-        <Recently_Viewed />
-      </div>
+        <div className={isVisible ?  "hidden" : "block"}>
+          <Recently_Viewed />
+        </div>
 
-      {/* Modals */}
+      </div>
       <OutOfStockModal
         open={showOutStockModal}
         onClose={() => setShowOutStockModal(false)}
@@ -284,7 +301,10 @@ function Favourites() {
         open={showRestockSuccess}
         onClose={() => setShowRestockSuccess(false)}
       />
+
+
     </>
+
   );
 }
 

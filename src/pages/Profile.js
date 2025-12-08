@@ -22,6 +22,8 @@ import product_2 from "../assets/Products/product_2.png";
 import logout_icon from "../assets/logout_icon.png";
 import trashcan from "../assets/Trash.png";
 
+
+
 import gold_ellipse from "../assets/Products/gold_ellipse.png";
 import silver_ellipse from "../assets/Products/silver_ellipse.png";
 import brown_ellipse from "../assets/Products/brown_ellipse.png";
@@ -33,7 +35,7 @@ import OrderSummaryPopup from "../components/OrderSummaryPopup";
 import ProfileSection from "../profilecomponent/ProfileSection";
 import AddressSection from "../profilecomponent/AddressSection";
 import OrdersSection from "../profilecomponent/OrdersSection";
-import FavouritesSection from "../profilecomponent/FavouritesSection";
+import FavouritesSection from "../pages/Favourites";
 
 const Profile = () => {
   const [activeSection, setActiveSection] = useState("Your Profile");
@@ -389,7 +391,7 @@ const Profile = () => {
   }, []);
 
   return (
-    <div className="min-h-fit bg-[#FFF5E8] py-16 px-4 sm:px-6 lg:px-16 xl:px-28">
+    <div className="min-h-fit bg-[#FFF5E8] py-16 px-2 sm:px-6 lg:px-16 xl:px-28">
       <div className="max-w-[1280px] mx-auto space-y-20">
         <div className="md:flex flex-auto justify-items-center">
           <h1 className="font-atteron text-[#5A0010] text-[28px] leading-[42px]">
@@ -466,19 +468,20 @@ const Profile = () => {
             )}
 
             {activeSection === "Favourites" && (
-              <FavouritesSection
-                likedProducts={likedProducts}
-                handleProductClick={handleProductClick}
-                toggleLike={toggleLike}
-                handleColorSelect={handleColorSelect}
-                handleRemove={handleRemove}
-                showOutStockModal={showOutStockModal}
-                setShowOutStockModal={setShowOutStockModal}
-                showRestockModal={showRestockModal}
-                setShowRestockModal={setShowRestockModal}
-                showRestockSuccess={showRestockSuccess}
-                setShowRestockSuccess={setShowRestockSuccess}
-              />
+              // <FavouritesSection
+              //   likedProducts={likedProducts}
+              //   handleProductClick={handleProductClick}
+              //   toggleLike={toggleLike}
+              //   handleColorSelect={handleColorSelect}
+              //   handleRemove={handleRemove}
+              //   showOutStockModal={showOutStockModal}
+              //   setShowOutStockModal={setShowOutStockModal}
+              //   showRestockModal={showRestockModal}
+              //   setShowRestockModal={setShowRestockModal}
+              //   showRestockSuccess={showRestockSuccess}
+              //   setShowRestockSuccess={setShowRestockSuccess}
+              // />
+              <FavouritesSection />
             )}
           </div>
         </div>

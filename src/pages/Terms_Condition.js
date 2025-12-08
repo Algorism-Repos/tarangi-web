@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
 
+import Grievance_policy from "../components/Grievance_policy";
+import Refund_policy from "../components/Refund_policy";
+
 function Terms_Condition() {
 
     const termsData = [
@@ -116,7 +119,7 @@ function Terms_Condition() {
     return (
         <>
             <div className=" blog-banner text-white">
-                <h1 className=" font-atteron text-[52px] sm:text-[80px] mt-32 sm:mt-0 text-center font-normal  ">Terms &<br/> Conditions</h1>
+                <h1 className=" font-atteron text-[52px] sm:text-[80px] mt-32 sm:mt-0 text-center font-normal  ">Terms &<br /> Conditions</h1>
                 {/* <p className="font-[poppins] text-[16px] sm:text-[20px] px-5 mt-[20px] text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p> */}
             </div>
 
@@ -133,9 +136,11 @@ function Terms_Condition() {
                         <h2 className="text-[#313131] font-medium text-[20px] mb-[8px]">27. Contact Information</h2>
                         <p>For any questions, clarifications or concerns relating to these Terms, you may contact:</p>
                     </div>
-                    
 
+                    
                 </div>
+                <Grievance_policy />
+                <Refund_policy />
             </div>
 
         </>

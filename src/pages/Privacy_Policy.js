@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import bullet_icon from "../assets/bullet_point.png";
-import Grievance_policy from "../components/Grievance_policy";
-import Refund_policy from "../components/Refund_policy";
+
 
 
 
@@ -259,8 +258,7 @@ function Privacy_Policy() {
 
 
                 </div>
-                <Grievance_policy/>
-                <Refund_policy/>
+
             </div>
         </>
     );
