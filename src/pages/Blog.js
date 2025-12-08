@@ -6,6 +6,7 @@ import down_arrow from "../assets/Products/down_arrow.png";
 import blog_1 from "../assets/blog_1.png";
 import {FetchAllBlogsFromShopify, FetchBlogPosts,} from "../handler/api_Handler";
 import { parseArticleBody } from "../utils/helper";
+import { Link } from "react-router";
 
 function Blog() {
   const [blogs, setBlogs] = useState([]);
@@ -83,7 +84,7 @@ function Blog() {
         <h1 className="font-atteron text-[80px] font-normal ">Blog</h1>
         <p className="font-[poppins] text-[20px] mt-[20px] text-center">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-        </p> */}
+        </p> 
       </div>
 
       {/* Blogs */}
@@ -125,6 +126,7 @@ function Blog() {
             const content = parseArticleBody(article.body);
 
             return (
+              <Link to={'/blogdescription'}   state={{ blog: article }}> 
               <div className="max-w-[410px] mx-auto font-[poppins]">
                 <img className="w-[361px] h-fit sm:w-[414px] sm:h-[289px] object-cover rounded-[18px]"
                   src={article?.image?.src}
@@ -147,6 +149,7 @@ function Blog() {
                   Read more
                 </button>
               </div>
+              </Link>
             );
           })
           }

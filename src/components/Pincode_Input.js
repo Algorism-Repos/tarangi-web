@@ -39,6 +39,7 @@ function Pincode_Input() {
   const tatHours = deliveryInfo?.TAT;
 
   useEffect(() => {
+      if (!tatHours || !pincode) return;
     const now = new Date();
     const estimatedDelivery = new Date(
       now.getTime() + tatHours * 60 * 60 * 1000
@@ -56,11 +57,14 @@ function Pincode_Input() {
     setPincodeDetails(
       {
         date: estimatedDate,
-        pincode: pincode
+        pincode: pincode,
+        state:deliveryInfo.CSTATE,
+        city:deliveryInfo.CITY
       }
     )
 
   }, [pincode, tatHours])
+
   console.log(pincodeDetails);
 
 

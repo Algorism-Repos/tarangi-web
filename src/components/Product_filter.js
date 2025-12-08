@@ -101,27 +101,36 @@ function Product_Filter({ productCatergory, collectionName }) {
     filtered = sortProducts(filtered, sortOption);
     setFilteredProducts(filtered);
   };
-  const sortProducts = (products, sortBy) => {
-    const sorted = [...products];
-    if (sortBy === "Latest") {
-      sorted.sort(
-        (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
-    } else if (sortBy === "Price High to Low") {
-      sorted.sort(
-        (a, b) =>
-          Number(b.variants?.[0]?.price) - Number(a.variants?.[0]?.price)
-      );
-    } else if (sortBy === "Price Low to High") {
-      sorted.sort(
-        (a, b) =>
-          Number(a.variants?.[0]?.price) - Number(b.variants?.[0]?.price)
-      );
-    } else if (sortBy === "Featured") {
-    }
-    return sorted;
-  };
+
+
+const getPrice = (product) => {
+  if (product.type === "simple") {
+    return Number(product.price);
+  }
+  return Number(product.variants?.[0]?.price || 0);
+};
+const sortProducts = (products, sortBy) => {
+  const sorted = [...products];
+
+  if (sortBy === "Latest") {
+    sorted.sort(
+      (item, key) =>
+        new Date(key.createdAt).getTime() - new Date(item.createdAt).getTime()
+    );
+  }
+  else if (sortBy === "Price High to Low") {
+    sorted.sort((item, key) => getPrice(key) - getPrice(item));
+  }
+
+  else if (sortBy === "Price Low to High") {
+    sorted.sort((item, key) => getPrice(item) - getPrice(key));
+  }
+
+  else if (sortBy === "Featured") {
+  }
+
+  return sorted;
+};
 
   const handleSortSelection = (option) => {
     setSortOption(option);

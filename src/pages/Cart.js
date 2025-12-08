@@ -5,7 +5,7 @@ import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 
 // Images
 import red_arrow from "../assets/Products/down_arrow_red.png";
-import product_1 from "../assets/Products/product_1.png";
+import freekit from "../assets/Products/freekit.png";
 import product_2 from "../assets/Products/product_2.png";
 import close_icon from "../assets/Products/cart-close_icon.png";
 import Pincode_Input from "../components/Pincode_Input";
@@ -130,7 +130,7 @@ function Cart() {
                           <div className="flex flex-row items-center gap-x-3 sm:gap-x-5">
                             <img
                               className="w-[37px] h-[38px] sm:w-[73px] sm:h-[74px] rounded-[4px] sm:rounded-[16px]"
-                              src={product_1}
+                              src={freekit}
                               alt="free kit"
                             />
                             <div className="">

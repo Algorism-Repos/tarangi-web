@@ -10,9 +10,8 @@ export function AppProvider({ children }) {
     const saved = localStorage.getItem("collection");
     return saved ? JSON.parse(saved) : [];
   });
-  const [allproduct, setallproduct] = useState();
   const [pincodeDetails, setPincodeDetails] = useState({});
-
+  const[deliveryDate,setdeliveryDate]=useState()
   const [filteredProducts, setFilteredProducts] = useState([]);
 
   const [loggedCustomerId, setLoggedCustomerId] = useState(() => {

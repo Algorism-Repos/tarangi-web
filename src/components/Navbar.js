@@ -42,7 +42,6 @@ function Navbar() {
   } = useContext(AppContext);
   // Product dropdown - desktop
   const [productDropdown, setProductDropdown] = useState(false);
-  console.log(trendingProduct);
 
   const mobileSearchRef = useRef(null);
   // Timer function

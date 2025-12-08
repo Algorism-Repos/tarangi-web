@@ -28,7 +28,7 @@ function Product_Description() {
   const swiperRef = useRef(null);
   const location = useLocation();
   const { product } = location.state || {};
-  const { categorizedProduct, addToWishlist, pincodeDetails, addToRecentlyViewed } = useContext(AppContext);
+  const { categorizedProduct, wishlistItems , pincodeDetails, addToRecentlyViewed } = useContext(AppContext);
   const [colorSelected, setColorSelected] = useState("Gold");
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});
@@ -115,6 +115,10 @@ function Product_Description() {
     console.log(idx);
     swiperRef.current.slideTo(idx);
   }
+  const isAlreadyInWishlist = wishlistItems.some(
+  (item) => item.variantId === activeVariant?.variantId
+);
+
    console.log(activeVariant)
   return (
     <>
@@ -322,7 +326,8 @@ function Product_Description() {
               <div className="max-w-[500px] mt-5">
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
                   <AddToCartButton productToCart={activeVariant} />
-                  <AddToWishlistButton productToFavorites={activeVariant} />
+                  <AddToWishlistButton productToFavorites={activeVariant}   disabled={isAlreadyInWishlist}
+ />
                 </div>
               </div>
             </div>
