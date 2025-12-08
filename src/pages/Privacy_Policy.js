@@ -6,6 +6,7 @@ import CookiePolicy from "./CookiePolicy";
 
 
 
+
 function Privacy_Policy() {
 
     const privacyData = [

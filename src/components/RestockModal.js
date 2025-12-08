@@ -4,7 +4,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 function RestockModal({ open, onClose, onSuccess }) {
-
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -13,10 +12,13 @@ function RestockModal({ open, onClose, onSuccess }) {
     validationSchema: Yup.object({
       name: Yup.string().required("Name is required"),
       contact: Yup.string()
-      .matches(/^[0-9]{10}$/, "Enter a valid 10-digit number")
-      .required("Phone number is required"),
+        .matches(/^[0-9]{10}$/, "Enter a valid 10-digit number")
+        .required("Phone number is required"),
     }),
     onSubmit: (values) => {
+      // log to console
+      console.log("Restock request:", values);
+      // call success callback
       onSuccess();
     },
   });
@@ -28,6 +30,11 @@ function RestockModal({ open, onClose, onSuccess }) {
 
   if (!open) return null; // AFTER hooks
 
+  // sanitize contact input to numbers only
+  const handleContactChange = (e) => {
+    const digitsOnly = e.target.value.replace(/\D/g, "").slice(0, 10); // max 10 digits
+    formik.setFieldValue("contact", digitsOnly);
+  };
 
   return (
     <div
@@ -53,7 +60,6 @@ function RestockModal({ open, onClose, onSuccess }) {
 
         {/* FORM */}
         <form onSubmit={formik.handleSubmit} className="mt-4">
-
           {/* Name */}
           <input
             type="text"
@@ -62,19 +68,23 @@ function RestockModal({ open, onClose, onSuccess }) {
             className="w-full px-1 py-2 rounded-lg border border-[#AA8B6F] bg-white text-[#4A4032] focus:outline-none placeholder:text-[14px] placeholder-[#979797] placeholder:font-normal"
             value={formik.values.name}
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           />
           {formik.errors.name && formik.touched.name && (
             <p className="text-red-600 text-sm mt-1">{formik.errors.name}</p>
           )}
 
-          {/* Contact */}
+          {/* Contact (numbers only) */}
           <input
-            type="text"
+            type="tel"
             name="contact"
             placeholder="Phone Number"
+            inputMode="numeric"
+            maxLength={10}
             className="w-full px-1 py-2 rounded-lg border border-[#AA8B6F] bg-white text-[#4A4032] mt-3 focus:outline-none placeholder:text-[14px] placeholder-[#979797] placeholder:font-normal"
             value={formik.values.contact}
-            onChange={formik.handleChange}
+            onChange={handleContactChange}
+            onBlur={formik.handleBlur}
           />
           {formik.errors.contact && formik.touched.contact && (
             <p className="text-red-600 text-sm mt-1">{formik.errors.contact}</p>

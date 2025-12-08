@@ -44,6 +44,8 @@ function Navbar() {
 
   // Product dropdown - desktop
   const [productDropdown, setProductDropdown] = useState(false);
+  // const [showOverlay, setShowOverlay] = useState(false);
+
 
   // Catergory
   const productCatergory = [
@@ -80,6 +82,7 @@ function Navbar() {
   const handleMouseLeave = () => {
     closeTimer.current = setTimeout(() => {
       setProductDropdown(false);
+      // setShowOverlay(true);
     }, 500);
   };
   const handleClose = () => {
@@ -105,7 +108,7 @@ function Navbar() {
   const [mobileActiveTab, setMobileActiveTab] = useState("men"); // for mobile pills
 
   // Product dropdown datas
-  const mobileCategories = ["men", "women", "couples"]; // to match your design
+  const mobileCategories = ["men", "women", "couples", "Gifts"]; // to match your design
 
 
 
@@ -243,6 +246,7 @@ function Navbar() {
           
           {/* Product dropdown */}
           <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+
             <Link to="#"
               className={`rounded-full py-2.5 px-4 text-white transition-all duration-200 flex items-center ${isActive("/products") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F] opacity-50"}`} >
               Products
@@ -250,6 +254,9 @@ function Navbar() {
             </Link>
 
             {/* Dropdown */}
+            {/* {productDropdown && (
+              <div className="fixed inset-0 z-20 bg-black/40"></div>
+            )} */}
             {productDropdown && (
               <div className="absolute top-[111px] left-1/2 transform -translate-x-1/2 min-w-[1000px] h-fit bg-[#FFF5E8] px-10 py-8 shadow-2xl z-30 rounded-lg">
                 <h2 className="font-atteron text-primary text-[32px] text-center mb-8">Product Caterogry</h2>

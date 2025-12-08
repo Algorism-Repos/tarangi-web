@@ -51,7 +51,7 @@ function AddToCartButton({
     <>
       <button
         className={`cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]
-          w-full h-[52px] rounded-full text-primary text-[16px] font-medium mt-2
+          w-full h-[45px] sm:h-[52px] rounded-full text-primary text-[14px] font-medium mt-2 sm:text-[16px]
           transition-all duration-300 ease-in-out 
           ${isDisabledInFavourites ? "hover:bg-[#4B001A] hover:text-white" : "hover:bg-[#4B001A] hover:text-white"}
         `}
@@ -64,7 +64,7 @@ function AddToCartButton({
         onClick={handleClick}
       >
         {!isDisabledInFavourites && (
-          <img className="w-[32px] h-[32px]" src={cartIconSrc} alt="" />
+          <img className="w-[26px] sm:w-[32px] sm:h-[32px]" src={cartIconSrc} alt="" />
         )}
 
         {isDisabledInFavourites ? "Remove from favourites" : "Add to cart"}

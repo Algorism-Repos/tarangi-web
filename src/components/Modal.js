@@ -15,9 +15,9 @@ function Modal({ modal, active, productName }) {
     email: Yup.string()
       .email("Invalid email")
       .required("Email is Required"),
-    phone: Yup.string()
+     phone: Yup.string()
       .required("Phone Number is Required")
-      .matches(/^[0-9]+$/, "Invalid Phone Number")
+      .matches(/^[0-9]{10}$/, "Invalid Phone Number")
       .length(10, "Invalid Phone Number"),
     product: Yup.string().required("Please enter a Product"),
   });
@@ -42,6 +42,23 @@ function Modal({ modal, active, productName }) {
       }, 3000);
     },
   });
+
+    useEffect(() => {
+    if (modal) {
+      // store previous overflow to restore exactly
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev || "auto";
+      };
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    // ensure cleanup on unmount
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [modal]);
 
   // ✅ Sync productName prop with Formik values
   useEffect(() => {
@@ -70,6 +87,12 @@ function Modal({ modal, active, productName }) {
       .catch((error) => {
         console.error("Fetch error:", error);
       });
+  };
+
+    const handlePhoneChange = (e) => {
+    const raw = e.target.value || "";
+    const digitsOnly = raw.replace(/\D/g, "").slice(0, 10);
+    formik.setFieldValue("phone", digitsOnly);
   };
 
   return (
@@ -105,7 +128,7 @@ function Modal({ modal, active, productName }) {
             <div className="flex flex-col items-center gap-y-5 max-w-[317px] mx-auto mt-7">
               {/* Name */}
               <div className="flex flex-col w-full">
-                <label className="font-poppins text-[12px] font-medium leading-[16.8px] text-[#03060D]">
+                <label className="font-poppins text-[14px] font-medium leading-[16.8px] text-[#03060D]">
                   Name
                 </label>
                 <input
@@ -116,33 +139,35 @@ function Modal({ modal, active, productName }) {
                   onBlur={formik.handleBlur}
                   value={formik.values.name}
                 />
-                <h4 className="font-poppins text-red-700 text-[12px] mt-1">
+                <h4 className="font-poppins text-red-700 text-[14px] mt-1">
                   {formik.touched.name && formik.errors.name}
                 </h4>
               </div>
 
               {/* Phone */}
               <div className="flex flex-col w-full">
-                <label className="font-poppins text-[12px] font-medium leading-[16.8px] text-[#03060D]">
+                <label className="font-poppins text-[14px] font-medium leading-[16.8px] text-[#03060D]">
                   Phone Number
                 </label>
                 <input
                   className="input-box"
                   name="phone"
                   type="tel"
-                  onChange={formik.handleChange}
+                  inputMode="numeric"
+                  maxLength={10}
+                  onChange={handlePhoneChange}
                   onBlur={formik.handleBlur}
                   placeholder="+91 00000 00000"
                   value={formik.values.phone}
                 />
-                <h4 className="font-poppins text-red-700 text-[12px] mt-1">
+                <h4 className="font-poppins text-red-700 text-[14px] mt-1">
                   {formik.touched.phone && formik.errors.phone}
                 </h4>
               </div>
 
               {/* Email */}
               <div className="flex flex-col w-full">
-                <label className="font-poppins text-[12px] font-medium leading-[16.8px] text-[#03060D]">
+                <label className="font-poppins text-[14px] font-medium leading-[16.8px] text-[#03060D]">
                   E-mail
                 </label>
                 <input
@@ -153,14 +178,14 @@ function Modal({ modal, active, productName }) {
                   onBlur={formik.handleBlur}
                   value={formik.values.email}
                 />
-                <h4 className="font-poppins text-red-700 text-[12px] mt-1">
+                <h4 className="font-poppins text-red-700 text-[14px] mt-1">
                   {formik.touched.email && formik.errors.email}
                 </h4>
               </div>
 
               {/* Product */}
               <div className="flex flex-col w-full">
-                <label className="font-poppins text-[12px] font-medium leading-[16.8px] text-[#03060D]">
+                <label className="font-poppins text-[14px] font-medium leading-[16.8px] text-[#03060D]">
                   Products interested in
                 </label>
                 <input
@@ -172,7 +197,7 @@ function Modal({ modal, active, productName }) {
                   onBlur={formik.handleBlur}
                   value={formik.values.product}
                 />
-                <h4 className="font-poppins text-red-700 text-[12px] mt-1">
+                <h4 className="font-poppins text-red-700 text-[14px] mt-1">
                   {formik.touched.product && formik.errors.product}
                 </h4>
               </div>
