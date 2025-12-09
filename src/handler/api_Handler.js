@@ -3,7 +3,7 @@ import axios from "axios";
 let url = "http://localhost:8080/api/shopify";
 // let url = "https://tarangijewels.com/api/shopify"
 
-
+ 
 export async function FetchAllProductFromShopify() {
   try {
     const response = await axios.get(

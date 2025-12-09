@@ -21,7 +21,7 @@ function CheckoutPage() {
   const [useDifferentBilling, setUseDifferentBilling] = useState(false);
   const navigate = useNavigate();
   const [giftWrapPrice, setGiftWrapPrice] = useState(0);
-
+  const [orderId, setOrderId] = useState();
   const { cartItems, clearCart } = useContext(AppContext);
   const [showSummary, setShowSummary] = useState(false);
   const [formValues, setFormValues] = useState([]);
@@ -134,8 +134,28 @@ function CheckoutPage() {
     },
   });
   console.log(formValues);
-    console.log(cartItems);
+  console.log(cartItems);
+  const handlePincodeCheck = async (field) => {
+    console.log(field);
+    const pincode = formik.values[field];
+    if (!pincode || pincode.length !== 6) return;
+    try {
+      const response = await FetchDeliveryByPincode(pincode);
+      const state = response?.CSTATE || response?.data?.CSTATE || "";
+      const city = response?.CITY || response?.data?.CITY || "";
 
+      if (!state || !city) return;
+
+      const mapping = {
+        pincode: { city: "city", state: "state" },
+        billingPincode: { city: "billingCity", state: "billingState" },
+      };
+      formik.setFieldValue(mapping[field].city, city);
+      formik.setFieldValue(mapping[field].state, state);
+    } catch (error) {
+      console.log("Error fetching pincode", error);
+    }
+  };
   const handlePlaceOrder = async (formValues, customerId) => {
     console.log(cartItems);
     if (!cartItems || cartItems.length === 0) return;
@@ -179,6 +199,9 @@ function CheckoutPage() {
         "http://localhost:8080/api/shopify/order",
         orderData
       );
+      setOrderId(response.data.id);
+      
+      sendWhatsapp(response.data.id);
       navigate("/thankyou");
       console.log("Order placed successfully:", response.data);
     } catch (error) {
@@ -188,29 +211,14 @@ function CheckoutPage() {
       );
     }
   };
-
-  const handlePincodeCheck = async (field) => {
-    console.log(field);
-    const pincode = formik.values[field];
-    if (!pincode || pincode.length !== 6) return;
-    try {
-      const response = await FetchDeliveryByPincode(pincode);
-      const state = response?.CSTATE || response?.data?.CSTATE || "";
-      const city = response?.CITY || response?.data?.CITY || "";
-
-      if (!state || !city) return;
-
-      const mapping = {
-        pincode: { city: "city", state: "state" },
-        billingPincode: { city: "billingCity", state: "billingState" },
-      };
-      formik.setFieldValue(mapping[field].city, city);
-      formik.setFieldValue(mapping[field].state, state);
-    } catch (error) {
-      console.log("Error fetching pincode", error);
-    }
+  const sendWhatsapp = (orderId) => {
+    const phoneNumber = "919003058300";
+    const message = `Hi, my order has been placed. My Order ID is: ${orderId}`;
+    const url = `https://wa.me/${phoneNumber}/?text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(url, "_blank");
   };
-
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -308,7 +316,9 @@ function CheckoutPage() {
                   alt="truck icon"
                   className="w-4 h-4 object-contain"
                 />
-                <span>Est. delivery by {cartItems[0]?.deliverDetails?.date}</span>
+                <span>
+                  Est. delivery by {cartItems[0]?.deliverDetails?.date}
+                </span>
               </div>
 
               <div className="border-t border-[#EDEDED] my-3" />
@@ -520,7 +530,10 @@ function CheckoutPage() {
                         formik.handleBlur(e);
                         handlePincodeCheck("pincode", e.target.value);
                       }}
-                      value={formik.values.pincode || cartItems[0]?.deliverDetails.pincode}
+                      value={
+                        formik.values.pincode ||
+                        cartItems[0]?.deliverDetails.pincode
+                      }
                       className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
                         formik.errors.pincode && formik.touched.pincode
                           ? "border-red-500"
@@ -542,7 +555,9 @@ function CheckoutPage() {
                       name="city"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.city || cartItems[0]?.deliverDetails?.city}
+                      value={
+                        formik.values.city || cartItems[0]?.deliverDetails?.city
+                      }
                       className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
                         formik.errors.city && formik.touched.city
                           ? "border-red-500"
@@ -564,7 +579,10 @@ function CheckoutPage() {
                       name="state"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.state || cartItems[0]?.deliverDetails?.state}
+                      value={
+                        formik.values.state ||
+                        cartItems[0]?.deliverDetails?.state
+                      }
                       className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${
                         formik.errors.state && formik.touched.state
                           ? "border-red-500"
@@ -856,8 +874,11 @@ function CheckoutPage() {
                       <span className="checkmark"></span>
                     </label>
                     <p className=" text-[16px] mx-2  text-[#313131] absolute top-0 left-6">
-                      I agree to the <Link to="/terms" className="underline text-primary">Terms & Conditions</Link> and Jewel Care
-                      Instructions.
+                      I agree to the{" "}
+                      <Link to="/terms" className="underline text-primary">
+                        Terms & Conditions
+                      </Link>{" "}
+                      and Jewel Care Instructions.
                     </p>
                   </div>
                 </div>
@@ -917,7 +938,9 @@ function CheckoutPage() {
                   alt="truck icon"
                   className="w-4 h-4 object-contain"
                 />
-                <span>Est. delivery by {cartItems[0]?.deliverDetails?.date}</span>
+                <span>
+                  Est. delivery by {cartItems[0]?.deliverDetails?.date}
+                </span>
               </div>
 
               <div className="border-t border-[#EDEDED] my-4" />
