@@ -151,7 +151,7 @@ function Product_Listing({ productCatergory }) {
 
   return (
     <>
-      <div className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-y-10 sm:gap-x-[30px] px-1.5 ">
+      <div className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-[15px] sm:gap-y-10 sm:gap-x-[30px] px-1.5">
         {products.map((item) => {
           // const isOutOfStock = item.variants[0].inventory_quantity === 0;
           const isOutOfStock = "";
@@ -213,15 +213,15 @@ function Product_Listing({ productCatergory }) {
               )}
 
               {/* PRODUCT DETAILS */}
-              <div className="mt-2 flex flex-wrap gap-2 justify-between sm:mt-3">
+              <div className="mt-2 flex flex-wrap gap-1.5 justify-between sm:mt-3">
                 <div>
                   <h1 className="text-[13px] font-semibold sm:text-[18px] text-[#313131]">
                     {item?.title}
                   </h1>
                 </div>
 
-                <div className="mt-1.5 flex items-center justify-between w-full">
-                  <h3 className="text-[13px] text-[#4E4E4E] font-medium sm:text-[18px] mt-1">
+                <div className="flex items-center justify-between w-full">
+                  <h3 className="text-[12.5px] text-[#4E4E4E] font-normal sm:text-[18px]">
                     ₹{" "}
                     {item.variants != null
                       ? parseInt(item.variants?.[0]?.price).toLocaleString(

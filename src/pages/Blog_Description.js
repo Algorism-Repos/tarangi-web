@@ -83,9 +83,9 @@ function Blog_Description() {
 
                     <div className="max-w-[1286px] text-[#595959] space-y-[40px] mx-auto ">
                         {termsData.map((item, idx) => (
-                            <div key={idx} className="font-[poppins] font-normal text-[16px] sm:text-[19px]">
+                            <div key={idx} className="font-[poppins] ">
                                 <h2 className="text-[#313131] font-medium text-[18px] mb-[8px] sm:text-[20px]">{item.title}</h2>
-                                <p>{item.content}</p>
+                                <p className="text-[#595959] font-normal text-[16px] sm:text-[19px]">{item.content}</p>
                             </div>
                         ))}
                     </div>

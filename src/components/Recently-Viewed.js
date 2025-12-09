@@ -52,7 +52,7 @@ function Recently_Viewed() {
         Recently Viewed
       </h1>
         
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[20px] gap-y-6 mt-[25px] sm:gap-x-[24px]">
         {recentlyViewed?.map((item) => {
           const colorImages = IMAGE_BY_COLOR(item);
           const selectedColor = item.selectedColor || "gold";
@@ -85,8 +85,8 @@ function Recently_Viewed() {
                 </div>
 
                 <div className="mt-1.5 flex items-center justify-between">
-                  <h3 className="text-[13px] text-[#4E4E4E] font-medium sm:text-[18px] mt-1">
-                    ₹{item.price}
+                  <h3 className="text-[12.5px] text-[#4E4E4E] font-normal sm:text-[18px] mt-1">
+                    ₹ {item.price}
                   </h3>
 
                   {/* Color Options */}

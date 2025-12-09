@@ -159,25 +159,25 @@ function Cart() {
                 <div className="bg-[#FFFAF3] p-[24px] rounded-[16px] shadow-2xl mt-[25px]">
                   <div className="space-y-[16px]">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-[16px] text-[#878787] font-semibold">
+                      <h3 className="text-[16px] text-[#878787] font-normal">
                         Sub total
                       </h3>
-                      <h3 className="text-[16px] text-[#404040] font-medium">
+                      <h3 className="text-[16px] text-[#404040] font-normal">
                         ₹{subtotal.toLocaleString("en-IN")}
                       </h3>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <h3 className="text-[16px] text-[#878787] font-semibold">
+                      <h3 className="text-[16px] text-[#878787] font-normal">
                         Tax
                       </h3>
-                      <h3 className="text-[16px] text-[#404040] font-medium">
+                      <h3 className="text-[16px] text-[#404040] font-normal">
                         ₹{tax.toFixed(0)}
                       </h3>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <h3 className="text-[16px] text-[#878787] font-semibold">
+                      <h3 className="text-[16px] text-[#878787] font-normal">
                         Shipping
                       </h3>
                       <h3 className="text-[16px] text-primary font-medium max-[425px]:text-[14px]">
@@ -195,19 +195,25 @@ function Cart() {
                         ₹{total.toLocaleString("en-IN")}
                       </h3>
                     </div>
-                    <Link
-                      to="/checkout"
-                      state={{
-                        subtotal: subtotal,
-                        shipping: shipping,
-                        tax: tax,
-                        total: total,
-                      }}
-                    >
-                      <button className="bg-[#4B001A] text-white w-full h-[51px] rounded-full max-[425px]:h-[46px] max-[425px]:text-[15px]">
-                        Place Order
-                      </button>
-                    </Link>
+
+                    <div className="flex flex- w-full gap-x-[25px]">
+                      <Link to={"/products/:handle"} className="text-[15px] border-primary border-2 rounded-full py-3 px-4 text-primary">Continue Shopping</Link>
+
+                      <Link
+                        to="/checkout"
+                        state={{
+                          subtotal: subtotal,
+                          shipping: shipping,
+                          tax: tax,
+                          total: total,
+                        }}
+                      >
+                        <button className="bg-[#4B001A] text-white w-[210px] py-3 rounded-full text-[16px]">
+                          Place Order
+                        </button>
+                      </Link>
+                    </div>
+
                   </div>
                 </div>
               </div>
@@ -221,7 +227,7 @@ function Cart() {
             </h1>
             <div className="sm:max-w-fit mx-auto xl:mx-0 ">
               <div className="flex flex-row flex-wrap gap-x-12 gap-y-9 sm:gap-x-[50px] items-center justify-center max-[425px]:gap-x-[10px]">
-                {boughtTogether?.slice(0,6).map((item) => (
+                {boughtTogether?.slice(0, 6).map((item) => (
                   <div className="bg-[#FFFAF3] max-w-[580px] p-[24px] rounded-[16px] shadow-2xl mt-[25px] max-[425px]:p-[16px] ">
                     <div className="relative space-y-[10px]">
                       {/* <input
@@ -244,7 +250,7 @@ function Cart() {
                     </div>
                     {/* Total Price */}
                     <div className="mt-[24px]">
-                      <AddToCartButton productToCart={item}/>
+                      <AddToCartButton productToCart={item} />
                     </div>
                   </div>
                 ))}
@@ -309,6 +315,10 @@ function Cart() {
                     {showSummary ? "Hide Order Summary" : "View Order Summary"}
                   </button>
                 </div>
+
+                {/* <Link to="/" className="flex items-center justify-center gap-x-[8px] bg-[#4B001A] w-[220px] h-[56px] rounded-full text-white text-[18px] font-medium ">
+                  Continue Shopping
+                </Link > */}
                 <button className="bg-[#4B001A] text-white px-6 py-2 rounded-full font-medium text-[14px]">
                   Place Order
                 </button>

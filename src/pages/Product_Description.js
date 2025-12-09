@@ -134,8 +134,9 @@ function Product_Description() {
             <p> {product.title}</p>
           </div>
 
-          <div className="flex flex-wrap items-start justify-around gap-10 sm:my-[40px] xl:my-[70px] ">
+          <div className="flex flex-wrap items-center justify-evenly gap-10 sm:my-[40px] xl:my-[70px] ">
             {/* Product Image */}
+
             <div className="w-[380px] overflow-hidden sm:max-w-[400px] lg:mt-20 mb-5">
               <Swiper
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
@@ -145,7 +146,7 @@ function Product_Description() {
                     setColorSelected(product.variants[id].colorVariant);
                   }
                 }}
-                spaceBetween={0}
+                spaceBetween={30}
                 pagination={{ dynamicBullets: true }}
                 modules={[Pagination]}
               >
@@ -154,7 +155,7 @@ function Product_Description() {
                     <SwiperSlide>
                       <img
                         src={item.image}
-                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]"
+                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px] mx-auto"
                       />
                     </SwiperSlide>
                   ))
@@ -162,7 +163,7 @@ function Product_Description() {
                     <SwiperSlide>
                       <img
                         src={item}
-                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px]"
+                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px] mx-auto"
                       />
                     </SwiperSlide>
                   ))}
@@ -170,8 +171,8 @@ function Product_Description() {
             </div>
 
             {/* Product Detail */}
-            <div className="lg:min-w-[633px]">
-              <div className="space-y-[3px]">
+            <div className="min-w-full sm:min-w-[633px]">
+              <div className="space-y-[5px]">
                 <h1 className="font-atteron text-primary text-[24px] sm:text-[32px] tracking-[1px] mt-3 sm:mt-0">
                   {product.title}
                 </h1>
@@ -244,7 +245,7 @@ function Product_Description() {
                 </div>
 
                 <div className=" max-w-full sm:max-w-[305px] flex flex-wrap justify-between  font-[poppins] text-center text-[#313131] mt-9 sm:my-5">
-                  <div className="max-w-[75px] ">
+                  <div className="max-w-[75px]">
                     <img
                       className="w-[42px] h-[42px] mx-auto"
                       src={pure_silver}
@@ -332,13 +333,13 @@ function Product_Description() {
         </div>
 
         {/* Suggested products */}
-        <div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 sm:px-0">
+        <div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 xl:px-0">
           <div>
             <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
               you may also like
             </h1>
 
-            <div className="flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[20px] gap-y-6 mt-[25px] sm:gap-x-[24px]">
               {categorizedProduct?.slice(0, 4).map((item) => {
                 return (
                   <div
