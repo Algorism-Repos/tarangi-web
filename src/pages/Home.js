@@ -369,9 +369,8 @@ function Home() {
             <h1 className="font-atteron uppercase text-[40px] text-center xl:text-left sm:text-[50px] xl:text-[65px] text-white font-normal w-full sm:max-w-[720px] mx-auto tracking-[1px] xl:mx-0">
               Born from tradition Designed for today
             </h1>
-            <h4 className="font-poppins text-[13px] w-[270px]  sm:text-[22px] font-normal leading-normal text-white text-center xl:text-left mt-8 max-w-[640px] mx-auto xl:mx-0">
-              Because exculsive 925 silver jewelry should feel as unique as the
-              one who wears it.
+            <h4 className="font-poppins text-[13px] w-[270px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center xl:text-left mt-8 max-w-[640px] mx-auto xl:mx-0">
+              Because exculsive 925 silver jewelry should feel as unique as the one who wears it.
             </h4>
             <a
               href="#launchOffers"
@@ -404,10 +403,11 @@ function Home() {
           </div>
         </SwiperSlide>
 
+        {/* Men Banner */}
         <SwiperSlide>
           <div className="men-banner-slider">
-            <h1 className="font-atteron uppercase text-white text-[40px] text-center xl:text-left sm:text-[50px] xl:text-[62px] font-normal w-full sm:max-w-[780px] tracking-[1px]">
-              Heritage of Strength Crafted for Character
+            <h1 className="font-atteron uppercase text-white text-[40px] text-center xl:text-left sm:text-[50px] xl:text-[62px] font-normal w-full sm:max-w-[700px] tracking-[1px]">
+              More than Jewelry Its your Signature
             </h1>
             <h4 className="font-poppins text-[13px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center xl:text-left mt-3 sm:mt-6 xl:mt-8 max-w-[640px]">
               Because distinguished 925 silver jewelry should feel as commanding as the one who wears it.

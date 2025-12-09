@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 
 // Images
-import sort_icon from "../assets/search_icon_red.png";
+import sort_icon from "../assets/sort_icon.png";
 import down_arrow from "../assets/Products/down_arrow.png";
 import blog_1 from "../assets/blog_1.png";
-import {FetchAllBlogsFromShopify, FetchBlogPosts,} from "../handler/api_Handler";
+import { FetchAllBlogsFromShopify, FetchBlogPosts, } from "../handler/api_Handler";
 import { parseArticleBody } from "../utils/helper";
+import { Link } from "react-router";
 
 function Blog() {
   const [blogs, setBlogs] = useState([]);
@@ -13,7 +14,7 @@ function Blog() {
   const [sortedBlogData, setSortedBlogData] = useState([]);
   const [sortOption, setSortOption] = useState("Latest");
   const [showSort, setShowSort] = useState("");
-  const [selectedSort, setSelectedSort] = useState ("Latest");
+  const [selectedSort, setSelectedSort] = useState("Latest");
 
 
   //  fetching blogs
@@ -46,7 +47,7 @@ function Blog() {
     // All the articles in one array
     const extractedArticles = allBlogData.flatMap(item =>
       item.articles.map(article => ({
-        ...article, 
+        ...article,
         blogId: item.blogId
       }))
     );
@@ -65,37 +66,36 @@ function Blog() {
     }
     setSortedBlogData(sorted);
   }, [allBlogData, sortOption]);
-    console.log("allData", allBlogData);
-    useEffect(() => {
-      if (blogs.length > 0) {
-        loadAllBlogArticles();
-      }
-    }, [blogs]);
-    useEffect(() => {
-      Blogs();
-    }, []);
+  console.log("allData", allBlogData);
+  useEffect(() => {
+    if (blogs.length > 0) {
+      loadAllBlogArticles();
+    }
+  }, [blogs]);
+  useEffect(() => {
+    Blogs();
+  }, []);
 
   const SortOptions = ["Latest", "Oldest"];
   return (
     <>
       {/* Banner */}
       <div className="blog-banner text-white">
-        <h1 className="font-atteron text-[80px] font-normal ">Blog</h1>
-        <p className="font-[poppins] text-[20px] mt-[20px] text-center">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-        </p>
+        <h1 className="font-atteron text-[80px] font-normal mt-[150px] sm:mt-0 tracking-[1px]">Blogs</h1>
       </div>
 
       {/* Blogs */}
-      <div className="bg-light-sandal py-[75px]">
+      <div className="bg-light-sandal py-[75px] h-fit relative">
+
         {/* Search & Filters */}
         <div className="max-w-[1320px] mx-auto flex flex-col gap-10  md:flex-row md:items-center md:justify-between px-4 lg:gap-20">
-          {/* Search */}
 
+          {/* Empty div */}
+          <div></div>
 
           {/* Filter */}
           <div className="relative flex items-center gap-4 md:gap-6 hidden lg:flex">
-            <label className="font-poppins text-font-grey text-[14px] md:text-[16px]">
+            <label className="font-poppins text-[#4E4E4E] text-[14px] md:text-[16px]">
               Sort by
             </label>
 
@@ -120,54 +120,57 @@ function Blog() {
           </div>
         </div>
 
-        <div className="max-w-[1320px] mx-auto px-4 my-[40px] flex flex-wrap gap-x-[15px] gap-y-[60px] justify-between">
+        <div className="max-w-[1310px] mx-auto px-4 my-[45px] grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-[20px] gap-y-[60px] justify-between">
           {sortedBlogData.map((article) => {
             const content = parseArticleBody(article.body);
 
             return (
-              <div className="max-w-[410px] mx-auto font-[poppins]">
-                <img className="w-[361px] h-fit sm:w-[414px] sm:h-[289px] object-cover rounded-[18px]"
-                  src={article?.image?.src}
-                  alt="Blog image"
-                />
+              <Link to="/blogdescription">
+                <div className="max-w-[410px] mx-auto font-[poppins] xl:mx-0">
+                  <img className="w-[361px] h-[300px] sm:w-[415px] sm:h-[290px] object-cover rounded-[18px]"
+                    src={article?.image?.src}
+                    alt="Blog image"
+                  />
 
-                <p className="text-[#6E6E6E] text-[14px] mt-[24px]">
-                  {new Date(article.createdAt).toDateString()}
-                </p>
-                <h1 className="text-[#404040] text-[24px] mt-2">
+                  <p className="text-[#6E6E6E] text-[14px] mt-[24px]">
+                    {new Date(article.createdAt).toDateString()}
+                  </p>
+                  {/* <h1 className="text-[#6E6E6E] text-[14px] font-medium">
                   {article.title}
-                </h1>
-                <h1 className="text-[#404040] text-[24px] mt-2">
-                  {content.headings}
-                </h1>
-                <p className="text-[#6E0027] text-[16px]">
-                  {content.paragraphs[0].slice(0, 120)}...
-                </p>
-                <button className="text-[#6E0027] font-semibold mt-2">
-                  Read more
-                </button>
-              </div>
+                </h1> */}
+                  <h1 className="text-[#404040] text-[24px] font-medium mt-2">
+                    {content.headings}
+                  </h1>
+                  <p className="text-[#6E0027] text-[16px] font-normal mt-1">
+                    {content.paragraphs[0].slice(0, 120)}...
+                  </p>
+                  <button className="text-[#6E0027] font-semibold mt-2">
+                    Read more
+                  </button>
+                </div>
+              </Link>
             );
           })
           }
-          {/* MOBILE SORT BUTTON — FIXED FOOTER */}
-          <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden px-4 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
-            <div className="flex justify-between">
-              <div
-                className="group flex items-center gap-x-[8px] cursor-pointer"
-                onClick={() => setShowSort(true)}
-              >
-                <img className="w-[24px] h-[24px]" src={sort_icon} alt="Sort" />
-                <button className="text-primary text-[18px] font-semibold">
-                  Sort
-                </button>
-              </div>
+        </div>
+        
+        {/* MOBILE SORT BUTTON — FIXED FOOTER */}
+        <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
+          <div className="flex justify-between">
+            <div
+              className="group flex items-center gap-x-[8px] cursor-pointer"
+              onClick={() => setShowSort(true)}
+            >
+              <img className="w-[24px] h-[24px]" src={sort_icon} alt="Sort" />
+              <button className="text-primary text-[18px] font-semibold">
+                Sort
+              </button>
             </div>
           </div>
 
           {/* MOBILE SORT POPUP */}
           {showSort && (
-            <div className="fixed inset-0 bg-black bg-opacity-40 z-40 flex items-end lg:hidden">
+            <div className="fixed inset-0 bg-black bg-opacity-40 z-40 flex items-end w-full lg:hidden">
               <div className="w-full bg-[#FFF5EA] rounded-t-[20px] p-6 pb-10">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-4">
@@ -205,7 +208,7 @@ function Blog() {
           )}
         </div>
       </div>
-    
+
     </>
   );
 }

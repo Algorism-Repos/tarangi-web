@@ -151,6 +151,8 @@ function Terms_Condition() {
                 
             </div>
             
+            <Grievance_policy />
+
             <DisclaimerPolicy />
 
             

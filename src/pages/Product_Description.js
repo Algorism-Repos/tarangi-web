@@ -134,7 +134,7 @@ function Product_Description() {
             <p> {product.title}</p>
           </div>
 
-          <div className="flex flex-wrap items-start justify-around  sm:my-[40px] xl:my-[70px] ">
+          <div className="flex flex-wrap items-start justify-around gap-10 sm:my-[40px] xl:my-[70px] ">
             {/* Product Image */}
             <div className="w-[380px] overflow-hidden sm:max-w-[400px] lg:mt-20 mb-5">
               <Swiper
@@ -206,8 +206,9 @@ function Product_Description() {
                 <h3 className="text-[#6F6F6F] text-[14px] font-medium mt-5 sm:mt-0">
                   Description
                 </h3>
-                <p className="text-[#484848] text-[16px] font-medium ">
+                <p className="text-[#484848] text-[16px] font-medium max-w-[633px]">
                   {product.description}
+                  {/* At Tarangi Jewels, every piece of 92.5 silver jewellery reflects impeccable artistry and sophisticated charm. Experience jewellery that is as beautiful as it is timeless. */}
                 </p>
 
                 {/*Colors Available Section - Mobile  */}
