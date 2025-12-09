@@ -179,7 +179,6 @@ function CheckoutPage() {
         "http://localhost:8080/api/shopify/order",
         orderData
       );
-      clearCart();
       navigate("/thankyou");
       console.log("Order placed successfully:", response.data);
     } catch (error) {
@@ -309,7 +308,7 @@ function CheckoutPage() {
                   alt="truck icon"
                   className="w-4 h-4 object-contain"
                 />
-                <span>Est. delivery by 22 Oct</span>
+                <span>Est. delivery by {cartItems[0]?.deliverDetails?.date}</span>
               </div>
 
               <div className="border-t border-[#EDEDED] my-3" />
@@ -521,7 +520,7 @@ function CheckoutPage() {
                         formik.handleBlur(e);
                         handlePincodeCheck("pincode", e.target.value);
                       }}
-                      value={formik.values.pincode}
+                      value={formik.values.pincode || cartItems[0]?.deliverDetails.pincode}
                       className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
                         formik.errors.pincode && formik.touched.pincode
                           ? "border-red-500"
@@ -543,7 +542,7 @@ function CheckoutPage() {
                       name="city"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.city}
+                      value={formik.values.city || cartItems[0]?.deliverDetails?.city}
                       className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
                         formik.errors.city && formik.touched.city
                           ? "border-red-500"
@@ -565,7 +564,7 @@ function CheckoutPage() {
                       name="state"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.state}
+                      value={formik.values.state || cartItems[0]?.deliverDetails?.state}
                       className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${
                         formik.errors.state && formik.touched.state
                           ? "border-red-500"
@@ -918,7 +917,7 @@ function CheckoutPage() {
                   alt="truck icon"
                   className="w-4 h-4 object-contain"
                 />
-                <span>Est. delivery by 22 Oct</span>
+                <span>Est. delivery by {cartItems[0]?.deliverDetails?.date}</span>
               </div>
 
               <div className="border-t border-[#EDEDED] my-4" />

@@ -14,14 +14,14 @@ function Product_Filter({ productCatergory, collectionName }) {
 
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedPrices, setSelectedPrices] = useState([]);
-  const [sortOption, setSortOption] = useState("Latest");
+  const [sortOption, setSortOption] = useState("Price Low to High");
   const [showSort, setShowSort] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [tab, setTab] = useState("productCatergory");
   const { productListFromShopify, filteredProducts, setFilteredProducts } =
     useContext(AppContext);
 
-  const SortOptions = ["Price High to Low", "Price Low to High"];
+  const SortOptions = ["Price Low to High", "Price High to Low" ];
   const priceRanges = [
     { label: "₹10,000 – ₹15,000" },
     { label: "₹15,000 – ₹25,000" },
@@ -99,27 +99,36 @@ function Product_Filter({ productCatergory, collectionName }) {
     filtered = sortProducts(filtered, sortOption);
     setFilteredProducts(filtered);
   };
-  const sortProducts = (products, sortBy) => {
-    const sorted = [...products];
-    if (sortBy === "Latest") {
-      sorted.sort(
-        (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
-    } else if (sortBy === "Price High to Low") {
-      sorted.sort(
-        (a, b) =>
-          Number(b.variants?.[0]?.price) - Number(a.variants?.[0]?.price)
-      );
-    } else if (sortBy === "Price Low to High") {
-      sorted.sort(
-        (a, b) =>
-          Number(a.variants?.[0]?.price) - Number(b.variants?.[0]?.price)
-      );
-    } else if (sortBy === "Featured") {
-    }
-    return sorted;
-  };
+
+
+const getPrice = (product) => {
+  if (product.type === "simple") {
+    return Number(product.price);
+  }
+  return Number(product.variants?.[0]?.price || 0);
+};
+const sortProducts = (products, sortBy) => {
+  const sorted = [...products];
+
+  if (sortBy === "Latest") {
+    sorted.sort(
+      (item, key) =>
+        new Date(key.createdAt).getTime() - new Date(item.createdAt).getTime()
+    );
+  }
+  else if (sortBy === "Price High to Low") {
+    sorted.sort((item, key) => getPrice(key) - getPrice(item));
+  }
+
+  else if (sortBy === "Price Low to High") {
+    sorted.sort((item, key) => getPrice(item) - getPrice(key));
+  }
+
+  else if (sortBy === "Featured") {
+  }
+
+  return sorted;
+};
 
   const handleSortSelection = (option) => {
     setSortOption(option);
@@ -456,33 +465,12 @@ function Product_Filter({ productCatergory, collectionName }) {
                   Sort Designs By
                 </h2>
 
-                <button
-                  className="text-[16px] font-medium text-left focus:text-primary"
-                  onClick={() => handleSortSelection("Latest")}
-                >
-                  Latest
-                </button>
+                {SortOptions.map((items) =>(
+                  <button className={`text-[16px] font-medium text-left ${items === sortOption ? "text-primary" : ""} `} onClick={() => handleSortSelection(items)}>
+                    {items}
+                  </button>
+                ))}
 
-                <button
-                  className="text-[16px] font-medium text-left focus:text-primary"
-                  onClick={() => handleSortSelection("Featured")}
-                >
-                  Featured
-                </button>
-
-                <button
-                  className="text-[16px] font-medium text-left focus:text-primary"
-                  onClick={() => handleSortSelection("Price High to Low")}
-                >
-                  Price High to Low
-                </button>
-
-                <button
-                  className="text-[16px] font-medium text-left focus:text-primary"
-                  onClick={() => handleSortSelection("Price Low to High")}
-                >
-                  Price Low to High
-                </button>
               </div>
             </div>
 
@@ -542,7 +530,7 @@ function Product_Filter({ productCatergory, collectionName }) {
                     className=" focus:text-primary "
                     onClick={() => setTab("occasion")}
                   >
-                    Occasion
+                    Type
                   </button>
                   <hr className="border border-t-[#D9D9D9] w-full hidden" />
                   <button

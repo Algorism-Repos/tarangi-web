@@ -6,7 +6,7 @@ import { AppContext } from "../context/AppContext";
 import Wishlist_Popup from "./Wishlist_Popup";
 import { useNavigate } from "react-router-dom";
 
-function AddToWishlistButton({ productToFavorites }) {
+function AddToWishlistButton({ productToFavorites, disabled }) {
   const { addToWishlist } = useContext(AppContext);
   const [wishIconSrc, setWishIconSrc] = useState(favorie_icon);
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
@@ -26,7 +26,7 @@ function AddToWishlistButton({ productToFavorites }) {
 
   return (
     <>
-      <button
+      <button disabled={disabled}
         className="w-full sm:w-[190px] h-[56px] flex items-center justify-center gap-x-[8px]
           border-2 border-[#4B001A] rounded-full text-primary text-[16px] font-medium mt-2
           transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"

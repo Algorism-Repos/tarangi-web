@@ -18,7 +18,7 @@ const Modal = ({
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [isOpen ,]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

@@ -1,4 +1,7 @@
 import { Link } from "react-router";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
 // Image
 import gold_ellipse from "../assets/Products/gold_ellipse.png";
 import silver_ellipse from "../assets/Products/silver_ellipse.png";
@@ -13,18 +16,10 @@ import product_2 from "../assets/Products/product_2.png";
 import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import LoadingScreen from "../components/LoadingScreen";
+import { Autoplay } from "swiper/modules";
 
-const ELLIPSE_BY_COLOR = {
-  gold: gold_ellipse,
-  silver: silver_ellipse,
-  brown: brown_ellipse,
-};
 
-const IMAGE_BY_COLOR = (item) => ({
-  gold: item.image?.src, // gold = main image
-  silver: product_1,
-  brown: product_2,
-});
+
 
 function Product_Listing({ productCatergory }) {
   const [products, setProducts] = useState([]);
@@ -32,7 +27,7 @@ function Product_Listing({ productCatergory }) {
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const { loading, setLoading,addToWishlist,removeFromWishlist} = useContext(AppContext);
+  const { loading, setLoading, addToWishlist, removeFromWishlist, wishlistItems, colorAssets } = useContext(AppContext);
   // after form success
   const handleSuccess = () => {
     setShowRestockModal(false);
@@ -48,56 +43,54 @@ function Product_Listing({ productCatergory }) {
 
   console.log(products);
 
-  //Extracting colors into an array from the variants
-  const colorAssets = [
-    {
-      value: "Gold",
-      imgUrl: gold_ellipse,
-    },
-    {
-      value: "Silver",
-      imgUrl: silver_ellipse,
-    },
-    {
-      value: "RoseGold",
-      imgUrl: brown_ellipse,
-    },
-  ];
 
-  //Organising the colors that are available for the product
+
+  //Extracting colors into an array from the variants
+  // const colorAssets = [
+  //   {
+  //     value: "Gold",
+  //     imgUrl: gold_ellipse,
+  //   },
+  //   {
+  //     value: "Silver",
+  //     imgUrl: silver_ellipse,
+  //   },
+  //   {
+  //     value: "RoseGold",
+  //     imgUrl: brown_ellipse,
+  //   },
+  // ];
+
+
+
+  // Organising the colors that are available for the product
   const variantColors = products?.map((element) =>
-    element?.variants?.map((item) => item.colorVariant)
-  );
-  // console.log(variantColors);
-  // const availableColors = colorAssets.filter(element => variantColors?.includes(element.value))
-  const availableColors = variantColors
-    .map((color) => colorAssets.find((asset) => asset.value == color))
-    .filter(Boolean);
-  // console.log(availableColors);
+    element?.variants?.map((item) => item.colorVariant));
+  console.log("variantColors", variantColors);
+
 
   //  Like button toggle
-  const toggleLike = (productId) => {
+  const toggleLike = (productId, variantId) => {
     setProducts((prev) => {
-      const productToUpdate = prev.find((p) => p.productId === productId);
+      return prev.map((product) => {
+        if (product.productId !== productId) return product;
 
-      if (!productToUpdate) return prev;
+        const isLiked = product.liked;
 
-      const wasLiked = productToUpdate.liked;
+        if (isLiked) {
 
-      if (!wasLiked) {
-        addToWishlist(productToUpdate);
-      } else {
-        removeFromWishlist(productId);
-      }
+          removeFromWishlist(variantId);
+        } else {
 
-      // return updated products list
-      return prev.map((product) =>
-        product.productId === productId
-          ? { ...product, liked: !product.liked }
-          : product
-      );
+          addToWishlist(product);
+        }
+
+        return { ...product, liked: !product.liked };
+      });
     });
   };
+
+
 
   //  Color change handler
   const handleColorChange = (id, color) => {
@@ -109,7 +102,19 @@ function Product_Listing({ productCatergory }) {
       })
     );
   };
-
+  useEffect(() => {
+    setProducts((prev) =>
+      prev.map((product) => ({
+        ...product,
+        liked: wishlistItems.some(
+          (w) =>
+            w.productId === product.productId &&
+            w.variantId === product.variantId
+        ),
+      }))
+    );
+  }, [wishlistItems, productCatergory]);
+  
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -153,11 +158,9 @@ function Product_Listing({ productCatergory }) {
     <>
       <div className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-y-10 sm:gap-x-[30px] px-1.5 ">
         {products.map((item) => {
-          // const isOutOfStock = item.variants[0].inventory_quantity === 0;
-          const isOutOfStock = "";
+          const isOutOfStock = item?.inventoryQuantity === 0 || item?.variants?.[0]?.inventoryQuantity === 0;
           const isRestocking = item.restock === true;
 
-          const colorImages = IMAGE_BY_COLOR(item);
 
           return (
             <Link
@@ -172,67 +175,70 @@ function Product_Listing({ productCatergory }) {
                 isOutOfStock
                   ? handleOutOfStockClick
                   : isRestocking
-                  ? handleRestockClick
-                  : undefined
+                    ? handleRestockClick
+                    : undefined
               }
               className="font-poppins w-[170px] sm:w-[310px] mx-auto relative hover:scale-105 transition duration-300 ease-in-out group"
             >
               {/* MAIN PRODUCT IMAGE */}
-              <img
-                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${
-                  isOutOfStock ? "grayscale" : ""
-                } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
-                src={
-                  item.variants != null
-                    ? item.variants.map((item) => item.image)
-                    : item.images
-                }
-                alt={item?.title}
-              />
+              <div className=" relative group z-0">
+                <Swiper
+                  modules={Autoplay}
+                >
+                  {(item?.variants?.map(v => v.image) || item.images).map((item, i) => (
+                    <SwiperSlide>
+                      <img src={item} alt="images" className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-[0.6]" : ""
+                        } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
 
-              {/*  Like Button */}
-              <LikeButton
-                liked={item.liked}
-                isOutOfStock={isOutOfStock}
-                isRestocking={isRestocking}
-                onToggle={() => toggleLike(item.productId)}
-              />
+                {/*  Like Button */}
+                <LikeButton
+                  liked={item.liked}
+                  isOutOfStock={isOutOfStock}
+                  isRestocking={isRestocking}
+                  onToggle={() => toggleLike(item.productId, item.variantId)}
+                />
 
-              {/* SOLD OUT LABEL */}
-              {isOutOfStock && (
-                <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
-                  Sold Out
-                </p>
-              )}
+                {/* SOLD OUT LABEL */}
+                {isOutOfStock && (
+                  <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5 z-10">
+                    Sold Out
+                  </p>
+                )}
 
-              {/* RESTOCK SOON LABEL */}
-              {!isOutOfStock && isRestocking && (
-                <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
-                  Restocking Soon
-                </p>
-              )}
+                {/* RESTOCK SOON LABEL */}
+                {!isOutOfStock && isRestocking && (
+                  <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
+                    Restocking Soon
+                  </p>
+                )}
+              </div>
 
               {/* PRODUCT DETAILS */}
-              <div className="mt-2 flex flex-wrap gap-2 justify-between sm:mt-3">
+              <div className="mt-2 flex flex-wrap justify-between sm:mt-3">
                 <div>
-                  <h1 className="text-[13px] font-semibold sm:text-[18px] text-[#313131]">
+                  <h1 className="text-[12px] font-semibold sm:text-[18px] text-wrap text-[#313131]">
                     {item?.title}
                   </h1>
                 </div>
 
-                <div className="mt-1.5 flex items-center justify-between w-full">
+                <div className="mt-1.3 flex flex-col sm:flex-row gap-y-2 items-start sm:items-center sm:justify-between w-full">
                   <h3 className="text-[13px] text-[#4E4E4E] font-medium sm:text-[18px] mt-1">
                     ₹{" "}
-                    {item.variants != null
+                    {item?.variants != null && item?.variants?.inventoryQuantity !== 0
                       ? parseInt(item.variants?.[0]?.price).toLocaleString(
-                          "en-IN"
-                        )
+                        "en-IN"
+                      )
                       : parseInt(item.price).toLocaleString("en-in")}
                   </h3>
 
                   {/*  COLOR TOGGLE BUTTONS */}
-                  <div className="flex flex-row items-center">
-                    {/* {item?.variants?.map((color) => color?.colorVariant)} */}
+                  <div className="flex flex-row items-center gap-x-1">
+                    {Object.values(colorAssets).map((i) => (
+                      <img src={i} alt="color_assets" className="w-[20px] h-[20px] sm:w-[25px] sm:h-[25px] p-[0.5px] hover:border-2 rounded-full border-primary" />
+                    ))}
                   </div>
                 </div>
               </div>
