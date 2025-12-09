@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, {useContext, useState, useEffect } from "react";
 import { Link, useLocation } from "react-router";
 import Marquee from "react-fast-marquee";
+import { AppContext } from "../context/AppContext";
+
 
 // assets import
 import logo from "../assets/logo.png"
@@ -21,6 +23,8 @@ import client_9 from '../assets/Clients/client_9.png'
 import client_10 from '../assets/Clients/client_10.png'
 
 function Footer() {
+
+    const {collection} = useContext(AppContext);
 
     // Modal State & Function
     const [modalToggle, setModalToggle] = useState(false);
@@ -45,8 +49,8 @@ function Footer() {
     ]
 
     useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
 
     return (
         <>
@@ -72,39 +76,39 @@ function Footer() {
                     </Marquee>
                 </div>
 
-              <div className=" flex flex-row items-center gap-x-6 w-fit ml-8 sm:ml-10">
-                <a
-                  href="https://www.instagram.com/tarangijewels/"
-                  target="_blank"
-                >
-                  <img src={instagram} className="w-[30px] h-[31px]" />
-                </a>
-                <a href="https://wa.me/919003058300/?text=Hi," target="_blank">
-                  <img src={whatsapp} className="w-[40px] h-[40px]" />
-                </a>
-              </div>
+                <div className=" flex flex-row items-center gap-x-6 w-fit ml-8 sm:ml-10">
+                    <a
+                        href="https://www.instagram.com/tarangijewels/"
+                        target="_blank"
+                    >
+                        <img src={instagram} className="w-[30px] h-[31px]" />
+                    </a>
+                    <a href="https://wa.me/919003058300/?text=Hi," target="_blank">
+                        <img src={whatsapp} className="w-[40px] h-[40px]" />
+                    </a>
+                </div>
             </div>
 
 
-              {/* Product Catergory */}
-              <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] ml-6 sm:ml-0">
+            {/* Product Catergory */}
+            <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] ml-6 sm:ml-0">
                 {collection &&
-                  collection
-                    ?.filter((item) => item.handle !== "best_seller")
-                    .map((item) => (
-                      <Link
-                        to={`/products/${item.handle}`}
-                        state={{
-                          category: item.handle,
-                          collectionId: item.id,
-                        }}
-                      >
-                        {item.handle}
-                      </Link>
-                    ))}
-              </div>
+                    collection
+                        ?.filter((item) => item.handle !== "best_seller")
+                        .map((item) => (
+                            <Link
+                                to={`/products/${item.handle}`}
+                                state={{
+                                    category: item.handle,
+                                    collectionId: item.id,
+                                }}
+                            >
+                                {item.handle}
+                            </Link>
+                        ))}
             </div>
 
+            
         </>
     )
 }

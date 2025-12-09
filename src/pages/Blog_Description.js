@@ -156,8 +156,6 @@ function Blog_Description() {
         </div>
       </div>
       {/* })} */}
-    </div >
-      </div >
 
     {/* Accordian */ }
     < div className = "max-w-[1000px] mx-auto mt-20" >
@@ -239,7 +237,6 @@ function Blog_Description() {
         < img src = { ArrowRight } alt = "Next" className = "w-[30px] h-[30px]" />
         </button >
       </div >
-    </div >
     </>
   );
 }
