@@ -206,17 +206,12 @@ function Navbar() {
               Products
               <img className="w-[28px] h-[28px]" src={down_arrow} alt="" />
             </Link>
-
-            {/* Dropdown */}
-            {/* {productDropdown && (
-              <div className="fixed inset-0 z-20 bg-black/40"></div>
-            )} */}
-            {productDropdown && (
-              <div className="absolute top-[111px] left-1/2 transform -translate-x-1/2 min-w-[1000px] h-fit bg-[#FFF5E8] px-10 py-8 shadow-2xl z-30 rounded-lg">
+            { productDropdown && (
+              <div className="absolute top-[111px] left-1/2 transform -translate-x-1/2 min-w-fit h-fit bg-[#FFF5E8] p-8 shadow-2xl z-30 rounded-lg">
                 <h2 className="font-atteron text-primary text-[32px] text-center mb-8">
                   Product Caterogry
                 </h2>
-                <div className="grid grid-cols-4 gap-4">
+                <div className="flex flex-row justify-center flex-wrap overflow-hidden w-full gap-4">
                   {collection &&
                     collection
                       ?.filter((item) => item.handle !== "best_seller" && item.body_html !== "<p>tarangi-specials</p>")

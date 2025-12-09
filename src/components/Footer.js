@@ -76,17 +76,8 @@ function Footer() {
                     </Marquee>
                 </div>
 
-                <div className=" flex flex-row items-center gap-x-6 w-fit ml-8 sm:ml-10">
-                    <a
-                        href="https://www.instagram.com/tarangijewels/"
-                        target="_blank"
-                    >
-                        <img src={instagram} className="w-[30px] h-[31px]" />
-                    </a>
-                    <a href="https://wa.me/919003058300/?text=Hi," target="_blank">
-                        <img src={whatsapp} className="w-[40px] h-[40px]" />
-                    </a>
-                </div>
+                {/* Insta Button */}
+                <a href="https://www.instagram.com/tarangistars" target="_blank"><button className="font-poppins text-white text-[20px] font-extralight leading-normal bg-[#4B001A] rounded-[93px] py-[10px] px-[20px] cursor-pointer sm:text-[24px] sm:mt-6 ">Explore More</button></a>
             </div>
 
 
