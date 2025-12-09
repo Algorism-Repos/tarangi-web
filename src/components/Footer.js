@@ -90,25 +90,58 @@ function Footer() {
             </div>
 
 
-            {/* Product Catergory */}
-            <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] ml-6 sm:ml-0">
-                {collection &&
-                    collection
-                        ?.filter((item) => item.handle !== "best_seller")
-                        .map((item) => (
-                            <Link
-                                to={`/products/${item.handle}`}
-                                state={{
-                                    category: item.handle,
-                                    collectionId: item.id,
-                                }}
-                            >
-                                {item.handle}
-                            </Link>
-                        ))}
+            {/* Footer */}
+            <div className="footer-section z-40 font-[poppins] text-white sm:py-14 ">
+
+                {/* Muhil */}
+                <div className="flex flex-col gap-y-16 xl:flex-row sm:items-center sm:justify-between px-3 pt-5 pb-12 sm:py-0 sm:pt-0 sm:px-[70px]">
+
+                    <div className="flex flex-wrap gap-x-[60px] gap-y-10 ">
+                        {/* Logo & Social */}
+                        <div className="sm:m-auto xl:m-0">
+                            <img src={logo} alt="brand-logo" className="w-[231px] h-fit" />
+
+                            <div className=" flex flex-row items-center gap-x-6 w-fit mx-auto ">
+                                <a href="https://www.instagram.com/tarangijewels/" target="_blank"><img src={instagram} className="w-[30px] h-[31px]" /></a>
+                                <a href="https://wa.me/919003058300/?text=Hi," target="_blank"><img src={whatsapp} className="w-[40px] h-[40px]" /></a>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-x-[25px] sm:gap-x-[65px] gap-y-10 sm:mx-auto">
+
+                            {/* Subpages */}
+                            <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] ml-6 sm:ml-0 md:border-l border-[#D6A76F] md:pl-[54px]">
+                                <Link to="/home">Home</Link>
+                                <Link to="/about">About</Link>
+                                <Link to="/products">Products</Link>
+                                {/* <Link to="/blog">Blog</Link> */}
+                                <Link to="/terms">Terms & Conditions</Link>
+                                <Link to="/privacy">Privacy Policy</Link>
+                            </div>
+
+                            {/* Product Catergory */}
+                            <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] ml-7 sm:ml-0">
+                                <Link to="#">Products</Link>
+                                <Link to="#">Women</Link>
+                                <Link to="#">Men</Link>
+                                <Link to="#">Couples</Link>
+                                <Link to="#">Gifts</Link>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] text-left sm:text-center xl:text-right ml-6 sm:ml-0">
+                        <a href="tel:9003058300"><p>+91 90030 58300</p></a>
+                        <a href="mailto:tarangijewelsindia@gmail.com"><p>tarangijewelsindia@gmail.com</p></a>
+                        <a href="https://share.google/6f6U8XByQoc0FWsBP" target="_blank">
+                            <p>431-435,VNA Complex, NSR Road</p>
+                            <p>Saibaba Colony, Coimbatore-641011</p>
+                        </a>
+                    </div>
+                </div>
             </div>
 
-            
+
         </>
     )
 }
