@@ -18,17 +18,6 @@ import { AppContext } from "../context/AppContext";
 import LoadingScreen from "../components/LoadingScreen";
 import { Autoplay } from "swiper/modules";
 
-const ELLIPSE_BY_COLOR = {
-  gold: gold_ellipse,
-  silver: silver_ellipse,
-  brown: brown_ellipse,
-};
-
-const IMAGE_BY_COLOR = (item) => ({
-  gold: item.image?.src, // gold = main image
-  silver: product_1,
-  brown: product_2,
-});
 
 
 
@@ -38,7 +27,7 @@ function Product_Listing({ productCatergory }) {
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const { loading, setLoading,addToWishlist,removeFromWishlist,wishlistItems} = useContext(AppContext);
+  const { loading, setLoading, addToWishlist, removeFromWishlist, wishlistItems } = useContext(AppContext);
   // after form success
   const handleSuccess = () => {
     setShowRestockModal(false);
@@ -57,46 +46,58 @@ function Product_Listing({ productCatergory }) {
 
 
   //Extracting colors into an array from the variants
-  const colorAssets = [
-    {
-      value: "Gold",
-      imgUrl: gold_ellipse,
-    },
-    {
-      value: "Silver",
-      imgUrl: silver_ellipse,
-    },
-    {
-      value: "RoseGold",
-      imgUrl: brown_ellipse,
-    },
-  ];
+  // const colorAssets = [
+  //   {
+  //     value: "Gold",
+  //     imgUrl: gold_ellipse,
+  //   },
+  //   {
+  //     value: "Silver",
+  //     imgUrl: silver_ellipse,
+  //   },
+  //   {
+  //     value: "RoseGold",
+  //     imgUrl: brown_ellipse,
+  //   },
+  // ];
 
+  const colorAssets = {
+    Silver: silver_ellipse,
+    Gold : gold_ellipse,
+    RoseGold: brown_ellipse
+  };
+
+  useEffect(() => {
+    products.map((product,index) => {
+      const colors = variantColors[index] || [];
+      console.log(colors);
+    })
+  },[products]);
   //Organising the colors that are available for the product
-  const variantColors = products?.map((element) =>
-    element?.variants?.map((item) => item.colorVariant));
-    console.log("variantColors", variantColors);  
+  // const variantColors = products?.map((element) =>
+  //   element?.variants?.map((item) => item.colorVariant));
+  // console.log("variantColors", variantColors);
 
   //  Like button toggle
-const toggleLike = (productId, variantId) => {
-  setProducts((prev) => {
-    return prev.map((product) => {
-      if (product.productId !== productId) return product;
+  const toggleLike = (productId, variantId) => {
+    setProducts((prev) => {
+      return prev.map((product) => {
+        if (product.productId !== productId) return product;
 
-      const isLiked = product.liked;
+        const isLiked = product.liked;
 
-      if (isLiked) {
-       
-        removeFromWishlist(variantId);
-      } else {
-        
-        addToWishlist(product);
-      }
+        if (isLiked) {
 
-      return { ...product, liked: !product.liked };
+          removeFromWishlist(variantId);
+        } else {
+
+          addToWishlist(product);
+        }
+
+        return { ...product, liked: !product.liked };
+      });
     });
-  });
-};
+  };
 
 
 
@@ -110,18 +111,18 @@ const toggleLike = (productId, variantId) => {
       })
     );
   };
-useEffect(() => {
-  setProducts((prev) =>
-    prev.map((product) => ({
-      ...product,
-      liked: wishlistItems.some(
-        (w) =>
-          w.productId === product.productId &&
-          w.variantId === product.variantId
-      ),
-    }))
-  );
-}, [wishlistItems, productCatergory]);
+  useEffect(() => {
+    setProducts((prev) =>
+      prev.map((product) => ({
+        ...product,
+        liked: wishlistItems.some(
+          (w) =>
+            w.productId === product.productId &&
+            w.variantId === product.variantId
+        ),
+      }))
+    );
+  }, [wishlistItems, productCatergory]);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -214,7 +215,7 @@ useEffect(() => {
                 liked={item.liked}
                 isOutOfStock={isOutOfStock}
                 isRestocking={isRestocking}
-  onToggle={() => toggleLike(item.productId, item.variantId)}
+                onToggle={() => toggleLike(item.productId, item.variantId)}
               />
 
               {/* SOLD OUT LABEL */}

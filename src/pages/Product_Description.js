@@ -28,7 +28,7 @@ function Product_Description() {
   const swiperRef = useRef(null);
   const location = useLocation();
   const { product } = location.state || {};
-  const { categorizedProduct, addToWishlist, pincodeDetails, addToRecentlyViewed } = useContext(AppContext);
+  const { categorizedProduct, addToWishlist, pincodeDetails, addToRecentlyViewed, wishlistItems } = useContext(AppContext);
   const [colorSelected, setColorSelected] = useState(product?.variants?.[0].colorVariant || "");
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});

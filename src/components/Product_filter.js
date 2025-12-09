@@ -14,14 +14,14 @@ function Product_Filter({ productCatergory, collectionName }) {
 
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedPrices, setSelectedPrices] = useState([]);
-  const [sortOption, setSortOption] = useState("Latest");
+  const [sortOption, setSortOption] = useState("Price Low to High");
   const [showSort, setShowSort] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [tab, setTab] = useState("productCatergory");
   const { productListFromShopify, filteredProducts, setFilteredProducts } =
     useContext(AppContext);
 
-  const SortOptions = ["Price High to Low", "Price Low to High"];
+  const SortOptions = ["Price Low to High", "Price High to Low" ];
   const priceRanges = [
     { label: "₹10,000 – ₹15,000" },
     { label: "₹15,000 – ₹25,000" },
@@ -467,33 +467,12 @@ const sortProducts = (products, sortBy) => {
                   Sort Designs By
                 </h2>
 
-                <button
-                  className="text-[16px] font-medium text-left focus:text-primary"
-                  onClick={() => handleSortSelection("Latest")}
-                >
-                  Latest
-                </button>
+                {SortOptions.map((items) =>(
+                  <button className={`text-[16px] font-medium text-left ${items === sortOption ? "text-primary" : ""} `} onClick={() => handleSortSelection(items)}>
+                    {items}
+                  </button>
+                ))}
 
-                <button
-                  className="text-[16px] font-medium text-left focus:text-primary"
-                  onClick={() => handleSortSelection("Featured")}
-                >
-                  Featured
-                </button>
-
-                <button
-                  className="text-[16px] font-medium text-left focus:text-primary"
-                  onClick={() => handleSortSelection("Price High to Low")}
-                >
-                  Price High to Low
-                </button>
-
-                <button
-                  className="text-[16px] font-medium text-left focus:text-primary"
-                  onClick={() => handleSortSelection("Price Low to High")}
-                >
-                  Price Low to High
-                </button>
               </div>
             </div>
 
@@ -553,7 +532,7 @@ const sortProducts = (products, sortBy) => {
                     className=" focus:text-primary "
                     onClick={() => setTab("occasion")}
                   >
-                    Occasion
+                    Type
                   </button>
                   <hr className="border border-t-[#D9D9D9] w-full hidden" />
                   <button
