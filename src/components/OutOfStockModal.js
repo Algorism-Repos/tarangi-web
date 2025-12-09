@@ -23,18 +23,15 @@ function OutOfStockModal({ open, onClose }) {
       onClick={onClose}
     >
       <div
-        className="bg-[#FFF5E8] px-6 py-4 rounded-xl shadow-xl text-center w-[80%] sm:w-[350px] relative"
+        className="bg-[#FFF5E8] p-7 rounded-xl shadow-xl text-center w-[80%] sm:w-[400px] relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-[20px] font-semibold text-[#434343]">
-          Product Out of Stock
-        </h2>
-        <p className="text-[#67171F] text-[14px] mt-2">
+        <h1 className="text-red-500 text-[18px] font-poppins font-medium capitalize my-3">
           This product is currently unavailable.
-        </p>
+        </h1>
 
             <button
-              className="absolute top-3 right-3 z-10"
+              className="absolute top-3 right-2 z-10"
               onClick={onClose}
             >
               <img src={closeIcon} className="w-[25px] h-[25px]" alt="" />

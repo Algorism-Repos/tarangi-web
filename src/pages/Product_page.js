@@ -52,6 +52,7 @@ function formatProduct(productNode) {
     featuredImage,
     vendor,
     productType,
+    inventoryQuantity,
     tags,
     createdAt,
   } = productNode;
@@ -77,6 +78,7 @@ function formatProduct(productNode) {
       variantId: firstVariant?.id,
       price: firstVariant?.price,
       variantId: firstVariant?.id,
+      inventoryQuantity: firstVariant?.inventoryQuantity,
       compareAtPrice:
         firstVariant?.compareAtPrice !== undefined
           ? firstVariant.compareAtPrice

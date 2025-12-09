@@ -107,6 +107,7 @@ const variantColors = (product?.variants || []).map(
   const availableColors = colorAssets?.filter((element) =>
     variantColors?.includes(element.value)
   );
+
   // click on a color toggle
   function handleColorChangeByButton(color) {
     setColorSelected(color);
@@ -137,7 +138,7 @@ const variantColors = (product?.variants || []).map(
             <p> {product?.title}</p>
           </div>
 
-          <div className="flex flex-wrap items-start justify-around  sm:my-[40px] xl:my-[70px] ">
+          <div className="flex flex-wrap items-start justify-around sm:my-[40px] xl:my-[70px] ">
             {/* Product Image */}
             <div className="w-[380px] overflow-hidden sm:max-w-[400px] lg:mt-20 mb-5">
               <Swiper
@@ -365,14 +366,14 @@ const variantColors = (product?.variants || []).map(
                     <div className="mt-2 flex flex-wrap items-center justify-between sm:mt-4">
                       <div>
                         <h3 className="text-[16px] font-semibold sm:text-[20px]">
+                          {item.title}
+                        </h3>
+                        <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">
                           ₹{" "}
                           {(item?.price
                             ? parseInt(item?.price)
                             : parseInt(item?.variants?.[0]?.price)
                           )?.toLocaleString("en-IN")}
-                        </h3>
-                        <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">
-                          {item?.title}
                         </p>
                       </div>
 

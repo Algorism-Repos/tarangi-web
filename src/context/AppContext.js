@@ -1,15 +1,20 @@
 import PropTypes from "prop-types";
 import { createContext, useEffect, useState } from "react";
+import gold_ellipse from "../assets/Products/gold_ellipse.png";
+import silver_ellipse from "../assets/Products/silver_ellipse.png";
+import brown_ellipse from "../assets/Products/brown_ellipse.png";
+
+
 export const AppContext = createContext();
 export function AppProvider({ children }) {
   const [loading, setLoading] = useState(true);
-  const[trendingProduct,setTrendingProduct]=useState()
+  const [trendingProduct, setTrendingProduct] = useState()
   const [collection, setCollections] = useState(() => {
     const saved = localStorage.getItem("collection");
     return saved ? JSON.parse(saved) : [];
   });
   const [pincodeDetails, setPincodeDetails] = useState({});
-  const[deliveryDate,setdeliveryDate]=useState()
+  const [deliveryDate, setdeliveryDate] = useState()
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loggedCustomerId, setLoggedCustomerId] = useState(() => {
     return localStorage.getItem("loggedCustomerId") || null;
@@ -17,10 +22,10 @@ export function AppProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem("isLoggedIn") === "true";
   });
-const [categorizedProduct, setCategorizedProduct] = useState(() => {
-  const saved = localStorage.getItem("categorizedProduct");
-  return saved ? JSON.parse(saved) : null;
-});
+  const [categorizedProduct, setCategorizedProduct] = useState(() => {
+    const saved = localStorage.getItem("categorizedProduct");
+    return saved ? JSON.parse(saved) : null;
+  });
   useEffect(() => {
     if (loggedCustomerId) {
       localStorage.setItem("loggedCustomerId", loggedCustomerId);
@@ -48,9 +53,15 @@ const [categorizedProduct, setCategorizedProduct] = useState(() => {
   const updateCartItemQuantity = (id, newQty) => {
     setCartItems((prev) =>
       prev.map((item) =>
-        item.variantId  === id ? { ...item, quantity: newQty } : item
+        item.variantId === id ? { ...item, quantity: newQty } : item
       )
     );
+  };
+
+  const colorAssets = {
+    Silver: silver_ellipse,
+    Gold: gold_ellipse,
+    RoseGold: brown_ellipse
   };
   useEffect(() => {
     if (categorizedProduct !== null) {
@@ -118,24 +129,24 @@ const [categorizedProduct, setCategorizedProduct] = useState(() => {
     );
   };
   const clearWishlist = () => setWishlistItems([]);
-const addToRecentlyViewed = (product) => {
-  setRecentlyViewed((prev) => {
-    const safePrev = Array.isArray(prev) ? prev : [];
-    const filtered = safePrev.filter(
-      (item) => item?.variantId !== product.variantId
-    );
-    const updated = [product, ...filtered].slice(0, 10);
-    localStorage.setItem("recentlyViewed", JSON.stringify(updated));
-    return updated;
-  });
-};
-const clearRecentlyViewed = () => {
-  setRecentlyViewed([]);
-  localStorage.removeItem("recentlyViewed");
-};
-useEffect(() => {
-  localStorage.setItem("recentlyViewed", JSON.stringify(recentlyViewed));
-}, [recentlyViewed]);
+  const addToRecentlyViewed = (product) => {
+    setRecentlyViewed((prev) => {
+      const safePrev = Array.isArray(prev) ? prev : [];
+      const filtered = safePrev.filter(
+        (item) => item?.variantId !== product.variantId
+      );
+      const updated = [product, ...filtered].slice(0, 10);
+      localStorage.setItem("recentlyViewed", JSON.stringify(updated));
+      return updated;
+    });
+  };
+  const clearRecentlyViewed = () => {
+    setRecentlyViewed([]);
+    localStorage.removeItem("recentlyViewed");
+  };
+  useEffect(() => {
+    localStorage.setItem("recentlyViewed", JSON.stringify(recentlyViewed));
+  }, [recentlyViewed]);
   return (
     <AppContext.Provider
       value={{
@@ -168,9 +179,10 @@ useEffect(() => {
         deliveryDate,
         setdeliveryDate,
         clearRecentlyViewed,
-        trendingProduct,setTrendingProduct,
+        trendingProduct, setTrendingProduct,
         pincodeDetails,
-        setPincodeDetails
+        setPincodeDetails,
+        colorAssets,
       }}
     >
       {children}

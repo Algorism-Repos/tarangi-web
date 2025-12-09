@@ -12,7 +12,7 @@ function LikeButton({ liked, onToggle, isOutOfStock, isRestocking }) {
         e.preventDefault();
         onToggle();
       }}
-      className={`absolute right-3 top-3 w-[40px] h-[40px] opacity-100 
+      className={`absolute right-3 top-3 w-[40px] h-[40px] opacity-100 z-10 
         ${liked
           ? "opacity-100"
           : "lg:opacity-0 group-hover:opacity-100"

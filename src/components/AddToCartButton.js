@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useLocation } from "react-router-dom";
 import shoppingCart_red from "../assets/Products/shoppingcart_red.png";
 import shoppingCart_white from "../assets/Products/shoppingcart_white.png";
 import { AppContext } from "../context/AppContext";
@@ -21,8 +22,10 @@ function AddToCartButton({
   const { addToCart } = useContext(AppContext);
   const isDisabledInFavourites =
     isFavouritesPage && (isOutOfStock || isRestocking);
+  console.log(productToCart);
 
-    console.log(productToCart)
+  const{pathname} = useLocation();
+
   const handleAddToCart = () => {
     addToCart(productToCart);
     setShowToast(true);
@@ -32,8 +35,9 @@ function AddToCartButton({
       document.body.style.overflow = "auto";
     }, 1500);
   };
-  const handleClick = () => {
-        handleAddToCart();
+  const handleClick = (e) => {
+    e.preventDefault();
+    handleAddToCart();
 
     if (isDisabledInFavourites) {
       onRemoveFromFavourites && onRemoveFromFavourites();
@@ -51,9 +55,9 @@ function AddToCartButton({
   return (
     <>
       <button
-        className="cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]
-        w-full sm:w-[205px] h-[56px] rounded-full text-primary text-[16px] font-medium mt-2
-        transition-all duration-300 hover:bg-[#4B001A] hover:text-white"
+        className={`cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]
+        ${pathname === "/favourites" ? "w-full h-[56px]" :"w-full sm:w-[205px] h-[56px]"} rounded-full text-primary text-[16px] font-medium mt-2
+        transition-all duration-300 hover:bg-[#4B001A] hover:text-white`}
         onMouseEnter={() => !isDisabledInFavourites && setCartIconSrc(shoppingCart_white)}
         onMouseLeave={() => !isDisabledInFavourites && setCartIconSrc(shoppingCart_red)}
         onClick={handleClick}

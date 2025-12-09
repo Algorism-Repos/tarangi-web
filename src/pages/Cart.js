@@ -25,7 +25,7 @@ function Cart() {
   const toggleSummary = () => {
     setShowSummary(!showSummary);
   };
-   console.log(cartItems)
+  console.log(cartItems)
   const subtotal = cartItems?.reduce((total, item) => {
     const price = Number(item?.price) || 0;
     const qty = Number(item?.quantity) || 1;
@@ -336,22 +336,22 @@ function Cart() {
       </div>
 
       {/* DELETE CONFIRMATION MODAL */}
-  <DeleteConfirmationModal
-  isOpen={isDeleteModalOpen}
-  title="Remove Item"
-  message="Are you sure you want to remove this product from your cart?"
-  onCancel={() => {
-    setIsDeleteModalOpen(false);
-    setProductToDelete(null);
-  }}
-  onConfirm={() => {
-    if (productToDelete) {
-      removeFromCart(productToDelete.variantId); 
-    }
-    setIsDeleteModalOpen(false);
-    setProductToDelete(null);
-  }}
-/>
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        title="Remove Item"
+        message="Are you sure you want to remove this product from your cart?"
+        onCancel={() => {
+          setIsDeleteModalOpen(false);
+          setProductToDelete(null);
+        }}
+        onConfirm={() => {
+          if (productToDelete) {
+            removeFromCart(productToDelete.variantId);
+          }
+          setIsDeleteModalOpen(false);
+          setProductToDelete(null);
+        }}
+      />
 
     </>
   );
