@@ -204,7 +204,7 @@ const sortProducts = (products, sortBy) => {
       <div>
         {/* Women Collection & Sort  */}
         <div className="min-w-full">
-          <div className="max-w-[1350px] w-full mx-auto flex  justify-between px-4">
+          <div className="max-w-[1350px] w-full mx-auto flex justify-between px-4">
             <div className="lg:flex flex-wrap items-center gap-x-[18px]">
               <h2 className="font-atteron text-[26px] text-primary tracking-[1px] sm:text-[36px]">
                 {collectionName} Collections

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 
 // Images
-import sort_icon from "../assets/search_icon_red.png";
+import sort_icon from "../assets/sort_icon.png";
 import down_arrow from "../assets/Products/down_arrow.png";
 import blog_1 from "../assets/blog_1.png";
 import {
@@ -81,10 +81,7 @@ function Blog() {
     <>
       {/* Banner */}
       <div className="blog-banner text-white">
-        <h1 className="font-atteron text-[80px] font-normal ">Blog</h1>
-        <p className="font-[poppins] text-[20px] mt-[20px] text-center">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-        </p>
+        <h1 className="font-atteron text-[80px] font-normal mt-[150px] sm:mt-0 tracking-[1px]">Blogs</h1>
       </div>
 
       {/* Blogs */}

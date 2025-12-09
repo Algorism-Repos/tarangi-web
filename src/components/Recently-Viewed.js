@@ -94,8 +94,8 @@ useEffect(() => {
                 </div>
 
                 <div className="mt-1.5 flex items-center justify-between">
-                  <h3 className="text-[13px] text-[#4E4E4E] font-medium sm:text-[18px] mt-1">
-                    ₹{item?.price}
+                  <h3 className="text-[12.5px] text-[#4E4E4E] font-normal sm:text-[18px] mt-1">
+                    ₹ {item.price}
                   </h3>
 
                   {/* Color Options */}
