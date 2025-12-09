@@ -48,8 +48,13 @@ function Home() {
   const [modalToggle, setModalToggle] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
   const [FestiveFiltered, setFestiveFiltered] = useState([]);
-  const { collection, setCollections, loading, setLoading ,setTrendingProduct} = useContext(AppContext);
-
+  const {
+    collection,
+    setCollections,
+    loading,
+    setLoading,
+    setTrendingProduct,
+  } = useContext(AppContext);
 
   function toggle(product) {
     setSelectedType(product);
@@ -97,28 +102,59 @@ function Home() {
     fetchBestSellerProducts();
   }, [collection]);
   function formatProduct(productNode) {
-  const {
-    id,
-    title,
-    description,
-    images,
-    variants,
-    featuredImage,
-    vendor,
-    productType,
-    tags,
-    createdAt,
-  } = productNode;
+    const {
+      id,
+      title,
+      description,
+      images,
+      variants,
+      featuredImage,
+      vendor,
+      productType,
+      tags,
+      createdAt,
+    } = productNode;
 
-  const allImages = images?.edges?.map((img) => img.node.url) || [];
-  const variantEdges = variants?.edges || [];
-  const firstVariant = variantEdges[0]?.node;
+    const allImages = images?.edges?.map((img) => img.node.url) || [];
+    const variantEdges = variants?.edges || [];
+    const firstVariant = variantEdges[0]?.node;
 
-  const isSimpleProduct =
-    variantEdges.length === 1 &&
-    variantEdges[0].node.selectedOptions?.[0]?.value === "Default Title";
+    const isSimpleProduct =
+      variantEdges.length === 1 &&
+      variantEdges[0].node.selectedOptions?.[0]?.value === "Default Title";
 
-  if (isSimpleProduct) {
+    if (isSimpleProduct) {
+      return {
+        productId: id,
+        title,
+        description,
+        vendor,
+        productType,
+        tags,
+        createdAt,
+        type: "simple",
+        price: firstVariant?.price,
+        compareAtPrice:
+          firstVariant?.compareAtPrice !== undefined
+            ? firstVariant.compareAtPrice
+            : null,
+        image: featuredImage?.url || allImages[0],
+        images: allImages,
+        variants: null,
+      };
+    }
+
+    const formattedVariants = variantEdges.map((v) => ({
+      variantId: v.node.id,
+      price: v.node.price,
+      compareAtPrice:
+        v.node.compareAtPrice !== undefined ? v.node.compareAtPrice : null,
+      inventoryQuantity: v.node.inventoryQuantity,
+      image: v.node.image?.url || featuredImage?.url,
+      // colorVariant: v.node.selectedOptions.map((opt) => [opt.name, opt.value]),
+      colorVariant: v.node.selectedOptions[0].value,
+    }));
+
     return {
       productId: id,
       title,
@@ -127,44 +163,12 @@ function Home() {
       productType,
       tags,
       createdAt,
-      type: "simple",
-      price: firstVariant?.price,
-      compareAtPrice:
-        firstVariant?.compareAtPrice !== undefined
-          ? firstVariant.compareAtPrice
-          : null,
-      image: featuredImage?.url || allImages[0],
+      type: "variant",
+      featuredImage: featuredImage?.url,
       images: allImages,
-      variants: null,
+      variants: formattedVariants,
     };
   }
-
-  const formattedVariants = variantEdges.map((v) => ({
-    variantId: v.node.id,
-    price: v.node.price,
-    compareAtPrice:
-      v.node.compareAtPrice !== undefined ? v.node.compareAtPrice : null,
-    inventoryQuantity: v.node.inventoryQuantity,
-    image: v.node.image?.url || featuredImage?.url,
-    // colorVariant: v.node.selectedOptions.map((opt) => [opt.name, opt.value]),
-    colorVariant: v.node.selectedOptions[0].value,
-
-  }));
-
-  return {
-    productId: id,
-    title,
-    description,
-    vendor,
-    productType,
-    tags,
-    createdAt,
-    type: "variant",
-    featuredImage: featuredImage?.url,
-    images: allImages,
-    variants: formattedVariants,
-  };
-}
   // product catogory
   const categorized = FestiveFiltered.reduce((acc, product) => {
     const type = product.productType || "Uncategorized";
@@ -173,8 +177,7 @@ function Home() {
     return acc;
   }, {});
 
- console.log(FestiveFiltered)
-
+  console.log(FestiveFiltered);
 
   async function fetchMetalRates() {
     const url =
@@ -245,7 +248,7 @@ function Home() {
     };
   }, []);
   useEffect(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
     collectionsList();
   }, []);
@@ -276,12 +279,11 @@ function Home() {
       setIsRefreshing(false);
     }, 1000);
   };
-useEffect(()=>{
-    setTrendingProduct(FestiveFiltered)
+  useEffect(() => {
+    setTrendingProduct(FestiveFiltered);
+  }, [FestiveFiltered]);
 
-},[FestiveFiltered])
-
-
+  console.log(collection);
   return (
     <>
       {/* Floating Whatsapp icon */}
@@ -309,8 +311,9 @@ useEffect(()=>{
 
           <div className="flex items-center gap-x-1 w-[155px] sm:w-[170px]">
             <img
-              className={`w-[15px] h-[15px] cursor-pointer ${isRefreshing ? "animate-spin" : ""
-                }`}
+              className={`w-[15px] h-[15px] cursor-pointer ${
+                isRefreshing ? "animate-spin" : ""
+              }`}
               src={refresh_icon}
               alt="Refresh icon"
               onClick={fetchMetalRates}
@@ -341,8 +344,9 @@ useEffect(()=>{
 
           <div className="flex items-center gap-x-2 mr-6">
             <img
-              className={`w-[15px] h-[15px] cursor-pointer ${isRefreshing ? "animate-spin" : ""
-                }`}
+              className={`w-[15px] h-[15px] cursor-pointer ${
+                isRefreshing ? "animate-spin" : ""
+              }`}
               src={refresh_icon}
               alt="Refresh icon"
               onClick={fetchMetalRates}
@@ -387,7 +391,7 @@ useEffect(()=>{
         </SwiperSlide>
 
         {/* Women banner */}
-      <SwiperSlide>
+        <SwiperSlide>
           <div className="women-banner-slider">
             <h1 className="font-atteron uppercase text-[#5B3A09] text-[40px] text-center xl:text-left sm:text-[50px] xl:text-[65px] font-normal w-full sm:max-w-[780px] tracking-[1px]">
               Embrace your beauty Shine with Elegance
@@ -425,7 +429,7 @@ useEffect(()=>{
               </button>
             </a>
           </div>
-        </SwiperSlide> 
+        </SwiperSlide>
       </Swiper>
 
       <div className="whyus">
@@ -458,23 +462,25 @@ useEffect(()=>{
 
               <div className="flex flex-col gap-y-[100px] sm:gap-y-20 sm:flex-row sm:flex-wrap items-center justify-center  gap-x-12 my-36 sm:mt-40 sm:mb-56 relative ">
                 {collection &&
-                  collection?.filter((item) => item.handle !== "best_seller").map((item) => (
-                    <Link
-                      to={`/products/${item.handle}`}
-                      state={{ category: item.handle, collectionId: item.id}}
-                    >
-                      <div className="border-2 border-white w-[360px] h-[361px] sm:h-[374px] relative z-0 overflow-hidden">
-                        <img
-                          src={item.image?.src}
-                          alt="men-image"
-                          className="w-[359px] h-[361px] sm:w-[373px] sm:h-[459px]  transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
-                        />
-                        <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-[50%] transform translate-x-[-50%]">
-                          {item.handle}
-                        </h2>
-                      </div>
-                    </Link>
-                  ))}
+                  collection
+                    ?.filter((item) => item.handle !== "best_seller" && item.body_html !== "<p>tarangi-specials</p>")
+                    .map((item) => (
+                      <Link
+                        to={`/products/${item.handle}`}
+                        state={{ category: item.handle, collectionId: item.id }}
+                      >
+                        <div className="border-2 border-white w-[360px] h-[361px] sm:h-[374px] relative z-0 overflow-hidden">
+                          <img
+                            src={item.image?.src}
+                            alt="men-image"
+                            className="w-[359px] h-[361px] sm:w-[373px] sm:h-[459px]  transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
+                          />
+                          <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-[50%] transform translate-x-[-50%]">
+                            {item.handle}
+                          </h2>
+                        </div>
+                      </Link>
+                    ))}
               </div>
 
               {/* Best Sellers - Desktop View */}
@@ -501,14 +507,16 @@ useEffect(()=>{
                         <img
                           src={type?.image}
                           alt={type?.name}
-                          className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] " 
+                          className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] "
                         />
                         <h5 className="font-poppins text-[22px] font-normal leading-normal text-white mt-6">
                           {type?.title}
                         </h5>
                         <h4 className="font-poppins text-[20px] font-semibold leading-normal text-[#FCD99F]">
-                          ₹{Number(type?.price).toLocaleString("en-IN", { maximumFractionDigits: 0, }) || type.variant?.[0]?.price}
-
+                          ₹
+                          {Number(type?.price).toLocaleString("en-IN", {
+                            maximumFractionDigits: 0,
+                          }) || type.variant?.[0]?.price}
                         </h4>
                       </div>
                     </Link>
@@ -518,7 +526,6 @@ useEffect(()=>{
 
               {/* Best Sellers - Mobile View slider */}
               <div className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden">
-
                 <h1 className="section-heading mb-9 !text-white tracking-[1px] text-center">
                   Best Sellers
                 </h1>
@@ -555,8 +562,11 @@ useEffect(()=>{
 
                 <Swiper
                   modules={[Navigation, Autoplay]}
-                  autoplay={{ "delay": 2000 }}
-                  navigation={{ prevEl: bestsellerprevRef.current, nextEl: bestsellernextRef.current }}
+                  autoplay={{ delay: 2000 }}
+                  navigation={{
+                    prevEl: bestsellerprevRef.current,
+                    nextEl: bestsellernextRef.current,
+                  }}
                   spaceBetween={12}
                   slidesPerView={1.1}
                   breakpoints={{
@@ -571,8 +581,10 @@ useEffect(()=>{
                   }}
                   onBeforeInit={(swiper) => {
                     if (showNavigation) {
-                      swiper.params.navigation.prevEl = bestsellerprevRef.current;
-                      swiper.params.navigation.nextEl = bestsellernextRef.current;
+                      swiper.params.navigation.prevEl =
+                        bestsellerprevRef.current;
+                      swiper.params.navigation.nextEl =
+                        bestsellernextRef.current;
                     }
                   }}
                   className="!overflow-hidden  !h-[515px]"
@@ -580,15 +592,27 @@ useEffect(()=>{
                   {FestiveFiltered.length > 0 ? (
                     FestiveFiltered.map((type, index) => (
                       <SwiperSlide key={index}>
-                        <Link to={`/product_description/${type.title.replace(/\s+/g, "-")}`} state={{ product: type }} >
+                        <Link
+                          to={`/product_description/${type.title.replace(
+                            /\s+/g,
+                            "-"
+                          )}`}
+                          state={{ product: type }}
+                        >
                           <div className="w-[360px] h-[450px] mx-auto flex flex-col items-center gap-y-2 transform transition-transform duration-300 ease-out hover:scale-105 cursor-pointer">
-                            <img src={type?.image} alt={type?.name} className="px-2 sm:px-0 w-[360px] h-[460px]" />
+                            <img
+                              src={type?.image}
+                              alt={type?.name}
+                              className="px-2 sm:px-0 w-[360px] h-[460px]"
+                            />
                             <h5 className="font-poppins text-[18px] sm:text-[20px] md:text-[22px] font-normal leading-normal text-white mt-4 sm:mt-6">
                               {type?.title}
                             </h5>
                             <h4 className="font-poppins text-[16px] sm:text-[18px] md:text-[20px] font-semibold leading-normal text-[#FCD99F]">
                               ₹
-                              {Number(type?.price).toLocaleString("en-IN", { maximumFractionDigits: 0, }) || type.variant?.[0]?.price}
+                              {Number(type?.price).toLocaleString("en-IN", {
+                                maximumFractionDigits: 0,
+                              }) || type.variant?.[0]?.price}
                             </h4>
                           </div>
                         </Link>
@@ -701,25 +725,33 @@ useEffect(()=>{
           </h1>
 
           <div className="hidden sm:flex flex-col sm:flex-row items-center sm:gap-x-12 gap-y-24 sm:flex-wrap justify-center mt-10 sm:mt-44">
-            {specials.map((item, index) => (
-              <div
-                key={index}
-                className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
-                onClick={() => {
-                  setSelectedType(item.title);
-                  toggle();
-                }}
-              >
-                <img
-                  src={item.img}
-                  alt={item.title}
-                  className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white"
-                />
-                <h3 className="font-atteron text-[32px] font-normal leading-normal text-white mt-2 sm:text-[34px]">
-                  {item.title}
-                </h3>
-              </div>
-            ))}
+            {collection &&
+              collection
+                ?.filter((item) => item.body_html === "<p>tarangi-specials</p>")
+                .map((item, index) => (
+                    <Link
+                        to={`/products/${item.handle}`}
+                        state={{ category: item.handle, collectionId: item.id }}
+                      >
+                  <div
+                    key={index}
+                    className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
+                    onClick={() => {
+                      setSelectedType(item.title);
+                      toggle();
+                    }}
+                  >
+                    <img
+                      src={item.image?.src}
+                      alt={item.title}
+                      className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white"
+                    />
+                    <h3 className="font-atteron text-[32px] font-normal leading-normal text-white mt-2 sm:text-[34px]">
+                      {item.title}
+                    </h3>
+                  </div>
+                  </Link>
+                ))}
           </div>
         </div>
         {/* ----------- MOBILE VIEW (Swiper) ----------- */}
@@ -756,8 +788,11 @@ useEffect(()=>{
 
           <Swiper
             modules={[Navigation, Autoplay]}
-            autoplay={{ "delay": 2000 }}
-            navigation={{ prevEl: tarangispecialprevRef.current, nextEl: tarangisepecialnextRef.current }}
+            autoplay={{ delay: 2000 }}
+            navigation={{
+              prevEl: tarangispecialprevRef.current,
+              nextEl: tarangisepecialnextRef.current,
+            }}
             spaceBetween={12}
             slidesPerView={1.1}
             breakpoints={{
@@ -768,7 +803,8 @@ useEffect(()=>{
             onBeforeInit={(swiper) => {
               if (showNavigation) {
                 swiper.params.navigation.prevEl = tarangispecialprevRef.current;
-                swiper.params.navigation.nextEl = tarangisepecialnextRef.current;
+                swiper.params.navigation.nextEl =
+                  tarangisepecialnextRef.current;
               }
             }}
             className="!overflow-hidden !h-[620px]"
@@ -970,5 +1006,3 @@ useEffect(()=>{
 }
 
 export default Home;
-
-

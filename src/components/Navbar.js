@@ -24,6 +24,7 @@ import new_product_1 from "../assets/Frame 29.png";
 import down_arrow from "../assets/down_arrow.png";
 import up_arrow from "../assets/up_arrow.png";
 import { AppContext } from "../context/AppContext";
+import { FetchAllProductFromShopify } from "../handler/api_Handler";
 
 function Navbar() {
   const location = useLocation();
@@ -153,6 +154,12 @@ function Navbar() {
     navigate("/login");
   };
 
+
+  const handleSearch=async(e)=>{
+     const response= await FetchAllProductFromShopify()
+      console.log(response)
+  }
+   
   return (
     <>
       {/* Navbar - large screens */}
@@ -212,7 +219,7 @@ function Navbar() {
                 <div className="grid grid-cols-4 gap-4">
                   {collection &&
                     collection
-                      ?.filter((item) => item.handle !== "best_seller")
+                      ?.filter((item) => item.handle !== "best_seller" && item.body_html !== "<p>tarangi-specials</p>")
                       .map((item) => (
                         <Link
                           to={`/products/${item.handle}`}
@@ -330,7 +337,8 @@ function Navbar() {
                     <input
                       type="text"
                       placeholder="Search for Products"
-                      className="w-full bg-white rounded-[12px] py-4 pl-5 pr-12 font-poppins text-[16px] placeholder:font-medium placeholder:text-[#ABABAB] outline-none"
+                      className="w-full bg-white rounded-[12px] py-4 pl-5 pr-12 font-poppins text-[16px] placeholder:font-medium placeholder:text-[#ABABAB] outline-none" 
+                      onChange={(e)=>handleSearch(e.target.value)}
                     />
                     <img
                       src={Search_icon}
