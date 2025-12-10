@@ -430,7 +430,7 @@ input::placeholder {
 
   .banner-section {
     background-image: url("./assets/backgrounds/banner_background_mobile.png");
-    height: 780px;
+    height: 790px;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -444,7 +444,7 @@ input::placeholder {
 
   .women-banner-slider {
     background-image: url("./assets/Home_banner/banner_2_mobile.png");
-    height: 780px;
+    height: 790px;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -452,14 +452,14 @@ input::placeholder {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    padding: 110px 0px;
+    padding: 100px 0px;
   }
 
   
 
   .men-banner-slider {
   background: url("./assets/Home_banner/menbanner_mobile.png");
-  height: 780px;
+  height: 790px;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -468,7 +468,7 @@ input::placeholder {
   flex-direction: column;
   justify-content: flex-start;
    align-items: center;
-  padding: 110px 0px;
+  padding: 100px 10px;
 }
 
 .design-section {
@@ -489,7 +489,7 @@ input::placeholder {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    padding: 110px 0px;
+    padding: 100px 0px;
     background-position: center center;
   }
 

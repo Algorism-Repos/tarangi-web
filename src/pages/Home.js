@@ -97,28 +97,60 @@ function Home() {
     fetchBestSellerProducts();
   }, [collection]);
   function formatProduct(productNode) {
-  const {
-    id,
-    title,
-    description,
-    images,
-    variants,
-    featuredImage,
-    vendor,
-    productType,
-    tags,
-    createdAt,
-  } = productNode;
+    const {
+      id,
+      title,
+      description,
+      images,
+      variants,
+      featuredImage,
+      vendor,
+      productType,
+      tags,
+      createdAt,
+    } = productNode;
 
-  const allImages = images?.edges?.map((img) => img.node.url) || [];
-  const variantEdges = variants?.edges || [];
-  const firstVariant = variantEdges[0]?.node;
+    const allImages = images?.edges?.map((img) => img.node.url) || [];
+    const variantEdges = variants?.edges || [];
+    const firstVariant = variantEdges[0]?.node;
 
-  const isSimpleProduct =
-    variantEdges.length === 1 &&
-    variantEdges[0].node.selectedOptions?.[0]?.value === "Default Title";
+    const isSimpleProduct =
+      variantEdges.length === 1 &&
+      variantEdges[0].node.selectedOptions?.[0]?.value === "Default Title";
 
-  if (isSimpleProduct) {
+    if (isSimpleProduct) {
+      return {
+        productId: id,
+        title,
+        description,
+        vendor,
+        productType,
+        tags,
+        createdAt,
+        type: "simple",
+        price: firstVariant?.price,
+        compareAtPrice:
+          firstVariant?.compareAtPrice !== undefined
+            ? firstVariant.compareAtPrice
+            : null,
+        image: featuredImage?.url || allImages[0],
+        images: allImages,
+        variants: null,
+      };
+    }
+
+    const formattedVariants = variantEdges.map((v) => ({
+      variantId: v.node.id,
+      price: v.node.price,
+      compareAtPrice:
+        v.node.compareAtPrice !== undefined ? v.node.compareAtPrice : null,
+      inventoryQuantity: v.node.inventoryQuantity,
+      image: v.node.image?.url || featuredImage?.url,
+      // colorVariant: v.node.selectedOptions.map((opt) => [opt.name, opt.value]),
+      colorVariant: v.node.selectedOptions[0].value,
+
+    }));
+
     return {
       productId: id,
       title,
@@ -127,44 +159,12 @@ function Home() {
       productType,
       tags,
       createdAt,
-      type: "simple",
-      price: firstVariant?.price,
-      compareAtPrice:
-        firstVariant?.compareAtPrice !== undefined
-          ? firstVariant.compareAtPrice
-          : null,
-      image: featuredImage?.url || allImages[0],
+      type: "variant",
+      featuredImage: featuredImage?.url,
       images: allImages,
-      variants: null,
+      variants: formattedVariants,
     };
   }
-
-  const formattedVariants = variantEdges.map((v) => ({
-    variantId: v.node.id,
-    price: v.node.price,
-    compareAtPrice:
-      v.node.compareAtPrice !== undefined ? v.node.compareAtPrice : null,
-    inventoryQuantity: v.node.inventoryQuantity,
-    image: v.node.image?.url || featuredImage?.url,
-    // colorVariant: v.node.selectedOptions.map((opt) => [opt.name, opt.value]),
-    colorVariant: v.node.selectedOptions[0].value,
-
-  }));
-
-  return {
-    productId: id,
-    title,
-    description,
-    vendor,
-    productType,
-    tags,
-    createdAt,
-    type: "variant",
-    featuredImage: featuredImage?.url,
-    images: allImages,
-    variants: formattedVariants,
-  };
-}
   // product catogory
   const categorized = FestiveFiltered.reduce((acc, product) => {
     const type = product.productType || "Uncategorized";
@@ -173,7 +173,7 @@ function Home() {
     return acc;
   }, {});
 
- console.log(FestiveFiltered)
+  console.log(FestiveFiltered)
 
 
   async function fetchMetalRates() {
@@ -185,6 +185,7 @@ function Home() {
         Accept: "application/json",
       },
     });
+    // setIsRefreshing(true);
 
     const result = await response.json();
     const date = new Date(result.timestamps.metal);
@@ -197,7 +198,9 @@ function Home() {
         minute: "2-digit",
         hour12: true,
         timeZone: "Asia/kolkata",
+        
       })
+      
     );
 
     const price = result.metals.silver;
@@ -311,7 +314,10 @@ function Home() {
                 }`}
               src={refresh_icon}
               alt="Refresh icon"
-              onClick={fetchMetalRates}
+              onClick={() => {
+                fetchMetalRates ();
+                handleRefresh () ;
+              }}
             />
             <p className="text-[14px] text-right sm:text-[16px]">
               Last Updated {silverPriceUpdatedTime}
@@ -369,22 +375,23 @@ function Home() {
             <h1 className="font-atteron uppercase text-[40px] text-center xl:text-left sm:text-[50px] xl:text-[65px] text-white font-normal w-full sm:max-w-[720px] mx-auto tracking-[1px] xl:mx-0">
               Born from tradition Designed for today
             </h1>
-            <h4 className="font-poppins text-[13px] w-[270px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center xl:text-left mt-8 max-w-[640px] mx-auto xl:mx-0">
+            <h4 className="font-poppins text-[13px] w-[270px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center xl:text-left mt-3 sm:mt-6 xl:mt-8 max-w-[640px] mx-auto xl:mx-0">
               Because exculsive 925 silver jewelry should feel as unique as the one who wears it.
             </h4>
-            <a
+            {/* <a
               href="#launchOffers"
               className="w-fit hover:scale-110 transition duration-300 mx-auto xl:mx-0"
-            >
-              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
+            > */}
+              <button onClick={() => document.getElementById("launchOffers")?.scrollIntoView({ behavior: "smooth",})} 
+                className=" mt-4 sm:mt-7 xl:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
                 View our Best Sellers
               </button>
-            </a>
+            {/* </a> */}
           </div>
         </SwiperSlide>
 
         {/* Women banner */}
-      <SwiperSlide>
+        <SwiperSlide>
           <div className="women-banner-slider">
             <h1 className="font-atteron uppercase text-[#5B3A09] text-[40px] text-center xl:text-left sm:text-[50px] xl:text-[65px] font-normal w-full sm:max-w-[780px] tracking-[1px]">
               Embrace your beauty Shine with Elegance
@@ -416,12 +423,12 @@ function Home() {
               href="#launchOffers"
               className="w-fit hover:scale-110 transition duration-300"
             >
-              <button className=" mt-10 sm:mt-11 rounded-[32px] bg-[#8F103B] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
+              <button className=" mt-4 sm:mt-7 xl:mt-12 rounded-[32px] bg-[#8F103B] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
                 View our mens Collections
               </button>
             </a>
           </div>
-        </SwiperSlide> 
+        </SwiperSlide>
       </Swiper>
 
       <div className="whyus">
@@ -457,7 +464,7 @@ function Home() {
                   collection?.filter((item) => item.handle !== "best_seller").map((item) => (
                     <Link
                       to={`/products/${item.handle}`}
-                      state={{ category: item.handle, collectionId: item.id}}
+                      state={{ category: item.handle, collectionId: item.id }}
                     >
                       <div className="border-2 border-white w-[360px] h-[361px] sm:h-[374px] relative z-0 overflow-hidden">
                         <img
@@ -497,7 +504,7 @@ function Home() {
                         <img
                           src={type?.image}
                           alt={type?.name}
-                          className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] " 
+                          className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] "
                         />
                         <h5 className="font-poppins text-[22px] font-normal leading-normal text-white mt-6">
                           {type?.title}

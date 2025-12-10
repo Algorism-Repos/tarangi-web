@@ -16,7 +16,7 @@ function Blog() {
   const [showSort, setShowSort] = useState("");
   const [selectedSort, setSelectedSort] = useState("Latest");
 
-
+  
   //  fetching blogs
   const Blogs = async () => {
     try {
@@ -112,7 +112,7 @@ function Blog() {
               </select>
 
               <img
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 w-[24px]"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 w-[24px] pointer-events-none"
                 src={down_arrow}
                 alt="Down Arrow"
               />
@@ -127,7 +127,7 @@ function Blog() {
             return (
               <Link to="/blogdescription">
                 <div className="max-w-[410px] mx-auto font-[poppins] xl:mx-0">
-                  <img className="w-[361px] h-[300px] sm:w-[415px] sm:h-[290px] object-cover rounded-[18px]"
+                  <img className="w-full h-[300px] sm:w-[415px] sm:h-[290px] object-cover rounded-[18px]"
                     src={article?.image?.src}
                     alt="Blog image"
                   />
