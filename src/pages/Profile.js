@@ -505,7 +505,15 @@ useEffect(() => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-
+  const sendWhatsapp = (orderId) => {
+    const phoneNumber = "919003058300";
+    const message = `Hi, my order has been placed. My Order ID is: ${orderId}`;
+    const url = `https://wa.me/${phoneNumber}/?text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(url, "_blank");
+  };
+  
   return (
     <div className="min-h-fit bg-[#FFF5E8] py-16 px-4 sm:px-6 lg:px-16 xl:px-28">
       <div className="max-w-[1280px] mx-auto space-y-20">

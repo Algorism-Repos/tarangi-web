@@ -5,7 +5,7 @@ export const AppContext = createContext();
 
 export function AppProvider({ children }) {
   const [loading, setLoading] = useState(true);
-  const[trendingProduct,setTrendingProduct]=useState()
+ 
   const [collection, setCollections] = useState(() => {
     const saved = localStorage.getItem("collection");
     return saved ? JSON.parse(saved) : [];
@@ -13,6 +13,16 @@ export function AppProvider({ children }) {
   const [pincodeDetails, setPincodeDetails] = useState({});
   const[deliveryDate,setdeliveryDate]=useState()
   const [filteredProducts, setFilteredProducts] = useState([]);
+const [trendingProduct, setTrendingProduct] = useState(() => {
+  const saved = localStorage.getItem("trendingProduct");
+  return saved ? JSON.parse(saved) : [];
+});
+
+useEffect(() => {
+  if (trendingProduct.length > 0) {
+    localStorage.setItem("trendingProduct", JSON.stringify(trendingProduct));
+  }
+}, [trendingProduct]);
 
   const [loggedCustomerId, setLoggedCustomerId] = useState(() => {
     return localStorage.getItem("loggedCustomerId") || null;

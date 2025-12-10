@@ -37,12 +37,14 @@ import {
   FetchAllCollectionsFromShopify,
   FetchAllProductByCollections,
   FetchAllProductFromShopify,
+  FetchSilverRate,
 } from "../handler/api_Handler";
 import { AppContext } from "../context/AppContext";
 import LoadingScreen from "../components/LoadingScreen";
 
 function Home() {
-  const [silverPrice, SetSilverPrice] = useState();
+  const [silver, setSilver] = useState();
+  const [silverRate, setSilverRate] = useState(null);
   const [silverPriceUpdatedTime, setSilverPriceUpdatedTime] = useState();
   const [animate, setAnimate] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
@@ -179,36 +181,6 @@ function Home() {
 
   console.log(FestiveFiltered);
 
-  async function fetchMetalRates() {
-    const url =
-      "https://api.metals.dev/v1/latest?api_key=TNJIKPQ4AYPHZUDTT0BS619DTT0BS&currency=INR&unit=g&symbols=XAG-COIM";
-
-    const response = await fetch(url, {
-      headers: {
-        Accept: "application/json",
-      },
-    });
-
-    const result = await response.json();
-    const date = new Date(result.timestamps.metal);
-    setSilverPriceUpdatedTime(
-      date.toLocaleString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-        timeZone: "Asia/kolkata",
-      })
-    );
-
-    const price = result.metals.silver;
-    const silver_rate = price * 0.925;
-    console.log(silver_rate);
-    SetSilverPrice(silver_rate);
-  }
-
   const specials = [
     { img: pink_collection, title: "Pink Collection" },
     { img: statement_earrings, title: "Statement Earrings" },
@@ -254,8 +226,7 @@ function Home() {
   }, []);
 
   // Silver prices logic
-  const [pricePerGram, setPricePerGram] = useState(169.9);
-  const [pricePerKg, setPricePerKg] = useState(169900);
+
   const [lastUpdated, setLastUpdated] = useState("27 Oct 2025, 11:00 AM");
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -283,7 +254,32 @@ function Home() {
     setTrendingProduct(FestiveFiltered);
   }, [FestiveFiltered]);
 
-  console.log(collection);
+  useEffect(() => {
+    async function loadSilver() {
+      const data = await FetchSilverRate();
+      console.log(data);
+      setSilver(data);
+      if (data?.silverPerGram) {
+        setSilverRate(data.silverPerGram);
+      }
+
+      const date = new Date();
+      setSilverPriceUpdatedTime(
+        date.toLocaleString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+          timeZone: "Asia/Kolkata",
+        })
+      );
+    }
+
+    loadSilver();
+  }, []);
+  console.log(silverRate);
   return (
     <>
       {/* Floating Whatsapp icon */}
@@ -304,8 +300,15 @@ function Home() {
         <div className="flex justify-between p-3">
           <div className="flex items-center w-[161px] sm:w-[175px]">
             <p className="text-[#28040E] text-[15px] font-normal  sm:text-[16px]">
-              <span className="font-semibold">₹ {silverPrice}</span> /g <br />{" "}
-              <span className="font-semibold">₹ 1,69,900</span>/ kilogram.
+              <span className="font-semibold">
+                {" "}
+                ₹ {Number(silver?.silverPerGram).toFixed(2)}
+              </span>{" "}
+              /g <br />{" "}
+              <span className="font-semibold">
+                ₹ {Number(silver?.silverPerKg).toFixed(2)}
+              </span>
+              / kilogram.
             </p>
           </div>
 
@@ -316,7 +319,7 @@ function Home() {
               }`}
               src={refresh_icon}
               alt="Refresh icon"
-              onClick={fetchMetalRates}
+              // onClick={fetchMetalRates}
             />
             <p className="text-[14px] text-right sm:text-[16px]">
               Last Updated {silverPriceUpdatedTime}
@@ -333,10 +336,10 @@ function Home() {
               Silver Price Today
             </p>
             <p className="text-[#28040E] text-[18px] font-normal">
-              <span className="font-semibold">₹ {silverPrice?.toFixed(2)}</span>{" "}
+              <span className="font-semibold">₹ {Number(silver?.silverPerGram).toFixed(2)}</span>{" "}
               per gram and{" "}
               <span className="font-semibold">
-                ₹{silverPrice?.toFixed(2) * 1000}
+                ₹{Number(silver?.silverPerKg).toFixed(2)}
               </span>{" "}
               per kilogram.
             </p>
@@ -349,7 +352,7 @@ function Home() {
               }`}
               src={refresh_icon}
               alt="Refresh icon"
-              onClick={fetchMetalRates}
+              //  / onClick={fetchMetalRates}
             />
             <p>Last Updated {silverPriceUpdatedTime}</p>
           </div>
@@ -463,7 +466,11 @@ function Home() {
               <div className="flex flex-col gap-y-[100px] sm:gap-y-20 sm:flex-row sm:flex-wrap items-center justify-center  gap-x-12 my-36 sm:mt-40 sm:mb-56 relative ">
                 {collection &&
                   collection
-                    ?.filter((item) => item.handle !== "best_seller" && item.body_html !== "<p>tarangi-specials</p>")
+                    ?.filter(
+                      (item) =>
+                        item.handle !== "best_seller" &&
+                        item.body_html !== "<p>tarangi-specials</p>"
+                    )
                     .map((item) => (
                       <Link
                         to={`/products/${item.handle}`}
@@ -729,27 +736,27 @@ function Home() {
               collection
                 ?.filter((item) => item.body_html === "<p>tarangi-specials</p>")
                 .map((item, index) => (
-                    <Link
-                        to={`/products/${item.handle}`}
-                        state={{ category: item.handle, collectionId: item.id }}
-                      >
-                  <div
-                    key={index}
-                    className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
-                    onClick={() => {
-                      setSelectedType(item.title);
-                      toggle();
-                    }}
+                  <Link
+                    to={`/products/${item.handle}`}
+                    state={{ category: item.handle, collectionId: item.id }}
                   >
-                    <img
-                      src={item.image?.src}
-                      alt={item.title}
-                      className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white"
-                    />
-                    <h3 className="font-atteron text-[32px] font-normal leading-normal text-white mt-2 sm:text-[34px]">
-                      {item.title}
-                    </h3>
-                  </div>
+                    <div
+                      key={index}
+                      className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
+                      onClick={() => {
+                        setSelectedType(item.title);
+                        toggle();
+                      }}
+                    >
+                      <img
+                        src={item.image?.src}
+                        alt={item.title}
+                        className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white"
+                      />
+                      <h3 className="font-atteron text-[32px] font-normal leading-normal text-white mt-2 sm:text-[34px]">
+                        {item.title}
+                      </h3>
+                    </div>
                   </Link>
                 ))}
           </div>

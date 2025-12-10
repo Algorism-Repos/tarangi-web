@@ -105,9 +105,17 @@ function Cart() {
 
                       <div className="space-y-[3px] sm:space-y-[15px]">
                         <div>
-                          <h3 className="text-[10px] font-medium text-[#6F6F6F] sm:text-[16px]">
-                            {item.title}
-                          </h3>
+                          <Link
+                            to={`/product_description/${item?.title?.replace(
+                              /\s+/g,
+                              "-"
+                            )}`}
+                            state={{ product: item }}
+                          >
+                            <h3 className="text-[10px] font-medium text-[#6F6F6F] sm:text-[16px]">
+                              {item.title}
+                            </h3>
+                          </Link>
                           <h3 className="text-[12px] font-semibold sm:text-[20px]">
                             ₹{parseInt(item.price).toLocaleString("en-in")}
                           </h3>
@@ -341,23 +349,22 @@ function Cart() {
       </div>
 
       {/* DELETE CONFIRMATION MODAL */}
-  <DeleteConfirmationModal
-  isOpen={isDeleteModalOpen}
-  title="Remove Item"
-  message="Are you sure you want to remove this product from your cart?"
-  onCancel={() => {
-    setIsDeleteModalOpen(false);
-    setProductToDelete(null);
-  }}
-  onConfirm={() => {
-    if (productToDelete) {
-      removeFromCart(productToDelete.variantId); 
-    }
-    setIsDeleteModalOpen(false);
-    setProductToDelete(null);
-  }}
-/>
-
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        title="Remove Item"
+        message="Are you sure you want to remove this product from your cart?"
+        onCancel={() => {
+          setIsDeleteModalOpen(false);
+          setProductToDelete(null);
+        }}
+        onConfirm={() => {
+          if (productToDelete) {
+            removeFromCart(productToDelete.variantId);
+          }
+          setIsDeleteModalOpen(false);
+          setProductToDelete(null);
+        }}
+      />
     </>
   );
 }
