@@ -458,7 +458,7 @@ function Home() {
                           <img
                             src={item.image?.src}
                             alt="men-image"
-                            className="w-[359px] h-[361px] sm:w-[350px] sm:h-[350px]  transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
+                            className="w-[359px] h-[361px] sm:w-[373px] sm:h-[373px] object-cover transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
                           />
                           <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-[50%] transform translate-x-[-50%]">
                             {item.handle}
@@ -981,7 +981,7 @@ function Home() {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Modal */}0
       <Modal modal={modalToggle} active={toggle} productName={selectedType} />
     </>
   );

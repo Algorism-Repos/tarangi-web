@@ -200,7 +200,7 @@ function CheckoutPage() {
         orderData
       );
       setOrderId(response.data.id);
-      
+
       sendWhatsapp(response.data.id);
       if(Payment_key){
         navigate("/thankyou");
@@ -231,10 +231,10 @@ function CheckoutPage() {
     <div className="min-h-screen bg-[#FFF5E8] text-[#979797]  font-poppins overflow-x-hidden px-3 sm:px-6">
       <div className="max-w-[1440px] mx-auto py-10 space-y-10 ">
         {/* Header */}
-        <div className="flex items-center  relative px-2 sm:px-4 md:px-6 lg:px-10 py-2">
+        <div className="flex items-center relative px-2 sm:px-4 md:px-6 lg:px-10 py-2">
           <Link
             to="/cart"
-            className="flex  items-center gap-x-[6px] px-5 max-[425px]:gap-x-[4px] max-[425px]:px-4"
+            className="flex flex-row items-center gap-x-[6px] px-5 max-[425px]:gap-x-[4px] max-[425px]:px-4"
           >
             <img
               className="w-[26px] rotate-90 max-[425px]:w-[26px]"
@@ -264,9 +264,8 @@ function CheckoutPage() {
               <img
                 src={downArrow}
                 alt="Dropdown Arrow"
-                className={`w-[11px] h-[7px] transition-transform duration-300 ${
-                  showSummary ? "rotate-180" : "rotate-0"
-                }`}
+                className={`w-[11px] h-[7px] transition-transform duration-300 ${showSummary ? "rotate-180" : "rotate-0"
+                  }`}
               />
             </div>
 
@@ -351,8 +350,10 @@ function CheckoutPage() {
 
         {/* Main Grid */}
         <div className="flex max-w-[1300px]">
+          
           {/* Left Form */}
           <div className="w-[700px]  mx-auto">
+            <h3 className="text-primary text-[30px] font-medium font-atteron uppercase text-center">Checkout Form</h3>
             <form
               onSubmit={formik.handleSubmit}
               className="bg-[#FFF5E8] rounded-xl  p-4 sm:p-6 space-y-6"
@@ -371,11 +372,10 @@ function CheckoutPage() {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.firstName}
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                        formik.errors.firstName && formik.touched.firstName
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.firstName && formik.touched.firstName
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                      }
+                        }
                       focus:outline-none focus:border-[#8C455E]`}
                       placeholder="First Name"
                     />
@@ -393,11 +393,10 @@ function CheckoutPage() {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.lastName}
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                        formik.errors.lastName && formik.touched.lastName
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.lastName && formik.touched.lastName
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                      }
+                        }
                              focus:outline-none focus:border-[#8C455E]`}
                       placeholder="Last Name"
                     />
@@ -412,11 +411,10 @@ function CheckoutPage() {
                 <div>
                   <label className="text-sm block mb-1">Mobile Number</label>
                   <div
-                    className={`flex items-center w-full h-[44px] px-3 border rounded-md text-[16px] bg-white ${
-                      formik.errors.mobile && formik.touched.mobile
+                    className={`flex items-center w-full h-[44px] px-3 border rounded-md text-[16px] bg-white ${formik.errors.mobile && formik.touched.mobile
                         ? "border-red-500"
                         : "border-[#efe6e6]"
-                    }
+                      }
                     focus:outline-none focus:border-[#8C455E]`}
                   >
                     <span className="text-[#800020] font-semibold mr-2 whitespace-nowrap">
@@ -449,11 +447,10 @@ function CheckoutPage() {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.email}
-                    className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                      formik.errors.email && formik.touched.email
+                    className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.email && formik.touched.email
                         ? "border-red-500"
                         : "border-[#efe6e6]"
-                    } focus:outline-none focus:border-[#8C455E]`}
+                      } focus:outline-none focus:border-[#8C455E]`}
                     placeholder="Email Id"
                   />
 
@@ -478,11 +475,10 @@ function CheckoutPage() {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.address}
-                    className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${
-                      formik.errors.address && formik.touched.address
+                    className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${formik.errors.address && formik.touched.address
                         ? "border-red-500"
                         : "border-[#efe6e6]"
-                    }
+                      }
                      focus:outline-none focus:border-[#8C455E]`}
                     placeholder="Address (Flat No./ House No./Street/Area))"
                   />
@@ -528,11 +524,10 @@ function CheckoutPage() {
                         formik.values.pincode ||
                         cartItems[0]?.deliverDetails.pincode
                       }
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                        formik.errors.pincode && formik.touched.pincode
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.pincode && formik.touched.pincode
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                      }
+                        }
                       focus:outline-none focus:border-[#8C455E]`}
                       placeholder="Pincode"
                     />
@@ -552,11 +547,10 @@ function CheckoutPage() {
                       value={
                         formik.values.city || cartItems[0]?.deliverDetails?.city
                       }
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                        formik.errors.city && formik.touched.city
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.city && formik.touched.city
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                      }
+                        }
                        focus:outline-none focus:border-[#8C455E]`}
                       placeholder="City"
                     />
@@ -577,11 +571,10 @@ function CheckoutPage() {
                         formik.values.state ||
                         cartItems[0]?.deliverDetails?.state
                       }
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${
-                        formik.errors.state && formik.touched.state
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${formik.errors.state && formik.touched.state
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                      }
+                        }
                      focus:outline-none focus:border-[#8C455E]`}
                     />
                     {formik.touched.state && formik.errors.state && (
@@ -617,11 +610,10 @@ function CheckoutPage() {
                     setUseDifferentBilling(false);
                   }}
                   className={`cursor-pointer w-full p-4 rounded-md border transition-all duration-300
-              ${
-                !useDifferentBilling
-                  ? "bg-gradient-to-r from-[#f8e3e3] to-[#ffffff] border-[#8C455E] shadow-md"
-                  : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
-              }`}
+              ${!useDifferentBilling
+                      ? "bg-gradient-to-r from-[#f8e3e3] to-[#ffffff] border-[#8C455E] shadow-md"
+                      : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <p className="text-16px font-Poppins text-[#313131]">
@@ -629,11 +621,10 @@ function CheckoutPage() {
                     </p>
                     <span
                       className={`w-[22px] h-[22px] border-2 rounded-full flex items-center justify-center
-                  ${
-                    !useDifferentBilling
-                      ? "border-[#6E0027]"
-                      : "border-[#6E0027]"
-                  }
+                  ${!useDifferentBilling
+                          ? "border-[#6E0027]"
+                          : "border-[#6E0027]"
+                        }
                      `}
                     >
                       {!useDifferentBilling && (
@@ -648,11 +639,10 @@ function CheckoutPage() {
                     setUseDifferentBilling(true);
                   }}
                   className={`cursor-pointer w-full p-4 mt-3 rounded-md border transition-all duration-300
-              ${
-                useDifferentBilling
-                  ? "bg-gradient-to-r from-[#DAB3C14F] to-[#ffffff]  border-[#8C455E] shadow-md"
-                  : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
-              }`}
+              ${useDifferentBilling
+                      ? "bg-gradient-to-r from-[#DAB3C14F] to-[#ffffff]  border-[#8C455E] shadow-md"
+                      : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-[16px] font-Poppins text-[#313131]">
@@ -682,12 +672,11 @@ function CheckoutPage() {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.billingAddress}
-                      className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${
-                        formik.errors.billingAddress &&
-                        formik.touched.billingAddress
+                      className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${formik.errors.billingAddress &&
+                          formik.touched.billingAddress
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                      }
+                        }
                      focus:outline-none focus:border-[#8C455E]`}
                       placeholder="Address (Flat No./ House No./Street/Area))"
                     />
@@ -729,12 +718,11 @@ function CheckoutPage() {
                           handlePincodeCheck("billingPincode", e.target.value);
                         }}
                         value={formik.values.billingPincode}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                          formik.errors.billingPincode &&
-                          formik.touched.billingPincode
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.billingPincode &&
+                            formik.touched.billingPincode
                             ? "border-red-500"
                             : "border-[#efe6e6]"
-                        } focus:outline-none focus:border-[#8C455E]`}
+                          } focus:outline-none focus:border-[#8C455E]`}
                         placeholder="billingPincode"
                       />
 
@@ -752,12 +740,11 @@ function CheckoutPage() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.billingCity}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                          formik.errors.billingCity &&
-                          formik.touched.billingCity
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.billingCity &&
+                            formik.touched.billingCity
                             ? "border-red-500"
                             : "border-[#efe6e6]"
-                        }
+                          }
                        focus:outline-none focus:border-[#8C455E]`}
                         placeholder="City"
                       />
@@ -775,12 +762,11 @@ function CheckoutPage() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.billingState}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${
-                          formik.errors.billingState &&
-                          formik.touched.billingState
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${formik.errors.billingState &&
+                            formik.touched.billingState
                             ? "border-red-500"
                             : "border-[#efe6e6]"
-                        }
+                          }
                      focus:outline-none focus:border-[#8C455E]`}
                       />
                       {formik.touched.billingState && formik.errors.state && (

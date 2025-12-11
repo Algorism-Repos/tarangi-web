@@ -100,15 +100,15 @@ function Product_Description() {
   }, [colorSelected, pincodeDetails]);
 
   //Organising the colors that are available for the product
-const variantColors = (product?.variants || []).map(
-  (element) => element.colorVariant
-);
+  const variantColors = (product?.variants || []).map(
+    (element) => element.colorVariant
+  );
 
   const availableColors = colorAssets?.filter((element) =>
     variantColors?.includes(element.value)
   );
 
-  // click on a color toggle
+  // click on  color toggle
   function handleColorChangeByButton(color) {
     setColorSelected(color);
     const idx = product?.variants?.findIndex(
@@ -118,8 +118,8 @@ const variantColors = (product?.variants || []).map(
     swiperRef.current.slideTo(idx);
   }
   const isAlreadyInWishlist = wishlistItems.some(
-  (item) => item?.variantId === activeVariant?.variantId
-);
+    (item) => item?.variantId === activeVariant?.variantId
+  );
 
   return (
     <>
@@ -138,10 +138,10 @@ const variantColors = (product?.variants || []).map(
             <p> {product?.title}</p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-evenly gap-10 sm:my-[40px] xl:my-[70px] ">
+          <div className="flex flex-col sm:flex-row items-start gap-10 sm:my-[40px] xl:my-[70px] ">
             {/* Product Image */}
 
-            <div className="w-[380px] overflow-hidden sm:min-w-[550px] lg:mt-20 mb-5">
+            <div className="min-w-[400px] overflow-hidden  lg:mt-20 mb-5">
               <Swiper
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
                 onSlideChange={(swiper) => {
@@ -159,7 +159,7 @@ const variantColors = (product?.variants || []).map(
                     <SwiperSlide>
                       <img
                         src={item.image}
-                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px] mx-auto"
+                        className="w-[361px] h-[373px] sm:w-[388px] max-w-[388px] sm:min-h-[399px] rounded-[18px] mx-auto"
                       />
                     </SwiperSlide>
                   ))
@@ -212,7 +212,7 @@ const variantColors = (product?.variants || []).map(
                   Description
                 </h3>
                 <p className="text-[#484848] text-[16px] font-medium ">
-               At Tarangi Jewels, every piece of 92.5 silver jewellery reflects impeccable artistry and sophisticated charm. Experience jewellery that is as beautiful as it is timeless.
+                  At Tarangi Jewels, every piece of 92.5 silver jewellery reflects impeccable artistry and sophisticated charm. Experience jewellery that is as beautiful as it is timeless.
                 </p>
 
                 {/*Colors Available Section - Mobile  */}
@@ -328,8 +328,7 @@ const variantColors = (product?.variants || []).map(
               <div className="max-w-[500px] mt-5">
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
                   <AddToCartButton productToCart={activeVariant} />
-                  <AddToWishlistButton productToFavorites={activeVariant}   disabled={isAlreadyInWishlist}
- />
+                  <AddToWishlistButton productToFavorites={activeVariant} disabled={isAlreadyInWishlist} />
                 </div>
               </div>
             </div>
@@ -364,37 +363,24 @@ const variantColors = (product?.variants || []).map(
                       />
                     </Link>
 
-                    <div className="mt-2 flex flex-wrap items-center justify-between sm:mt-4">
-                      <div>
-                        <h3 className="text-[16px] font-semibold sm:text-[20px]">
-                          {item.title}
-                        </h3>
-                        <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">
+                    <div className="mt-2 sm:mt-4">
+                      <h3 className="text-[16px] font-semibold sm:text-[20px]">
+                        {item.title}
+                      </h3>
+                      <div className="flex flex-row justify-between items-center">
+                        <p className="text-[12.5px] text-[#4E4E4E] font-normal sm:text-[18px] mt-1">
                           ₹{" "}
                           {(item?.price
                             ? parseInt(item?.price)
                             : parseInt(item?.variants?.[0]?.price)
                           )?.toLocaleString("en-IN")}
                         </p>
-                      </div>
 
-                      <div className="hidden sm:block">
-                        <div className="mt-1 flex justify-end gap-x-3">
-                          <img
-                            className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
-                            src={gold_ellipse}
-                            alt="gold ellipse"
-                          />
-                          <img
-                            className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
-                            src={silver_ellipse}
-                            alt="Silver ellipse"
-                          />
-                          <img
-                            className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
-                            src={brown_ellipse}
-                            alt="brown ellipse"
-                          />
+                        <div className="hidden sm:flex flex-row items-center gap-x-1">
+                          {colorAssets.map((item) => (
+                            <img src={item.imgUrl} className="w-[24px] h-[24px] hover:border-2 border-primary px-[0.6px] rounded-full" alt="color-assets" />
+
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -411,7 +397,7 @@ const variantColors = (product?.variants || []).map(
           show={showWishlistPopup}
           onClose={() => setShowWishlistPopup(false)}
         />
-      </div>
+      </div >
     </>
   );
 }

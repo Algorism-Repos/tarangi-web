@@ -114,7 +114,7 @@ function Product_Listing({ productCatergory }) {
       }))
     );
   }, [wishlistItems, productCatergory]);
-  
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);

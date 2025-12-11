@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import shoppingCart_red from "../assets/Products/shoppingcart_red.png";
 import shoppingCart_white from "../assets/Products/shoppingcart_white.png";
 import { AppContext } from "../context/AppContext";
@@ -25,6 +25,7 @@ function AddToCartButton({
   console.log(productToCart);
 
   const{pathname} = useLocation();
+  const navigate = useNavigate();
 
   const handleAddToCart = () => {
     addToCart(productToCart);
@@ -33,7 +34,9 @@ function AddToCartButton({
     setTimeout(() => {
       setShowToast(false);
       document.body.style.overflow = "auto";
-    }, 1500);
+      navigate("/cart");
+
+    }, 1000);
   };
   const handleClick = (e) => {
     e.preventDefault();

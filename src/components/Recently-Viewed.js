@@ -20,7 +20,6 @@ const IMAGE_BY_COLOR = (item) => ({
 
 function Recently_Viewed() {
   const { recentlyViewed, setRecentlyViewed } = useContext(AppContext);
-  console.log(recentlyViewed)
   //  Color change – only update selectedColor
   const handleColorChange = (id, color) => {
     setRecentlyViewed((prev) =>
@@ -56,7 +55,7 @@ useEffect(() => {
       </h1>
         
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
-        {recentlyViewed?.slice(0).map((item) => {
+        {recentlyViewed?.slice(1).map((item) => {
           const colorImages = IMAGE_BY_COLOR(item);
           const selectedColor = item.selectedColor || "gold";
           const imageSrc =(selectedColor && colorImages[selectedColor]) || colorImages.gold;
@@ -95,7 +94,7 @@ useEffect(() => {
 
                 <div className="mt-1.5 flex items-center justify-between">
                   <h3 className="text-[12.5px] text-[#4E4E4E] font-normal sm:text-[18px] mt-1">
-                    ₹ {item.price}
+                    ₹ {parseInt(item?.price).toLocaleString("en-IN")}
                   </h3>
 
                   {/* Color Options */}
