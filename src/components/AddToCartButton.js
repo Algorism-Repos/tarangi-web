@@ -21,7 +21,6 @@ function AddToCartButton({
   const navigate = useNavigate();
 
   const{pathname} = useLocation();
-  console.log(pathname);
 
   const handleAddToCart = () => {
     addToCart(productToCart);

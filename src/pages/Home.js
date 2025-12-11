@@ -91,7 +91,6 @@ function Home() {
     const fetchBestSellerProducts = async () => {
       try {
         const response = await FetchAllProductByCollections(bestSeller.id);
-        console.log(`${bestSeller.id} && ${response?.data}`);
         const productEdges = response?.data?.collection?.products?.edges ?? [];
         const formattedProducts = productEdges.map((item) =>
           formatProduct(item.node)
@@ -179,7 +178,6 @@ function Home() {
     return acc;
   }, {});
 
-  console.log(FestiveFiltered);
 
   const specials = [
     { img: pink_collection, title: "Pink Collection" },
@@ -257,7 +255,6 @@ function Home() {
   useEffect(() => {
     async function loadSilver() {
       const data = await FetchSilverRate();
-      console.log(data);
       setSilver(data);
       if (data?.silverPerGram) {
         setSilverRate(data.silverPerGram);
@@ -279,7 +276,6 @@ function Home() {
 
     loadSilver();
   }, []);
-  console.log(silverRate);
   return (
     <>
       {/* Floating Whatsapp icon */}

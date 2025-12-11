@@ -26,7 +26,6 @@ function Blog() {
   const Blogs = async () => {
     try {
       const response = await FetchAllBlogsFromShopify();
-      console.log(response);
       setBlogs(response.blogs);
     } catch (error) {
       console.log(error);
@@ -73,8 +72,6 @@ function Blog() {
   useEffect(() => {
     Blogs();
   }, []);
-  console.log("allData", allBlogData);
-  console.log("sortedBlogData", allBlogData);
 
   const SortOptions = ["Latest", "Oldest"];
 

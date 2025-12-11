@@ -150,7 +150,6 @@ contentRefs.current = faqSections.map((_, i) => contentRefs.current[i] ?? null);
             FAQ about sterling silver jewelry
           </h3>
           <div>
-            {" "}
             {faqData.map((item, i) => {
               const isOpen = openIndex === i;
               return (

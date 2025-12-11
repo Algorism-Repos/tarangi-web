@@ -46,7 +46,6 @@ function Product_Listing({ productCatergory }) {
     }
   }, [productCatergory]);
 
-  console.log(products);
 
   //Extracting colors into an array from the variants
   const colorAssets = [
@@ -68,12 +67,9 @@ function Product_Listing({ productCatergory }) {
   const variantColors = products?.map((element) =>
     element?.variants?.map((item) => item.colorVariant)
   );
-  // console.log(variantColors);
-  // const availableColors = colorAssets.filter(element => variantColors?.includes(element.value))
   const availableColors = variantColors
     .map((color) => colorAssets.find((asset) => asset.value == color))
     .filter(Boolean);
-  // console.log(availableColors);
 
   //  Like button toggle
 const toggleLike = (productId, variantId) => {

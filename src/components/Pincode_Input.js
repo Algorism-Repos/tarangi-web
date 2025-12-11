@@ -65,7 +65,6 @@ function Pincode_Input() {
 
   }, [pincode, tatHours])
 
-  console.log(pincodeDetails);
 
 
   useEffect(() => {

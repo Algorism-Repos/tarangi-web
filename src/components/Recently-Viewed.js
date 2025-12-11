@@ -20,7 +20,6 @@ const IMAGE_BY_COLOR = (item) => ({
 
 function Recently_Viewed() {
   const { recentlyViewed, setRecentlyViewed } = useContext(AppContext);
-  console.log(recentlyViewed)
   //  Color change – only update selectedColor
   const handleColorChange = (id, color) => {
     setRecentlyViewed((prev) =>
@@ -47,7 +46,6 @@ useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     }, []);
 
-  console.log(recentlyViewed)
 
   return (
     <div className="max-w-[1300px] mx-auto mt-[50px] lg:mt-[80px]">
