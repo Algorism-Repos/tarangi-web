@@ -11,39 +11,18 @@ import parse from "html-react-parser";
 
 function Blog_Description() {
   const location = useLocation();
-  const { blog } = location.state || {};
+  const { blog, blogsList = [] } = location.state || {};
   console.log(blog);
   //  FAQ data .
-  const faqData = [
-    {
-      q: "What is 925 sterling silver?",
-      a: "925 sterling silver is an alloy containing 92.5% pure silver and 7.5% other metals (usually copper) to increase strength while retaining silver's luster.",
-    },
-    {
-      q: "How should I care for my silver jewelry?",
-      a: "Store your jewelry in soft, dry pouches and avoid contact with water, perfumes, or chemicals. To clean, gently rub with a soft polishing cloth. For long-term brilliance, have your silver jewelry professionally polished occasionally.",
-    },
-    {
-      q: "Where can I buy handcrafted sterling silver jewelry?",
-      a: "You can explore Tarangi's handcrafted sterling silver collections on our website or visit authorized retail partners listed on our store locator.",
-    },
-  ];
+
+  const currentIndex = blogsList.findIndex((b) => b.id === blog.id);
   const [openIndex, setOpenIndex] = useState(null);
-  const contentRefs = useRef([]);
-  contentRefs.current = faqData.map((_, i) => contentRefs.current[i] ?? null);
-  useEffect(() => {
-    if (openIndex !== null && contentRefs.current[openIndex]) {
-      void contentRefs.current[openIndex].scrollHeight;
-    }
-  }, [openIndex]);
-  const toggle = (i) => {
-    setOpenIndex((prev) => (prev === i ? null : i));
-  };
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
-
+  // Calculate previous and next
+  const prevBlog = currentIndex > 0 ? blogsList[currentIndex - 1] : null;
+  const nextBlog =
+    currentIndex < blogsList.length - 1 ? blogsList[currentIndex + 1] : null;
+   
   function extractSections(html) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
@@ -96,10 +75,37 @@ function Blog_Description() {
     if (current) sections.push(current);
     return sections;
   }
+    const sections = extractSections(blog.body);
 
-  const sections = extractSections(blog.body);
+const faqSections = sections.filter(
+  (sec) =>
+    sec.heading.toLowerCase().includes("faq") || /^\d+\./.test(sec.heading)
+);
+const faqData = faqSections.map((item) => ({
+  q: item.heading,
+  a: item.paragraphs.join("\n"), // join paragraphs into a single string
+}));
+
+  const contentRefs = useRef([]);
+contentRefs.current = faqSections.map((_, i) => contentRefs.current[i] ?? null);
+  useEffect(() => {
+    if (openIndex !== null && contentRefs.current[openIndex]) {
+      void contentRefs.current[openIndex].scrollHeight;
+    }
+  }, [openIndex]);
+  const toggle = (i) => {
+    setOpenIndex((prev) => (prev === i ? null : i));
+  };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+
   console.log(sections);
   console.log(blog);
+// After you get 'sections' from extractSections(blog.body)
+
 
   return (
     <>
@@ -172,11 +178,21 @@ function Blog_Description() {
 
         <div className="max-w-[1000px] bg-[#FFF5E8]  mt-20 sm:mt-32  mx-auto flex items-center justify-between ">
           {/* Previous Button */}
-          <button className="flex items-center gap-2 font-poppins text-primary text-[16px] font-normal">
-            <img src={ArrowLeft} alt="Previous" className="w-[30px] h-[30px]" />
-            Previous
-          </button>
 
+          {prevBlog ? (
+            <Link to="/blogdescription" state={{ blog: prevBlog, blogsList }}>
+              <button className="flex items-center gap-2 font-poppins text-primary text-[16px] font-normal">
+                <img
+                  src={ArrowLeft}
+                  alt="Previous"
+                  className="w-[30px] h-[30px]"
+                />
+                Previous
+              </button>
+            </Link>
+          ) : (
+            <div />
+          )}
           {/* Back to Home */}
           <Link to="/home">
             <button className="text-primary items-center mt-2 font-poppins text-[16px] font-normal hidden md:block">
@@ -185,13 +201,20 @@ function Blog_Description() {
           </Link>
 
           {/* Next Button */}
-          <button className="flex items-center gap-2 font-poppins text-primary text-[16px] font-normal">
-            Go to Next
-            <img src={ArrowRight} alt="Next" className="w-[30px] h-[30px]" />
-          </button>
-
-
-
+          {nextBlog ? (
+            <Link to="/blogdescription" state={{ blog: nextBlog, blogsList }}>
+              <button className="flex items-center gap-2 font-poppins text-primary text-[16px] font-normal">
+                Go to Next
+                <img
+                  src={ArrowRight}
+                  alt="Next"
+                  className="w-[30px] h-[30px]"
+                />
+              </button>
+            </Link>
+          ) : (
+            <div />
+          )}
         </div>
       </div>
       {/* })} */}

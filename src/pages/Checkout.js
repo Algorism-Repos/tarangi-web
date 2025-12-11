@@ -25,6 +25,7 @@ function CheckoutPage() {
   const { cartItems, clearCart } = useContext(AppContext);
   const [showSummary, setShowSummary] = useState(false);
   const [formValues, setFormValues] = useState([]);
+
   // Yup validation schema
   const validationSchema = Yup.object({
     // Contact
@@ -81,40 +82,48 @@ function CheckoutPage() {
     addGiftWrap: Yup.boolean(),
     orderNote: Yup.string(),
   });
+const savedForm = JSON.parse(localStorage.getItem("checkoutForm")) || {};
+useEffect(() => {
+  const navigationType = performance.getEntriesByType("navigation")[0]?.type;
+
+  if (navigationType === "reload") {
+    console.log("Page refreshed — clearing saved form");
+    localStorage.removeItem("checkoutForm");
+  }
+}, []);
 
   // Formik
   const formik = useFormik({
     initialValues: {
-      email: "",
-      firstName: "",
-      lastName: "",
-      mobile: "",
+      email: savedForm.email || "",
+    firstName: savedForm.firstName || "",
+    lastName: savedForm.lastName || "",
+    mobile: savedForm.mobile || "",
 
       // Shipping
-      address: "",
-      landmark: "",
-      city: "",
-      pincode: "",
-      state: "",
-      country: "India",
+    address: savedForm.address || "",
+    landmark: savedForm.landmark || "",
+    city: savedForm.city || "",
+    pincode: savedForm.pincode || "",
+    state: savedForm.state || "",
+    country: savedForm.country || "India",
 
       // Billing
-      billingAddress: "",
-      billingLandmark: "",
-      billingCity: "",
-      billingPincode: "",
-      billingState: "",
-      billingCountry: "India",
+         billingAddress: savedForm.billingAddress || "",
+    billingLandmark: savedForm.billingLandmark || "",
+    billingCity: savedForm.billingCity || "",
+    billingPincode: savedForm.billingPincode || "",
+    billingState: savedForm.billingState || "",
+    billingCountry: savedForm.billingCountry || "India",
 
-      terms: false,
-      useDifferentBilling: false,
-      addGiftWrap: false,
-      orderNote: "",
+      terms: savedForm.terms || false,
+    useDifferentBilling: savedForm.useDifferentBilling || false,
+    addGiftWrap: savedForm.addGiftWrap || false,
+    orderNote: savedForm.orderNote || "",
     },
     validationSchema,
     validateOnChange: true,
     validateOnBlur: true,
-    enableReinitialize: true,
     onSubmit: async (values) => {
       setFormValues(values);
       if (!total) {
@@ -213,14 +222,10 @@ function CheckoutPage() {
       );
     }
   };
-  const sendWhatsapp = (orderId) => {
-    const phoneNumber = "919003058300";
-    const message = `Hi, my order has been placed. My Order ID is: ${orderId}`;
-    const url = `https://wa.me/${phoneNumber}/?text=${encodeURIComponent(
-      message
-    )}`;
-    window.open(url, "_blank");
-  };
+useEffect(() => {
+  localStorage.setItem("checkoutForm", JSON.stringify(formik.values));
+}, [formik.values]);
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -508,7 +513,7 @@ function CheckoutPage() {
                       inputMode="numeric"
                       maxLength={6}
                       onChange={(e) => {
-                        const value = e.target.value.replace(/\D/g, "");
+                        const value = e.target.value?.replace(/\D/g, "");
                         formik.setFieldValue("pincode", value);
                       }}
                       onBlur={(e) => {
@@ -705,7 +710,7 @@ function CheckoutPage() {
                         inputMode="numeric"
                         maxLength={6}
                         onChange={(e) => {
-                          const value = e.target.value.replace(/\D/g, "");
+                          const value = e.target.value?.replace(/\D/g, "");
                           formik.setFieldValue("billingPincode", value);
                         }}
                         onBlur={(e) => {

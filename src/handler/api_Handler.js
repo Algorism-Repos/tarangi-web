@@ -119,3 +119,11 @@ export async function FetchDeliveryByPincode(pincode) {
     return null;
   }
 }
+export async function FetchSilverRate() {
+  try {
+    const response = await axios.get(`${url}/silver-rate`);
+    return response.data;
+  } catch (error) {
+    console.error("Silver rate fetch failed:", error);
+  }
+}

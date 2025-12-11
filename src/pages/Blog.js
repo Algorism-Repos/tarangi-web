@@ -77,6 +77,8 @@ function Blog() {
   console.log("sortedBlogData", allBlogData);
 
   const SortOptions = ["Latest", "Oldest"];
+
+  
   return (
     <>
       {/* Banner */}
@@ -125,7 +127,7 @@ function Blog() {
               {sortedBlogData?.map((article) => {
                 const content = parseArticleBody(article.body);
                 return (
-                  <Link to={"/blogdescription"} state={{ blog: article }}>
+                  <Link to={"/blogdescription"} state={{ blog: article ,blogsList: sortedBlogData}}>
                     <div className="max-w-[410px] mx-auto font-[poppins]">
                       <img
                         className="w-[361px] h-fit sm:w-[414px] sm:h-[289px] object-cover rounded-[18px]"
