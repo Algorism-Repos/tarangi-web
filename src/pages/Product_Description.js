@@ -138,10 +138,10 @@ function Product_Description() {
             <p> {product?.title}</p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-start gap-10 sm:my-[40px] xl:my-[70px] ">
+          <div className="flex flex-wrap flex-col sm:flex-row items-start gap-10 sm:my-[40px] xl:my-[70px] sm:px-12 ">
             {/* Product Image */}
 
-            <div className="min-w-[400px] overflow-hidden  lg:mt-20 mb-5">
+            <div className="max-w-[361px] sm:max-w-[400px] sm:min-w-[400px]  overflow-hidden  lg:mt-20 mb-5">
               <Swiper
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
                 onSlideChange={(swiper) => {
@@ -163,7 +163,7 @@ function Product_Description() {
                       />
                     </SwiperSlide>
                   ))
-                  : product?.images?.map((item) => (
+                  : product?.images?.map((item) => ( 
                     <SwiperSlide>
                       <img
                         src={item}
@@ -390,7 +390,7 @@ function Product_Description() {
             </div>
           </div>
 
-          <Recently_Viewed />
+          {/* <Recently_Viewed /> */}
         </div>
 
         <Wishlist_Popup

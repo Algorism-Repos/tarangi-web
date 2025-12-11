@@ -90,7 +90,8 @@ function Favourites() {
   };
 
 
-  console.log("wishlistItems",  wishlistItems)
+  console.log("wishlistItems", wishlistItems);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -146,15 +147,20 @@ function Favourites() {
                       }
                     >
                       {/* IMAGE */}
-                      <div className="overflow-hidden rounded-2xl  ">
-                        <Swiper>
-                          {(item?.variants?.map(v => v?.image) || item?.images)?.map((item, i) => (
-                            <SwiperSlide>
-                              <img src={item} alt="images" className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-[0.6]" : ""
-                                } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} />
-                            </SwiperSlide>
-                          ))}
-                        </Swiper>
+                      <div className="overflow-hidden rounded-2xl relative ">
+                        {item.images ?
+                          <Swiper>
+                            {(item?.variants?.map(v => v?.image) || item?.images)?.map((item, i) => (
+                              <SwiperSlide>
+                                <img src={item} alt="images" className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-[0.6]" : ""
+                                  } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} />
+                              </SwiperSlide>
+                            ))}
+                          </Swiper> :
+
+                          <img src={item.image} alt="images" className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-[0.6]" : ""
+                            } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} />
+                        }
 
                         {/* SOLD OUT LABEL */}
                         {item.isOutOfStock && (
@@ -212,14 +218,14 @@ function Favourites() {
                           </div>
                         </div>
                       </div>
-                      
+
                     </Link >
                     <AddToCartButton
-                        productToCart={item}
-                        isOutOfStock={item.isOutOfStock}
-                        isRestocking={item.isRestocking}
-                        isFavouritesPage={true}
-                      />
+                      productToCart={item}
+                      isOutOfStock={item.isOutOfStock}
+                      isRestocking={item.isRestocking}
+                      isFavouritesPage={true}
+                    />
 
                   </div>
                 )
@@ -228,9 +234,9 @@ function Favourites() {
           )}
         </div>
 
-        <div className={isVisible ? "hidden" : "block"}>
+        {/* <div className={isVisible ? "hidden" : "block"}>
           <Recently_Viewed />
-        </div>
+        </div> */}
       </div >
       <OutOfStockModal
         open={showOutStockModal}

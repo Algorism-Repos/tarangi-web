@@ -245,11 +245,6 @@ function CheckoutPage() {
               Go back
             </h3>
           </Link>
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center justify-center gap-1 sm:gap-2 md:gap-3 text-xs sm:text-sm md:text-base  ">
-            <span className="font-poppins text-[16px] text-[#6E0027] pb-1">
-              Address
-            </span>
-          </div>
         </div>
 
         {/* ======= Mobile Order Summary Dropdown ======= */}
