@@ -287,13 +287,10 @@ function Home() {
   return (
     <>
       {/* Floating Whatsapp icon */}
-      <a href="https://wa.me/919003058300/?text=Hi," target="_blank">
-        <img
-          src={whatsapp_floating}
-          alt="Whatsapp_Icon"
-          className="w-[50px] sm:w-[70px] h-fit fixed bottom-3 right-3 sm:bottom-9 sm:right-7 animate-bounce hover:scale-125 duration-300 transition-transform z-50"
-        />
+      <a href="https://wa.me/919003058300/?text=Hi," target="_blank" className="fixed bottom-3 right-3 sm:bottom-9 sm:right-7 z-30 ">
+        <img src={whatsapp_floating} alt="Whatsapp_Icon" className={`w-[50px] sm:w-[70px] h-fit hover:scale-125 max-h-[70px] ${animate ? " animate-bounce duration-300 transition-transform will-change-transform transform-gpu" : ""}`} />
       </a>
+
 
       {/* Silver price -Mobile */}
       <div className="w-full bg-[#FCE8CD] font-poppins lg:hidden">
@@ -311,9 +308,8 @@ function Home() {
 
           <div className="flex items-center gap-x-1 w-[155px] sm:w-[170px]">
             <img
-              className={`w-[15px] h-[15px] cursor-pointer ${
-                isRefreshing ? "animate-spin" : ""
-              }`}
+              className={`w-[15px] h-[15px] cursor-pointer ${isRefreshing ? "animate-spin" : ""
+                }`}
               src={refresh_icon}
               alt="Refresh icon"
               onClick={fetchMetalRates}
@@ -344,9 +340,8 @@ function Home() {
 
           <div className="flex items-center gap-x-2 mr-6">
             <img
-              className={`w-[15px] h-[15px] cursor-pointer ${
-                isRefreshing ? "animate-spin" : ""
-              }`}
+              className={`w-[15px] h-[15px] cursor-pointer ${isRefreshing ? "animate-spin" : ""
+                }`}
               src={refresh_icon}
               alt="Refresh icon"
               onClick={fetchMetalRates}
@@ -359,10 +354,10 @@ function Home() {
       <Swiper
         spaceBetween={30}
         centeredSlides={true}
-        autoplay={{
-          delay: 3500,
-          disableOnInteraction: false,
-        }}
+        // autoplay={{
+        //   delay: 3500,
+        //   disableOnInteraction: false,
+        // }}
         // pagination={{
         //     clickable: true,
         // }}
@@ -399,14 +394,9 @@ function Home() {
               Because every exquisite 925 silver jewelry should perfectly
               reflect the grace of its wearer.
             </h4>
-            <a
-              href="#launchOffers"
-              className="w-fit hover:scale-110 transition duration-300"
-            >
-              <button className=" mt-4 sm:mt-7 xl:mt-12 rounded-[32px] bg-[#5B3A09] font-poppins text-[16px] font-normal text-white py-[16px] px-[25px] cursor-pointer">
-                View our womens Collections
-              </button>
-            </a>
+              <Link to = {`/products/${collection?.[6]?.handle}`} state={{ category: collection?.[6]?.handle, collectionId: collection?.[6]?.id }} >
+                <button className=" mt-4 sm:mt-7 xl:mt-12 rounded-[32px] bg-[#5B3A09] font-poppins text-[16px] font-normal text-white py-[16px] px-[25px] cursor-pointer"> View our Womens Collections</button>
+              </Link>
           </div>
         </SwiperSlide>
 
@@ -420,14 +410,9 @@ function Home() {
               Because distinguished 925 silver jewelry should feel as commanding
               as the one who wears it.
             </h4>
-            <a
-              href="#launchOffers"
-              className="w-fit hover:scale-110 transition duration-300"
-            >
-              <button className=" mt-10 sm:mt-11 rounded-[32px] bg-[#8F103B] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
-                View our mens Collections
-              </button>
-            </a>
+               <Link to = {`/products/${collection?.[5]?.handle}`} state={{ category: collection?.[5]?.handle, collectionId: collection?.[5]?.id }} >
+                <button className=" mt-4 sm:mt-7 xl:mt-12 rounded-[32px] bg-[#5B3A09] font-poppins text-[16px] font-normal text-white py-[16px] px-[25px] cursor-pointer"> View our Mens Collections</button>
+              </Link>
           </div>
         </SwiperSlide>
       </Swiper>
@@ -469,11 +454,11 @@ function Home() {
                         to={`/products/${item.handle}`}
                         state={{ category: item.handle, collectionId: item.id }}
                       >
-                        <div className="border-2 border-white w-[360px] h-[361px] sm:h-[374px] relative z-0 overflow-hidden">
+                        <div className=" w-[360px] h-[361px] sm:h-[374px] relative z-0 overflow-hidden">
                           <img
                             src={item.image?.src}
                             alt="men-image"
-                            className="w-[359px] h-[361px] sm:w-[373px] sm:h-[459px]  transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
+                            className="w-[359px] h-[361px] sm:w-[350px] sm:h-[350px]  transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
                           />
                           <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-[50%] transform translate-x-[-50%]">
                             {item.handle}
@@ -492,7 +477,7 @@ function Home() {
                 <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center gap-x-9 justify-center  mt-20 sm:mt-36 ">
                   {FestiveFiltered?.map((type) => (
                     <Link
-                      to={`/product_description/${type.title.replace(
+                      to={`/product_description/${type?.title.replace(
                         /\s+/g,
                         "-"
                       )}`}
@@ -505,7 +490,7 @@ function Home() {
                         }}
                       >
                         <img
-                          src={type?.image}
+                          src={type?.variants?.[0].image}
                           alt={type?.name}
                           className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] "
                         />
@@ -514,9 +499,7 @@ function Home() {
                         </h5>
                         <h4 className="font-poppins text-[20px] font-semibold leading-normal text-[#FCD99F]">
                           ₹
-                          {Number(type?.price).toLocaleString("en-IN", {
-                            maximumFractionDigits: 0,
-                          }) || type.variant?.[0]?.price}
+                          {parseInt(type?.variants?.[0].price).toLocaleString("en-IN")}
                         </h4>
                       </div>
                     </Link>
@@ -525,7 +508,7 @@ function Home() {
               </div>
 
               {/* Best Sellers - Mobile View slider */}
-              <div className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden">
+              <div id ="" className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden">
                 <h1 className="section-heading mb-9 !text-white tracking-[1px] text-center">
                   Best Sellers
                 </h1>
@@ -601,7 +584,7 @@ function Home() {
                         >
                           <div className="w-[360px] h-[450px] mx-auto flex flex-col items-center gap-y-2 transform transition-transform duration-300 ease-out hover:scale-105 cursor-pointer">
                             <img
-                              src={type?.image}
+                              src={type?.variants?.[0].image}
                               alt={type?.name}
                               className="px-2 sm:px-0 w-[360px] h-[460px]"
                             />
@@ -610,9 +593,7 @@ function Home() {
                             </h5>
                             <h4 className="font-poppins text-[16px] sm:text-[18px] md:text-[20px] font-semibold leading-normal text-[#FCD99F]">
                               ₹
-                              {Number(type?.price).toLocaleString("en-IN", {
-                                maximumFractionDigits: 0,
-                              }) || type.variant?.[0]?.price}
+                              {parseInt(type?.variants?.[0].price).toLocaleString("en-IN")}
                             </h4>
                           </div>
                         </Link>
@@ -729,27 +710,27 @@ function Home() {
               collection
                 ?.filter((item) => item.body_html === "<p>tarangi-specials</p>")
                 .map((item, index) => (
-                    <Link
-                        to={`/products/${item.handle}`}
-                        state={{ category: item.handle, collectionId: item.id }}
-                      >
-                  <div
-                    key={index}
-                    className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
-                    onClick={() => {
-                      setSelectedType(item.title);
-                      toggle();
-                    }}
+                  <Link
+                    to={`/products/${item.handle}`}
+                    state={{ category: item.handle, collectionId: item.id }}
                   >
-                    <img
-                      src={item.image?.src}
-                      alt={item.title}
-                      className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white"
-                    />
-                    <h3 className="font-atteron text-[32px] font-normal leading-normal text-white mt-2 sm:text-[34px]">
-                      {item.title}
-                    </h3>
-                  </div>
+                    <div
+                      key={index}
+                      className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer"
+                      onClick={() => {
+                        setSelectedType(item.title);
+                        toggle();
+                      }}
+                    >
+                      <img
+                        src={item.image?.src}
+                        alt={item.title}
+                        className="w-[357px] h-[380px] sm:w-[374px] sm:h-[398px] border-[2px] border-white"
+                      />
+                      <h3 className="font-atteron text-[32px] font-normal leading-normal text-white mt-2 sm:text-[34px]">
+                        {item.title}
+                      </h3>
+                    </div>
                   </Link>
                 ))}
           </div>
@@ -809,32 +790,33 @@ function Home() {
             }}
             className="!overflow-hidden !h-[620px]"
           >
-            {specials.length > 0 ? (
-              specials.map((item, index) => (
-                <SwiperSlide key={index}>
-                  <div
-                    className="flex flex-col items-center transform transition-transform duration-300 ease-out hover:scale-105 cursor-pointer"
-                    onClick={() => {
-                      setSelectedType(item.title);
-                      toggle();
-                    }}
-                  >
-                    <img
-                      src={item.img}
-                      alt={item.title}
-                      className="w-[357px] h-[380px] border-[2px] border-white"
-                    />
-                    <h3 className="font-atteron text-[30px] font-normal leading-normal text-white mt-2">
-                      {item.title}
-                    </h3>
-                  </div>
-                </SwiperSlide>
-              ))
-            ) : (
-              <div className="text-white text-center py-10">
-                No specials available
-              </div>
-            )}
+            {collection &&
+              collection
+                ?.filter((item) => item.body_html === "<p>tarangi-specials</p>").map((item, index) => (
+                  <SwiperSlide key={index}>
+                    <Link
+                      to={`/products/${item.handle}`}
+                      state={{ category: item.handle, collectionId: item.id }}
+                    >
+                      <div
+                        className="flex flex-col items-center cursor-pointer"
+                        onClick={() => {
+                          setSelectedType(item.title);
+                          toggle();
+                        }}
+                      >
+                        <img
+                          src={item.image?.src}
+                          alt={item.title}
+                          className="w-[357px] h-[380px] border-[2px] border-white"
+                        />
+                        <h3 className="font-atteron text-[30px] font-normal leading-normal text-white mt-2">
+                          {item.title}
+                        </h3>
+                      </div>
+                    </Link>
+                  </SwiperSlide>
+                ))}
           </Swiper>
         </div>
       </div>

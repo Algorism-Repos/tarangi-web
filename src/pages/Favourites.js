@@ -90,7 +90,7 @@ function Favourites() {
   };
 
 
-
+  console.log("wishlistItems",  wishlistItems)
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -123,12 +123,12 @@ function Favourites() {
                   : "grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]"
               }
             >
-              {wishlistItems.map((item) => {
+              {wishlistItems?.map((item) => {
 
                 const isOutOfStock = item?.inventoryQuantity === 0 || item?.variants?.[0]?.inventoryQuantity === 0;
                 const isRestocking = false;
                 return (
-                  <>
+                  <div>
                     <Link
                       key={item.id}
                       to={`/product_description/${item.title.replace(
@@ -148,7 +148,7 @@ function Favourites() {
                       {/* IMAGE */}
                       <div className="overflow-hidden rounded-2xl  ">
                         <Swiper>
-                          {(item?.variants?.map(v => v.image) || item.images).map((item, i) => (
+                          {(item?.variants?.map(v => v?.image) || item?.images)?.map((item, i) => (
                             <SwiperSlide>
                               <img src={item} alt="images" className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-[0.6]" : ""
                                 } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} />
@@ -212,15 +212,16 @@ function Favourites() {
                           </div>
                         </div>
                       </div>
-                      <AddToCartButton
+                      
+                    </Link >
+                    <AddToCartButton
                         productToCart={item}
                         isOutOfStock={item.isOutOfStock}
                         isRestocking={item.isRestocking}
                         isFavouritesPage={true}
                       />
-                    </Link >
 
-                  </>
+                  </div>
                 )
               })}
             </div>

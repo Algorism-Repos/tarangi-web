@@ -56,7 +56,7 @@ function AddToCartButton({
     <>
       <button
         className={`cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]
-        ${pathname === "/favourites" ? "w-full h-[56px]" :"w-full sm:w-[205px] h-[56px]"} rounded-full text-primary text-[16px] font-medium mt-2
+        ${pathname === "/favourites" ? "w-full h-[56px]" :"w-full h-[40px] sm:w-[205px] sm:h-[56px]"} rounded-full text-primary text-[16px] font-medium mt-2
         transition-all duration-300 hover:bg-[#4B001A] hover:text-white`}
         onMouseEnter={() => !isDisabledInFavourites && setCartIconSrc(shoppingCart_white)}
         onMouseLeave={() => !isDisabledInFavourites && setCartIconSrc(shoppingCart_red)}

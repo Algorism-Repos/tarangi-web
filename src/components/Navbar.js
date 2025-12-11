@@ -160,6 +160,7 @@ function Navbar() {
       console.log(response)
   }
    
+  console.log("Trending Product", trendingProduct);
   return (
     <>
       {/* Navbar - large screens */}
@@ -214,8 +215,7 @@ function Navbar() {
                 <div className="flex flex-row justify-center flex-wrap overflow-hidden w-full gap-4">
                   {collection &&
                     collection
-                      ?.filter((item) => item.handle !== "best_seller" && item.body_html !== "<p>tarangi-specials</p>")
-                      .map((item) => (
+                      ?.filter((item) => item.handle !== "best_seller" && item.body_html !== "<p>tarangi-specials</p>").reverse().map((item) => (
                         <Link
                           to={`/products/${item.handle}`}
                           state={{
@@ -242,7 +242,7 @@ function Navbar() {
             )}
           </div>
 
-          <Link
+          {/* <Link
             to="/blog"
             className={`rounded-full py-2.5 px-4 text-white ${
               isActive("/blog")
@@ -251,7 +251,7 @@ function Navbar() {
             }`}
           >
             Blog
-          </Link>
+          </Link> */}
         </div>
 
         {/* Right Side Icons */}
@@ -388,12 +388,12 @@ function Navbar() {
                       >
                         <div key={index} className="flex flex-col  w-[120px]">
                           <img
-                            src={item.image}
-                            alt={item.name}
+                            src={item?.featuredImage}
+                            alt={item?.name}
                             className="w-[121px] h-[120px] object-cover rounded-[10px]"
                           />
                           <span className="mt-2 text-[12px] font-poppins text-center">
-                            {item.title}
+                            {item?.title}
                           </span>
                         </div>
                       </Link>
@@ -577,7 +577,7 @@ function Navbar() {
                         </h3>
 
                         <Swiper
-                          spaceBetween={20}
+                          spaceBetween={0}
                           slidesPerView={2.4}
                           className="trending-swiper"
                           breakpoints={{
@@ -603,12 +603,12 @@ function Navbar() {
                               >
                                 <div className="flex flex-col items-center">
                                   <img
-                                    src={item.image}
-                                    alt={item.name}
+                                    src={item?.featuredImage}
+                                    alt={item?.name}
                                     className="w-[100px] h-[100px] object-contain rounded-[12px] shadow-md"
                                   />
                                   <span className="mt-2 text-white text-center text-[11px] font-poppins font-normal">
-                                    {item.title}
+                                    {item?.title}
                                   </span>
                                 </div>
                               </Link>
@@ -683,10 +683,7 @@ function Navbar() {
                           <div className="flex flex-col gap-3 w-full max-w-[260px]">
                             {collection &&
                               collection
-                                ?.filter(
-                                  (item) => item.handle !== "best_seller"
-                                )
-                                .map((item) => (
+                                  ?.filter((item) => item.handle !== "best_seller" && item.body_html !== "<p>tarangi-specials</p>").reverse().map((item) => (
                                   <button
                                     key={item.id}
                                     onClick={() => {
@@ -717,7 +714,7 @@ function Navbar() {
                 </div>
 
                 {/* Blog */}
-                <Link to="/blog" onClick={() => setMenuVisible(false)}>
+                {/* <Link to="/blog" onClick={() => setMenuVisible(false)}>
                   <h2
                     className={`font-poppins text-[18px] leading-normal text-center ${
                       location.pathname === "/blog"
@@ -727,7 +724,7 @@ function Navbar() {
                   >
                     Blog
                   </h2>
-                </Link>
+                </Link> */}
 
                 {/* User Profile text link (like your design) */}
                 {isLoggedIn && (

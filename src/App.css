@@ -415,6 +415,7 @@ input::placeholder {
   justify-content: flex-start;
    align-items: center;
   padding: 110px 0px;
+  background-position: center center;
 }
 }
 

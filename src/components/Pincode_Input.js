@@ -162,7 +162,7 @@ let estimatedDate=null;
           {deliveryInfo ? (
             <p className="text-[#484848] text-[15px] font-medium">
               Expected to deliver by{" "}
-              <span className="font-bold"> {estimatedDate} </span>
+              <span className="font-bold"> {pincodeDetails.date} </span>
             </p>
           ) : (
             <p className="text-[#484848] text-[15px] font-medium">

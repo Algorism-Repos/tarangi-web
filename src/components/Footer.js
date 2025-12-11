@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, useLocation } from "react-router";
 import Marquee from "react-fast-marquee";
 import { AppContext } from "../context/AppContext";
@@ -24,7 +24,7 @@ import client_10 from '../assets/Clients/client_10.png'
 
 function Footer() {
 
-    const {collection} = useContext(AppContext);
+    const { collection } = useContext(AppContext);
 
     // Modal State & Function
     const [modalToggle, setModalToggle] = useState(false);
@@ -48,6 +48,9 @@ function Footer() {
         { src: client_10 }
     ]
 
+    function ScrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     }, []);
@@ -102,21 +105,30 @@ function Footer() {
 
                             {/* Subpages */}
                             <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] ml-6 sm:ml-0 md:border-l border-[#D6A76F] md:pl-[54px]">
-                                <Link to="/home">Home</Link>
-                                <Link to="/about">About</Link>
-                                <Link to="/products">Products</Link>
-                                {/* <Link to="/blog">Blog</Link> */}
-                                <Link to="/terms">Terms & Conditions</Link>
-                                <Link to="/privacy">Privacy Policy</Link>
+                                <Link to="/home" className="transition-transform duration-300 hover:scale-105" onClick={ScrollToTop}>Home</Link>
+                                <Link to="/about" className="transition-transform duration-300 hover:scale-105" onClick={ScrollToTop}>About</Link>
+                                <Link to="/privacy" className="transition-transform duration-300 hover:scale-105" onClick={ScrollToTop}>Privacy Policy</Link>
+                                <Link to="/terms" className="transition-transform duration-300 hover:scale-105" onClick={ScrollToTop}>Terms & Conditions</Link>
                             </div>
 
                             {/* Product Catergory */}
                             <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] ml-7 sm:ml-0">
-                                <Link to="#">Products</Link>
-                                <Link to="#">Women</Link>
-                                <Link to="#">Men</Link>
-                                <Link to="#">Couples</Link>
-                                <Link to="#">Gifts</Link>
+                                {collection && collection
+                                    ?.filter((item) => item.handle !== "best_seller" && item.body_html !== "<p>tarangi-specials</p>")
+                                    .map((item) => (
+                                        <Link
+                                            to={`/products/${item.handle}`}
+                                            state={{
+                                                category: item.handle,
+                                                collectionId: item.id,
+                                            }}
+                                            onClick={ScrollToTop}
+                                            className="group transition-transform duration-300 hover:scale-105 "
+                                        >
+                                            <p className="capitalize">{item.handle}</p>
+                                        </Link>
+                                ))}
+                                <Link to="/blog" className = "transition-transform duration-300 hover:scale-105">Blogs</Link>
                             </div>
                         </div>
                     </div>

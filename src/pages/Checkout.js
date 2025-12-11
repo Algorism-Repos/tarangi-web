@@ -126,7 +126,7 @@ function CheckoutPage() {
         console.log("Customer ID:", customerId);
         const paymentResponse = await OpenRazorpayService(formValues, total);
         if (paymentResponse.razorpay_payment_id) {
-          await handlePlaceOrder(values, customerId);
+          await handlePlaceOrder(values, customerId, paymentResponse.razorpay_payment_id);
         }
       } catch (error) {
         console.log("error".error);
@@ -156,7 +156,7 @@ function CheckoutPage() {
       console.log("Error fetching pincode", error);
     }
   };
-  const handlePlaceOrder = async (formValues, customerId) => {
+  const handlePlaceOrder = async (formValues, customerId, Payment_key) => {
     console.log(cartItems);
     if (!cartItems || cartItems.length === 0) return;
 
@@ -196,13 +196,15 @@ function CheckoutPage() {
     try {
       console.log(orderData);
       const response = await axios.post(
-        "http://localhost:8080/api/shopify/order",
+        "https://tarangi-staging.df.r.appspot.com/api/shopify/order",
         orderData
       );
       setOrderId(response.data.id);
       
       sendWhatsapp(response.data.id);
-      navigate("/thankyou");
+      if(Payment_key){
+        navigate("/thankyou");
+      }
       console.log("Order placed successfully:", response.data);
     } catch (error) {
       console.error(
@@ -246,14 +248,6 @@ function CheckoutPage() {
           <div className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center justify-center gap-1 sm:gap-2 md:gap-3 text-xs sm:text-sm md:text-base  ">
             <span className="font-poppins text-[16px] text-[#6E0027] pb-1">
               Address
-            </span>
-            <img
-              src={LineImg}
-              alt="progress line"
-              className="w-[36px] sm:w-[132px] md:w-16 object-cover"
-            />
-            <span className="font-poppins text-[16px] text-gray-400  pb-1">
-              Payment
             </span>
           </div>
         </div>

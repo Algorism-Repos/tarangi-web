@@ -47,10 +47,10 @@ useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     }, []);
 
-  console.log(recentlyViewed)
+  console.log("recentlyViewed",recentlyViewed)
 
   return (
-    <div className="max-w-[1300px] mx-auto mt-[50px] lg:mt-[80px]">
+    <div className={recentlyViewed.length === 1 ? "hidden" : "max-w-[1300px] mx-auto mt-[50px] lg:mt-[80px]"}>
       <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
         Recently Viewed
       </h1>

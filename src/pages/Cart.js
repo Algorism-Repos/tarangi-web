@@ -35,9 +35,7 @@ function Cart() {
   const shipping = 0;
   const total = subtotal + tax + shipping;
   console.log(categorizedProduct);
-  const boughtTogether = categorizedProduct
-    ?.filter((item) => item?.variants === null)
-    .reverse();
+  const boughtTogether = categorizedProduct?.filter((item) => item?.variants.length === 1).reverse().slice(0,6);
   console.log(boughtTogether);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -53,6 +51,7 @@ function Cart() {
     (sum, item) => sum + (Number(item.quantity) || 1),
     0
   );
+
 
   return (
     <>
@@ -96,7 +95,7 @@ function Cart() {
                     <div className="flex gap-x-[15px] sm:gap-x-[50px] items-center max-[425px]:gap-x-[12px]">
                       <img
                         className="w-[140px] h-[148px] sm:w-[233px] sm:h-[239px] rounded-[16px] "
-                        src={item?.image}
+                        src={item?.image || item?.variants?.[0]?.image}
                         alt="product image"
                       />
 
@@ -106,7 +105,7 @@ function Cart() {
                             {item?.title}
                           </h3>
                           <h3 className="text-[12px] font-semibold sm:text-[20px]">
-                            ₹{parseInt(item?.price).toLocaleString("en-in")}
+                            ₹{parseInt(item?.price) || parseInt(item?.variants?.[0]?.price).toLocaleString("en-IN")}
                           </h3>
                         </div>
 
@@ -135,7 +134,7 @@ function Cart() {
                     </div>
 
                     {/* Free silver cleaning kit */}
-                    {item?.price > 2000 && (
+                    {item?.price || item?.variants?.[0].price > 2000 && (
                       <>
                         <hr className="border border-[#EDEDED] my-[14px]" />
                         <div className="flex items-center gap-x-[20px] justify-between">
@@ -228,23 +227,19 @@ function Cart() {
 
                   </div>
                 </div>
-                <Link to={"/products/:handle"}>
-                  <h5 className="font-poppins text-[12px] sm:text-[14px] ml-3 xl:ml-2 uppercase  justify-item-end">
-                    CONTINUE SHOPPPING
-                  </h5>
-                </Link>
+                
               </div>
             )}
           </div>
 
           {/* Recommended products */}
-          <div className="my-[100px] px-5 md:px-0 max-[425px]:my-[60px]">
+          <div className="my-[100px] px-2 md:px-0 max-[425px]:my-[60px]">
             <h1 className="font-atteron  text-primary text-[26px] text-center sm:text-[30px] xl:text-left max-[425px]:text-[22px] mx-auto">
               {cartItems?.length > 0 ? "Frequently bought together" : "Our favourites, just for you"}
             </h1>
             <div className="sm:max-w-fit mx-auto xl:mx-0 ">
-              <div className="flex flex-row flex-wrap gap-x-12 gap-y-9 sm:gap-x-[50px] items-center justify-center max-[425px]:gap-x-[10px]">
-                {boughtTogether?.slice(0, 6).map((item) => (
+              <div className="grid grid-cols-2 sm:flex sm:flex-row sm:flex-wrap  gap-y-9 sm:gap-x-[50px] items-center justify-center max-[425px]:gap-x-[10px]">
+                {boughtTogether?.map((item) => (
                   <div className="bg-[#FFFAF3] max-w-[580px] p-[24px] rounded-[16px] shadow-2xl mt-[25px] max-[425px]:p-[16px] ">
                     <div className="relative space-y-[10px]">
                       {/* <input
@@ -253,7 +248,7 @@ function Cart() {
                       /> */}
                       <img
                         className="w-[148px] sm:w-[233px] rounded-[12px]"
-                        src={item?.image}
+                        src={item?.variants?.[0].image}
                         alt="product image"
                       />
                       <div>
@@ -261,7 +256,7 @@ function Cart() {
                           {item?.title}
                         </h3>
                         <h3 className="text-[16px] font-semibold sm:text-[20px] max-[425px]:text-[15px]">
-                          ₹{parseInt(item?.price).toLocaleString("en-IN")}
+                          ₹{parseInt(item?.variants?.[0].price).toLocaleString("en-IN")}
                         </h3>
                       </div>
                     </div>

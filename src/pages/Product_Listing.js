@@ -178,7 +178,7 @@ function Product_Listing({ productCatergory }) {
                     ? handleRestockClick
                     : undefined
               }
-              className="font-poppins w-[170px] sm:w-[310px] mx-auto relative hover:scale-105 transition duration-300 ease-in-out group"
+              className="font-poppins w-[170px] sm:w-[310px] mx-auto relative sm:hover:scale-105 transition duration-300 ease-in-out group"
             >
               {/* MAIN PRODUCT IMAGE */}
               <div className=" relative group z-0">

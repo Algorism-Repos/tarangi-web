@@ -366,7 +366,7 @@ const sortProducts = (products, sortBy) => {
               {/* occasion */}
               <div>
                 <h3 className="text-primary text-[20px] font-semibold">
-                  Occasions
+                  Type
                 </h3>
                 <div className="mt-6 space-y-3">
                   {occasions.map((tag) => (
@@ -379,7 +379,7 @@ const sortProducts = (products, sortBy) => {
                           />
                           <span class="checkmark"></span>
                         </label>
-                        <span className="text-[18px]">{tag}</span>
+                        <span className="text-[18px] capitalize">{tag}</span>
                       </div>
                     </label>
                   ))}
@@ -657,7 +657,7 @@ const sortProducts = (products, sortBy) => {
                               />
                               <span class="checkmark"></span>
                             </label>
-                            <span className="text-[15px]">{tag}</span>
+                            <span className="text-[15px] capitalize">{tag}</span>
                           </div>
                         </label>
                       ))}

@@ -34,8 +34,8 @@ function Product_Description() {
   const [activeVariant, setactiveVariant] = useState({});
 
 
-  console.log(product);
-
+  console.log("product",product);
+  console.log("categorizedProduct", categorizedProduct)
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -138,10 +138,10 @@ const variantColors = (product?.variants || []).map(
             <p> {product?.title}</p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-evenly gap-10 sm:my-[40px] xl:my-[70px] ">
+          <div className="flex flex-col sm:flex-row items-center justify-evenly gap-10 sm:my-[40px] xl:my-[70px] ">
             {/* Product Image */}
 
-            <div className="w-[380px] overflow-hidden sm:max-w-[400px] lg:mt-20 mb-5">
+            <div className="w-[380px] overflow-hidden sm:min-w-[550px] lg:mt-20 mb-5">
               <Swiper
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
                 onSlideChange={(swiper) => {
@@ -359,7 +359,7 @@ const variantColors = (product?.variants || []).map(
                     >
                       <img
                         className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[24px]"
-                        src={item?.image}
+                        src={item?.featuredImage}
                         alt={item?.alt || item?.title}
                       />
                     </Link>
