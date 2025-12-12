@@ -106,7 +106,7 @@ function Cart() {
                               /\s+/g,
                               "-"
                             )}`}
-                            state={{ product: item }}
+                            state={{ product: categorizedProduct.find(p => p.productId === item.productId) }}
                           >
                             <h3 className="text-[10px] font-medium text-[#6F6F6F] sm:text-[16px]">
                               {item.title}

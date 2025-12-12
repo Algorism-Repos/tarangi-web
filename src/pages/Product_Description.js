@@ -28,35 +28,15 @@ function Product_Description() {
   const swiperRef = useRef(null);
   const location = useLocation();
   const { product } = location.state || {};
-  const { categorizedProduct, addToWishlist, pincodeDetails, addToRecentlyViewed, wishlistItems } = useContext(AppContext);
-  const [colorSelected, setColorSelected] = useState(product?.variants?.[0].colorVariant || "");
+  const {
+    categorizedProduct,
+    wishlistItems,
+    pincodeDetails,
+    addToRecentlyViewed,
+  } = useContext(AppContext);
+  const [colorSelected, setColorSelected] = useState( product?.variants?.[0]?.colorVariant || "");
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});
-
-
-  console.log("product",product);
-  console.log("categorizedProduct", categorizedProduct)
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-    //selected variant of the product by the client based on the color.
-    if (product?.variants !== null) {
-      const variant = product?.variants?.find(element => element.colorVariant === colorSelected)
-      if (variant) {
-        const updatedVariant = { ...variant, title: product?.title, productId: product?.productId, deliveryDetails: pincodeDetails }
-        setactiveVariant(updatedVariant);
-      }
-    } else if (product?.variants === null) {
-      const updatedVariant = { ...product, variantId: product?.variantId, deliveryDetails: pincodeDetails };
-      setactiveVariant(updatedVariant);
-    }
-  }, [colorSelected, pincodeDetails]);
-
-  console.log("variantActive", activeVariant);
-
-
-
-  //Extracting colors into an array from the variants
   const colorAssets = [
     {
       value: "Gold",
@@ -74,27 +54,26 @@ function Product_Description() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    //selected variant of the product by the client based on the color.
-    if (product?.variants !== null) {
-      const variant = product?.variants?.find(
+
+    if (product?.variants?.length > 0) {
+      const variant = product.variants.find(
         (element) => element.colorVariant === colorSelected
       );
+ console.log(variant)
       if (variant) {
-        const updatedVariant = {
+        setactiveVariant({
           ...variant,
-          title: product?.title,
-          productId: product?.productId,
-          deliverDetails: pincodeDetails,
-        };
-        setactiveVariant(updatedVariant);
+          title: product.title,
+          productId: product.productId,
+          deliveryDetails: pincodeDetails,
+        });
       }
-    } else if (product?.variants === null) {
-      const updatedVariant = {
+    } else {
+      setactiveVariant({
         ...product,
-        variantId: product?.variantId,
-        deliverDetails: pincodeDetails,
-      };
-      setactiveVariant(updatedVariant);
+        variantId: product.variantId,
+        deliveryDetails: pincodeDetails,
+      });
     }
     addToRecentlyViewed(activeVariant);
   }, [colorSelected, pincodeDetails]);
@@ -154,23 +133,17 @@ function Product_Description() {
                 pagination={{ dynamicBullets: true }}
                 modules={[Pagination]}
               >
-                {product?.variant != null
-                  ? product?.variants?.map((item) => (
-                    <SwiperSlide>
-                      <img
-                        src={item.image}
-                        className="w-[361px] h-[373px] sm:w-[388px] max-w-[388px] sm:min-h-[399px] rounded-[18px] mx-auto"
-                      />
-                    </SwiperSlide>
-                  ))
-                  : product?.images?.map((item) => ( 
-                    <SwiperSlide>
-                      <img
-                        src={item}
-                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[18px] mx-auto"
-                      />
-                    </SwiperSlide>
-                  ))}
+                {product?.variants && product?.variants.length > 0
+                  ? product.variants.map((item) => (
+                      <SwiperSlide>
+                        <img src={item.image} />
+                      </SwiperSlide>
+                    ))
+                  : product.images.map((img) => (
+                      <SwiperSlide>
+                        <img src={img} />
+                      </SwiperSlide>
+                    ))}
               </Swiper>
             </div>
 
@@ -195,10 +168,26 @@ function Product_Description() {
                 </h2>
 
                 {/* Price with Discounted Price */}
-                <div className={activeVariant?.compareAtPrice !== null ? "flex flex-row flex-nowrap items-center gap-x-3 w-fit" : "hidden"}>
-                  <h2 className="text-[16px] font-semibold text-red-500 sm:text-[22px] line-through"> ₹{parseInt(activeVariant?.compareAtPrice).toLocaleString("en-IN") || product.compareAtPrice}</h2 >
-                  <h2 className="text-[24px] font-semibold sm:text-[32px]"> ₹{parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}</h2 >
-
+                <div
+                  className={
+                    activeVariant?.compareAtPrice !== null
+                      ? "flex flex-row flex-nowrap items-center gap-x-3 w-fit"
+                      : "hidden"
+                  }
+                >
+                  <h2 className="text-[16px] font-semibold text-red-500 sm:text-[22px] line-through">
+                    {" "}
+                    ₹
+                    {parseInt(activeVariant?.compareAtPrice).toLocaleString(
+                      "en-IN"
+                    ) || product.compareAtPrice}
+                  </h2>
+                  <h2 className="text-[24px] font-semibold sm:text-[32px]">
+                    {" "}
+                    ₹
+                    {parseInt(activeVariant?.price).toLocaleString("en-IN") ||
+                      product.price}
+                  </h2>
                 </div>
                 <p className="text-[#878787] text-[12px] font-poppins ">
                   MRP Excl.of all taxes

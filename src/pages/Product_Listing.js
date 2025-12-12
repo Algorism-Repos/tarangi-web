@@ -41,7 +41,6 @@ function Product_Listing({ productCatergory }) {
     }
   }, [productCatergory]);
 
-  console.log(products);
 
 
 

@@ -148,15 +148,55 @@ contentRefs.current = faqSections.map((_, i) => contentRefs.current[i] ?? null);
           <h3 className="text-[22px] sm:text-[32px] text-[#8C2742] font-semibold mb-8">
             FAQ about sterling silver jewelry
           </h3>
-
-          <div> {faqData.map((item, i) => {
-            const isOpen = openIndex === i;
-
-            return (
-              <div key={i} className={`px-4 py-3 mb-5 rounded-[8px] border-[1px] border-[#F3E4D1] transition-colors duration-300 ${isOpen ? "bg-[#F6E8D5]" : "bg-[#FFF5E8]"} border-b border-[#F6E8D5]`}>
-                <button type="button" onClick={() => toggle(i)} aria-expanded={isOpen} aria-controls={`faq-content-${i}`} id={`faq-header-${i}`} className="w-full flex items-center justify-between gap-4 text-left focus:outline-none">
-                  <div className="flex-1 gap-y-10">
-                    <div className="text-[16px] sm:text-[20px] text-slate-800 font-medium">{`${i + 1}. ${item.q}`}
+          <div>
+            {faqData.map((item, i) => {
+              const isOpen = openIndex === i;
+              return (
+                <div
+                  key={i}
+                  className={`px-4 py-3 mb-5 rounded-[8px] border-[1px] border-[#F3E4D1] transition-colors duration-300 ${
+                    isOpen ? "bg-[#F6E8D5]" : "bg-[#FFF5E8]"
+                  } border-b border-[#F6E8D5]`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggle(i)}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-content-${i}`}
+                    id={`faq-header-${i}`}
+                    className="w-full flex items-center justify-between gap-4 text-left focus:outline-none"
+                  >
+                    <div className="flex-1 gap-y-10">
+                      <div className="text-[16px] sm:text-[20px] text-slate-800 font-medium">
+                        {`${i + 1}. ${item.q}`}
+                      </div>
+                    </div>
+                    {/* Chevron Icon */}
+                    <img
+                      src={ChevronIcon}
+                      alt="toggle"
+                      className={`w-[30px] h-[30px] transition-transform duration-300 ${
+                        isOpen ? "rotate-180" : "rotate-0"
+                      }`}
+                    />
+                  </button>
+                  {/* CONTENT */}
+                  <div
+                    id={`faq-content-${i}`}
+                    role="region"
+                    aria-labelledby={`faq-header-${i}`}
+                    className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                    style={{
+                      maxHeight: isOpen
+                        ? `${contentRefs.current[i]?.scrollHeight || 999}px`
+                        : "0px",
+                    }}
+                  >
+                    <div
+                      ref={(el) => (contentRefs.current[i] = el)}
+                      className="mt-3 mb-2 text-[14px] sm:text-[18px] text-[#4B4B4B] bg-[#F6E8D5] p-4 rounded-md"
+                    >
+                      {item.a}{" "}
                     </div>
                   </div>
 

@@ -9,6 +9,7 @@ export async function FetchAllProductFromShopify() {
     const response = await axios.get(
       `${url}/products`
     );
+     console.log(response)
     return response.data || [];
   } catch (error) {
     console.error("error fetching product:", error);
@@ -34,7 +35,6 @@ export async function FetchAllProductByCollections(collectionId) {
     console.error("Error fetching products:", error);
   }
 }
-
 // check the login customer is exit in  shopify
 export async function checkCustomer(logincredential) {
   console.log(logincredential)
@@ -50,7 +50,6 @@ export async function checkCustomer(logincredential) {
     console.error("Customer check  failed:", error);
   }
 }
-
 export async function checkOrCreateCustomer(customer) {
   try {
     const response = await axios.post(
@@ -82,7 +81,6 @@ export async function CustomersOrders(customerId) {
     console.error("CustomersOrders check  failed:", error);
   }
 }
-
 export async function FetchAllBlogsFromShopify() {
   try {
     const response = await axios.get(`${url}/blogs`);

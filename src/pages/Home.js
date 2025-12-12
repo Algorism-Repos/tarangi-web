@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
-import axios from "axios";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
@@ -32,7 +31,7 @@ import slider_button from "../assets/slider_button.png";
 import refresh_icon from "../assets/Refresh_icon.png";
 import right_arrow from "../assets/right_arrow.png";
 import left_arrow from "../assets/left_arrow.png";
-
+import { formatProduct } from "../utils/productFormatter";
 import {
   FetchAllCollectionsFromShopify,
   FetchAllProductByCollections,
@@ -43,13 +42,18 @@ import { AppContext } from "../context/AppContext";
 import LoadingScreen from "../components/LoadingScreen";
 
 function Home() {
+   const containerRef = useRef(null);
+  const sliderRef = useRef(null);
   const [silver, setSilver] = useState();
   const [silverRate, setSilverRate] = useState(null);
   const [silverPriceUpdatedTime, setSilverPriceUpdatedTime] = useState();
   const [animate, setAnimate] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
-  const [FestiveFiltered, setFestiveFiltered] = useState([]);
+  const [FestiveFiltered, setFestiveFiltered] = useState([]);  const bestsellerprevRef = useRef(null);
+  const bestsellernextRef = useRef(null);
+  const tarangispecialprevRef = useRef(null);
+  const tarangisepecialnextRef = useRef(null);
   const {
     collection,
     setCollections,
@@ -57,130 +61,6 @@ function Home() {
     setLoading,
     setTrendingProduct,
   } = useContext(AppContext);
-
-  function toggle(product) {
-    setSelectedType(product);
-  }
-  const bestsellerprevRef = useRef(null);
-  const bestsellernextRef = useRef(null);
-  const tarangispecialprevRef = useRef(null);
-  const tarangisepecialnextRef = useRef(null);
-
-  const showNavigation = FestiveFiltered.length > 1;
-  const collectionsList = async () => {
-    try {
-      const response = await FetchAllCollectionsFromShopify();
-      setCollections(response);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setAnimate(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (!collection) return;
-    const bestSeller = collection.find((item) => item.handle === "best_seller");
-    if (!bestSeller) return;
-    const fetchBestSellerProducts = async () => {
-      try {
-        const response = await FetchAllProductByCollections(bestSeller.id);
-        console.log(`${bestSeller.id} && ${response?.data}`);
-        const productEdges = response?.data?.collection?.products?.edges ?? [];
-        const formattedProducts = productEdges.map((item) =>
-          formatProduct(item.node)
-        );
-        setFestiveFiltered(formattedProducts);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchBestSellerProducts();
-  }, [collection]);
-  function formatProduct(productNode) {
-    const {
-      id,
-      title,
-      description,
-      images,
-      variants,
-      featuredImage,
-      vendor,
-      productType,
-      tags,
-      createdAt,
-    } = productNode;
-
-    const allImages = images?.edges?.map((img) => img.node.url) || [];
-    const variantEdges = variants?.edges || [];
-    const firstVariant = variantEdges[0]?.node;
-
-    const isSimpleProduct =
-      variantEdges.length === 1 &&
-      variantEdges[0].node.selectedOptions?.[0]?.value === "Default Title";
-
-    if (isSimpleProduct) {
-      return {
-        productId: id,
-        title,
-        description,
-        vendor,
-        productType,
-        tags,
-        createdAt,
-        type: "simple",
-        price: firstVariant?.price,
-        compareAtPrice:
-          firstVariant?.compareAtPrice !== undefined
-            ? firstVariant.compareAtPrice
-            : null,
-        image: featuredImage?.url || allImages[0],
-        images: allImages,
-        variants: null,
-      };
-    }
-
-    const formattedVariants = variantEdges.map((v) => ({
-      variantId: v.node.id,
-      price: v.node.price,
-      compareAtPrice:
-        v.node.compareAtPrice !== undefined ? v.node.compareAtPrice : null,
-      inventoryQuantity: v.node.inventoryQuantity,
-      image: v.node.image?.url || featuredImage?.url,
-      // colorVariant: v.node.selectedOptions.map((opt) => [opt.name, opt.value]),
-      colorVariant: v.node.selectedOptions[0].value,
-    }));
-
-    return {
-      productId: id,
-      title,
-      description,
-      vendor,
-      productType,
-      tags,
-      createdAt,
-      type: "variant",
-      featuredImage: featuredImage?.url,
-      images: allImages,
-      variants: formattedVariants,
-    };
-  }
-  // product catogory
-  const categorized = FestiveFiltered.reduce((acc, product) => {
-    const type = product.productType || "Uncategorized";
-    if (!acc[type]) acc[type] = [];
-    acc[type].push(product);
-    return acc;
-  }, {});
-
-  console.log(FestiveFiltered);
-
   const specials = [
     { img: pink_collection, title: "Pink Collection" },
     { img: statement_earrings, title: "Statement Earrings" },
@@ -188,76 +68,65 @@ function Home() {
     { img: jaguar_bracelet, title: "Jaguar Bracelets" },
     { img: watch_charms, title: "Watch Charms" },
   ];
-  const containerRef = useRef(null);
-  const sliderRef = useRef(null);
+  function toggle(product) {
+    setSelectedType(product);
+  }
+ const showNavigation = FestiveFiltered.length > 1;
+  const collectionsList = async () => {
+    setLoading(false);
+    try {
+      const response = await FetchAllCollectionsFromShopify();  
+      setCollections(response);
+    } catch (error) {
+      console.log("error fetching collections", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (!collection) return;
+    const bestSeller = collection.find((item) => item.handle === "best_seller");
+    if (!bestSeller) return;
+    const fetchBestSellerProducts = async () => {
+      try {
+        const response = await FetchAllProductByCollections(bestSeller.id);
+        const productEdges = response?.data?.collection?.products?.edges ?? [];
+        const formattedProducts = productEdges.map(item => formatProduct(item.node));
+        setFestiveFiltered(formattedProducts);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchBestSellerProducts();
+  }, [collection]);
 
   useEffect(() => {
     const container = containerRef.current;
     const slider = sliderRef.current;
-
     if (!container || !slider) return;
-
-    const imageAfter = container.querySelector(".image-after");
-    const sliderLine = container.querySelector(".slider-line");
-    const sliderButton = container.querySelector(".slider-button");
-
     const updateSlider = (value) => {
       // Set the --position variable (controls the clipping width)
       container.style.setProperty("--position", `${value}%`);
     };
-
     // Initial position (centered at 50%)
     updateSlider(50);
     slider.value = 50;
-
     slider.addEventListener("input", (e) => {
       const value = e.target.value;
       updateSlider(value);
     });
-
     return () => {
       slider.removeEventListener("input", updateSlider);
     };
   }, []);
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
     collectionsList();
-  }, []);
-
-  // Silver prices logic
-
-  const [lastUpdated, setLastUpdated] = useState("27 Oct 2025, 11:00 AM");
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  const handleRefresh = async () => {
-    if (isRefreshing) return;
-
-    setIsRefreshing(true);
-
-    setTimeout(() => {
-      const now = new Date();
-      const formatted = now.toLocaleString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      });
-
-      setLastUpdated(formatted);
-      setIsRefreshing(false);
-    }, 1000);
-  };
-  useEffect(() => {
     setTrendingProduct(FestiveFiltered);
   }, [FestiveFiltered]);
 
   useEffect(() => {
     async function loadSilver() {
       const data = await FetchSilverRate();
-      console.log(data);
       setSilver(data);
       if (data?.silverPerGram) {
         setSilverRate(data.silverPerGram);
@@ -279,7 +148,16 @@ function Home() {
 
     loadSilver();
   }, []);
-  console.log(silverRate);
+   useEffect(() => {
+    const timer = setTimeout(() => {
+      setAnimate(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+  useEffect(() => {
+       window.scrollTo({ top: 0, behavior: "smooth" });
+   
+  }, []);
   return (
     <>
       {/* Floating Whatsapp icon */}
@@ -310,13 +188,14 @@ function Home() {
           </div>
 
           <div className="flex items-center gap-x-1 w-[155px] sm:w-[170px]">
-            <img
-              className={`w-[15px] h-[15px] cursor-pointer ${isRefreshing ? "animate-spin" : ""
-                }`}
+            {/* <img
+              className={`w-[15px] h-[15px] cursor-pointer ${
+                isRefreshing ? "animate-spin" : ""
+              }`}
               src={refresh_icon}
               alt="Refresh icon"
               // onClick={fetchMetalRates}
-            />
+            /> */}
             <p className="text-[14px] text-right sm:text-[16px]">
               Last Updated {silverPriceUpdatedTime}
             </p>
@@ -332,7 +211,9 @@ function Home() {
               Silver Price Today
             </p>
             <p className="text-[#28040E] text-[18px] font-normal">
-              <span className="font-semibold">₹ {Number(silver?.silverPerGram).toFixed(2)}</span>{" "}
+              <span className="font-semibold">
+                ₹ {Number(silver?.silverPerGram).toFixed(2)}
+              </span>{" "}
               per gram and{" "}
               <span className="font-semibold">
                 ₹{Number(silver?.silverPerKg).toFixed(2)}
@@ -342,13 +223,14 @@ function Home() {
           </div>
 
           <div className="flex items-center gap-x-2 mr-6">
-            <img
-              className={`w-[15px] h-[15px] cursor-pointer ${isRefreshing ? "animate-spin" : ""
-                }`}
+            {/* <img
+              className={`w-[15px] h-[15px] cursor-pointer ${
+                isRefreshing ? "animate-spin" : ""
+              }`}
               src={refresh_icon}
               alt="Refresh icon"
               //  / onClick={fetchMetalRates}
-            />
+            /> */}
             <p>Last Updated {silverPriceUpdatedTime}</p>
           </div>
         </div>
@@ -468,7 +350,7 @@ function Home() {
                             className="w-[359px] h-[361px] sm:w-[373px] sm:h-[373px] object-cover transform transition-transform duration-300 ease-out hover:scale-110 absolute bottom-[-0px] z-10"
                           />
                           <h2 className="font-atteron text-white text-center font-normal leading-normal text-[50px] z-20 absolute bottom-0 left-[50%] transform translate-x-[-50%]">
-                            {item.handle}
+                            {item?.handle}
                           </h2>
                         </div>
                       </Link>
