@@ -30,7 +30,7 @@ function Login() {
     }),
     onSubmit: async (values) => {
       const customerResult = await checkCustomer(values);
-             console.log(customerResult);
+      console.log(customerResult);
 
       setLoggedCustomerId(customerResult.data);
       if (customerResult) {
@@ -42,9 +42,8 @@ function Login() {
     },
   });
   useEffect(() => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}, []);
-
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   return (
     <>

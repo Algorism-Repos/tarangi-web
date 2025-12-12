@@ -1,4 +1,3 @@
-
 // import React, { useContext, useEffect, useState } from "react";
 // import { useFormik } from "formik";
 // import * as Yup from "yup";
@@ -55,8 +54,6 @@
 //     }
 //   }, [loggedCustomerId]);
 
-
-
 //   const CustomerOrders = async () => {
 
 //     try {
@@ -81,15 +78,7 @@
 //   //   }
 //   // };
 
-  
-
-
-
-
-
-
-
-  // src/pages/Profile.js
+// src/pages/Profile.js
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -119,7 +108,7 @@ import brown_ellipse from "../assets/Products/brown_ellipse.png";
 
 import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 import OrderSummaryPopup from "../components/OrderSummaryPopup";
- import { AppContext } from "../context/AppContext";
+import { AppContext } from "../context/AppContext";
 
 // NEW: section components
 import ProfileSection from "../profilecomponent/ProfileSection";
@@ -146,29 +135,33 @@ const Profile = () => {
   // order popup
   const [showOrderPopup, setShowOrderPopup] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
- const { loggedCustomerId } = useContext(AppContext);
-  const [orders, setorder] = useState([])
- const savedCustomerId = localStorage.getItem("customerId");
+  const { loggedCustomerId } = useContext(AppContext);
+  const [orders, setorder] = useState([]);
+  const savedCustomerId = localStorage.getItem("customerId");
 
+  console.log(loggedCustomerId);
   const CustomerOrders = async () => {
     try {
       const response = await CustomersOrders(loggedCustomerId?.customer?.id);
       console.log(response);
-      setorder(response.data.orders)
+      setorder(response.data.orders);
     } catch (error) {
       console.log(error);
     }
   };
-        console.log(orders);
 
+  console.log(orders);
+const grouped = {
+  fulfilled: orders.filter(o => o.fulfillment_status === "fulfilled"),
+  unfulfilled: orders.filter(o => o.fulfillment_status !== "fulfilled")
+};
+  console.log(grouped);
 
-useEffect(() => {
+  useEffect(() => {
     const id = loggedCustomerId?.customer?.id || savedCustomerId;
 
     if (id) {
-          CustomerOrders(id)
-
-  
+      CustomerOrders(id);
     }
   }, [loggedCustomerId]);
   // profile form
@@ -336,9 +329,7 @@ useEffect(() => {
 
   const handleRemove = (id) => {
     setProducts((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, liked: false } : item
-      )
+      prev.map((item) => (item.id === id ? { ...item, liked: false } : item))
     );
   };
 
@@ -405,9 +396,7 @@ useEffect(() => {
 
   const [editingAddressId, setEditingAddressId] = useState(null);
   const nextAddressId = () =>
-    addresses.length === 0
-      ? 1
-      : Math.max(...addresses.map((a) => a.id)) + 1;
+    addresses.length === 0 ? 1 : Math.max(...addresses.map((a) => a.id)) + 1;
 
   const handleAddNew = () => {
     const newId = nextAddressId();
@@ -430,9 +419,7 @@ useEffect(() => {
 
   const handleAddressSave = (values, { setSubmitting }) => {
     setAddresses((prev) =>
-      prev.map((a) =>
-        a.id === values.id ? { ...values, isNew: false } : a
-      )
+      prev.map((a) => (a.id === values.id ? { ...values, isNew: false } : a))
     );
     setEditingAddressId(null);
     setSubmitting(false);
@@ -474,7 +461,6 @@ useEffect(() => {
     navigate("/login");
   };
 
-
   const profileRef = useRef(null);
   const addressRef = useRef(null);
   const ordersRef = useRef(null);
@@ -489,9 +475,7 @@ useEffect(() => {
     };
 
     const ref =
-      sectionMap[
-      Object.keys(openSections).find((key) => openSections[key])
-      ];
+      sectionMap[Object.keys(openSections).find((key) => openSections[key])];
 
     if (ref?.current) {
       setTimeout(() => {
@@ -501,19 +485,11 @@ useEffect(() => {
     }
   }, [openSections]);
 
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-  const sendWhatsapp = (orderId) => {
-    const phoneNumber = "919003058300";
-    const message = `Hi, my order has been placed. My Order ID is: ${orderId}`;
-    const url = `https://wa.me/${phoneNumber}/?text=${encodeURIComponent(
-      message
-    )}`;
-    window.open(url, "_blank");
-  };
-  
+
+
   return (
     <div className="min-h-fit bg-[#FFF5E8] py-16 px-4 sm:px-6 lg:px-16 xl:px-28">
       <div className="max-w-[1280px] mx-auto space-y-20">
@@ -533,10 +509,11 @@ useEffect(() => {
                   key={item.name}
                   onClick={() => setActiveSection(item.name)}
                   className={`flex items-center gap-3 px-5 py-3 rounded-[8px] text-[16px] font-poppins transition-all w-full
-                      ${isActive
-                      ? "bg-[#5A0010] text-white"
-                      : "text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010]"
-                    }`}
+                      ${
+                        isActive
+                          ? "bg-[#5A0010] text-white"
+                          : "text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010]"
+                      }`}
                 >
                   <img
                     src={isActive ? item.activeIcon : item.icon}
@@ -552,10 +529,13 @@ useEffect(() => {
               onClick={handleLogout}
               className="flex items-center gap-3 px-5 py-3 text-[#6D6D6D] mt-[240px] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
             >
-              <img src={logout_icon} alt="Logout" className="w-[30px] h-[30px] object-contain" />
+              <img
+                src={logout_icon}
+                alt="Logout"
+                className="w-[30px] h-[30px] object-contain"
+              />
               Logout
             </button>
-
           </div>
 
           <div className="flex-1 bg-transparent">
@@ -586,9 +566,8 @@ useEffect(() => {
 
             {activeSection === "Orders" && (
               <OrdersSection
-                orders={orders}
-                  setSelectedOrder={setSelectedOrder}
-
+                grouped={grouped}
+                setSelectedOrder={setSelectedOrder}
                 setShowOrderPopup={setShowOrderPopup}
               />
             )}
@@ -723,7 +702,6 @@ useEffect(() => {
               <div className="border-t border-[#F6EFE6] px-4 py-4 bg-[#FFF5E8] transition-all duration-300">
                 <OrdersSection
                   orders={orders}
-
                   setSelectedOrder={setSelectedOrder}
                   setShowOrderPopup={setShowOrderPopup}
                 />
@@ -794,9 +772,7 @@ useEffect(() => {
         isOpen={isDeleteModalOpen}
         onCancel={() => setIsDeleteModalOpen(false)}
         onConfirm={() => {
-          setAddresses((prev) =>
-            prev.filter((a) => a.id !== addressToDelete)
-          );
+          setAddresses((prev) => prev.filter((a) => a.id !== addressToDelete));
           setIsDeleteModalOpen(false);
         }}
         title="Are you Sure"
@@ -805,7 +781,6 @@ useEffect(() => {
         cancelText="Cancel"
         icon={trashcan}
       />
-  
     </div>
   );
 };
