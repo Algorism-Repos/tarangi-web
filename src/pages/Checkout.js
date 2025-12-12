@@ -210,7 +210,7 @@ useEffect(() => {
       );
       setOrderId(response.data.id);
 
-      sendWhatsapp(response.data.id);
+      // sendWhatsapp(response.data.id);
       if(Payment_key){
         navigate("/thankyou");
       }

@@ -8,7 +8,6 @@ import brown_ellipse from "../assets/Products/brown_ellipse.png";
 export const AppContext = createContext();
 export function AppProvider({ children }) {
   const [loading, setLoading] = useState(true);
-  const [trendingProduct, setTrendingProduct] = useState()
   const [collection, setCollections] = useState(() => {
     const saved = localStorage.getItem("collection");
     return saved ? JSON.parse(saved) : [];

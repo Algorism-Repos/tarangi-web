@@ -111,8 +111,9 @@ export async function FetchOrderByMail(email) {
 export async function FetchDeliveryByPincode(pincode) {
   try {
     const response = await axios.get(
-      `${url}/api/shopify/pincode/${pincode}`
+      `${url}/pincode/${pincode}`
     );
+    console.log(response);
     return response.data || null;
   } catch (error) {
     console.error("Error fetching delivery details:", error);
