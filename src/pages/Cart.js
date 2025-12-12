@@ -80,7 +80,7 @@ function Cart() {
                   </h3>
                 </Link>
               ) : (
-                cartItems.map((item) => (
+                cartItems?.map((item) => (
                   <div
                     key={item.id}
                     className="bg-[#FFFAF3] max-w-[694px] p-[24px] rounded-[16px] shadow-2xl mb-[25px] max-[425px]:p-[16px]"
@@ -110,7 +110,7 @@ function Cart() {
                               /\s+/g,
                               "-"
                             )}`}
-                            state={{ product: item }}
+                            state={{ product: categorizedProduct.find(p => p.productId === item.productId) }}
                           >
                             <h3 className="text-[10px] font-medium text-[#6F6F6F] sm:text-[16px]">
                               {item.title}

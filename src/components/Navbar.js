@@ -73,15 +73,7 @@ function Navbar() {
   // mobile products dropdown
   const [mobileProductDropdown, setMobileProductDropdown] = useState(false);
   const [mobileActiveTab, setMobileActiveTab] = useState("men"); // for mobile pills
-  // Product dropdown datas
-  const TRENDING_PRODUCTS = [
-    { img: new_product_1, name: "Emerald Pendant" },
-    { img: new_product_1, name: "Diamond Necklace" },
-    { img: new_product_1, name: "Tulip Brooch" },
-    { img: new_product_1, name: "Tulip Brooch" },
-    { img: new_product_1, name: "Tulip Brooch" },
-    { img: new_product_1, name: "Tulip Brooch" },
-  ];
+ 
 
   const isActive = (path) => location.pathname === path;
   const isProductsRoute = location.pathname.startsWith("/products");
@@ -155,8 +147,7 @@ function Navbar() {
 
 
   const handleSearch=async(e)=>{
-     const response= await FetchAllProductFromShopify()
-      console.log(response)
+      console.log(e)
   }
    
   return (
@@ -389,7 +380,7 @@ function Navbar() {
                       >
                         <div key={index} className="flex flex-col  w-[120px]">
                           <img
-                            src={item.image}
+                            src={item.images}
                             alt={item.name}
                             className="w-[121px] h-[120px] object-cover rounded-[10px]"
                           />
