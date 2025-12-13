@@ -133,39 +133,14 @@ const Profile = () => {
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
 
   // order popup
-  const [showOrderPopup, setShowOrderPopup] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const { loggedCustomerId } = useContext(AppContext);
+  const { loggedCustomerId,wishlistItems } = useContext(AppContext);
   const [orders, setorder] = useState([]);
   const savedCustomerId = localStorage.getItem("customerId");
-
-  console.log(loggedCustomerId);
-  const CustomerOrders = async () => {
-    try {
-      const response = await CustomersOrders(loggedCustomerId?.customer?.id);
-      console.log(response);
-      setorder(response.data.orders);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  console.log(orders);
-const grouped = {
-  fulfilled: orders.filter(o => o.fulfillment_status === "fulfilled"),
-  unfulfilled: orders.filter(o => o.fulfillment_status !== "fulfilled")
-};
-  console.log(grouped);
-
-  useEffect(() => {
-    const id = loggedCustomerId?.customer?.id || savedCustomerId;
-
-    if (id) {
-      CustomerOrders(id);
-    }
-  }, [loggedCustomerId]);
-  // profile form
-  const formik = useFormik({
+ const profileRef = useRef(null);
+  const addressRef = useRef(null);
+  const ordersRef = useRef(null);
+  const favouritesRef = useRef(null);
+   const formik = useFormik({
     initialValues: {
       firstName: "",
       lastName: "",
@@ -185,6 +160,24 @@ const grouped = {
     },
   });
 
+
+
+  console.log(orders);
+const grouped = {
+  fulfilled: orders.filter(o => o.fulfillment_status === "fulfilled"),
+  unfulfilled: orders.filter(o => o.fulfillment_status !== "fulfilled")
+};
+  console.log(grouped);
+
+  useEffect(() => {
+    const id = loggedCustomerId?.customer?.id || savedCustomerId;
+
+    if (id) {
+      CustomerOrders(id);
+    }
+  }, [loggedCustomerId]);
+  // profile form
+ 
   const handleEdit = () => setIsEditing(true);
   const handleCancel = () => setIsEditing(false);
 
@@ -350,24 +343,10 @@ const grouped = {
     });
   };
 
-  // Order details for popup
-  const orderItems =
-    selectedOrder?.products?.map((p) => ({
-      product_img: p,
-      product_name: "Product Name",
-      quantity: 1,
-      free: false,
-      price: 1200,
-    })) || [];
-
-  const subTotal = orderItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
 
   const tax = 800;
   const shipping = 0;
-  const total = subTotal + tax + shipping;
+  // const total = subTotal + tax + shipping;
 
   // Address logic
   const [addresses, setAddresses] = useState([
@@ -461,10 +440,7 @@ const grouped = {
     navigate("/login");
   };
 
-  const profileRef = useRef(null);
-  const addressRef = useRef(null);
-  const ordersRef = useRef(null);
-  const favouritesRef = useRef(null);
+ 
 
   useEffect(() => {
     const sectionMap = {
@@ -488,6 +464,27 @@ const grouped = {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
+  const CustomerOrders = async (customerId) => {
+  try {
+    if (!customerId) return;
+
+    const response = await CustomersOrders(customerId);
+    setorder(response.data.orders || []);
+  } catch (error) {
+    console.log(error);
+  }
+};
+useEffect(() => {
+  const customerId =
+    loggedCustomerId?.customer?.id || localStorage.getItem("customerId");
+
+  if (customerId) {
+    CustomerOrders(customerId);
+  }
+}, [loggedCustomerId]);
+console.log("loggedCustomerId:", loggedCustomerId);
+console.log("order:", orders);
 
 
   return (
@@ -567,14 +564,13 @@ const grouped = {
             {activeSection === "Orders" && (
               <OrdersSection
                 grouped={grouped}
-                setSelectedOrder={setSelectedOrder}
-                setShowOrderPopup={setShowOrderPopup}
+                // setShowOrderPopup={setShowOrderPopup}
               />
             )}
 
             {activeSection === "Favourites" && (
               <FavouritesSection
-                likedProducts={likedProducts}
+                wishlistItems={wishlistItems}
                 handleProductClick={handleProductClick}
                 toggleLike={toggleLike}
                 handleColorSelect={handleColorSelect}
@@ -701,9 +697,8 @@ const grouped = {
             {openSections.orders && (
               <div className="border-t border-[#F6EFE6] px-4 py-4 bg-[#FFF5E8] transition-all duration-300">
                 <OrdersSection
-                  orders={orders}
-                  setSelectedOrder={setSelectedOrder}
-                  setShowOrderPopup={setShowOrderPopup}
+                grouped={grouped}
+               
                 />
               </div>
             )}

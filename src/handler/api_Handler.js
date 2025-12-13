@@ -125,3 +125,15 @@ export async function FetchSilverRate() {
     console.error("Silver rate fetch failed:", error);
   }
 }
+export async function FetchImageByVarient(varient_id) {
+  try {
+    const response = await axios.post(
+      `${url}/variant/${varient_id}/image`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Variant image fetch failed:", error);
+    return null;
+  }
+}
+

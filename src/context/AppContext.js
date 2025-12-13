@@ -24,9 +24,16 @@ useEffect(() => {
   }
 }, [trendingProduct]);
 
-  const [loggedCustomerId, setLoggedCustomerId] = useState(() => {
-    return localStorage.getItem("loggedCustomerId") || null;
-  });
+ const [loggedCustomerId, setLoggedCustomerId] = useState(() => {
+  try {
+    const saved = localStorage.getItem("loggedCustomerId");
+    return saved ? JSON.parse(saved) : null;
+  } catch {
+    localStorage.removeItem("loggedCustomerId");
+    return null;
+  }
+});
+
 
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem("isLoggedIn") === "true";
@@ -36,11 +43,15 @@ const [categorizedProduct, setCategorizedProduct] = useState(() => {
   return saved ? JSON.parse(saved) : null;
 });
 
-  useEffect(() => {
-    if (loggedCustomerId) {
-      localStorage.setItem("loggedCustomerId", loggedCustomerId);
-    }
-  }, [loggedCustomerId]);
+useEffect(() => {
+  if (loggedCustomerId && typeof loggedCustomerId === "object") {
+    localStorage.setItem(
+      "loggedCustomerId",
+      JSON.stringify(loggedCustomerId)
+    );
+  }
+}, [loggedCustomerId]);
+
 
   useEffect(() => {
     localStorage.setItem("isLoggedIn", isLoggedIn);

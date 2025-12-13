@@ -8,7 +8,7 @@ import RestockModal from "../components/RestockModal";
 import RestockSuccessModal from "../components/RestockSuccessModal";
 
 const FavouritesSection = ({
-  likedProducts,
+  wishlistItems,
   handleProductClick,
   toggleLike,
   handleColorSelect,
@@ -20,18 +20,19 @@ const FavouritesSection = ({
   showRestockSuccess,
   setShowRestockSuccess,
 }) => {
+   console.log(wishlistItems)
   return (
     <>
       <div>
-        {likedProducts.length === 0 ? (
+        {wishlistItems?.length === 0 ? (
           <p className="text-center text-[14px] text-[#4B0010] mt-6 font-poppins">
             No Products in the favourites page
           </p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full overflow-visible relative">
-            {likedProducts.map((item) => (
+            {wishlistItems?.map((item) => (
               <div
-                key={item.id}
+                key={item?.id}
                 className="max-w-[304px] flex flex-wrap gap-x-10 mx-auto items-center group relative"
               >
                 {/* IMAGE CARD */}
@@ -39,34 +40,34 @@ const FavouritesSection = ({
                   onClick={() => handleProductClick(item)}
                   className="overflow-hidden rounded-2xl relative "
                 >
-                  <img
-                    src={item.colorImages[item.selectedColor]}
+                  {/* <img
+                    src={item?.colorImages[item?.selectedColor]}
                     className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] object-cover rounded-[16px]${
-                      item.isOutOfStock ? " grayscale" : ""
+                      item?.isOutOfStock ? " grayscale" : ""
                     } ${
-                      item.isRestocking ? "opacity-50" : ""
+                      item?.isRestocking ? "opacity-50" : ""
                     }  transition-all duration-300 group-hover:scale-105`}
-                  />
+                  /> */}
 
                   {/* LABEL */}
-                  {item.isOutOfStock ? (
+                  {/* {item?.isOutOfStock ? (
                     <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
                       Sold Out
                     </p>
-                  ) : item.isRestocking ? (
+                  ) : item?.isRestocking ? (
                     <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
                       Restocking Soon
                     </p>
-                  ) : null}
+                  ) : null} */}
 
                   {/* HEART BUTTON */}
                   <div>
-                    <LikeButton
-                      liked={item.liked}
-                      isOutOfStock={item.isOutOfStock}
-                      isRestocking={item.isRestocking}
-                      onToggle={() => toggleLike(item.id)}
-                    />
+                    {/* <LikeButton
+                      liked={item?.liked}
+                      isOutOfStock={item?.isOutOfStock}
+                      isRestocking={item?.isRestocking}
+                      onToggle={() => toggleLike(item?.id)}
+                    /> */}
                   </div>
                 </div>
 
@@ -74,41 +75,41 @@ const FavouritesSection = ({
                 <div className="flex justify-between items-center w-full my-3 gap-x-2">
                   <div>
                     <p className="text-[13px] font-semibold sm:text-[18px] text-[#313131]">
-                      {item.product_name}
+                      {/* {item?.product_name} */}
                     </p>
                     <p className="text-[#4E4E4E] font-semibold text-[16px]">
-                      {item.price}
+                      {/* {item?.price} */}
                     </p>
                   </div>
 
                   {/* COLOR OPTIONS */}
                   <div className="mt-1.5 flex items-center justify-between">
                     <div className="flex justify-center gap-x-2.5 mr-1">
-                      {item.colors.map((color) => (
+                      {/* {item?.colors?.map((color) => (
                         <img
-                          key={color.id}
-                          src={color.img}
+                          key={color?.id}
+                          src={color?.img}
                           onClick={() =>
-                            handleColorSelect(item.id, color.id)
+                            handleColorSelect(item?.id, color?.id)
                           }
                           className={`w-[20px] sm:w-[24px] rounded-full cursor-pointer transition-all ${
-                            item.selectedColor === color.id
+                            item?.selectedColor === color?.id
                               ? "border-2 border-primary p-[2px]"
                               : "border bg-white"
                           }`}
                         />
-                      ))}
+                      ))} */}
                     </div>
                   </div>
                 </div>
 
                 {/* BUTTON */}
-                <AddToCartButton
-                  isOutOfStock={item.isOutOfStock}
-                  isRestocking={item.isRestocking}
+                {/* <AddToCartButton
+                  isOutOfStock={item?.isOutOfStock}
+                  isRestocking={item?.isRestocking}
                   isFavouritesPage={true}
-                  onRemoveFromFavourites={() => handleRemove(item.id)}
-                />
+                  onRemoveFromFavourites={() => handleRemove(item?.id)}
+                /> */}
               </div>
             ))}
           </div>

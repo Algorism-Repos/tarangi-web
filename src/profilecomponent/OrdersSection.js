@@ -1,13 +1,19 @@
 // src/pages/OrdersSection.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
 import circle from "../assets/Ellipse 12.png";
 import truck_icon from "../assets/truck_icon.png";
+import OrderSummaryPopup from "../components/OrderSummaryPopup";
+import { FetchImageByVarient } from "../handler/api_Handler";
 
-const OrdersSection = ({ grouped, setShowOrderPopup, setSelectedOrder }) => {
-  console.log(grouped);
+const OrdersSection = ({ grouped }) => {
+  const [showOrderPopup, setShowOrderPopup] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [imageMap, setImageMap] = useState({});
+
+  // console.log(grouped);
   const sendTrackOrder = (orderId) => {
     const phoneNumber = "919003058300";
     const message = `Hi,I need to track my order. My Order ID is: ${orderId}`;
@@ -16,7 +22,7 @@ const OrdersSection = ({ grouped, setShowOrderPopup, setSelectedOrder }) => {
     )}`;
     window.open(url, "_blank");
   };
-    const sendCancelOrder = (orderId) => {
+  const sendCancelOrder = (orderId) => {
     const phoneNumber = "919003058300";
     const message = `Hi,I need to cancel my order. My Order ID is: ${orderId}`;
     const url = `https://wa.me/${phoneNumber}/?text=${encodeURIComponent(
@@ -24,6 +30,23 @@ const OrdersSection = ({ grouped, setShowOrderPopup, setSelectedOrder }) => {
     )}`;
     window.open(url, "_blank");
   };
+
+  console.log(grouped?.fulfilled[0]);
+
+ const loadImages = async()=>{
+    const orderImage=await FetchImageByVarient("10055735968058")
+    console.log(orderImage)
+ }
+ 
+
+useEffect(() => {
+
+
+ loadImages()
+}, [grouped]);
+
+
+   console.log(imageMap[51981218283834])
   return (
     <div className="space-y-10 max-w-[634px]">
       <div>
@@ -73,11 +96,11 @@ const OrdersSection = ({ grouped, setShowOrderPopup, setSelectedOrder }) => {
                   {/* <span>{fulfillmentsOrder.status}</span> */}
                 </div>
                 <button
-                //   className="text-[#5A0010] text-[12px] font-medium hover:underline"
-                //   onClick={() => {
-                //     setSelectedOrder(fulfillmentsOrder);
-                //     setShowOrderPopup(true);
-                //   }}
+                  className="text-[#5A0010] text-[12px] font-medium hover:underline"
+                  onClick={() => {
+                    setSelectedOrder(fulfillmentsOrder);
+                    setShowOrderPopup(true);
+                  }}
                 >
                   View Order Details
                 </button>
@@ -89,14 +112,14 @@ const OrdersSection = ({ grouped, setShowOrderPopup, setSelectedOrder }) => {
                 <div>
                   <p>{line_items.title}</p>
                   <p>{line_items.price}</p>
-                </div>
 
-                // <img
-                //   key={idx}
-                //   src={img}
-                //   alt="Product"
-                //   className="w-[90px] h-[90px] rounded-[8px] object-cover"
-                // />
+                  <img
+                    key={idx}
+                    src={imageMap[line_items?.variant_id]}
+                    alt="Product"
+                    className="w-[90px] h-[90px] rounded-[8px] object-cover"
+                  />
+                </div>
               ))}
             </div>
 
@@ -114,20 +137,24 @@ const OrdersSection = ({ grouped, setShowOrderPopup, setSelectedOrder }) => {
               >
                 Track Order
               </button>
-              <button className="flex-1 border border-[#4B001A] text-[#4B001A] text-[14px] font-semibold py-2.5 rounded-full" onClick={()=>sendCancelOrder(fulfillmentsOrder.fulfillments[0]?.order_id)}>
+              <button
+                className="flex-1 border border-[#4B001A] text-[#4B001A] text-[14px] font-semibold py-2.5 rounded-full"
+                onClick={() =>
+                  sendCancelOrder(fulfillmentsOrder.fulfillments[0]?.order_id)
+                }
+              >
                 Cancel Order
               </button>
             </div>
           </div>
         ))}
-      </div>{" "}
-      *
-      {/* 
+      </div>
+
       <div>
         <h2 className="text-[#2A2A2A] text-[16px] font-semibold font-poppins mb-2">
           Delivered
         </h2>
-        {deliveredOrders?.map((order) => (
+        {/* {deliveredOrders?.map((order) => (
           <div
             key={order.id}
             className="border border-[#E0E0E0] rounded-lg bg-white p-5 shadow-sm mb-6"
@@ -195,18 +222,18 @@ const OrdersSection = ({ grouped, setShowOrderPopup, setSelectedOrder }) => {
               </button>
             </div>
           </div>
-        ))}
-      </div> */}
-       <OrderSummaryPopup
-        // open={showOrderPopup}
+        ))} */}
+      </div>
+      <OrderSummaryPopup
+        open={showOrderPopup}
         onClose={() => setShowOrderPopup(false)}
-        // order={selectedOrder}
-        orderItems={orderItems}
-        subTotal={subTotal}
-        tax={tax}
-        shipping={shipping}
-        total={total}
-      /> 
+        order={selectedOrder}
+        // orderItems={orderItems}
+        // subTotal={subTotal}
+        // tax={tax}
+        // shipping={shipping}
+        // total={total}
+      />
     </div>
   );
 };
