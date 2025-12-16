@@ -28,7 +28,7 @@ function Favourites() {
   const initialProducts = [];
 
   const [products, setProducts] = useState(initialProducts);
-  const [favorites, setFavorites] = useState([]);
+  // const [favorites, setFavorites] = useState([]);
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);

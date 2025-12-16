@@ -33,11 +33,7 @@ import right_arrow from "../assets/right_arrow.png";
 import left_arrow from "../assets/left_arrow.png";
 import { formatProduct } from "../utils/productFormatter";
 import {
-  FetchAllCollectionsFromShopify,
-  FetchAllProductByCollections,
-  FetchAllProductFromShopify,
-  FetchSilverRate,
-} from "../handler/api_Handler";
+  FetchAllCollectionsFromShopify, FetchAllProductByCollections, FetchAllProductFromShopify, FetchSilverRate,} from "../handler/api_Handler";
 import { AppContext } from "../context/AppContext";
 import LoadingScreen from "../components/LoadingScreen";
 
@@ -123,7 +119,7 @@ function Home() {
     collectionsList();
     setTrendingProduct(FestiveFiltered);
   }, [FestiveFiltered]);
-
+  
   useEffect(() => {
     async function loadSilver() {
       const data = await FetchSilverRate();
@@ -155,9 +151,10 @@ function Home() {
     return () => clearTimeout(timer);
   }, []);
   useEffect(() => {
-       window.scrollTo({ top: 0, behavior: "smooth" });
-   
+       window.scrollTo({ top: 0, behavior: "smooth" })
   }, []);
+
+  
   return (
     <>
       {/* Floating Whatsapp icon */}
@@ -379,7 +376,7 @@ function Home() {
                         }}
                       >
                         <img
-                          src={type?.variants?.[0].image}
+                          src={type?.images?.[0]}
                           alt={type?.name}
                           className="px-2 sm:px-0 w-[360px] h-fit sm:w-[395px] sm:h-[395px] "
                         />
@@ -388,7 +385,7 @@ function Home() {
                         </h5>
                         <h4 className="font-poppins text-[20px] font-semibold leading-normal text-[#FCD99F]">
                           ₹
-                          {parseInt(type?.variants?.[0].price).toLocaleString("en-IN")}
+                          {(Number(type?.price) || Number(type?.variants?.[0]?.price)?.toLocaleString("en-IN"))}
                         </h4>
                       </div>
                     </Link>
@@ -482,7 +479,7 @@ function Home() {
                             </h5>
                             <h4 className="font-poppins text-[16px] sm:text-[18px] md:text-[20px] font-semibold leading-normal text-[#FCD99F]">
                               ₹
-                              {parseInt(type?.variants?.[0].price).toLocaleString("en-IN")}
+                              {(Number(type?.price) || Number(type?.variants?.[0]?.price)?.toLocaleString("en-IN"))}
                             </h4>
                           </div>
                         </Link>
@@ -870,7 +867,7 @@ function Home() {
         </div>
       </div>
 
-      {/* Modal */}0
+      {/* Modal */}
       <Modal modal={modalToggle} active={toggle} productName={selectedType} />
     </>
   );

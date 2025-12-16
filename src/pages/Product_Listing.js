@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Link } from "react-router";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -22,6 +23,7 @@ import { Autoplay } from "swiper/modules";
 
 
 function Product_Listing({ productCatergory }) {
+  const swiperRef = useRef(null);
   const [products, setProducts] = useState([]);
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
@@ -40,6 +42,8 @@ function Product_Listing({ productCatergory }) {
       setLoading(false);
     }
   }, [productCatergory]);
+
+  console.log("product-list", products);
 
 
 
@@ -182,12 +186,18 @@ function Product_Listing({ productCatergory }) {
               {/* MAIN PRODUCT IMAGE */}
               <div className=" relative group z-0">
                 <Swiper
-                  modules={Autoplay}
+                  modules={[Autoplay]} 
+                  autoplay = {false}
+                  onSwiper = {(swiper) => (swiperRef.current = swiper)}
+
                 >
                   {(item?.variants?.map(v => v.image) || item.images).map((item, i) => (
                     <SwiperSlide>
-                      <img src={item} alt="images" className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-[0.6]" : ""
-                        } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} />
+                      <img src={item} 
+                        alt="images" 
+                        className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-[0.6]" : ""} ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} 
+                        onMouseEnter={() => {swiperRef.current?.autoplay.start()}}    
+                      />
                     </SwiperSlide>
                   ))}
                 </Swiper>

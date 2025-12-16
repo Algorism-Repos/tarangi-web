@@ -6,13 +6,9 @@ import { Pagination } from "swiper/modules";
 import { Link, useLocation } from "react-router";
 // images
 import grey_arrow from "../assets/Products/grey_arrow.png";
-import product_1 from "../assets/Products/product_1.png";
-import product_2 from "../assets/Products/product_2.png";
 import gold_ellipse from "../assets/Products/gold_ellipse.png";
 import silver_ellipse from "../assets/Products/silver_ellipse.png";
 import brown_ellipse from "../assets/Products/brown_ellipse.png";
-import favorie_icon from "../assets/Products/favorite_icon.png";
-import favorie_icon_white from "../assets/Products/Unfilled_likeIcon.png";
 import { AppContext } from "../context/AppContext";
 import pure_silver from "../assets/pure_silver_icon.png";
 import shipping from "../assets/shipping_icon.png";
@@ -100,6 +96,10 @@ function Product_Description() {
     (item) => item?.variantId === activeVariant?.variantId
   );
 
+  console.log("Product", product);
+  console.log("Active Variant", activeVariant);
+  
+  
   return (
     <>
       {/* Backgound */}
@@ -117,7 +117,7 @@ function Product_Description() {
             <p> {product?.title}</p>
           </div>
 
-          <div className="flex flex-wrap flex-col sm:flex-row items-start gap-10 sm:my-[40px] xl:my-[70px] sm:px-12 ">
+          <div className="flex flex-wrap flex-col sm:flex-row lg:flex-nowrap items-start gap-y-10 gap-x-10 lg:gap-x-24 sm:my-[40px] xl:my-[70px] sm:px-12 ">
             {/* Product Image */}
 
             <div className="max-w-[361px] sm:max-w-[400px] sm:min-w-[400px]  overflow-hidden  lg:mt-20 mb-5">
@@ -136,12 +136,12 @@ function Product_Description() {
                 {product?.variants && product?.variants.length > 0
                   ? product.variants.map((item) => (
                       <SwiperSlide>
-                        <img src={item.image} />
+                        <img className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px]" src={item?.image} />
                       </SwiperSlide>
                     ))
-                  : product.images.map((img) => (
+                  : product?.images.map((img) => (
                       <SwiperSlide>
-                        <img src={img} />
+                        <img className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px]" src={img} />
                       </SwiperSlide>
                     ))}
               </Swiper>
@@ -163,8 +163,7 @@ function Product_Description() {
                   }
                 >
                   ₹
-                  {parseInt(activeVariant?.price).toLocaleString("en-IN") ||
-                    product.price}
+                  {parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}
                 </h2>
 
                 {/* Price with Discounted Price */}
@@ -180,7 +179,7 @@ function Product_Description() {
                     ₹
                     {parseInt(activeVariant?.compareAtPrice).toLocaleString(
                       "en-IN"
-                    ) || product.compareAtPrice}
+                    ) || product?.compareAtPrice}
                   </h2>
                   <h2 className="text-[24px] font-semibold sm:text-[32px]">
                     {" "}
@@ -192,8 +191,8 @@ function Product_Description() {
                 <p className="text-[#878787] text-[12px] font-poppins ">
                   MRP Excl.of all taxes
                 </p>
-                {/* ----------------------------------------------------------------------------------------- */}
               </div>
+              {/* ----------------------------------------------------------------------------------------- */}
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px] sm:block hidden" />
               {/* Description */}
               <div>

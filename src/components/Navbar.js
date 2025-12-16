@@ -150,8 +150,7 @@ function Navbar() {
   const handleSearch=async(e)=>{
       console.log(e)
   }
-   
-  console.log("Trending Product", trendingProduct);
+  
   return (
     <>
       {/* Navbar - large screens */}
@@ -379,7 +378,7 @@ function Navbar() {
                       >
                         <div key={index} className="flex flex-col  w-[120px]">
                           <img
-                            src={item.images}
+                            src={item?.images?.[0]}
                             alt={item.name}
                             className="w-[121px] h-[120px] object-cover rounded-[10px]"
                           />
@@ -594,7 +593,7 @@ function Navbar() {
                               >
                                 <div className="flex flex-col items-center">
                                   <img
-                                    src={item?.featuredImage}
+                                    src={item?.images?.[0]}
                                     alt={item?.name}
                                     className="w-[100px] h-[100px] object-contain rounded-[12px] shadow-md"
                                   />

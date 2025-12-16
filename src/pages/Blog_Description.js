@@ -181,6 +181,7 @@ contentRefs.current = faqSections.map((_, i) => contentRefs.current[i] ?? null);
                     />
                   </button>
                   {/* CONTENT */}
+                  <button>
                   <div
                     id={`faq-content-${i}`}
                     role="region"
@@ -200,9 +201,11 @@ contentRefs.current = faqSections.map((_, i) => contentRefs.current[i] ?? null);
                     </div>
                   </div>
 
+
                   {/* Chevron Icon */}
                   <img src={ChevronIcon} alt="toggle" className={`w-[30px] h-[30px] transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`} />
                 </button>
+                
 
                 {/* CONTENT */}
                 <div id={`faq-content-${i}`} role="region" aria-labelledby={`faq-header-${i}`} className="overflow-hidden transition-[max-height] duration-300 ease-in-out" style={{ maxHeight: isOpen ? `${contentRefs.current[i]?.scrollHeight || 999}px` : "0px", }} >
