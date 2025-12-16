@@ -14,14 +14,8 @@ import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import LoadingScreen from "../components/LoadingScreen";
 
-const ELLIPSE_BY_COLOR = {
-  gold: gold_ellipse,
-  silver: silver_ellipse,
-  brown: brown_ellipse,
-};
-
 const IMAGE_BY_COLOR = (item) => ({
-  gold: item.image?.src, // gold = main image
+  gold: item.image?.src,
   silver: product_1,
   brown: product_2,
 });
@@ -32,94 +26,90 @@ function Product_Listing({ productCatergory }) {
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const { loading, setLoading,addToWishlist,removeFromWishlist,wishlistItems} = useContext(AppContext);
-  // after form success
+  const [selectedVariants, setSelectedVariants] = useState({});
+  const {
+    loading,
+    setLoading,
+    addToWishlist,
+    removeFromWishlist,
+    wishlistItems,
+  } = useContext(AppContext);
+  const COLOR_MAP = {
+    Gold: gold_ellipse,
+    Silver: silver_ellipse,
+    RoseGold: brown_ellipse,
+  };
+  useEffect(() => {
+    if (productCatergory) {
+      setProducts(normalizeProducts(productCatergory));
+
+      // setProducts(productCatergory);
+      setLoading(false);
+    }
+  }, [productCatergory]);
+  const normalizeProducts = (data) =>
+    data.map((item) => {
+      if (!item.variants) {
+        return {
+          ...item,
+          variants: [
+            {
+              variantId: item.variantId,
+              price: item.price,
+              image: item.image,
+              colorVariant: null,
+            },
+          ],
+        };
+      }
+      return item;
+    });
+
+  const changeVariant = (productId, index) => {
+    setSelectedVariants((prev) => ({
+      ...prev,
+      [productId]: index,
+    }));
+  };
+  //  Like button toggle
+  const toggleLike = (productId, variantId) => {
+    setProducts((prev) => {
+      return prev.map((product) => {
+        if (product.productId !== productId) return product;
+
+        const isLiked = product.liked;
+
+        if (isLiked) {
+          removeFromWishlist(variantId);
+        } else {
+          addToWishlist(product);
+        }
+
+        return { ...product, liked: !product.liked };
+      });
+    });
+  };
+
+  useEffect(() => {
+    setProducts((prev) =>
+      prev.map((product) => ({
+        ...product,
+        liked: wishlistItems.some(
+          (w) =>
+            w.productId === product.productId &&
+            w.variantId === product.variantId
+        ),
+      }))
+    );
+  }, [wishlistItems, productCatergory]);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+ // after form success
   const handleSuccess = () => {
     setShowRestockModal(false);
     setShowSuccessModal(true);
   };
-
-  useEffect(() => {
-    if (productCatergory) {
-      setProducts(productCatergory);
-      setLoading(false);
-    }
-  }, [productCatergory]);
-
-
-  //Extracting colors into an array from the variants
-  const colorAssets = [
-    {
-      value: "Gold",
-      imgUrl: gold_ellipse,
-    },
-    {
-      value: "Silver",
-      imgUrl: silver_ellipse,
-    },
-    {
-      value: "RoseGold",
-      imgUrl: brown_ellipse,
-    },
-  ];
-
-  //Organising the colors that are available for the product
-  const variantColors = products?.map((element) =>
-    element?.variants?.map((item) => item.colorVariant)
-  );
-  const availableColors = variantColors
-    .map((color) => colorAssets.find((asset) => asset.value == color))
-    .filter(Boolean);
-
-  //  Like button toggle
-const toggleLike = (productId, variantId) => {
-  setProducts((prev) => {
-    return prev.map((product) => {
-      if (product.productId !== productId) return product;
-
-      const isLiked = product.liked;
-
-      if (isLiked) {
-       
-        removeFromWishlist(variantId);
-      } else {
-        
-        addToWishlist(product);
-      }
-
-      return { ...product, liked: !product.liked };
-    });
-  });
-};
-
-
-
-  //  Color change handler
-  const handleColorChange = (id, color) => {
-    setProducts((prev) =>
-      prev.map((product) => {
-        if (product.id !== id) return product;
-        if (!product.colors?.includes(color)) return product;
-        return { ...product, selectedColor: color };
-      })
-    );
-  };
-useEffect(() => {
-  setProducts((prev) =>
-    prev.map((product) => ({
-      ...product,
-      liked: wishlistItems.some(
-        (w) =>
-          w.productId === product.productId &&
-          w.variantId === product.variantId
-      ),
-    }))
-  );
-}, [wishlistItems, productCatergory]);
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
-
   const handleOutOfStockClick = () => {
     setShowOutStockModal(true);
   };
@@ -164,13 +154,14 @@ useEffect(() => {
           const isRestocking = item.restock === true;
 
           const colorImages = IMAGE_BY_COLOR(item);
-
+          const selectedIndex = selectedVariants[item?.productId] ?? 0;
+          const selectedVariant = item?.variants[selectedIndex];
           return (
             <Link
-              key={item.id}
+              key={item?.id}
               to={
                 !isOutOfStock && !isRestocking
-                  ? `/product_description/${item.title.replace(/\s+/g, "-")}`
+                  ? `/product_description/${item?.title.replace(/\s+/g, "-")}`
                   : "#"
               }
               state={!isOutOfStock && !isRestocking ? { product: item } : {}}
@@ -188,20 +179,21 @@ useEffect(() => {
                 className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${
                   isOutOfStock ? "grayscale" : ""
                 } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
-                src={
-                  item.variants != null
-                    ? item.variants.map((item) => item.image)
-                    : item.images
-                }
+                // src={
+                //   item.variants != null
+                //     ? item.variants.map((item) => item.image)
+                //     : item.images
+                // }
+                src={selectedVariant?.image}
                 alt={item?.title}
               />
 
               {/*  Like Button */}
               <LikeButton
-                liked={item.liked}
+                liked={item?.liked}
                 isOutOfStock={isOutOfStock}
                 isRestocking={isRestocking}
-  onToggle={() => toggleLike(item.productId, item.variantId)}
+                onToggle={() => toggleLike(item.productId, item.variantId)}
               />
 
               {/* SOLD OUT LABEL */}
@@ -228,17 +220,31 @@ useEffect(() => {
 
                 <div className="mt-1.5 flex items-center justify-between w-full">
                   <h3 className="text-[13px] text-[#4E4E4E] font-medium sm:text-[18px] mt-1">
-                    ₹{" "}
-                    {item.variants != null
-                      ? parseInt(item.variants?.[0]?.price).toLocaleString(
-                          "en-IN"
-                        )
-                      : parseInt(item.price).toLocaleString("en-in")}
+                    ₹ {parseInt(selectedVariant?.price).toLocaleString("en-IN")}
                   </h3>
 
                   {/*  COLOR TOGGLE BUTTONS */}
-                  <div className="flex flex-row items-center">
-                    {/* {item?.variants?.map((color) => color?.colorVariant)} */}
+                  <div className="flex flex-row items-center gap-x-4">
+                    {item?.variants.map((variant, index) => {
+                      if (!variant.colorVariant) return null;
+
+                      return (
+                        <img
+                          key={variant?.variantId}
+                          src={COLOR_MAP[variant?.colorVariant]}
+                          alt={variant.colorVariant}
+                          className={`w-6 h-6 cursor-pointer ${
+                            selectedIndex === index
+                              ? "ring-2 ring-[#8B5E3C] rounded-full"
+                              : ""
+                          }`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            changeVariant(item?.productId, index);
+                          }}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
               </div>

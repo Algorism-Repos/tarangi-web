@@ -158,6 +158,7 @@ useEffect(() => {
   const clearWishlist = () => setWishlistItems([]);
 
 const addToRecentlyViewed = (product) => {
+  
   setRecentlyViewed((prev) => {
     const safePrev = Array.isArray(prev) ? prev : [];
     const filtered = safePrev.filter(

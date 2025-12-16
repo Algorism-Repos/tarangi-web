@@ -23,6 +23,8 @@ import Recently_Viewed from "../components/Recently-Viewed";
 import AddToCartButton from "../components/AddToCartButton";
 import Wishlist_Popup from "../components/Wishlist_Popup";
 import AddToWishlistButton from "../components/AddToWishlistButton";
+import { FetchAllProductFromShopify } from "../handler/api_Handler";
+import { formatProduct } from "../utils/productFormatter";
 
 function Product_Description() {
   const swiperRef = useRef(null);
@@ -34,9 +36,15 @@ function Product_Description() {
     pincodeDetails,
     addToRecentlyViewed,
   } = useContext(AppContext);
-  const [colorSelected, setColorSelected] = useState( product?.variants?.[0]?.colorVariant || "");
+  const [colorSelected, setColorSelected] = useState(
+    product?.variants?.[0]?.colorVariant || ""
+  );
+  const [products, setProducts] = useState([]);
+  const [selectedVariants, setSelectedVariants] = useState({});
+
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});
+  const [youMayLike, setYouMayLike] = useState();
   const colorAssets = [
     {
       value: "Gold",
@@ -59,7 +67,6 @@ function Product_Description() {
       const variant = product.variants.find(
         (element) => element.colorVariant === colorSelected
       );
- console.log(variant)
       if (variant) {
         setactiveVariant({
           ...variant,
@@ -75,7 +82,7 @@ function Product_Description() {
         deliveryDetails: pincodeDetails,
       });
     }
-    addToRecentlyViewed(activeVariant);
+    addToRecentlyViewed(product);
   }, [colorSelected, pincodeDetails]);
 
   const variantColors = (product?.variants || []).map(
@@ -99,6 +106,43 @@ function Product_Description() {
   console.log(product);
 
   console.log("variantActive", activeVariant);
+  console.log(" you may also like categorizedProduct ", categorizedProduct);
+  const COLOR_MAP = {
+    Gold: gold_ellipse,
+    Silver: silver_ellipse,
+    RoseGold: brown_ellipse,
+  };
+  useEffect(() => {
+    if (categorizedProduct) {
+      setProducts(normalizeProducts(categorizedProduct));
+
+      // setProducts(productCatergory);
+    }
+  }, [categorizedProduct]);
+  const normalizeProducts = (data) =>
+    data.map((item) => {
+      if (!item.variants) {
+        return {
+          ...item,
+          variants: [
+            {
+              variantId: item.variantId,
+              price: item.price,
+              image: item.image,
+              colorVariant: null,
+            },
+          ],
+        };
+      }
+      return item;
+    });
+
+  const changeVariant = (productId, index) => {
+    setSelectedVariants((prev) => ({
+      ...prev,
+      [productId]: index,
+    }));
+  };
 
   return (
     <>
@@ -337,6 +381,8 @@ function Product_Description() {
 
             <div className="flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
               {categorizedProduct?.slice(0, 4).map((item) => {
+                const selectedIndex = selectedVariants[item?.productId] ?? 0;
+                const selectedVariant = item?.variants[selectedIndex];
                 return (
                   <div
                     key={item?.id}
@@ -351,7 +397,7 @@ function Product_Description() {
                     >
                       <img
                         className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[24px]"
-                        src={item?.image}
+                        src={selectedVariant?.image}
                         alt={item?.alt || item?.title}
                       />
                     </Link>
@@ -359,11 +405,15 @@ function Product_Description() {
                     <div className="mt-2 flex flex-wrap items-center justify-between sm:mt-4">
                       <div>
                         <h3 className="text-[16px] font-semibold sm:text-[20px]">
-                          ₹{" "}
+                          {/* ₹{" "}
                           {(item?.price
                             ? parseInt(item?.price)
                             : parseInt(item?.variants?.[0]?.price)
-                          )?.toLocaleString("en-IN")}
+                          )?.toLocaleString("en-IN")} */}
+                          ₹{" "}
+                          {parseInt(selectedVariant?.price).toLocaleString(
+                            "en-IN"
+                          )}
                         </h3>
                         <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">
                           {item?.title}
@@ -372,21 +422,26 @@ function Product_Description() {
 
                       <div className="hidden sm:block">
                         <div className="mt-1 flex justify-end gap-x-3">
-                          <img
-                            className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
-                            src={gold_ellipse}
-                            alt="gold ellipse"
-                          />
-                          <img
-                            className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
-                            src={silver_ellipse}
-                            alt="Silver ellipse"
-                          />
-                          <img
-                            className="w-[24px] bg-white rounded-full border-primary hover:border-2 hover:p-[2px]"
-                            src={brown_ellipse}
-                            alt="brown ellipse"
-                          />
+                          {item?.variants.map((variant, index) => {
+                            if (!variant.colorVariant) return null;
+
+                            return (
+                              <img
+                                key={variant?.variantId}
+                                src={COLOR_MAP[variant?.colorVariant]}
+                                alt={variant.colorVariant}
+                                className={`w-6 h-6 cursor-pointer ${
+                                  selectedIndex === index
+                                    ? "ring-2 ring-[#8B5E3C] rounded-full"
+                                    : ""
+                                }`}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  changeVariant(item?.productId, index);
+                                }}
+                              />
+                            );
+                          })}
                         </div>
                       </div>
                     </div>
