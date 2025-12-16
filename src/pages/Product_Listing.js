@@ -35,12 +35,9 @@ function Product_Listing({ productCatergory }) {
     addToWishlist,
     removeFromWishlist,
     wishlistItems,
+    colorAssets
   } = useContext(AppContext);
-  const COLOR_MAP = {
-    Gold: gold_ellipse,
-    Silver: silver_ellipse,
-    RoseGold: brown_ellipse,
-  };
+
   useEffect(() => {
     if (productCatergory) {
       setProducts(normalizeProducts(productCatergory));
@@ -104,10 +101,12 @@ function Product_Listing({ productCatergory }) {
       }))
     );
   }, [wishlistItems, productCatergory]);
+
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
- // after form success
+  // after form success
   const handleSuccess = () => {
     setShowRestockModal(false);
     setShowSuccessModal(true);
@@ -122,6 +121,9 @@ function Product_Listing({ productCatergory }) {
   if (loading) {
     return <LoadingScreen />;
   }
+
+  console.log(products);
+
 
   if (products.length === 0) {
     return (
@@ -154,7 +156,6 @@ function Product_Listing({ productCatergory }) {
           const isOutOfStock = item?.inventoryQuantity === 0 || item?.variants?.[0]?.inventoryQuantity === 0;
           const isRestocking = item.restock === true;
 
-          const colorImages = IMAGE_BY_COLOR(item);
           const selectedIndex = selectedVariants[item?.productId] ?? 0;
           const selectedVariant = item?.variants[selectedIndex];
           return (
@@ -177,14 +178,8 @@ function Product_Listing({ productCatergory }) {
             >
               {/* MAIN PRODUCT IMAGE */}
               <img
-                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${
-                  isOutOfStock ? "grayscale" : ""
-                } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
-                // src={
-                //   item.variants != null
-                //     ? item.variants.map((item) => item.image)
-                //     : item.images
-                // }
+                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-60" : ""
+                  } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
                 src={selectedVariant?.image}
                 alt={item?.title}
               />
@@ -197,27 +192,22 @@ function Product_Listing({ productCatergory }) {
                 onToggle={() => toggleLike(item.productId, item.variantId)}
               />
 
-                {/*  Like Button */}
-                <LikeButton
-                  liked={item.liked}
-                  isOutOfStock={isOutOfStock}
-                  isRestocking={isRestocking}
-                  onToggle={() => toggleLike(item.productId, item.variantId)}
-                />
 
-                {/* SOLD OUT LABEL */}
-                {isOutOfStock && (
-                  <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5 z-10">
-                    Sold Out
-                  </p>
-                )}
 
-                {/* RESTOCK SOON LABEL */}
-                {!isOutOfStock && isRestocking && (
-                  <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
-                    Restocking Soon
-                  </p>
-                )}
+
+              {/* SOLD OUT LABEL */}
+              {isOutOfStock && (
+                <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5 z-10">
+                  Sold Out
+                </p>
+              )}
+
+              {/* RESTOCK SOON LABEL */}
+              {!isOutOfStock && isRestocking && (
+                <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
+                  Restocking Soon
+                </p>
+              )}
 
               {/* PRODUCT DETAILS */}
               <div className="mt-2 flex flex-wrap justify-between sm:mt-3">
@@ -228,25 +218,25 @@ function Product_Listing({ productCatergory }) {
                 </div>
 
                 <div className="mt-1.3 flex flex-col sm:flex-row gap-y-2 items-start sm:items-center sm:justify-between w-full">
-                  <h3 className="text-[13px] text-[#4E4E4E] font-medium sm:text-[18px] mt-1">
-                    ₹ {parseInt(selectedVariant?.price).toLocaleString("en-IN")}
+                  {/* Pricing without discount */}
+                  <h3 className={item?.compareAtPrice === null || selectedVariant?.price === null}>
+                    ₹ { parseInt(selectedVariant?.price).toLocaleString("en-IN") || parseInt(item?.price).toLocaleString("en-IN")}
                   </h3>
 
                   {/*  COLOR TOGGLE BUTTONS */}
-                  <div className="flex flex-row items-center gap-x-4">
+                  <div className="flex flex-row items-center gap-x-2">
                     {item?.variants.map((variant, index) => {
                       if (!variant.colorVariant) return null;
 
                       return (
                         <img
                           key={variant?.variantId}
-                          src={COLOR_MAP[variant?.colorVariant]}
+                          src={colorAssets[variant?.colorVariant]}
                           alt={variant.colorVariant}
-                          className={`w-6 h-6 cursor-pointer ${
-                            selectedIndex === index
-                              ? "ring-2 ring-[#8B5E3C] rounded-full"
-                              : ""
-                          }`}
+                          className={`w-6 h-6 cursor-pointer ${selectedIndex === index
+                            ? "ring-2 ring-[#8B5E3C] rounded-full"
+                            : ""
+                            }`}
                           onClick={(e) => {
                             e.preventDefault();
                             changeVariant(item?.productId, index);

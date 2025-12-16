@@ -46,6 +46,7 @@ function Product_page() {
     return acc;
   }, {});
 
+  console.log(categorized)
 
   useEffect(() => {
     setCategorizedProduct(productListData);
