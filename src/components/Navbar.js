@@ -57,6 +57,7 @@ function Navbar() {
   const handleMouseLeave = () => {
     closeTimer.current = setTimeout(() => {
       setProductDropdown(false);
+      // setShowOverlay(true);
     }, 500);
   };
   const handleClose = () => {
@@ -149,7 +150,7 @@ function Navbar() {
   const handleSearch=async(e)=>{
       console.log(e)
   }
-   
+  
   return (
     <>
       {/* Navbar - large screens */}
@@ -196,17 +197,15 @@ function Navbar() {
               Products
               <img className="w-[28px] h-[28px]" src={down_arrow} alt="" />
             </Link>
-            {/* Dropdown */}
-            {productDropdown && (
-              <div className="absolute top-[111px] left-1/2 transform -translate-x-1/2 min-w-[1000px] h-fit bg-[#FFF5E8] px-10 py-8 shadow-2xl z-30 rounded-lg">
+            { productDropdown && (
+              <div className="absolute top-[111px] left-1/2 transform -translate-x-1/2 min-w-fit h-fit bg-[#FFF5E8] p-8 shadow-2xl z-30 rounded-lg">
                 <h2 className="font-atteron text-primary text-[32px] text-center mb-8">
                   Product Caterogry
                 </h2>
-                <div className="grid grid-cols-4 gap-4">
+                <div className="flex flex-row justify-center flex-wrap overflow-hidden w-full gap-4">
                   {collection &&
                     collection
-                      ?.filter((item) => item.handle !== "best_seller" && item.body_html !== "<p>tarangi-specials</p>")
-                      .map((item) => (
+                      ?.filter((item) => item.handle !== "best_seller" && item.body_html !== "<p>tarangi-specials</p>").reverse().map((item) => (
                         <Link
                           to={`/products/${item.handle}`}
                           state={{
@@ -233,7 +232,7 @@ function Navbar() {
             )}
           </div>
 
-          <Link
+          {/* <Link
             to="/blog"
             className={`rounded-full py-2.5 px-4 text-white ${
               isActive("/blog")
@@ -242,7 +241,7 @@ function Navbar() {
             }`}
           >
             Blog
-          </Link>
+          </Link> */}
         </div>
 
         {/* Right Side Icons */}
@@ -251,8 +250,7 @@ function Navbar() {
           <div
             onClick={() => setShowSearch((prev) => !prev)}
             className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] transition search-icon
-                      ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
-              }
+                      ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"}
         `}
           >
             <img src={Search_icon_white} className="w-[42px] h-[42px]" />
@@ -380,12 +378,12 @@ function Navbar() {
                       >
                         <div key={index} className="flex flex-col  w-[120px]">
                           <img
-                            src={item.images}
+                            src={item?.images?.[0]}
                             alt={item.name}
                             className="w-[121px] h-[120px] object-cover rounded-[10px]"
                           />
                           <span className="mt-2 text-[12px] font-poppins text-center">
-                            {item.title}
+                            {item?.title}
                           </span>
                         </div>
                       </Link>
@@ -569,7 +567,7 @@ function Navbar() {
                         </h3>
 
                         <Swiper
-                          spaceBetween={20}
+                          spaceBetween={0}
                           slidesPerView={2.4}
                           className="trending-swiper"
                           breakpoints={{
@@ -595,12 +593,12 @@ function Navbar() {
                               >
                                 <div className="flex flex-col items-center">
                                   <img
-                                    src={item.image}
-                                    alt={item.name}
+                                    src={item?.images?.[0]}
+                                    alt={item?.name}
                                     className="w-[100px] h-[100px] object-contain rounded-[12px] shadow-md"
                                   />
                                   <span className="mt-2 text-white text-center text-[11px] font-poppins font-normal">
-                                    {item.title}
+                                    {item?.title}
                                   </span>
                                 </div>
                               </Link>
@@ -650,7 +648,7 @@ function Navbar() {
                         mobileProductDropdown || isProductsRoute
                           ? "text-white font-semibold"
                           : "text-[#A0A0A0]"
-                      }`}
+                        }`}
                     >
                       Products
                     </button>
@@ -675,10 +673,7 @@ function Navbar() {
                           <div className="flex flex-col gap-3 w-full max-w-[260px]">
                             {collection &&
                               collection
-                                ?.filter(
-                                  (item) => item.handle !== "best_seller"
-                                )
-                                .map((item) => (
+                                  ?.filter((item) => item.handle !== "best_seller" && item.body_html !== "<p>tarangi-specials</p>").reverse().map((item) => (
                                   <button
                                     key={item.id}
                                     onClick={() => {
@@ -709,7 +704,7 @@ function Navbar() {
                 </div>
 
                 {/* Blog */}
-                <Link to="/blog" onClick={() => setMenuVisible(false)}>
+                {/* <Link to="/blog" onClick={() => setMenuVisible(false)}>
                   <h2
                     className={`font-poppins text-[18px] leading-normal text-center ${
                       location.pathname === "/blog"
@@ -719,7 +714,7 @@ function Navbar() {
                   >
                     Blog
                   </h2>
-                </Link>
+                </Link> */}
 
                 {/* User Profile text link (like your design) */}
                 {isLoggedIn && (

@@ -3,6 +3,8 @@ import bullet_icon from "../assets/bullet_point.png";
 
 // Imports
 import CookiePolicy from "./CookiePolicy";
+import Grievance_policy from "../components/Grievance_policy";
+
 
 
 
@@ -247,6 +249,8 @@ function Privacy_Policy() {
                 </div>
 
                 <CookiePolicy />
+
+                <Grievance_policy />
             </div>
         </>
     );

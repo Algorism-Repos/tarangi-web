@@ -1,4 +1,3 @@
-
 @font-face {
   font-family: "Atteron";
   src: url("./assets/fonts/atteron.ttf") format("truetype");
@@ -196,7 +195,7 @@
   place-content: center;
   align-items: center;
   overflow: hidden;
-  padding: 150px 0;
+  padding: 100px 0;
   /* replaced 10vw */
   min-height: 784px;
   --position: 50%;
@@ -416,6 +415,7 @@ input::placeholder {
   justify-content: flex-start;
    align-items: center;
   padding: 110px 0px;
+  background-position: center center;
 }
 }
 

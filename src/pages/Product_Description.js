@@ -6,13 +6,9 @@ import { Pagination } from "swiper/modules";
 import { Link, useLocation } from "react-router";
 // images
 import grey_arrow from "../assets/Products/grey_arrow.png";
-import product_1 from "../assets/Products/product_1.png";
-import product_2 from "../assets/Products/product_2.png";
 import gold_ellipse from "../assets/Products/gold_ellipse.png";
 import silver_ellipse from "../assets/Products/silver_ellipse.png";
 import brown_ellipse from "../assets/Products/brown_ellipse.png";
-import favorie_icon from "../assets/Products/favorite_icon.png";
-import favorie_icon_white from "../assets/Products/Unfilled_likeIcon.png";
 import { AppContext } from "../context/AppContext";
 import pure_silver from "../assets/pure_silver_icon.png";
 import shipping from "../assets/shipping_icon.png";
@@ -85,6 +81,7 @@ function Product_Description() {
     addToRecentlyViewed(product);
   }, [colorSelected, pincodeDetails]);
 
+  //Organising the colors that are available for the product
   const variantColors = (product?.variants || []).map(
     (element) => element.colorVariant
   );
@@ -92,6 +89,8 @@ function Product_Description() {
   const availableColors = colorAssets?.filter((element) =>
     variantColors?.includes(element.value)
   );
+
+  // click on  color toggle
   function handleColorChangeByButton(color) {
     setColorSelected(color);
     const idx = product?.variants?.findIndex(
@@ -144,6 +143,10 @@ function Product_Description() {
     }));
   };
 
+  console.log("Product", product);
+  console.log("Active Variant", activeVariant);
+  
+  
   return (
     <>
       {/* Backgound */}
@@ -161,9 +164,10 @@ function Product_Description() {
             <p> {product?.title}</p>
           </div>
 
-          <div className="flex flex-wrap items-start justify-around  sm:my-[40px] xl:my-[70px] ">
+          <div className="flex flex-wrap flex-col sm:flex-row lg:flex-nowrap items-start gap-y-10 gap-x-10 lg:gap-x-24 sm:my-[40px] xl:my-[70px] sm:px-12 ">
             {/* Product Image */}
-            <div className="w-[380px] overflow-hidden sm:max-w-[400px] lg:mt-20 mb-5">
+
+            <div className="max-w-[361px] sm:max-w-[400px] sm:min-w-[400px]  overflow-hidden  lg:mt-20 mb-5">
               <Swiper
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
                 onSlideChange={(swiper) => {
@@ -172,27 +176,27 @@ function Product_Description() {
                     setColorSelected(product?.variants[id]?.colorVariant);
                   }
                 }}
-                spaceBetween={0}
+                spaceBetween={30}
                 pagination={{ dynamicBullets: true }}
                 modules={[Pagination]}
               >
                 {product?.variants && product?.variants.length > 0
                   ? product.variants.map((item) => (
                       <SwiperSlide>
-                        <img src={item.image} />
+                        <img className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px]" src={item?.image} />
                       </SwiperSlide>
                     ))
-                  : product.images.map((img) => (
+                  : product?.images.map((img) => (
                       <SwiperSlide>
-                        <img src={img} />
+                        <img className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px]" src={img} />
                       </SwiperSlide>
                     ))}
               </Swiper>
             </div>
 
             {/* Product Detail */}
-            <div className="lg:min-w-[633px]">
-              <div className="space-y-[3px]">
+            <div className="min-w-full sm:min-w-[633px]">
+              <div className="space-y-[5px]">
                 <h1 className="font-atteron text-primary text-[24px] sm:text-[32px] tracking-[1px] mt-3 sm:mt-0">
                   {product?.title}
                 </h1>
@@ -206,8 +210,7 @@ function Product_Description() {
                   }
                 >
                   ₹
-                  {parseInt(activeVariant?.price).toLocaleString("en-IN") ||
-                    product.price}
+                  {parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}
                 </h2>
 
                 {/* Price with Discounted Price */}
@@ -223,7 +226,7 @@ function Product_Description() {
                     ₹
                     {parseInt(activeVariant?.compareAtPrice).toLocaleString(
                       "en-IN"
-                    ) || product.compareAtPrice}
+                    ) || product?.compareAtPrice}
                   </h2>
                   <h2 className="text-[24px] font-semibold sm:text-[32px]">
                     {" "}
@@ -235,8 +238,8 @@ function Product_Description() {
                 <p className="text-[#878787] text-[12px] font-poppins ">
                   MRP Excl.of all taxes
                 </p>
-                {/* ----------------------------------------------------------------------------------------- */}
               </div>
+              {/* ----------------------------------------------------------------------------------------- */}
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px] sm:block hidden" />
               {/* Description */}
               <div>
@@ -244,9 +247,7 @@ function Product_Description() {
                   Description
                 </h3>
                 <p className="text-[#484848] text-[16px] font-medium ">
-                  At Tarangi Jewels, every piece of 92.5 silver jewellery
-                  reflects impeccable artistry and sophisticated charm.
-                  Experience jewellery that is as beautiful as it is timeless.
+                  At Tarangi Jewels, every piece of 92.5 silver jewellery reflects impeccable artistry and sophisticated charm. Experience jewellery that is as beautiful as it is timeless.
                 </p>
 
                 {/*Colors Available Section - Mobile  */}
@@ -282,7 +283,7 @@ function Product_Description() {
                 </div>
 
                 <div className=" max-w-full sm:max-w-[305px] flex flex-wrap justify-between  font-[poppins] text-center text-[#313131] mt-9 sm:my-5">
-                  <div className="max-w-[75px] ">
+                  <div className="max-w-[75px]">
                     <img
                       className="w-[42px] h-[42px] mx-auto"
                       src={pure_silver}
@@ -362,10 +363,7 @@ function Product_Description() {
               <div className="max-w-[500px] mt-5">
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
                   <AddToCartButton productToCart={activeVariant} />
-                  <AddToWishlistButton
-                    productToFavorites={activeVariant}
-                    disabled={isAlreadyInWishlist}
-                  />
+                  <AddToWishlistButton productToFavorites={activeVariant} disabled={isAlreadyInWishlist} />
                 </div>
               </div>
             </div>
@@ -373,13 +371,13 @@ function Product_Description() {
         </div>
 
         {/* Suggested products */}
-        <div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-0 sm:px-0">
+        <div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 xl:px-0">
           <div>
             <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
               you may also like
             </h1>
 
-            <div className="flex flex-wrap justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[20px] gap-y-6 mt-[25px] sm:gap-x-[24px]">
               {categorizedProduct?.slice(0, 4).map((item) => {
                 const selectedIndex = selectedVariants[item?.productId] ?? 0;
                 const selectedVariant = item?.variants[selectedIndex];
@@ -418,7 +416,6 @@ function Product_Description() {
                         <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">
                           {item?.title}
                         </p>
-                      </div>
 
                       <div className="hidden sm:block">
                         <div className="mt-1 flex justify-end gap-x-3">
@@ -446,19 +443,20 @@ function Product_Description() {
                       </div>
                     </div>
                   </div>
+                  </div>
                 );
               })}
             </div>
           </div>
 
-          <Recently_Viewed />
+          {/* <Recently_Viewed /> */}
         </div>
 
         <Wishlist_Popup
           show={showWishlistPopup}
           onClose={() => setShowWishlistPopup(false)}
         />
-      </div>
+      </div >
     </>
   );
 }

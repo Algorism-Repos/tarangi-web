@@ -55,15 +55,8 @@ function Product_page() {
   }, []);
   return (
     <>
-      <div className="bg-[#FFF5E8] py-[50px] relative">
-        <img
-          src={floating_up_arrow}
-          alt="floating_up_arrow"
-          className="w-[50px] h-[48px] z-50 sm:w-[70px] sm:h-[67px] fixed bottom-20 sm:bottom-3 right-3 transform animate-bounce cursor-pointer"
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-        />
+      <div className="bg-[#FFF5E8] py-[10px] sm:py-[50px] relative">
+        <img src={floating_up_arrow} alt="floating_up_arrow" className="w-[50px] h-[48px] z-50 sm:w-[70px] sm:h-[67px] fixed bottom-20 lg:bottom-3 right-3  transform animate-bounce cursor-pointer" onClick={() => { window.scrollTo({ top: 0, behavior: "smooth" })}} />
         <div className="max-w-[1350px] mx-auto lg:flex justify-between gap-x-[40px] my-[50px]">
           <Product_Filter
             productCatergory={categorized}

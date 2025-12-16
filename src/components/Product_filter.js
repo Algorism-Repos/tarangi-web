@@ -14,14 +14,14 @@ function Product_Filter({ productCatergory, collectionName }) {
 
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedPrices, setSelectedPrices] = useState([]);
-  const [sortOption, setSortOption] = useState("Latest");
+  const [sortOption, setSortOption] = useState("Price Low to High");
   const [showSort, setShowSort] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [tab, setTab] = useState("productCatergory");
   const { productListFromShopify, filteredProducts, setFilteredProducts } =
     useContext(AppContext);
 
-  const SortOptions = ["Price High to Low", "Price Low to High"];
+  const SortOptions = ["Price Low to High", "Price High to Low" ];
   const priceRanges = [
     { label: "₹10,000 – ₹15,000" },
     { label: "₹15,000 – ₹25,000" },
@@ -39,10 +39,8 @@ function Product_Filter({ productCatergory, collectionName }) {
 
   const [showMorePrice, setShowMorePrice] = useState(false);
 
-  // Convert productCatergory object keys to array
   const categories = Object.keys(productCatergory);
 
-  // Limit display to 5 unless "show more" is active
   const visibleCategories = showMoreCategory
     ? categories
     : categories.slice(0, 5);
@@ -164,8 +162,8 @@ const sortProducts = (products, sortBy) => {
         (p) => p.min === range.min && p.max === range.max
       )
         ? selectedPrices.filter(
-            (p) => p.min !== range.min || p.max !== range.max
-          )
+          (p) => p.min !== range.min || p.max !== range.max
+        )
         : [...selectedPrices, range];
       setSelectedPrices(updated);
       handleFilterChange(selectedCategories, updated);
@@ -206,7 +204,7 @@ const sortProducts = (products, sortBy) => {
       <div>
         {/* Women Collection & Sort  */}
         <div className="min-w-full">
-          <div className="max-w-[1350px] w-full mx-auto flex  justify-between px-4">
+          <div className="max-w-[1350px] w-full mx-auto flex justify-between px-4">
             <div className="lg:flex flex-wrap items-center gap-x-[18px]">
               <h2 className="font-atteron text-[26px] text-primary tracking-[1px] sm:text-[36px]">
                 {collectionName} Collections
@@ -368,7 +366,7 @@ const sortProducts = (products, sortBy) => {
               {/* occasion */}
               <div>
                 <h3 className="text-primary text-[20px] font-semibold">
-                  Occasions
+                  Type
                 </h3>
                 <div className="mt-6 space-y-3">
                   {occasions.map((tag) => (
@@ -381,7 +379,7 @@ const sortProducts = (products, sortBy) => {
                           />
                           <span class="checkmark"></span>
                         </label>
-                        <span className="text-[18px]">{tag}</span>
+                        <span className="text-[18px] capitalize">{tag}</span>
                       </div>
                     </label>
                   ))}
@@ -391,9 +389,9 @@ const sortProducts = (products, sortBy) => {
               </div>
             </div>
 
-            {/* Mobile Verion Filter */}
-            <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden px-4 z-10 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
-              <div className="flex justify-between">
+            {/* Mobile Version Filter bar */}
+            <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden z-10 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
+              <div className="flex justify-between ">
                 {/* SORT BUTTON */}
                 <div
                   className="group flex items-center gap-x-[8px] cursor-pointer"
@@ -418,7 +416,7 @@ const sortProducts = (products, sortBy) => {
                     src={sort_icon}
                     alt="Sort Icon"
                   />
-                  <button className="text-primary text-[18px] font-semibold">
+                  <button className="text-primary text-[16px] font-semibold">
                     Sort
                   </button>
                 </div>
@@ -447,7 +445,7 @@ const sortProducts = (products, sortBy) => {
                     src={filter_icon}
                     alt="Filter Icon"
                   />
-                  <button className="text-primary text-[18px] font-semibold">
+                  <button className="text-primary text-[16px] font-semibold">
                     Filter
                   </button>
                 </div>
@@ -467,33 +465,12 @@ const sortProducts = (products, sortBy) => {
                   Sort Designs By
                 </h2>
 
-                <button
-                  className="text-[16px] font-medium text-left focus:text-primary"
-                  onClick={() => handleSortSelection("Latest")}
-                >
-                  Latest
-                </button>
+                {SortOptions.map((items) =>(
+                  <button className={`text-[16px] font-medium text-left ${items === sortOption ? "text-primary" : ""} `} onClick={() => handleSortSelection(items)}>
+                    {items}
+                  </button>
+                ))}
 
-                <button
-                  className="text-[16px] font-medium text-left focus:text-primary"
-                  onClick={() => handleSortSelection("Featured")}
-                >
-                  Featured
-                </button>
-
-                <button
-                  className="text-[16px] font-medium text-left focus:text-primary"
-                  onClick={() => handleSortSelection("Price High to Low")}
-                >
-                  Price High to Low
-                </button>
-
-                <button
-                  className="text-[16px] font-medium text-left focus:text-primary"
-                  onClick={() => handleSortSelection("Price Low to High")}
-                >
-                  Price Low to High
-                </button>
               </div>
             </div>
 
@@ -553,7 +530,7 @@ const sortProducts = (products, sortBy) => {
                     className=" focus:text-primary "
                     onClick={() => setTab("occasion")}
                   >
-                    Occasion
+                    Type
                   </button>
                   <hr className="border border-t-[#D9D9D9] w-full hidden" />
                   <button
@@ -680,7 +657,7 @@ const sortProducts = (products, sortBy) => {
                               />
                               <span class="checkmark"></span>
                             </label>
-                            <span className="text-[15px]">{tag}</span>
+                            <span className="text-[15px] capitalize">{tag}</span>
                           </div>
                         </label>
                       ))}
@@ -693,7 +670,7 @@ const sortProducts = (products, sortBy) => {
 
           <Product_Listing productCatergory={filteredProducts} />
         </div>
-      </div>
+      </div >
     </>
   );
 }

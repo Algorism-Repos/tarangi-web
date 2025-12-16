@@ -1,7 +1,7 @@
 import axios from "axios";
 
 let url = "http://localhost:8080/api/shopify";
-// let url = "https://tarangijewels.com/api/shopify"
+// let url = "https://tarangi-staging.df.r.appspot.com/api/shopify"
 
  
 export async function FetchAllProductFromShopify() {
@@ -109,8 +109,9 @@ export async function FetchOrderByMail(email) {
 export async function FetchDeliveryByPincode(pincode) {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/shopify/pincode/${pincode}`
+      `${url}/pincode/${pincode}`
     );
+    console.log(response);
     return response.data || null;
   } catch (error) {
     console.error("Error fetching delivery details:", error);

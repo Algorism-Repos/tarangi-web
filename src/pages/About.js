@@ -19,9 +19,31 @@ function About() {
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+  // counter functionality
+  const Counter = ({ endValue = 60, duration = 2000 }) => {
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+      let start = 0;
+      const incrementTime = Math.floor(duration / endValue);
+
+      const timer = setInterval(() => {
+        start += 1;
+        setCount(start);
+
+        if (start >= endValue) clearInterval(timer);
+      }, incrementTime);
+
+      return () => clearInterval(timer);
+    }, [endValue, duration]);
+
+    return (
+      <span className="font-extralight font-poppins text-[#5C0A1F]">
+        {count}+
+      </span>
+    );
+  };
+
 
   return (
     <>
@@ -34,8 +56,8 @@ function About() {
           src={whatsapp_floating}
           alt="Whatsapp_Icon"
           className={`w-[50px] sm:w-[70px] h-fit hover:scale-125 max-h-[70px] ${animate
-              ? " animate-bounce duration-300 transition-transform will-change-transform transform-gpu"
-              : ""
+            ? " animate-bounce duration-300 transition-transform will-change-transform transform-gpu"
+            : ""
             }`}
         />
       </a>
@@ -72,7 +94,7 @@ function About() {
       <div className="about-first-section py-28 lg:py-[300px] relative">
         <div className="max-w-7xl mx-auto ">
           <h1 className="font-atteron text-[52px] sm:text-[72px] text-[#5C0A1F] font-normal leading-normal tracking-[1px] text-center sm:w-[748px] mx-auto">
-            <span className="font-poppins font-extralight">6</span>0+ Years of
+            <Counter endValue={60} duration={1000} /> Years of
             Experience
           </h1>
 
@@ -141,4 +163,4 @@ function About() {
   );
 }
 
-export default About;
+export default About

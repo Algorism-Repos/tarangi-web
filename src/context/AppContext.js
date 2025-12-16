@@ -1,17 +1,19 @@
 import PropTypes from "prop-types";
 import { createContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-export const AppContext = createContext();
+import gold_ellipse from "../assets/Products/gold_ellipse.png";
+import silver_ellipse from "../assets/Products/silver_ellipse.png";
+import brown_ellipse from "../assets/Products/brown_ellipse.png";
 
+
+export const AppContext = createContext();
 export function AppProvider({ children }) {
   const [loading, setLoading] = useState(true);
- 
   const [collection, setCollections] = useState(() => {
     const saved = localStorage.getItem("collection");
     return saved ? JSON.parse(saved) : [];
   });
   const [pincodeDetails, setPincodeDetails] = useState({});
-  const[deliveryDate,setdeliveryDate]=useState()
+  const [deliveryDate, setdeliveryDate] = useState()
   const [filteredProducts, setFilteredProducts] = useState([]);
 const [trendingProduct, setTrendingProduct] = useState(() => {
   const saved = localStorage.getItem("trendingProduct");
@@ -56,7 +58,6 @@ useEffect(() => {
   useEffect(() => {
     localStorage.setItem("isLoggedIn", isLoggedIn);
   }, [isLoggedIn]);
-
   const [productListFromShopify, setProductListFromShopify] = useState(() => {
     const saved = localStorage.getItem("productListFromShopify");
     return saved ? JSON.parse(saved) : [];
@@ -69,23 +70,28 @@ useEffect(() => {
     const saved = localStorage.getItem("cartItems");
     return saved ? JSON.parse(saved) : [];
   });
-
   const [recentlyViewed, setRecentlyViewed] = useState(() => {
     const saved = localStorage.getItem("recentlyViewed");
     return saved ? JSON.parse(saved) : [];
   });
-
   const updateCartItemQuantity = (id, newQty) => {
     setCartItems((prev) =>
       prev.map((item) =>
-        item.variantId  === id ? { ...item, quantity: newQty } : item
+        item.variantId === id ? { ...item, quantity: newQty } : item
       )
     );
+  };
+
+  const colorAssets = {
+    Silver: silver_ellipse,
+    Gold: gold_ellipse,
+    RoseGold: brown_ellipse
   };
   useEffect(() => {
     if (categorizedProduct !== null) {
       localStorage.setItem(
         "categorizedProduct",
+
         JSON.stringify(categorizedProduct)
       );
     }
@@ -109,14 +115,12 @@ useEffect(() => {
       localStorage.setItem("collection", JSON.stringify(collection));
     }
   }, [collection]);
-
   const addToCart = (product) => {
     console.log(product)
     setCartItems((prev) => {
       const existing = prev.find(
-        (item) => item.variantId === product.variantId
+        (item) => item?.variantId === product.variantId
       );
-
       if (existing) {
         return prev.map((item) =>
           item.variantId === product.variantId
@@ -124,16 +128,13 @@ useEffect(() => {
             : item
         );
       }
-
       return [...prev, { ...product, quantity: product.quantity || 1 }];
     });
   };
   const removeFromCart = (variantId) => {
-    setCartItems((prev) => prev.filter((item) => item.variantId !== variantId));
+    setCartItems((prev) => prev.filter((item) => item?.variantId !== variantId));
   };
-
   const clearCart = () => setCartItems([]);
-
   // Wishlist operations
   const addToWishlist = (product) => {
     setWishlistItems((prev) => {
@@ -142,19 +143,15 @@ useEffect(() => {
           item.productId === product.productId &&
           item.variantId === product.variantId
       );
-
       if (exists) return prev;
-
       return [...prev, product];
     });
   };
-
   const removeFromWishlist = (variantId) => {
     setWishlistItems((prev) =>
-      prev.filter((item) => item.variantId !== variantId)
+      prev.filter((item) => item?.variantId !== variantId)
     );
   };
-
   const clearWishlist = () => setWishlistItems([]);
 
 const addToRecentlyViewed = (product) => {
@@ -211,9 +208,10 @@ useEffect(() => {
         deliveryDate,
         setdeliveryDate,
         clearRecentlyViewed,
-        trendingProduct,setTrendingProduct,
+        trendingProduct, setTrendingProduct,
         pincodeDetails,
-        setPincodeDetails
+        setPincodeDetails,
+        colorAssets,
       }}
     >
       {children}
@@ -221,7 +219,16 @@ useEffect(() => {
   );
 }
 export default AppProvider;
-
 AppProvider.propTypes = {
   children: PropTypes.node,
 };
+
+
+
+
+
+
+
+
+
+

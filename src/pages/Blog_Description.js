@@ -109,7 +109,6 @@ contentRefs.current = faqSections.map((_, i) => contentRefs.current[i] ?? null);
 
   return (
     <>
-      {/* Container */}
       <div className="bg-light-sandal font-poppins px-5 py-[50px] sm:py-[150px]">
         {/* Heading */}
         <div className="text-center">
@@ -125,8 +124,8 @@ contentRefs.current = faqSections.map((_, i) => contentRefs.current[i] ?? null);
         {/* Loop data */}
         <div className="max-w-[1000px] mx-auto">
           <img
-            className="w-full h-[200px]  object-cover my-[40px] sm:h-[450px] sm:my-[80px]"
-            src={blog.image?.src}
+            className="w-full h-[200px] object-cover my-[40px] sm:h-[450px] sm:my-[80px]"
+            src={blogDescription_banner}
             alt="Blog image"
           />
 
@@ -144,9 +143,9 @@ contentRefs.current = faqSections.map((_, i) => contentRefs.current[i] ?? null);
           </div>
         </div>
 
-        {/* Accordian */}
-        <div className="max-w-[1000px] mx-auto mt-20">
-          <h3 className="text-[22px] sm:text-[32px] text-[#8C2742] font-medium mb-8">
+        {/* Accordion / FAQ */}
+        <div className="max-w-[1000px] mx-auto mt-16">
+          <h3 className="text-[22px] sm:text-[32px] text-[#8C2742] font-semibold mb-8">
             FAQ about sterling silver jewelry
           </h3>
           <div>
@@ -182,6 +181,7 @@ contentRefs.current = faqSections.map((_, i) => contentRefs.current[i] ?? null);
                     />
                   </button>
                   {/* CONTENT */}
+                  <button>
                   <div
                     id={`faq-content-${i}`}
                     role="region"
@@ -200,13 +200,25 @@ contentRefs.current = faqSections.map((_, i) => contentRefs.current[i] ?? null);
                       {item.a}{" "}
                     </div>
                   </div>
+
+
+                  {/* Chevron Icon */}
+                  <img src={ChevronIcon} alt="toggle" className={`w-[30px] h-[30px] transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`} />
+                </button>
+                
+
+                {/* CONTENT */}
+                <div id={`faq-content-${i}`} role="region" aria-labelledby={`faq-header-${i}`} className="overflow-hidden transition-[max-height] duration-300 ease-in-out" style={{ maxHeight: isOpen ? `${contentRefs.current[i]?.scrollHeight || 999}px` : "0px", }} >
+                  <div ref={(el) => (contentRefs.current[i] = el)} className="mt-3 mb-2 text-[14px] sm:text-[18px] text-[#4B4B4B] bg-[#F6E8D5] p-4 rounded-md">{item.a} </div>
                 </div>
-              );
-            })}
+              </div>
+            );
+          })}
           </div>
         </div>
 
         {/* Bottom Navigation */}
+
         <div className="max-w-[1000px] bg-[#FFF5E8]  mt-20 sm:mt-32  mx-auto flex items-center justify-between ">
           {/* Previous Button */}
 
@@ -230,6 +242,7 @@ contentRefs.current = faqSections.map((_, i) => contentRefs.current[i] ?? null);
               Back to Home
             </button>
           </Link>
+
           {/* Next Button */}
           {nextBlog ? (
             <Link to="/blogdescription" state={{ blog: nextBlog, blogsList }}>
@@ -247,6 +260,88 @@ contentRefs.current = faqSections.map((_, i) => contentRefs.current[i] ?? null);
           )}
         </div>
       </div>
+      {/* })} */}
+
+    {/* Accordian */ }
+    < div className = "max-w-[1000px] mx-auto mt-20" >
+        <h3 className="text-[22px] sm:text-[32px] text-[#8C2742] font-medium mb-8">
+          FAQ about sterling silver jewelry
+        </h3>
+        <div>
+          {" "}
+          {faqData.map((item, i) => {
+            const isOpen = openIndex === i;
+            return (
+              <div
+                key={i}
+                className={`px-4 py-3 mb-5 rounded-[8px] border-[1px] border-[#F3E4D1] transition-colors duration-300 ${isOpen ? "bg-[#F6E8D5]" : "bg-[#FFF5E8]"
+                  } border-b border-[#F6E8D5]`}
+              >
+                <button
+                  type="button"
+                  onClick={() => toggle(i)}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-content-${i}`}
+                  id={`faq-header-${i}`}
+                  className="w-full flex items-center justify-between gap-4 text-left focus:outline-none"
+                >
+                  <div className="flex-1 gap-y-10">
+                    <div className="text-[16px] sm:text-[20px] text-slate-800 font-medium">
+                      {`${i + 1}. ${item.q}`}
+                    </div>
+                  </div>
+                  {/* Chevron Icon */}
+                  <img
+                    src={ChevronIcon}
+                    alt="toggle"
+                    className={`w-[30px] h-[30px] transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"
+                      }`}
+                  />
+                </button>
+                {/* CONTENT */}
+                <div
+                  id={`faq-content-${i}`}
+                  role="region"
+                  aria-labelledby={`faq-header-${i}`}
+                  className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                  style={{
+                    maxHeight: isOpen
+                      ? `${contentRefs.current[i]?.scrollHeight || 999}px`
+                      : "0px",
+                  }}
+                >
+                  <div
+                    ref={(el) => (contentRefs.current[i] = el)}
+                    className="mt-3 mb-2 text-[14px] sm:text-[18px] text-[#4B4B4B] bg-[#F6E8D5] p-4 rounded-md"
+                  >
+                    {item.a}{" "}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div >
+
+    {/* Bottom Navigation */ }
+    < div className = "max-w-[1000px] bg-[#FFF5E8]  mt-20 sm:mt-32  mx-auto flex items-center justify-between " >
+      {/* Previous Button */ }
+      < button className = "flex items-center gap-2 font-poppins text-primary text-[16px] font-normal" >
+        <img src={ArrowLeft} alt="Previous" className="w-[30px] h-[30px]" />
+  Previous
+        </button >
+    {/* Back to Home */ }
+    < Link to = "/home" >
+      <button className="text-primary items-center mt-2 font-poppins text-[16px] font-normal hidden md:block">
+        Back to Home
+      </button>
+        </Link >
+    {/* Next Button */ }
+    < button className = "flex items-center gap-2 font-poppins text-primary text-[16px] font-normal" >
+      Go to Next
+        < img src = { ArrowRight } alt = "Next" className = "w-[30px] h-[30px]" />
+        </button >
+      </div >
     </>
   );
 }
