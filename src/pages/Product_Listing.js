@@ -19,8 +19,6 @@ import { AppContext } from "../context/AppContext";
 import LoadingScreen from "../components/LoadingScreen";
 import { Autoplay } from "swiper/modules";
 
-
-
 function Product_Listing({ productCatergory }) {
   const swiperRef = useRef(null);
   const [products, setProducts] = useState([]);
@@ -44,11 +42,12 @@ function Product_Listing({ productCatergory }) {
   useEffect(() => {
     if (productCatergory) {
       setProducts(normalizeProducts(productCatergory));
-
+      // setProducts(productCatergory);
       // setProducts(productCatergory);
       setLoading(false);
     }
   }, [productCatergory]);
+
   const normalizeProducts = (data) =>
     data.map((item) => {
       if (!item.variants) {
@@ -67,10 +66,16 @@ function Product_Listing({ productCatergory }) {
       return item;
     });
 
-  const changeVariant = (productId, index) => {
+  console.log(products);
+
+  const changeVariant = (productId, index ,item) => {
+    console.log(productId, index,item);
+    
+
     setSelectedVariants((prev) => ({
       ...prev,
       [productId]: index,
+
     }));
   };
   //  Like button toggle
@@ -107,7 +112,7 @@ function Product_Listing({ productCatergory }) {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
- // after form success
+  // after form success
   const handleSuccess = () => {
     setShowRestockModal(false);
     setShowSuccessModal(true);
@@ -151,10 +156,14 @@ function Product_Listing({ productCatergory }) {
     <>
       <div className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-[15px] sm:gap-y-10 sm:gap-x-[30px] px-1.5">
         {products.map((item) => {
-          const isOutOfStock = item?.inventoryQuantity === 0 || item?.variants?.[0]?.inventoryQuantity === 0;
+          const isOutOfStock =  item.inventoryQuantity === 0 || item?.variants?.every(item => item.inventoryQuantity === 0);
+
+            // item?.inventoryQuantity === 0 ||
+            // item?.variants?.[0]?.inventoryQuantity === 0;
           const isRestocking = item.restock === true;
 
-          const colorImages = IMAGE_BY_COLOR(item);
+
+
           const selectedIndex = selectedVariants[item?.productId] ?? 0;
           const selectedVariant = item?.variants[selectedIndex];
           return (
@@ -170,8 +179,8 @@ function Product_Listing({ productCatergory }) {
                 isOutOfStock
                   ? handleOutOfStockClick
                   : isRestocking
-                    ? handleRestockClick
-                    : undefined
+                  ? handleRestockClick
+                  : undefined
               }
               className="font-poppins w-[170px] sm:w-[310px] mx-auto relative sm:hover:scale-105 transition duration-300 ease-in-out group"
             >
@@ -197,27 +206,19 @@ function Product_Listing({ productCatergory }) {
                 onToggle={() => toggleLike(item.productId, item.variantId)}
               />
 
-                {/*  Like Button */}
-                <LikeButton
-                  liked={item.liked}
-                  isOutOfStock={isOutOfStock}
-                  isRestocking={isRestocking}
-                  onToggle={() => toggleLike(item.productId, item.variantId)}
-                />
+              {/* SOLD OUT LABEL */}
+              {isOutOfStock && (
+                <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5 z-10">
+                  Sold Out
+                </p>
+              )}
 
-                {/* SOLD OUT LABEL */}
-                {isOutOfStock && (
-                  <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5 z-10">
-                    Sold Out
-                  </p>
-                )}
-
-                {/* RESTOCK SOON LABEL */}
-                {!isOutOfStock && isRestocking && (
-                  <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
-                    Restocking Soon
-                  </p>
-                )}
+              {/* RESTOCK SOON LABEL */}
+              {!isOutOfStock && isRestocking && (
+                <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
+                  Restocking Soon
+                </p>
+              )}
 
               {/* PRODUCT DETAILS */}
               <div className="mt-2 flex flex-wrap justify-between sm:mt-3">
@@ -234,7 +235,7 @@ function Product_Listing({ productCatergory }) {
 
                   {/*  COLOR TOGGLE BUTTONS */}
                   <div className="flex flex-row items-center gap-x-4">
-                    {item?.variants.map((variant, index) => {
+                    {item?.variants?.map((variant, index) => {
                       if (!variant.colorVariant) return null;
 
                       return (
@@ -249,7 +250,7 @@ function Product_Listing({ productCatergory }) {
                           }`}
                           onClick={(e) => {
                             e.preventDefault();
-                            changeVariant(item?.productId, index);
+                            changeVariant(item?.productId, index,variant);
                           }}
                         />
                       );

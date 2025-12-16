@@ -25,6 +25,7 @@ function CheckoutPage() {
   const { cartItems, clearCart } = useContext(AppContext);
   const [showSummary, setShowSummary] = useState(false);
   const [formValues, setFormValues] = useState([]);
+const [orderCompleted, setOrderCompleted] = useState(false);
 
   // Yup validation schema
   const validationSchema = Yup.object({
@@ -82,44 +83,34 @@ function CheckoutPage() {
     addGiftWrap: Yup.boolean(),
     orderNote: Yup.string(),
   });
-const savedForm = JSON.parse(localStorage.getItem("checkoutForm")) || {};
-useEffect(() => {
-  const navigationType = performance.getEntriesByType("navigation")[0]?.type;
-
-  if (navigationType === "reload") {
-    console.log("Page refreshed — clearing saved form");
-    localStorage.removeItem("checkoutForm");
-  }
-}, []);
-
   // Formik
   const formik = useFormik({
     initialValues: {
-      email: savedForm.email || "",
-    firstName: savedForm.firstName || "",
-    lastName: savedForm.lastName || "",
-    mobile: savedForm.mobile || "",
+      email: "",
+      firstName: "",
+      lastName: "",
+      mobile: "",
 
       // Shipping
-    address: savedForm.address || "",
-    landmark: savedForm.landmark || "",
-    city: savedForm.city || "",
-    pincode: savedForm.pincode || "",
-    state: savedForm.state || "",
-    country: savedForm.country || "India",
+      address: "",
+      landmark: "",
+      city: "",
+      pincode: "",
+      state: "",
+      country: "India",
 
       // Billing
-         billingAddress: savedForm.billingAddress || "",
-    billingLandmark: savedForm.billingLandmark || "",
-    billingCity: savedForm.billingCity || "",
-    billingPincode: savedForm.billingPincode || "",
-    billingState: savedForm.billingState || "",
-    billingCountry: savedForm.billingCountry || "India",
+      billingAddress: "",
+      billingLandmark: "",
+      billingCity: "",
+      billingPincode: "",
+      billingState: "",
+      billingCountry: "India",
 
-      terms: savedForm.terms || false,
-    useDifferentBilling: savedForm.useDifferentBilling || false,
-    addGiftWrap: savedForm.addGiftWrap || false,
-    orderNote: savedForm.orderNote || "",
+      terms: false,
+      useDifferentBilling: false,
+      addGiftWrap: false,
+      orderNote: "",
     },
     validationSchema,
     validateOnChange: true,
@@ -135,15 +126,32 @@ useEffect(() => {
         console.log("Customer ID:", customerId);
         const paymentResponse = await OpenRazorpayService(formValues, total);
         if (paymentResponse.razorpay_payment_id) {
-          await handlePlaceOrder(values, customerId, paymentResponse.razorpay_payment_id);
+          await handlePlaceOrder(
+            values,
+            customerId,
+            paymentResponse.razorpay_payment_id
+          );
         }
       } catch (error) {
         console.log("error".error);
       }
     },
   });
-  console.log(formValues);
-  console.log(cartItems);
+ useEffect(() => {
+  const navigationType =
+    performance.getEntriesByType("navigation")[0]?.type;
+
+  if (navigationType === "reload") {
+    localStorage.removeItem("checkoutForm");
+    formik.resetForm();
+  } else {
+    const saved = localStorage.getItem("checkoutForm");
+    if (saved) {
+      formik.setValues(JSON.parse(saved));
+    }
+  }
+}, []);
+
   const handlePincodeCheck = async (field) => {
     console.log(field);
     const pincode = formik.values[field];
@@ -166,6 +174,7 @@ useEffect(() => {
     }
   };
   const handlePlaceOrder = async (formValues, customerId, Payment_key) => {
+    console.log(customerId)
     console.log(cartItems);
     if (!cartItems || cartItems.length === 0) return;
 
@@ -211,7 +220,10 @@ useEffect(() => {
       setOrderId(response.data.id);
 
       // sendWhatsapp(response.data.id);
-      if(Payment_key){
+      if (Payment_key) {
+          setOrderCompleted(true);
+        localStorage.removeItem("checkoutForm");
+        formik.resetForm();
         navigate("/thankyou");
       }
       console.log("Order placed successfully:", response.data);
@@ -222,9 +234,10 @@ useEffect(() => {
       );
     }
   };
-useEffect(() => {
-  localStorage.setItem("checkoutForm", JSON.stringify(formik.values));
-}, [formik.values]);
+  useEffect(() => {
+ if (!orderCompleted) {
+    localStorage.setItem("checkoutForm", JSON.stringify(formik.values));
+  }  }, [formik.values]);
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -264,8 +277,9 @@ useEffect(() => {
               <img
                 src={downArrow}
                 alt="Dropdown Arrow"
-                className={`w-[11px] h-[7px] transition-transform duration-300 ${showSummary ? "rotate-180" : "rotate-0"
-                  }`}
+                className={`w-[11px] h-[7px] transition-transform duration-300 ${
+                  showSummary ? "rotate-180" : "rotate-0"
+                }`}
               />
             </div>
 
@@ -350,10 +364,11 @@ useEffect(() => {
 
         {/* Main Grid */}
         <div className="flex max-w-[1300px]">
-          
           {/* Left Form */}
           <div className="w-[700px]  mx-auto">
-            <h3 className="text-primary text-[30px] font-medium font-atteron uppercase text-center">Checkout Form</h3>
+            <h3 className="text-primary text-[30px] font-medium font-atteron uppercase text-center">
+              Checkout Form
+            </h3>
             <form
               onSubmit={formik.handleSubmit}
               className="bg-[#FFF5E8] rounded-xl  p-4 sm:p-6 space-y-6"
@@ -372,10 +387,11 @@ useEffect(() => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.firstName}
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.firstName && formik.touched.firstName
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                        formik.errors.firstName && formik.touched.firstName
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                        }
+                      }
                       focus:outline-none focus:border-[#8C455E]`}
                       placeholder="First Name"
                     />
@@ -393,10 +409,11 @@ useEffect(() => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.lastName}
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.lastName && formik.touched.lastName
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                        formik.errors.lastName && formik.touched.lastName
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                        }
+                      }
                              focus:outline-none focus:border-[#8C455E]`}
                       placeholder="Last Name"
                     />
@@ -411,10 +428,11 @@ useEffect(() => {
                 <div>
                   <label className="text-sm block mb-1">Mobile Number</label>
                   <div
-                    className={`flex items-center w-full h-[44px] px-3 border rounded-md text-[16px] bg-white ${formik.errors.mobile && formik.touched.mobile
+                    className={`flex items-center w-full h-[44px] px-3 border rounded-md text-[16px] bg-white ${
+                      formik.errors.mobile && formik.touched.mobile
                         ? "border-red-500"
                         : "border-[#efe6e6]"
-                      }
+                    }
                     focus:outline-none focus:border-[#8C455E]`}
                   >
                     <span className="text-[#800020] font-semibold mr-2 whitespace-nowrap">
@@ -447,10 +465,11 @@ useEffect(() => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.email}
-                    className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.email && formik.touched.email
+                    className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                      formik.errors.email && formik.touched.email
                         ? "border-red-500"
                         : "border-[#efe6e6]"
-                      } focus:outline-none focus:border-[#8C455E]`}
+                    } focus:outline-none focus:border-[#8C455E]`}
                     placeholder="Email Id"
                   />
 
@@ -475,10 +494,11 @@ useEffect(() => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.address}
-                    className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${formik.errors.address && formik.touched.address
+                    className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${
+                      formik.errors.address && formik.touched.address
                         ? "border-red-500"
                         : "border-[#efe6e6]"
-                      }
+                    }
                      focus:outline-none focus:border-[#8C455E]`}
                     placeholder="Address (Flat No./ House No./Street/Area))"
                   />
@@ -514,20 +534,21 @@ useEffect(() => {
                       maxLength={6}
                       onChange={(e) => {
                         const value = e.target.value?.replace(/\D/g, "");
-                        formik.setFieldValue("pincode", value);
+                        formik?.setFieldValue("pincode", value);
                       }}
                       onBlur={(e) => {
                         formik.handleBlur(e);
                         handlePincodeCheck("pincode", e.target.value);
                       }}
                       value={
-                        formik.values.pincode ||
-                        cartItems[0]?.deliverDetails.pincode
+                        formik?.values?.pincode ||
+                        cartItems[0]?.deliverDetails?.pincode
                       }
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.pincode && formik.touched.pincode
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                        formik.errors.pincode && formik.touched.pincode
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                        }
+                      }
                       focus:outline-none focus:border-[#8C455E]`}
                       placeholder="Pincode"
                     />
@@ -547,10 +568,11 @@ useEffect(() => {
                       value={
                         formik.values.city || cartItems[0]?.deliverDetails?.city
                       }
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.city && formik.touched.city
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                        formik.errors.city && formik.touched.city
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                        }
+                      }
                        focus:outline-none focus:border-[#8C455E]`}
                       placeholder="City"
                     />
@@ -571,10 +593,11 @@ useEffect(() => {
                         formik.values.state ||
                         cartItems[0]?.deliverDetails?.state
                       }
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${formik.errors.state && formik.touched.state
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${
+                        formik.errors.state && formik.touched.state
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                        }
+                      }
                      focus:outline-none focus:border-[#8C455E]`}
                     />
                     {formik.touched.state && formik.errors.state && (
@@ -610,10 +633,11 @@ useEffect(() => {
                     setUseDifferentBilling(false);
                   }}
                   className={`cursor-pointer w-full p-4 rounded-md border transition-all duration-300
-              ${!useDifferentBilling
-                      ? "bg-gradient-to-r from-[#f8e3e3] to-[#ffffff] border-[#8C455E] shadow-md"
-                      : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
-                    }`}
+              ${
+                !useDifferentBilling
+                  ? "bg-gradient-to-r from-[#f8e3e3] to-[#ffffff] border-[#8C455E] shadow-md"
+                  : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
+              }`}
                 >
                   <div className="flex items-center justify-between">
                     <p className="text-16px font-Poppins text-[#313131]">
@@ -621,10 +645,11 @@ useEffect(() => {
                     </p>
                     <span
                       className={`w-[22px] h-[22px] border-2 rounded-full flex items-center justify-center
-                  ${!useDifferentBilling
-                          ? "border-[#6E0027]"
-                          : "border-[#6E0027]"
-                        }
+                  ${
+                    !useDifferentBilling
+                      ? "border-[#6E0027]"
+                      : "border-[#6E0027]"
+                  }
                      `}
                     >
                       {!useDifferentBilling && (
@@ -639,10 +664,11 @@ useEffect(() => {
                     setUseDifferentBilling(true);
                   }}
                   className={`cursor-pointer w-full p-4 mt-3 rounded-md border transition-all duration-300
-              ${useDifferentBilling
-                      ? "bg-gradient-to-r from-[#DAB3C14F] to-[#ffffff]  border-[#8C455E] shadow-md"
-                      : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
-                    }`}
+              ${
+                useDifferentBilling
+                  ? "bg-gradient-to-r from-[#DAB3C14F] to-[#ffffff]  border-[#8C455E] shadow-md"
+                  : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
+              }`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-[16px] font-Poppins text-[#313131]">
@@ -672,11 +698,12 @@ useEffect(() => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.billingAddress}
-                      className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${formik.errors.billingAddress &&
-                          formik.touched.billingAddress
+                      className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${
+                        formik.errors.billingAddress &&
+                        formik.touched.billingAddress
                           ? "border-red-500"
                           : "border-[#efe6e6]"
-                        }
+                      }
                      focus:outline-none focus:border-[#8C455E]`}
                       placeholder="Address (Flat No./ House No./Street/Area))"
                     />
@@ -718,11 +745,12 @@ useEffect(() => {
                           handlePincodeCheck("billingPincode", e.target.value);
                         }}
                         value={formik.values.billingPincode}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.billingPincode &&
-                            formik.touched.billingPincode
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                          formik.errors.billingPincode &&
+                          formik.touched.billingPincode
                             ? "border-red-500"
                             : "border-[#efe6e6]"
-                          } focus:outline-none focus:border-[#8C455E]`}
+                        } focus:outline-none focus:border-[#8C455E]`}
                         placeholder="billingPincode"
                       />
 
@@ -740,11 +768,12 @@ useEffect(() => {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.billingCity}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.billingCity &&
-                            formik.touched.billingCity
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                          formik.errors.billingCity &&
+                          formik.touched.billingCity
                             ? "border-red-500"
                             : "border-[#efe6e6]"
-                          }
+                        }
                        focus:outline-none focus:border-[#8C455E]`}
                         placeholder="City"
                       />
@@ -762,11 +791,12 @@ useEffect(() => {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.billingState}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${formik.errors.billingState &&
-                            formik.touched.billingState
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${
+                          formik.errors.billingState &&
+                          formik.touched.billingState
                             ? "border-red-500"
                             : "border-[#efe6e6]"
-                          }
+                        }
                      focus:outline-none focus:border-[#8C455E]`}
                       />
                       {formik.touched.billingState && formik.errors.state && (

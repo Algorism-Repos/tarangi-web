@@ -40,7 +40,6 @@ function Product_Description() {
 
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});
-  const [youMayLike, setYouMayLike] = useState();
   const colorAssets = [
     {
       value: "Gold",
@@ -56,17 +55,18 @@ function Product_Description() {
     },
   ];
 
+  console.log(product)
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     if (product?.variants?.length > 0) {
-      const variant = product.variants.find(
+      const variant = product?.variants?.find(
         (element) => element.colorVariant === colorSelected
       );
       if (variant) {
         setactiveVariant({
           ...variant,
-          title: product.title,
+          title: product?.title,
           productId: product.productId,
           deliveryDetails: pincodeDetails,
         });
@@ -102,7 +102,7 @@ function Product_Description() {
   const isAlreadyInWishlist = wishlistItems.some(
     (item) => item?.variantId === activeVariant?.variantId
   );
-  console.log(product);
+  console.log(categorizedProduct);
 
   console.log("variantActive", activeVariant);
   console.log(" you may also like categorizedProduct ", categorizedProduct);
@@ -180,8 +180,8 @@ function Product_Description() {
                 pagination={{ dynamicBullets: true }}
                 modules={[Pagination]}
               >
-                {product?.variants && product?.variants.length > 0
-                  ? product.variants.map((item) => (
+                {product?.variants && product?.variants?.length > 0
+                  ? product?.variants.map((item) => (
                       <SwiperSlide>
                         <img className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px]" src={item?.image} />
                       </SwiperSlide>
@@ -379,8 +379,8 @@ function Product_Description() {
 
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[20px] gap-y-6 mt-[25px] sm:gap-x-[24px]">
               {categorizedProduct?.slice(0, 4).map((item) => {
-                const selectedIndex = selectedVariants[item?.productId] ?? 0;
-                const selectedVariant = item?.variants[selectedIndex];
+                // const selectedIndex = selectedVariants[item?.productId] ?? 0;
+                // const selectedVariant = item?.variants[selectedIndex];
                 return (
                   <div
                     key={item?.id}
@@ -395,7 +395,7 @@ function Product_Description() {
                     >
                       <img
                         className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[24px]"
-                        src={selectedVariant?.image}
+                        src={item?.images[0]}
                         alt={item?.alt || item?.title}
                       />
                     </Link>
@@ -403,15 +403,15 @@ function Product_Description() {
                     <div className="mt-2 flex flex-wrap items-center justify-between sm:mt-4">
                       <div>
                         <h3 className="text-[16px] font-semibold sm:text-[20px]">
-                          {/* ₹{" "}
+                          ₹{" "}
                           {(item?.price
                             ? parseInt(item?.price)
                             : parseInt(item?.variants?.[0]?.price)
-                          )?.toLocaleString("en-IN")} */}
-                          ₹{" "}
-                          {parseInt(selectedVariant?.price).toLocaleString(
+                          )?.toLocaleString("en-IN")}
+                          {/* ₹{" "}
+                          {parseInt(item?.price).toLocaleString(
                             "en-IN"
-                          )}
+                          )} */}
                         </h3>
                         <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">
                           {item?.title}
@@ -419,23 +419,23 @@ function Product_Description() {
 
                       <div className="hidden sm:block">
                         <div className="mt-1 flex justify-end gap-x-3">
-                          {item?.variants.map((variant, index) => {
-                            if (!variant.colorVariant) return null;
+                          {item?.variants?.map((variant, index) => {
+                            if (!variant?.colorVariant) return null;
 
                             return (
                               <img
                                 key={variant?.variantId}
                                 src={COLOR_MAP[variant?.colorVariant]}
-                                alt={variant.colorVariant}
-                                className={`w-6 h-6 cursor-pointer ${
-                                  selectedIndex === index
-                                    ? "ring-2 ring-[#8B5E3C] rounded-full"
-                                    : ""
-                                }`}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  changeVariant(item?.productId, index);
-                                }}
+                                alt={variant?.colorVariant}
+                                // className={`w-6 h-6 cursor-pointer ${
+                                //   selectedIndex === index
+                                //     ? "ring-2 ring-[#8B5E3C] rounded-full"
+                                //     : ""
+                                // }`}
+                                // onClick={(e) => {
+                                //   e.preventDefault();
+                                //   changeVariant(item?.productId, index);
+                                // }}
                               />
                             );
                           })}

@@ -1,4 +1,3 @@
-
 export function formatProduct(productNode) {
   const {
     id,
@@ -37,6 +36,8 @@ export function formatProduct(productNode) {
       type: "simple",
       price: firstVariant?.price,
       variantId: firstVariant?.id,
+      inventoryQuantity: firstVariant?.inventoryQuantity,
+
       compareAtPrice:
         firstVariant?.compareAtPrice !== undefined
           ? firstVariant.compareAtPrice
