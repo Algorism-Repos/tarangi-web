@@ -37,7 +37,6 @@ export function formatProduct(productNode) {
       price: firstVariant?.price,
       variantId: firstVariant?.id,
       inventoryQuantity: firstVariant?.inventoryQuantity,
-
       compareAtPrice:
         firstVariant?.compareAtPrice !== undefined
           ? firstVariant.compareAtPrice

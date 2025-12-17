@@ -25,7 +25,7 @@ function CheckoutPage() {
   const { cartItems, clearCart } = useContext(AppContext);
   const [showSummary, setShowSummary] = useState(false);
   const [formValues, setFormValues] = useState([]);
-const [orderCompleted, setOrderCompleted] = useState(false);
+  const [orderCompleted, setOrderCompleted] = useState(false);
 
   // Yup validation schema
   const validationSchema = Yup.object({
@@ -122,7 +122,7 @@ const [orderCompleted, setOrderCompleted] = useState(false);
         return;
       }
       try {
-        console.log(values)
+        console.log(values);
         const customerId = await checkOrCreateCustomer(values);
         console.log("Customer ID:", customerId);
         const paymentResponse = await OpenRazorpayService(formValues, total);
@@ -138,20 +138,19 @@ const [orderCompleted, setOrderCompleted] = useState(false);
       }
     },
   });
- useEffect(() => {
-  const navigationType =
-    performance.getEntriesByType("navigation")[0]?.type;
+  useEffect(() => {
+    const navigationType = performance.getEntriesByType("navigation")[0]?.type;
 
-  if (navigationType === "reload") {
-    localStorage.removeItem("checkoutForm");
-    formik.resetForm();
-  } else {
-    const saved = localStorage.getItem("checkoutForm");
-    if (saved) {
-      formik.setValues(JSON.parse(saved));
+    if (navigationType === "reload") {
+      localStorage.removeItem("checkoutForm");
+      formik.resetForm();
+    } else {
+      const saved = localStorage.getItem("checkoutForm");
+      if (saved) {
+        formik.setValues(JSON.parse(saved));
+      }
     }
-  }
-}, []);
+  }, []);
 
   const handlePincodeCheck = async (field) => {
     console.log(field);
@@ -175,7 +174,7 @@ const [orderCompleted, setOrderCompleted] = useState(false);
     }
   };
   const handlePlaceOrder = async (formValues, customerId, Payment_key) => {
-    console.log(customerId)
+    console.log(customerId);
     console.log(cartItems);
     if (!cartItems || cartItems.length === 0) return;
 
@@ -199,6 +198,7 @@ const [orderCompleted, setOrderCompleted] = useState(false);
             price: 100,
           },
         ],
+        properties: [{ name: "Gift Charge", value: "₹50" }],
         customer: { id: customerId },
         shipping_address: {
           first_name: formValues.firstName,
@@ -237,7 +237,7 @@ const [orderCompleted, setOrderCompleted] = useState(false);
 
       // sendWhatsapp(response.data.id);
       if (Payment_key) {
-          setOrderCompleted(true);
+        setOrderCompleted(true);
         localStorage.removeItem("checkoutForm");
         formik.resetForm();
         navigate("/thankyou");
@@ -251,9 +251,10 @@ const [orderCompleted, setOrderCompleted] = useState(false);
     }
   };
   useEffect(() => {
- if (!orderCompleted) {
-    localStorage.setItem("checkoutForm", JSON.stringify(formik.values));
-  }  }, [formik.values]);
+    if (!orderCompleted) {
+      localStorage.setItem("checkoutForm", JSON.stringify(formik.values));
+    }
+  }, [formik.values]);
 
   useEffect(() => {
     const script = document.createElement("script");
