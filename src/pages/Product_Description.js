@@ -118,7 +118,7 @@ function Product_Description() {
     if (categorizedProduct) {
       // setProducts(normalizeProducts(categorizedProduct));
       const filterOutofStockProducts = categorizedProduct.filter((item) => {
-        const hasVariants = item.variants && item.variants.length>0;
+        const hasVariants = item.variants && item.variants.length > 0;
 
         return hasVariants ? item.variants.every(i => i.inventoryQuantity !== 0) : item.inventoryQuantity !== 0;
       })
@@ -385,8 +385,8 @@ function Product_Description() {
               You may also like
             </h1>
 
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[20px] gap-y-6 mt-[25px] sm:gap-x-[24px]">
-              {youMayLike?.slice(0,4).map((item) => {
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[20px] gap-y-6 mt-[25px] sm:gap-x-[20px]">
+              {youMayLike?.slice(0, 4).map((item) => {
                 // const selectedIndex = selectedVariants[item?.productId] ?? 0;
                 // const selectedVariant = item?.variants[selectedIndex];
                 return (
@@ -407,56 +407,49 @@ function Product_Description() {
                         alt={`${item?.alt || item?.title}_image`}
                       />
                     </Link>
-
-                    <div className="mt-2 flex flex-wrap items-center justify-between sm:mt-4">
-                      <div>
-                        <h3 className="text-[16px] font-semibold sm:text-[20px]">
+                    <div>
+                      <h1 className="font-poppins font-semibold sm:text-[18px] text-[12px] leading-[140%] mt-2 mb-1">{item?.title}</h1>
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-y-1 sm:gap-y-0 justify-between w-full ">
+                        <h3 className="text-[12px] font-normal leading-normal sm:text-[16px] ">
                           ₹{" "}
-                          {(item?.price
-                            ? parseInt(item?.price)
-                            : parseInt(item?.variants?.[0]?.price)
+                          {(item?.variants && item?.variants.length > 0
+                            ? parseInt(item?.variants?.[0]?.price) 
+                            : parseInt(item?.price)
                           )?.toLocaleString("en-IN")}
-                          {/* ₹{" "}
-                          {parseInt(selectedVariant?.price).toLocaleString(
-                            "en-IN"
-                          )} */}
                         </h3>
-                        <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">
-                          {item?.title}
-                        </p>
-
-                        <div className="hidden sm:block">
-                          <div className="flex flex-row items-center gap-x-2">
+                        <div className="flex flex-row items-center gap-x-2">
                             {item?.variants !== null && item?.variants.length > 0 ?
                               item.variants.map((variants, index) => {
                                 return (
                                   <>
-                                    <img key={variants?.variantId || index} src={colorAssets[variants?.colorVariant]} alt="color-assets" className={`w-[24px] h-[24px] cursor-pointer`}
+                                    <img key={variants?.variantId || index} src={colorAssets[variants?.colorVariant]} alt="color-assets" className={`w-[20px] h-[20px] sm:w-[24px] sm:h-[24px] cursor-pointer`}
                                     />
                                   </>
                                 )
                               }) : ""
                             }
                           </div>
-                        </div>
                       </div>
                     </div>
                   </div>
+
                 );
               })}
+
+              </div>
+
             </div>
+
+            {/* <Recently_Viewed /> */}
           </div>
 
-          {/* <Recently_Viewed /> */}
-        </div>
-
-        <Wishlist_Popup
-          show={showWishlistPopup}
-          onClose={() => setShowWishlistPopup(false)}
-        />
-      </div >
-    </>
-  );
+          <Wishlist_Popup
+            show={showWishlistPopup}
+            onClose={() => setShowWishlistPopup(false)}
+          />
+        </div >
+      </>
+      );
 }
 
-export default Product_Description;
+      export default Product_Description;
