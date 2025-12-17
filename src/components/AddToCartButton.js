@@ -22,7 +22,7 @@ function AddToCartButton({
   const { addToCart } = useContext(AppContext);
   const isDisabledInFavourites =
     isFavouritesPage && (isOutOfStock || isRestocking);
-  console.log(productToCart);
+  // console.log(productToCart);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();

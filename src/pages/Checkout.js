@@ -122,6 +122,7 @@ const [orderCompleted, setOrderCompleted] = useState(false);
         return;
       }
       try {
+        console.log(values)
         const customerId = await checkOrCreateCustomer(values);
         console.log("Customer ID:", customerId);
         const paymentResponse = await OpenRazorpayService(formValues, total);
@@ -214,7 +215,7 @@ const [orderCompleted, setOrderCompleted] = useState(false);
     try {
       console.log(orderData);
       const response = await axios.post(
-        "https://tarangi-staging.df.r.appspot.com/api/shopify/order",
+        "http://localhost:8080/api/shopify/order",
         orderData
       );
       setOrderId(response.data.id);

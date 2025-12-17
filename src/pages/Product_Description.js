@@ -31,6 +31,7 @@ function Product_Description() {
     wishlistItems,
     pincodeDetails,
     addToRecentlyViewed,
+    setRecentlyViewed
   } = useContext(AppContext);
   const [colorSelected, setColorSelected] = useState(
     product?.variants?.[0]?.colorVariant || ""
@@ -55,7 +56,6 @@ function Product_Description() {
     },
   ];
 
-  console.log(product)
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -102,10 +102,6 @@ function Product_Description() {
   const isAlreadyInWishlist = wishlistItems.some(
     (item) => item?.variantId === activeVariant?.variantId
   );
-  console.log(categorizedProduct);
-
-  console.log("variantActive", activeVariant);
-  console.log(" you may also like categorizedProduct ", categorizedProduct);
   const COLOR_MAP = {
     Gold: gold_ellipse,
     Silver: silver_ellipse,
@@ -117,6 +113,7 @@ function Product_Description() {
 
       // setProducts(productCatergory);
     }
+    setRecentlyViewed(categorizedProduct)
   }, [categorizedProduct]);
   const normalizeProducts = (data) =>
     data.map((item) => {
@@ -141,12 +138,8 @@ function Product_Description() {
       ...prev,
       [productId]: index,
     }));
-  };
-
-  console.log("Product", product);
-  console.log("Active Variant", activeVariant);
-  
-  
+  }
+    
   return (
     <>
       {/* Backgound */}
@@ -449,7 +442,7 @@ function Product_Description() {
             </div>
           </div>
 
-          {/* <Recently_Viewed /> */}
+          <Recently_Viewed />
         </div>
 
         <Wishlist_Popup

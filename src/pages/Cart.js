@@ -25,7 +25,7 @@ function Cart() {
   const toggleSummary = () => {
     setShowSummary(!showSummary);
   };
-  console.log(cartItems);
+  // console.log(cartItems);
   const subtotal = cartItems?.reduce((total, item) => {
     const price = Number(item?.price) || 0;
     const qty = Number(item?.quantity) || 1;
@@ -34,7 +34,7 @@ function Cart() {
   const tax = subtotal * 0.03;
   const shipping = 0;
   const total = subtotal + tax + shipping;
-  console.log(categorizedProduct)
+  // console.log(categorizedProduct)
 
 
 
@@ -43,7 +43,7 @@ function Cart() {
     ?.filter((item) => item?.variants?.length === 1)
     .reverse()
     .slice(0, 6);
-  console.log(boughtTogether);
+  // console.log(boughtTogether);
 
 
 
