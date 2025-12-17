@@ -198,7 +198,6 @@ function CheckoutPage() {
             price: 100,
           },
         ],
-        properties: [{ name: "Gift Charge", value: "₹50" }],
         customer: { id: customerId },
         shipping_address: {
           first_name: formValues.firstName,
@@ -230,7 +229,8 @@ function CheckoutPage() {
     try {
       console.log(orderData);
       const response = await axios.post(
-        "http://localhost:8080/api/shopify/order",
+        "https://tarangi-staging.df.r.appspot.com/api/shopify/order",
+        // "https://localhost:8080/api/shopify/order",
         orderData
       );
       setOrderId(response.data.id);

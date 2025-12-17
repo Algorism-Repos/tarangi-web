@@ -97,7 +97,7 @@ function Favourites() {
   console.log("wishlistItems", wishlistItems);
   return (
     <>
-      <div className="bg-[#FFF5E8] py-[70px]">
+      <div className="bg-[#FFF5E8] py-[70px] min-h-screen">
         <div className="max-w-[1300px] mx-auto px-2">
           <h1
             className={

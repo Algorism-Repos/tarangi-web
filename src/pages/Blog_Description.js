@@ -144,7 +144,7 @@ contentRefs.current = faqSections.map((_, i) => contentRefs.current[i] ?? null);
         </div>
 
         {/* Accordion / FAQ */}
-        <div className="max-w-[1000px] mx-auto mt-16">
+        <div className="max-w-[1000px] mx-auto mt-16 hidden">
           <h3 className="text-[22px] sm:text-[32px] text-[#8C2742] font-semibold mb-8">
             FAQ about sterling silver jewelry
           </h3>
@@ -186,7 +186,7 @@ contentRefs.current = faqSections.map((_, i) => contentRefs.current[i] ?? null);
                     id={`faq-content-${i}`}
                     role="region"
                     aria-labelledby={`faq-header-${i}`}
-                    className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                    className="overflow-hidden transition-[max-height] duration-300 ease-in-out "
                     style={{
                       maxHeight: isOpen
                         ? `${contentRefs.current[i]?.scrollHeight || 999}px`
@@ -208,7 +208,7 @@ contentRefs.current = faqSections.map((_, i) => contentRefs.current[i] ?? null);
                 
 
                 {/* CONTENT */}
-                <div id={`faq-content-${i}`} role="region" aria-labelledby={`faq-header-${i}`} className="overflow-hidden transition-[max-height] duration-300 ease-in-out" style={{ maxHeight: isOpen ? `${contentRefs.current[i]?.scrollHeight || 999}px` : "0px", }} >
+                <div id={`faq-content-${i}`} role="region" aria-labelledby={`faq-header-${i}`} className="overflow-hidden transition-[max-height] duration-300 ease-in-out " style={{ maxHeight: isOpen ? `${contentRefs.current[i]?.scrollHeight || 999}px` : "0px", }} >
                   <div ref={(el) => (contentRefs.current[i] = el)} className="mt-3 mb-2 text-[14px] sm:text-[18px] text-[#4B4B4B] bg-[#F6E8D5] p-4 rounded-md">{item.a} </div>
                 </div>
               </div>
