@@ -25,7 +25,7 @@ function Cart() {
   const toggleSummary = () => {
     setShowSummary(!showSummary);
   };
-  console.log(cartItems)
+  // console.log(cartItems);
   const subtotal = cartItems?.reduce((total, item) => {
     const price = Number(item?.price) || 0;
     const qty = Number(item?.quantity) || 1;
@@ -34,9 +34,31 @@ function Cart() {
   const tax = subtotal * 0.03;
   const shipping = 0;
   const total = subtotal + tax + shipping;
-  console.log(categorizedProduct);
-  const boughtTogether = categorizedProduct?.filter((item) => item?.variants.length === 1).reverse().slice(0,6);
-  console.log(boughtTogether);
+  // console.log(categorizedProduct)
+
+
+
+
+  const boughtTogether = categorizedProduct
+    ?.filter((item) => item?.variants?.length === 1)
+    .reverse()
+    .slice(0, 6);
+  // console.log(boughtTogether);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
@@ -46,14 +68,11 @@ function Cart() {
     );
   }, [cartItems, categorizedProduct]);
 
-  console.log("cartItems", cartItems);
   const totalCartQuantity = cartItems.reduce(
     (sum, item) => sum + (Number(item.quantity) || 1),
     0
   );
-
-
-  return (
+ return (
     <>
       <div className="font-poppins bg-light-sandal pt-[35px] sm:py-[70px]">
         <div className="max-w-[1300px] mx-auto">
@@ -74,7 +93,11 @@ function Cart() {
             {/* Selected Productlist */}
             <div className="w-[694px] mx-auto xl:mx-0 max-[425px]:w-full">
               {cartItems?.length === 0 ? (
-                <Link to="/products/womens"><h3 className="hover:underline text-center text-[18px] text-[#4B001A] mt-6 font-poppins">No items yet. Find something you'll love</h3></Link>
+                <Link to="/products/womens">
+                  <h3 className="hover:underline text-center text-[18px] text-[#4B001A] mt-6 font-poppins">
+                    No items yet. Find something you'll love
+                  </h3>
+                </Link>
               ) : (
                 cartItems?.map((item) => (
                   <div
@@ -106,18 +129,28 @@ function Cart() {
                               /\s+/g,
                               "-"
                             )}`}
-                            state={{ product: categorizedProduct.find(p => p.productId === item.productId) }}
+                            state={{
+                              product: categorizedProduct.find(
+                                (p) => p.productId === item.productId
+                              ),
+                            }}
                           >
                             <h3 className="text-[10px] font-medium text-[#6F6F6F] sm:text-[16px]">
                               {item.title}
                             </h3>
                           </Link>
                           <h3 className="text-[12px] font-semibold sm:text-[20px]">
-                            ₹{parseInt(item?.price) || parseInt(item?.variants?.[0]?.price).toLocaleString("en-IN")}
+                            ₹
+                            {parseInt(item?.price) ||
+                              parseInt(
+                                item?.variants?.[0]?.price
+                              ).toLocaleString("en-IN")}
                           </h3>
                         </div>
 
-                        <div className={item?.colorVariant ? "block" : "hidden"}>
+                        <div
+                          className={item?.colorVariant ? "block" : "hidden"}
+                        >
                           <h3 className="text-[10px] text-[#6F6F6F] sm:text-[14px]">
                             Color chosen
                           </h3>
@@ -142,7 +175,8 @@ function Cart() {
                     </div>
 
                     {/* Free silver cleaning kit */}
-                    {item?.price || item?.variants?.[0].price > 2000 && (
+                    {Number(item?.price ?? item?.variants?.[0]?.price) >=
+                      2000 && (
                       <>
                         <hr className="border border-[#EDEDED] my-[14px]" />
                         <div className="flex items-center gap-x-[20px] justify-between">
@@ -216,7 +250,12 @@ function Cart() {
                     </div>
 
                     <div className="flex flex- w-full gap-x-[25px]">
-                      <Link to={"/products/:handle"} className="text-[15px] border-primary border-2 rounded-full py-3 px-4 text-primary">Continue Shopping</Link>
+                      <Link
+                        to={"/products/:handle"}
+                        className="text-[15px] border-primary border-2 rounded-full py-3 px-4 text-primary"
+                      >
+                        Continue Shopping
+                      </Link>
 
                       <Link
                         to="/checkout"
@@ -232,10 +271,8 @@ function Cart() {
                         </button>
                       </Link>
                     </div>
-
                   </div>
                 </div>
-                
               </div>
             )}
           </div>
@@ -243,7 +280,9 @@ function Cart() {
           {/* Recommended products */}
           <div className="my-[100px] px-2 md:px-0 max-[425px]:my-[60px]">
             <h1 className="font-atteron  text-primary text-[26px] text-center sm:text-[30px] xl:text-left max-[425px]:text-[22px] mx-auto">
-              {cartItems?.length > 0 ? "Frequently bought together" : "Our favourites, just for you"}
+              {cartItems?.length > 0
+                ? "Frequently bought together"
+                : "Our favourites, just for you"}
             </h1>
             <div className="sm:max-w-fit mx-auto xl:mx-0 ">
               <div className="grid grid-cols-2 sm:flex sm:flex-row sm:flex-wrap  gap-y-9 sm:gap-x-[50px] items-center justify-center max-[425px]:gap-x-[10px]">
@@ -264,7 +303,10 @@ function Cart() {
                           {item?.title}
                         </h3>
                         <h3 className="text-[16px] font-semibold sm:text-[20px] max-[425px]:text-[15px]">
-                          ₹{parseInt(item?.variants?.[0].price).toLocaleString("en-IN")}
+                          ₹
+                          {parseInt(item?.variants?.[0].price).toLocaleString(
+                            "en-IN"
+                          )}
                         </h3>
                       </div>
                     </div>

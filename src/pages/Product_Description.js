@@ -32,6 +32,7 @@ function Product_Description() {
     pincodeDetails,
     addToRecentlyViewed,
     colorAssets,
+    setRecentlyViewed
   } = useContext(AppContext);
   const [colorSelected, setColorSelected] = useState(
     product?.variants?.[0]?.colorVariant || ""
@@ -62,13 +63,13 @@ function Product_Description() {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     if (product?.variants?.length > 0) {
-      const variant = product.variants.find(
+      const variant = product?.variants?.find(
         (element) => element.colorVariant === colorSelected
       );
       if (variant) {
         setactiveVariant({
           ...variant,
-          title: product.title,
+          title: product?.title,
           productId: product.productId,
           deliveryDetails: pincodeDetails,
         });
@@ -124,6 +125,7 @@ function Product_Description() {
       })
       setYouMayLike(filterOutofStockProducts);
     }
+    setRecentlyViewed(categorizedProduct)
   }, [categorizedProduct]);
 
   // const normalizeProducts = (data) =>
@@ -435,21 +437,21 @@ function Product_Description() {
 
                 );
               })}
-
-              </div>
-
-            </div>
+           </div>
 
             {/* <Recently_Viewed /> */}
           </div>
 
-          <Wishlist_Popup
-            show={showWishlistPopup}
-            onClose={() => setShowWishlistPopup(false)}
-          />
-        </div >
-      </>
-      );
+          <Recently_Viewed />
+        </div>
+
+        <Wishlist_Popup
+          show={showWishlistPopup}
+          onClose={() => setShowWishlistPopup(false)}
+        />
+      </div >
+    </>
+  );
 }
 
       export default Product_Description;

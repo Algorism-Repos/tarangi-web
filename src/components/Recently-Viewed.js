@@ -71,7 +71,7 @@ function Recently_Viewed() {
       </h1>
 
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]">
-        {recentlyViewed?.map((item) => {
+        {recentlyViewed?.slice(0,8).map((item) => {
             if (!item || !item?.variants || item?.variants.length === 0) return null; 
           const selectedIndex = selectedVariants[item?.productId] ?? 0;
           const selectedVariant = item?.variants[selectedIndex] ;

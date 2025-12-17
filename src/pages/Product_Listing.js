@@ -19,8 +19,6 @@ import { AppContext } from "../context/AppContext";
 import LoadingScreen from "../components/LoadingScreen";
 import { Autoplay } from "swiper/modules";
 
-
-
 function Product_Listing({ productCatergory }) {
   const swiperRef = useRef(null);
   const [products, setProducts] = useState([]);
@@ -65,10 +63,16 @@ function Product_Listing({ productCatergory }) {
   //     return item;
   //   });
 
-  const changeVariant = (productId, index) => {
+  console.log(products);
+
+  const changeVariant = (productId, index ,item) => {
+    console.log(productId, index,item);
+    
+
     setSelectedVariants((prev) => ({
       ...prev,
       [productId]: index,
+
     }));
   };
 
@@ -176,8 +180,8 @@ function Product_Listing({ productCatergory }) {
                 isOutOfStock
                   ? handleOutOfStockClick
                   : isRestocking
-                    ? handleRestockClick
-                    : undefined
+                  ? handleRestockClick
+                  : undefined
               }
               className="font-poppins w-[170px] sm:w-[310px] mx-auto relative sm:hover:scale-105 transition duration-300 ease-in-out group"
             >
@@ -271,7 +275,7 @@ function Product_Listing({ productCatergory }) {
                           //   }`}
                           onClick={(e) => {
                             e.preventDefault();
-                            changeVariant(item?.productId, index);
+                            changeVariant(item?.productId, index,variant);
                           }}
                         />
                       );

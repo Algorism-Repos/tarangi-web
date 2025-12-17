@@ -22,12 +22,14 @@ function AddToCartButton({
   const { addToCart } = useContext(AppContext);
   const isDisabledInFavourites =
     isFavouritesPage && (isOutOfStock || isRestocking);
-  console.log(productToCart);
+  // console.log(productToCart);
 
-  const{pathname} = useLocation();
+  const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const handleAddToCart = () => {
+  const handleClick = (e) => {
+    e.preventDefault();
+
     addToCart(productToCart);
     setShowToast(true);
     document.body.style.overflow = "hidden";
@@ -35,12 +37,7 @@ function AddToCartButton({
       setShowToast(false);
       document.body.style.overflow = "auto";
       navigate("/cart");
-
     }, 1000);
-  };
-  const handleClick = (e) => {
-    e.preventDefault();
-    handleAddToCart();
 
     if (isDisabledInFavourites) {
       onRemoveFromFavourites && onRemoveFromFavourites();
@@ -59,14 +56,26 @@ function AddToCartButton({
     <>
       <button
         className={`cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]
-        ${pathname === "/favourites" ? "w-full h-[56px]" :"w-full h-[40px] sm:w-[205px] sm:h-[56px]"} rounded-full text-primary text-[16px] font-medium mt-2
+        ${
+          pathname === "/favourites"
+            ? "w-full h-[56px]"
+            : "w-full h-[40px] sm:w-[205px] sm:h-[56px]"
+        } rounded-full text-primary text-[16px] font-medium mt-2
         transition-all duration-300 hover:bg-[#4B001A] hover:text-white`}
-        onMouseEnter={() => !isDisabledInFavourites && setCartIconSrc(shoppingCart_white)}
-        onMouseLeave={() => !isDisabledInFavourites && setCartIconSrc(shoppingCart_red)}
+        onMouseEnter={() =>
+          !isDisabledInFavourites && setCartIconSrc(shoppingCart_white)
+        }
+        onMouseLeave={() =>
+          !isDisabledInFavourites && setCartIconSrc(shoppingCart_red)
+        }
         onClick={handleClick}
       >
         {!isDisabledInFavourites && (
-          <img className="w-[32px] h-[32px]" src={cartIconSrc} alt="cart icon" />
+          <img
+            className="w-[32px] h-[32px]"
+            src={cartIconSrc}
+            alt="cart icon"
+          />
         )}
         {isDisabledInFavourites ? "Remove from favourites" : "Add to cart"}
       </button>
