@@ -252,17 +252,18 @@ function Home() {
             <h1 className="font-atteron uppercase text-[40px] text-center xl:text-left sm:text-[50px] xl:text-[65px] text-white font-normal w-full sm:max-w-[720px] mx-auto tracking-[1px] xl:mx-0">
               Born from tradition Designed for today
             </h1>
-            <h4 className="font-poppins text-[13px] w-[270px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center xl:text-left mt-8 max-w-[640px] mx-auto xl:mx-0">
+            <h4 className="font-poppins text-[13px] w-[270px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center xl:text-left mt-3 sm:mt-6 xl:mt-8 max-w-[640px] mx-auto xl:mx-0">
               Because exculsive 925 silver jewelry should feel as unique as the one who wears it.
             </h4>
-            <a
+            {/* <a
               href="#launchOffers"
               className="w-fit hover:scale-110 transition duration-300 mx-auto xl:mx-0"
-            >
-              <button className=" mt-10 sm:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
+            > */}
+              <button onClick={() => document.getElementById("launchOffers")?.scrollIntoView({ behavior: "smooth",})} 
+                className=" mt-4 sm:mt-7 xl:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
                 View our Best Sellers
               </button>
-            </a>
+            {/* </a> */}
           </div>
         </SwiperSlide>
 
