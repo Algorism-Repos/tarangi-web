@@ -147,6 +147,7 @@ useEffect(() => {
       return [...prev, product];
     });
   };
+  
   const removeFromWishlist = (variantId) => {
     setWishlistItems((prev) =>
       prev.filter((item) => item?.variantId !== variantId)

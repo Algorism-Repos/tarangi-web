@@ -27,22 +27,22 @@ const data = [
             content: "A master craftsman who can infuse tradition with innovation, creating jewels that embody precision, novel artistry and generations of refined skillsets."
         }
     ]
-  // const mergedData =
-  //   cartItems.length === 1
-  //     ? [
-  //         {
-  //           ...data[0],
-  //           productImage: cartItems[0].image,
-  //         },
-  //       ]
-  //     : data.map((item, key) => ({
-  //         ...item,
-  //         productImage: cartItems[key]?.image,
-  //       }));
-  //       useEffect(()=>{
-  //               clearCart();
+  const mergedData =
+    cartItems.length === 1
+      ? [
+          {
+            ...data[0],
+            productImage: cartItems[0].image,
+          },
+        ]
+      : data.map((item, key) => ({
+          ...item,
+          productImage: cartItems[key]?.image,
+        }));
+        useEffect(()=>{
+                clearCart();
 
-  //       },[])
+        },[])
   return (
     <>
       {/* Background */}
@@ -92,7 +92,7 @@ const data = [
                                     </div>
                                 </div>
                             </SwiperSlide> */}
-              {cartItems?.map((items) => {
+              {mergedData?.map((items) => {
                 return (
                   <SwiperSlide>
                     <div className="w-full sm:w-[472px] h-fit mx-auto bg-[#FFFAF3] rounded-[24px] shadow-2xl p-[25px] sm:p-[35px] z-10">

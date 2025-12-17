@@ -198,7 +198,6 @@ function CheckoutPage() {
             price: 100,
           },
         ],
-        properties: [{ name: "Gift Charge", value: "₹50" }],
         customer: { id: customerId },
         shipping_address: {
           first_name: formValues.firstName,
