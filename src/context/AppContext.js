@@ -150,7 +150,7 @@ useEffect(() => {
   };
   const removeFromWishlist = (variantId) => {
     setWishlistItems((prev) =>
-      prev.filter((item) => item?.variantId !== variantId)
+      prev.filter((item) => item?.productId !== variantId)
     );
   };
   const clearWishlist = () => setWishlistItems([]);

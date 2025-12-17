@@ -110,11 +110,6 @@ function Product_Description() {
   console.log("variantActive", activeVariant);
   console.log(" you may also like categorizedProduct ", categorizedProduct);
 
-  const COLOR_MAP = {
-    Gold: gold_ellipse,
-    Silver: silver_ellipse,
-    RoseGold: brown_ellipse,
-  };
   useEffect(() => {
     if (categorizedProduct) {
       // setProducts(normalizeProducts(categorizedProduct));
@@ -123,10 +118,14 @@ function Product_Description() {
 
         return hasVariants ? item.variants.every(i => i.inventoryQuantity !== 0) : item.inventoryQuantity !== 0;
       })
-      setYouMayLike(filterOutofStockProducts);
+      console.log(filterOutofStockProducts);
+      const removingProductShown = filterOutofStockProducts.filter(item => item.productId !== product?.productId);
+      console.log(product?.productId);
+      console.log("removingProductShown",removingProductShown);
+      setYouMayLike(removingProductShown);
     }
     setRecentlyViewed(categorizedProduct)
-  }, [categorizedProduct]);
+  }, [categorizedProduct, location.pathname]);
 
   // const normalizeProducts = (data) =>
   //   data.map((item) => {
@@ -373,7 +372,7 @@ function Product_Description() {
               <div className="max-w-[500px] mt-5">
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
                   <AddToCartButton productToCart={activeVariant} />
-                  <AddToWishlistButton productToFavorites={activeVariant} disabled={isAlreadyInWishlist} />
+                  <AddToWishlistButton productToFavorites={product} disabled={isAlreadyInWishlist} />
                 </div>
               </div>
             </div>
@@ -395,6 +394,7 @@ function Product_Description() {
                   <div
                     key={item?.id}
                     className="font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0"
+                    onClick={() => {window.scrollTo({ top: 0, behavior: "smooth" });} }
                   >
                     <Link
                       to={`/product_description/${item?.title.replace(
@@ -438,8 +438,6 @@ function Product_Description() {
                 );
               })}
            </div>
-
-            {/* <Recently_Viewed /> */}
           </div>
 
           <Recently_Viewed />
@@ -454,4 +452,4 @@ function Product_Description() {
   );
 }
 
-      export default Product_Description;
+export default Product_Description;

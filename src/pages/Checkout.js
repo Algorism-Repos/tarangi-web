@@ -185,7 +185,20 @@ const [orderCompleted, setOrderCompleted] = useState(false);
           variant_id: item.variantId.split("/").pop(),
           quantity: item.quantity,
           price: item.price,
+          tax_lines: [
+            {
+              title: "GST 3%",
+              price: item.price * item.quantity * 0.03,
+              rate: 0.03,
+            },
+          ],
         })),
+        shipping_lines: [
+          {
+            title: "Standard Shipping",
+            price: 100,
+          },
+        ],
         customer: { id: customerId },
         shipping_address: {
           first_name: formValues.firstName,
@@ -211,6 +224,8 @@ const [orderCompleted, setOrderCompleted] = useState(false);
         financial_status: "paid",
       },
     };
+
+
 
     try {
       console.log(orderData);

@@ -65,9 +65,9 @@ function Product_Listing({ productCatergory }) {
 
   console.log(products);
 
-  const changeVariant = (productId, index ,item) => {
-    console.log(productId, index,item);
-    
+  const changeVariant = (productId, index, item) => {
+    console.log(productId, index, item);
+
 
     setSelectedVariants((prev) => ({
       ...prev,
@@ -87,7 +87,7 @@ function Product_Listing({ productCatergory }) {
         const isLiked = product.liked;
 
         if (isLiked) {
-          removeFromWishlist(variantId);
+          removeFromWishlist(productId);
         } else {
           addToWishlist(product);
         }
@@ -173,33 +173,38 @@ function Product_Listing({ productCatergory }) {
               to={
                 !isOutOfStock && !isRestocking
                   ? `/product_description/${item?.title.replace(/\s+/g, "-")}`
-                  : "#" 
+                  : "#"
               }
               state={!isOutOfStock && !isRestocking ? { product: item } : {}}
               onClick={
                 isOutOfStock
                   ? handleOutOfStockClick
                   : isRestocking
-                  ? handleRestockClick
-                  : undefined
+                    ? handleRestockClick
+                    : undefined
               }
               className="font-poppins w-[170px] sm:w-[310px] mx-auto relative sm:hover:scale-105 transition duration-300 ease-in-out group"
             >
               {/* MAIN PRODUCT IMAGE */}
-              <Swiper>
+              <Swiper
+                onSwiper={(swiper) => (swiperRef.current = swiper)}
+                onSlideChange={(swiper) => {
+                  const id = swiper.activeIndex;
+                }}
+              >
                 {item.variants !== null && item.variants.length > 0 ?
                   item.variants.map((i) => {
                     return (
                       <SwiperSlide>
-                        <img className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-60" : ""} ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} src={i.image} alt={item?.title}/>
+                        <img className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-60" : ""} ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} src={i.image} alt={item?.title} />
                       </SwiperSlide>
                     )
-                  })    
+                  })
                   :
                   item.images.map((i) => {
-                    return(
+                    return (
                       <SwiperSlide>
-                        <img className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-60" : ""} ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} src={i} alt={item?.title}/>
+                        <img className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-60" : ""} ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} src={i} alt={item?.title} />
                       </SwiperSlide>
                     )
                   })
@@ -238,22 +243,33 @@ function Product_Listing({ productCatergory }) {
 
                 <div className="mt-1.3 flex flex-col sm:flex-row gap-y-2 items-start sm:items-center sm:justify-between w-full">
                   {/* Pricing without discount */}
-                    <h3 className={item?.compareAtPrice === null || item?.variants?.[selectedIndex]?.compareAtPrice === null ? "font-poppins text-[12px] sm:text-[16px] font-normal leading-normal": "hidden"}>₹ {item.variants !== null && item.variants.length > 0 ? parseInt(item?.variants?.[selectedIndex]?.price).toLocaleString("en-IN") : parseInt(item?.price)?.toLocaleString("en-IN")}</h3>
+                  <h3 className={item?.compareAtPrice === null || item?.variants?.[selectedIndex]?.compareAtPrice === null ? "font-poppins text-[12px] sm:text-[16px] font-normal leading-normal" : "hidden"}>₹ {item.variants !== null && item.variants.length > 0 ? parseInt(item?.variants?.[selectedIndex]?.price).toLocaleString("en-IN") : parseInt(item?.price)?.toLocaleString("en-IN")}</h3>
 
                   {/* Pricing with discount */}
-                  <div className={item?.variants?.[0]?.compareAtPrice !== null || item?.compareAtPrice !== null ? "flex flex-row items-center flex-nowrap gap-x-2" : "hidden"}>
-                    <h3 className="font-poppins text-[10px] sm:text-[14px]  leading-normal text-red-500 line-through font-semibold ">₹ {item.variants !== null && item.variants.length > 0 ? parseInt(item?.variants?.[selectedIndex]?.compareAtPrice).toLocaleString("en-IN") : parseInt(item?.compareAtPrice).toLocaleString("en-IN")}</h3>
-                    <h3 className="font-poppins text-[12px] sm:text-[16px] font-normal leading-normal">₹ {item.variants !== null && item.variants.length > 0 ? parseInt(item.variants[selectedIndex].price).toLocaleString("en-IN") : parseInt(item.price).toLocaleString("en-IN")}</h3>
-                  </div>
+                  {item?.variants?.length > 0 && item?.variants?.[selectedIndex]?.compareAtPrice !== null  ?
+                    (
+                      <div className="flex flex-row items-center flex-nowrap gap-x-2">
+                        <h3 className="font-poppins text-[10px] sm:text-[14px]  leading-normal text-red-500 line-through font-semibold ">₹ {parseInt(item?.variants[selectedIndex]?.compareAtPrice).toLocaleString("en-IN")}</h3>
+                        <h3 className="font-poppins text-[12px] sm:text-[16px] font-normal leading-normal">₹ {parseInt(item?.variants[selectedIndex]?.price).toLocaleString("en-IN")}</h3>
+                      </div>
+                    )
+
+                    : (
+                      <div className={!item?.compareAtPrice || item?.compareAtPrice === null ? "hidden" : "flex flex-row items-center flex-nowrap gap-x-2"}>
+                        <h3 className="font-poppins text-[10px] sm:text-[14px]  leading-normal text-red-500 line-through font-semibold ">₹ {parseInt(item?.compareAtPrice).toLocaleString("en-IN")}</h3>
+                        <h3 className="font-poppins text-[12px] sm:text-[16px] font-normal leading-normal"> ₹{parseInt(item?.price).toLocaleString("en-IN")}</h3>
+                      </div>
+                    )
+                  }
 
                   {/*  COLOR TOGGLE BUTTONS */}
                   <div className="flex flex-row items-center gap-x-2">
                     {item?.variants !== null && item?.variants.length > 0 ?
                       item.variants.map((variants, index) => {
-                        return(
+                        return (
                           <>
                             <img key={variants?.variantId || index} src={colorAssets[variants?.colorVariant]} alt="color-assets" className={`w-[24px] h-[24px] cursor-pointer ${selectedIndex === index ? "border-2 border-primary rounded-[24px] px-[0.2px]" : ""}`}
-                              onClick={(e) => {e.preventDefault(); changeVariant(item?.productId, index)}}
+                              onClick={(e) => { e.preventDefault(); changeVariant(item?.productId, index) }}
                             />
                           </>
                         )
