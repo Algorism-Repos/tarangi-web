@@ -87,6 +87,7 @@ useEffect(() => {
     Silver: silver_ellipse,
     RoseGold: brown_ellipse,
   };
+  
   useEffect(() => {
     if (categorizedProduct !== null) {
       localStorage.setItem(

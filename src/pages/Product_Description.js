@@ -31,6 +31,7 @@ function Product_Description() {
     wishlistItems,
     pincodeDetails,
     addToRecentlyViewed,
+    colorAssets,
   } = useContext(AppContext);
   const [colorSelected, setColorSelected] = useState(
     product?.variants?.[0]?.colorVariant || ""
@@ -41,7 +42,8 @@ function Product_Description() {
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});
   const [youMayLike, setYouMayLike] = useState();
-  const colorAssets = [
+
+  const colorAssetsArray = [
     {
       value: "Gold",
       imgUrl: gold_ellipse,
@@ -86,7 +88,7 @@ function Product_Description() {
     (element) => element.colorVariant
   );
 
-  const availableColors = colorAssets?.filter((element) =>
+  const availableColors = colorAssetsArray?.filter((element) =>
     variantColors?.includes(element.value)
   );
 
@@ -106,6 +108,7 @@ function Product_Description() {
 
   console.log("variantActive", activeVariant);
   console.log(" you may also like categorizedProduct ", categorizedProduct);
+
   const COLOR_MAP = {
     Gold: gold_ellipse,
     Silver: silver_ellipse,
@@ -113,40 +116,45 @@ function Product_Description() {
   };
   useEffect(() => {
     if (categorizedProduct) {
-      setProducts(normalizeProducts(categorizedProduct));
+      // setProducts(normalizeProducts(categorizedProduct));
+      const filterOutofStockProducts = categorizedProduct.filter((item) => {
+        const hasVariants = item.variants && item.variants.length>0;
 
-      // setProducts(productCatergory);
+        return hasVariants ? item.variants.every(i => i.inventoryQuantity !== 0) : item.inventoryQuantity !== 0;
+      })
+      setYouMayLike(filterOutofStockProducts);
     }
   }, [categorizedProduct]);
-  const normalizeProducts = (data) =>
-    data.map((item) => {
-      if (!item.variants) {
-        return {
-          ...item,
-          variants: [
-            {
-              variantId: item.variantId,
-              price: item.price,
-              image: item.image,
-              colorVariant: null,
-            },
-          ],
-        };
-      }
-      return item;
-    });
 
-  const changeVariant = (productId, index) => {
-    setSelectedVariants((prev) => ({
-      ...prev,
-      [productId]: index,
-    }));
-  };
+  // const normalizeProducts = (data) =>
+  //   data.map((item) => {
+  //     if (!item.variants) {
+  //       return {
+  //         ...item,
+  //         variants: [
+  //           {
+  //             variantId: item.variantId,
+  //             price: item.price,
+  //             image: item.image,
+  //             colorVariant: null,
+  //           },
+  //         ],
+  //       };
+  //     }
+  //     return item;
+  //   });
+
+  // const changeVariant = (productId, index) => {
+  //   setSelectedVariants((prev) => ({
+  //     ...prev,
+  //     [productId]: index,
+  //   }));
+  // };
 
   console.log("Product", product);
   console.log("Active Variant", activeVariant);
-  
-  
+  console.log(" you may also like categorizedProduct ", youMayLike);
+
   return (
     <>
       {/* Backgound */}
@@ -182,15 +190,15 @@ function Product_Description() {
               >
                 {product?.variants && product?.variants.length > 0
                   ? product.variants.map((item) => (
-                      <SwiperSlide>
-                        <img className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px]" src={item?.image} />
-                      </SwiperSlide>
-                    ))
+                    <SwiperSlide>
+                      <img className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px]" src={item?.image} />
+                    </SwiperSlide>
+                  ))
                   : product?.images.map((img) => (
-                      <SwiperSlide>
-                        <img className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px]" src={img} />
-                      </SwiperSlide>
-                    ))}
+                    <SwiperSlide>
+                      <img className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px]" src={img} />
+                    </SwiperSlide>
+                  ))}
               </Swiper>
             </div>
 
@@ -374,13 +382,13 @@ function Product_Description() {
         <div className="max-w-[1300px] mx-auto my-[60px] lg:my-[130px] px-4 xl:px-0">
           <div>
             <h1 className="font-atteron text-primary text-[26px] text-center sm:text-[30px] xl:text-left">
-              you may also like
+              You may also like
             </h1>
 
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[20px] gap-y-6 mt-[25px] sm:gap-x-[24px]">
-              {categorizedProduct?.slice(0, 4).map((item) => {
-                const selectedIndex = selectedVariants[item?.productId] ?? 0;
-                const selectedVariant = item?.variants[selectedIndex];
+              {youMayLike?.slice(0,4).map((item) => {
+                // const selectedIndex = selectedVariants[item?.productId] ?? 0;
+                // const selectedVariant = item?.variants[selectedIndex];
                 return (
                   <div
                     key={item?.id}
@@ -395,54 +403,44 @@ function Product_Description() {
                     >
                       <img
                         className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[24px]"
-                        src={selectedVariant?.image}
-                        alt={item?.alt || item?.title}
+                        src={item?.images?.[0]}
+                        alt={`${item?.alt || item?.title}_image`}
                       />
                     </Link>
 
                     <div className="mt-2 flex flex-wrap items-center justify-between sm:mt-4">
                       <div>
                         <h3 className="text-[16px] font-semibold sm:text-[20px]">
-                          {/* ₹{" "}
+                          ₹{" "}
                           {(item?.price
                             ? parseInt(item?.price)
                             : parseInt(item?.variants?.[0]?.price)
-                          )?.toLocaleString("en-IN")} */}
-                          ₹{" "}
+                          )?.toLocaleString("en-IN")}
+                          {/* ₹{" "}
                           {parseInt(selectedVariant?.price).toLocaleString(
                             "en-IN"
-                          )}
+                          )} */}
                         </h3>
                         <p className="text-[14px] font-medium text-[#6F6F6F] sm:text-[14px]">
                           {item?.title}
                         </p>
 
-                      <div className="hidden sm:block">
-                        <div className="mt-1 flex justify-end gap-x-3">
-                          {item?.variants.map((variant, index) => {
-                            if (!variant.colorVariant) return null;
-
-                            return (
-                              <img
-                                key={variant?.variantId}
-                                src={COLOR_MAP[variant?.colorVariant]}
-                                alt={variant.colorVariant}
-                                className={`w-6 h-6 cursor-pointer ${
-                                  selectedIndex === index
-                                    ? "ring-2 ring-[#8B5E3C] rounded-full"
-                                    : ""
-                                }`}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  changeVariant(item?.productId, index);
-                                }}
-                              />
-                            );
-                          })}
+                        <div className="hidden sm:block">
+                          <div className="flex flex-row items-center gap-x-2">
+                            {item?.variants !== null && item?.variants.length > 0 ?
+                              item.variants.map((variants, index) => {
+                                return (
+                                  <>
+                                    <img key={variants?.variantId || index} src={colorAssets[variants?.colorVariant]} alt="color-assets" className={`w-[24px] h-[24px] cursor-pointer`}
+                                    />
+                                  </>
+                                )
+                              }) : ""
+                            }
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
                   </div>
                 );
               })}
