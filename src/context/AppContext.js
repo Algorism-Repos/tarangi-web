@@ -82,11 +82,12 @@ useEffect(() => {
     );
   };
 
-  const colorAssets = {
-    Silver: silver_ellipse,
+   const colorAssets = {
     Gold: gold_ellipse,
-    RoseGold: brown_ellipse
+    Silver: silver_ellipse,
+    RoseGold: brown_ellipse,
   };
+  
   useEffect(() => {
     if (categorizedProduct !== null) {
       localStorage.setItem(
@@ -150,7 +151,7 @@ useEffect(() => {
   
   const removeFromWishlist = (variantId) => {
     setWishlistItems((prev) =>
-      prev.filter((item) => item?.variantId !== variantId)
+      prev.filter((item) => item?.productId !== variantId)
     );
   };
   const clearWishlist = () => setWishlistItems([]);

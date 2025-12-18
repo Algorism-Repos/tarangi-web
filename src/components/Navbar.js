@@ -659,7 +659,7 @@ function Navbar() {
                       className="w-6 h-6"
                     />
                   </div>
-                  <div className="min-w-[260px] mx-auto mt-5">
+                  <div className="min-w-[260px] mx-auto ">
                     <AnimatePresence>
                       {mobileProductDropdown && (
                         <motion.div
@@ -670,7 +670,7 @@ function Navbar() {
                           className="flex flex-col items-center"
                         >
                           {/* Subcategory of products */}
-                          <div className="flex flex-col gap-3 w-full max-w-[260px]">
+                          <div className="flex flex-col gap-3 w-full max-w-[260px] mt-5">
                             {collection &&
                               collection
                                   ?.filter((item) => item.handle !== "best_seller" && item.body_html !== "<p>tarangi-specials</p>").reverse().map((item) => (

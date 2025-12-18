@@ -33,44 +33,41 @@ function Product_Listing({ productCatergory }) {
     addToWishlist,
     removeFromWishlist,
     wishlistItems,
+    colorAssets
   } = useContext(AppContext);
-  const COLOR_MAP = {
-    Gold: gold_ellipse,
-    Silver: silver_ellipse,
-    RoseGold: brown_ellipse,
-  };
+
   useEffect(() => {
     if (productCatergory) {
-      setProducts(normalizeProducts(productCatergory));
-      // setProducts(productCatergory);
-      // setProducts(productCatergory);
+      // setProducts(normalizeProducts(productCatergory));
+
+      setProducts(productCatergory);
       setLoading(false);
     }
   }, [productCatergory]);
 
-  const normalizeProducts = (data) =>
-    data.map((item) => {
-      if (!item.variants) {
-        return {
-          ...item,
-          variants: [
-            {
-              variantId: item.variantId,
-              price: item.price,
-              image: item.image,
-              colorVariant: null,
-            },
-          ],
-        };
-      }
-      return item;
-    });
+  // const normalizeProducts = (data) =>
+  //   data.map((item) => {
+  //     if (!item.variants) {
+  //       return {
+  //         ...item,
+  //         variants: [
+  //           {
+  //             variantId: item.variantId,
+  //             price: item.price,
+  //             image: item.image,
+  //             colorVariant: null,
+  //           },
+  //         ],
+  //       };
+  //     }
+  //     return item;
+  //   });
 
   console.log(products);
 
-  const changeVariant = (productId, index ,item) => {
-    console.log(productId, index,item);
-    
+  const changeVariant = (productId, index, item) => {
+    console.log(productId, index, item);
+
 
     setSelectedVariants((prev) => ({
       ...prev,
@@ -78,6 +75,9 @@ function Product_Listing({ productCatergory }) {
 
     }));
   };
+
+  console.log(selectedVariants);
+
   //  Like button toggle
   const toggleLike = (productId, variantId) => {
     setProducts((prev) => {
@@ -87,7 +87,7 @@ function Product_Listing({ productCatergory }) {
         const isLiked = product.liked;
 
         if (isLiked) {
-          removeFromWishlist(variantId);
+          removeFromWishlist(productId);
         } else {
           addToWishlist(product);
         }
@@ -109,6 +109,8 @@ function Product_Listing({ productCatergory }) {
       }))
     );
   }, [wishlistItems, productCatergory]);
+
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -127,6 +129,10 @@ function Product_Listing({ productCatergory }) {
   if (loading) {
     return <LoadingScreen />;
   }
+
+  console.log("products", products);
+  console.log("Variant--select--", selectedVariants);
+
 
   if (products.length === 0) {
     return (
@@ -156,19 +162,14 @@ function Product_Listing({ productCatergory }) {
     <>
       <div className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-[15px] sm:gap-y-10 sm:gap-x-[30px] px-1.5">
         {products.map((item) => {
-          const isOutOfStock =  item.inventoryQuantity === 0 || item?.variants?.every(item => item.inventoryQuantity === 0);
-
-            // item?.inventoryQuantity === 0 ||
-            // item?.variants?.[0]?.inventoryQuantity === 0;
+          const isOutOfStock = item?.variants?.every(item => item.inventoryQuantity === 0) || item?.inventoryQuantity === 0;
           const isRestocking = item.restock === true;
 
-
-
           const selectedIndex = selectedVariants[item?.productId] ?? 0;
-          const selectedVariant = item?.variants[selectedIndex];
+          // const selectedVariant = item?.variants[selectedIndex];
           return (
             <Link
-              key={item?.id}
+              key={item?.productId}
               to={
                 !isOutOfStock && !isRestocking
                   ? `/product_description/${item?.title.replace(/\s+/g, "-")}`
@@ -179,24 +180,36 @@ function Product_Listing({ productCatergory }) {
                 isOutOfStock
                   ? handleOutOfStockClick
                   : isRestocking
-                  ? handleRestockClick
-                  : undefined
+                    ? handleRestockClick
+                    : undefined
               }
               className="font-poppins w-[170px] sm:w-[310px] mx-auto relative sm:hover:scale-105 transition duration-300 ease-in-out group"
             >
               {/* MAIN PRODUCT IMAGE */}
-              <img
-                className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${
-                  isOutOfStock ? "grayscale" : ""
-                } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
-                // src={
-                //   item.variants != null
-                //     ? item.variants.map((item) => item.image)
-                //     : item.images
-                // }
-                src={selectedVariant?.image}
-                alt={item?.title}
-              />
+              <Swiper
+                onSwiper={(swiper) => (swiperRef.current = swiper)}
+                onSlideChange={(swiper) => {
+                  const id = swiper.activeIndex;
+                }}
+              >
+                {item.variants !== null && item.variants.length > 0 ?
+                  item.variants.map((i) => {
+                    return (
+                      <SwiperSlide>
+                        <img className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-60" : ""} ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} src={i.image} alt={item?.title} />
+                      </SwiperSlide>
+                    )
+                  })
+                  :
+                  item.images.map((i) => {
+                    return (
+                      <SwiperSlide>
+                        <img className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-60" : ""} ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} src={i} alt={item?.title} />
+                      </SwiperSlide>
+                    )
+                  })
+                }
+              </Swiper>
 
               {/*  Like Button */}
               <LikeButton
@@ -229,25 +242,53 @@ function Product_Listing({ productCatergory }) {
                 </div>
 
                 <div className="mt-1.3 flex flex-col sm:flex-row gap-y-2 items-start sm:items-center sm:justify-between w-full">
-                  <h3 className="text-[13px] text-[#4E4E4E] font-medium sm:text-[18px] mt-1">
-                    ₹ {parseInt(selectedVariant?.price).toLocaleString("en-IN")}
-                  </h3>
+                  {/* Pricing without discount */}
+                  <h3 className={item?.compareAtPrice === null || item?.variants?.[selectedIndex]?.compareAtPrice === null ? "font-poppins text-[12px] sm:text-[16px] font-normal leading-normal" : "hidden"}>₹ {item.variants !== null && item.variants.length > 0 ? parseInt(item?.variants?.[selectedIndex]?.price).toLocaleString("en-IN") : parseInt(item?.price)?.toLocaleString("en-IN")}</h3>
+
+                  {/* Pricing with discount */}
+                  {item?.variants?.length > 0 && item?.variants?.[selectedIndex]?.compareAtPrice !== null  ?
+                    (
+                      <div className="flex flex-row items-center flex-nowrap gap-x-2">
+                        <h3 className="font-poppins text-[10px] sm:text-[14px]  leading-normal text-red-500 line-through font-semibold ">₹ {parseInt(item?.variants[selectedIndex]?.compareAtPrice).toLocaleString("en-IN")}</h3>
+                        <h3 className="font-poppins text-[12px] sm:text-[16px] font-normal leading-normal">₹ {parseInt(item?.variants[selectedIndex]?.price).toLocaleString("en-IN")}</h3>
+                      </div>
+                    )
+
+                    : (
+                      <div className={!item?.compareAtPrice || item?.compareAtPrice === null ? "hidden" : "flex flex-row items-center flex-nowrap gap-x-2"}>
+                        <h3 className="font-poppins text-[10px] sm:text-[14px]  leading-normal text-red-500 line-through font-semibold ">₹ {parseInt(item?.compareAtPrice).toLocaleString("en-IN")}</h3>
+                        <h3 className="font-poppins text-[12px] sm:text-[16px] font-normal leading-normal"> ₹{parseInt(item?.price).toLocaleString("en-IN")}</h3>
+                      </div>
+                    )
+                  }
 
                   {/*  COLOR TOGGLE BUTTONS */}
-                  <div className="flex flex-row items-center gap-x-4">
-                    {item?.variants?.map((variant, index) => {
+                  <div className="flex flex-row items-center gap-x-2">
+                    {item?.variants !== null && item?.variants.length > 0 ?
+                      item.variants.map((variants, index) => {
+                        return (
+                          <>
+                            <img key={variants?.variantId || index} src={colorAssets[variants?.colorVariant]} alt="color-assets" className={`w-[24px] h-[24px] cursor-pointer ${selectedIndex === index ? "border-2 border-primary rounded-[24px] px-[0.2px]" : ""}`}
+                              onClick={(e) => { e.preventDefault(); changeVariant(item?.productId, index) }}
+                            />
+                          </>
+                        )
+                      }) : ""
+                    }
+                  </div>
+                  {/* <div className="flex flex-row items-center gap-x-2">
+                    {item?.variants.map((variant, index) => {
                       if (!variant.colorVariant) return null;
 
                       return (
                         <img
                           key={variant?.variantId}
-                          src={COLOR_MAP[variant?.colorVariant]}
+                          src={colorAssets[variant?.colorVariant]}
                           alt={variant.colorVariant}
-                          className={`w-6 h-6 cursor-pointer ${
-                            selectedIndex === index
-                              ? "ring-2 ring-[#8B5E3C] rounded-full"
-                              : ""
-                          }`}
+                          // className={`w-6 h-6 cursor-pointer ${selectedIndex === index
+                          //   ? "ring-2 ring-[#8B5E3C] rounded-full"
+                          //   : ""
+                          //   }`}
                           onClick={(e) => {
                             e.preventDefault();
                             changeVariant(item?.productId, index,variant);
@@ -255,7 +296,7 @@ function Product_Listing({ productCatergory }) {
                         />
                       );
                     })}
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </Link>

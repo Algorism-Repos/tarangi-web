@@ -224,10 +224,13 @@ function CheckoutPage() {
       },
     };
 
+
+
     try {
       console.log(orderData);
       const response = await axios.post(
-        "http://localhost:8080/api/shopify/order",
+        "https://tarangi-staging.df.r.appspot.com/api/shopify/order",
+        // "https://localhost:8080/api/shopify/order",
         orderData
       );
       setOrderId(response.data.id);

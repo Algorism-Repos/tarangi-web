@@ -15,6 +15,7 @@ import AddToCartButton from "../components/AddToCartButton";
 function Cart() {
   const [showSummary, setShowSummary] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [boughtTogether, setboughtTogether] = useState([]);
   const [productToDelete, setProductToDelete] = useState(null);
   const {
     cartItems,
@@ -25,7 +26,7 @@ function Cart() {
   const toggleSummary = () => {
     setShowSummary(!showSummary);
   };
-  // console.log(cartItems);
+
   const subtotal = cartItems?.reduce((total, item) => {
     const price = Number(item?.price) || 0;
     const qty = Number(item?.quantity) || 1;
@@ -36,27 +37,7 @@ function Cart() {
   const total = subtotal + tax + shipping;
   // console.log(categorizedProduct)
 
-
-
-
-  const boughtTogether = categorizedProduct
-    ?.filter((item) => item?.variants?.length === 1)
-    .reverse()
-    .slice(0, 6);
-  // console.log(boughtTogether);
-
-
-
-
-
-
-
-
-
-
-
-
-
+  console.log(cartItems);
 
 
   useEffect(() => {
@@ -66,13 +47,26 @@ function Cart() {
       "categorizedProduct",
       JSON.stringify(categorizedProduct)
     );
+
+    if (categorizedProduct) {
+      // setProducts(normalizeProducts(categorizedProduct));
+      const filterOutofStockProducts = categorizedProduct.filter((item) => {
+        const hasVariants = item.variants && item.variants.length > 0;
+
+        return hasVariants ? item.variants.every(i => i.inventoryQuantity !== 0) : item.inventoryQuantity !== 0;
+      })
+      setboughtTogether(filterOutofStockProducts);
+    }
+
   }, [cartItems, categorizedProduct]);
+
+  console.log(boughtTogether);
 
   const totalCartQuantity = cartItems.reduce(
     (sum, item) => sum + (Number(item.quantity) || 1),
     0
   );
- return (
+  return (
     <>
       <div className="font-poppins bg-light-sandal pt-[35px] sm:py-[70px]">
         <div className="max-w-[1300px] mx-auto">
@@ -177,30 +171,30 @@ function Cart() {
                     {/* Free silver cleaning kit */}
                     {Number(item?.price ?? item?.variants?.[0]?.price) >=
                       2000 && (
-                      <>
-                        <hr className="border border-[#EDEDED] my-[14px]" />
-                        <div className="flex items-center gap-x-[20px] justify-between">
-                          <div className="flex flex-row items-center gap-x-3 sm:gap-x-5">
-                            <img
-                              className="w-[37px] h-[38px] sm:w-[73px] sm:h-[74px] rounded-[4px] sm:rounded-[16px]"
-                              src={SilverCleaningKit}
-                              alt="free kit"
-                            />
-                            <div className="">
-                              <h3 className="text-[#404040] text-[12px] font-medium sm:text-[18px]  sm:mt-0">
-                                Free Silver Cleaning Kit
-                              </h3>
-                              <h3 className="text-[10px] text-[#6E6E6E] sm:text-[16px]">
-                                Added for products above ₹2000
-                              </h3>
+                        <>
+                          <hr className="border border-[#EDEDED] my-[14px]" />
+                          <div className="flex items-center gap-x-[20px] justify-between">
+                            <div className="flex flex-row items-center gap-x-3 sm:gap-x-5">
+                              <img
+                                className="w-[37px] h-[38px] sm:w-[73px] sm:h-[74px] rounded-[4px] sm:rounded-[16px]"
+                                src={SilverCleaningKit}
+                                alt="free kit"
+                              />
+                              <div className="">
+                                <h3 className="text-[#404040] text-[12px] font-medium sm:text-[18px]  sm:mt-0">
+                                  Free Silver Cleaning Kit
+                                </h3>
+                                <h3 className="text-[10px] text-[#6E6E6E] sm:text-[16px]">
+                                  Added for products above ₹2000
+                                </h3>
+                              </div>
                             </div>
+                            <p className="bg-[#C5A881] px-4 py-1 rounded-full text-[#404040] text-[12px]">
+                              Free
+                            </p>
                           </div>
-                          <p className="bg-[#C5A881] px-4 py-1 rounded-full text-[#404040] text-[12px]">
-                            Free
-                          </p>
-                        </div>
-                      </>
-                    )}
+                        </>
+                      )}
                   </div>
                 ))
               )}
@@ -286,7 +280,7 @@ function Cart() {
             </h1>
             <div className="sm:max-w-fit mx-auto xl:mx-0 ">
               <div className="grid grid-cols-2 sm:flex sm:flex-row sm:flex-wrap  gap-y-9 sm:gap-x-[50px] items-center justify-center max-[425px]:gap-x-[10px]">
-                {boughtTogether?.map((item) => (
+                {boughtTogether.slice(0,6)?.map((item) => (
                   <div className="bg-[#FFFAF3] max-w-[580px] p-[24px] rounded-[16px] shadow-2xl mt-[25px] max-[425px]:p-[16px] ">
                     <div className="relative space-y-[10px]">
                       {/* <input
@@ -295,7 +289,7 @@ function Cart() {
                       /> */}
                       <img
                         className="w-[148px] sm:w-[233px] rounded-[12px]"
-                        src={item?.variants?.[0].image}
+                        src={item?.images?.[0]}
                         alt="product image"
                       />
                       <div>
@@ -303,16 +297,24 @@ function Cart() {
                           {item?.title}
                         </h3>
                         <h3 className="text-[16px] font-semibold sm:text-[20px] max-[425px]:text-[15px]">
-                          ₹
-                          {parseInt(item?.variants?.[0].price).toLocaleString(
-                            "en-IN"
-                          )}
+                          ₹{" "}
+                          {item.variants !== null ? parseInt(item?.variants?.[0].price).toLocaleString("en-IN") : parseInt(item?.price).toLocaleString("en-IN")}
                         </h3>
                       </div>
                     </div>
                     {/* Total Price */}
                     <div className="mt-[24px]">
-                      <AddToCartButton productToCart={item} />
+                      <Link
+                        key={item.id}
+                        to={`/product_description/${item.title.replace(
+                          /\s+/g,
+                          "-"
+                        )}`}
+                        state = { {product: item }}
+                      >
+                        <button className="cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] rounded-full text-primary text-[12px] sm:text-[18px] font-medium mt-2
+                                            transition-all duration-300 hover:bg-[#4B001A] hover:text-white w-full h-[40px] sm:h-[50px]">View Product Details</button>
+                      </Link>
                     </div>
                   </div>
                 ))}

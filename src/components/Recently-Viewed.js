@@ -13,13 +13,9 @@ import { Link } from "react-router";
 function Recently_Viewed() {
   const [products, setProducts] = useState([]);
 
-  const { recentlyViewed, setRecentlyViewed } = useContext(AppContext);
+  const { recentlyViewed, setRecentlyViewed, colorAssets } = useContext(AppContext);
   const [selectedVariants, setSelectedVariants] = useState({});
-  const COLOR_MAP = {
-    Gold: gold_ellipse,
-    Silver: silver_ellipse,
-    RoseGold: brown_ellipse,
-  };
+
 
   console.log(recentlyViewed)
   useEffect(() => {
@@ -77,7 +73,7 @@ function Recently_Viewed() {
           const selectedVariant = item?.variants[selectedIndex] ;
 
           return (
-            <div key={item?.productId || item?.variantId}
+            <div onClick={() => {window.scrollTo({ top: 0, behavior: "smooth" });}} key={item?.productId || item?.variantId}
 
               className="relative font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0 group hover:scale-105 transition-transform duration-300 ease-in-out"
             >
@@ -96,10 +92,10 @@ function Recently_Viewed() {
               </Link>
 
               {/* Like button */}
-              <LikeButton
+              {/* <LikeButton
                 liked={item?.liked}
                 onToggle={() => toggleLike(item?.id)}
-              />
+              /> */}
 
               <div className="mt-2 flex-col items-center justify-between sm:mt-4">
                 <div>
@@ -122,7 +118,7 @@ function Recently_Viewed() {
                       return (
                         <img
                           key={variant?.variantId}
-                          src={COLOR_MAP[variant?.colorVariant]}
+                          src={colorAssets[variant?.colorVariant]}
                           alt={variant?.colorVariant}
                           className={`w-6 h-6 cursor-pointer ${
                             selectedIndex === index

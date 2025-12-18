@@ -32,7 +32,7 @@ function Favourites() {
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
-  const { wishlistItems, removeFromWishlist, colorAssets, addToWishlist } = useContext(AppContext);
+  const { wishlistItems, removeFromWishlist, colorAssets, } = useContext(AppContext);
   const [productToDelete, setProductToDelete] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -48,25 +48,25 @@ function Favourites() {
   console.log(wishlistItems);
 
   //  Like button toggle
-  const toggleLike = (productId, variantId) => {
-    setProducts((prev) => {
-      return prev.map((product) => {
-        if (product.productId !== productId) return product;
+  // const toggleLike = (productId, variantId) => {
+  //   setProducts((prev) => {
+  //     return prev.map((product) => {
+  //       if (product.productId !== productId) return product;
 
-        const isLiked = product.liked;
+  //       const isLiked = product.liked;
 
-        if (isLiked) {
+  //       if (isLiked) {
 
-          removeFromWishlist(variantId);
-        } else {
+  //         removeFromWishlist(productId);
+  //       } else {
 
-          addToWishlist(product);
-        }
+  //         addToWishlist(product);
+  //       }
 
-        return { ...product, liked: !product.liked };
-      });
-    });
-  };
+  //       return { ...product, liked: !product.liked };
+  //     });
+  //   });
+  // };
 
   useEffect(() => {
     setProducts((prev) =>
@@ -89,16 +89,15 @@ function Favourites() {
     setShowRestockModal(true);
   };
 
-
-  console.log("wishlistItems", wishlistItems);
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
+  console.log("productToDelete", productToDelete);
+  console.log("wishlistItems", wishlistItems);
   return (
     <>
-      <div className="bg-[#FFF5E8] py-[70px]">
+      <div className="bg-[#FFF5E8] py-[70px] min-h-screen">
         <div className="max-w-[1300px] mx-auto px-2">
           <h1
             className={
@@ -126,11 +125,17 @@ function Favourites() {
             >
               {wishlistItems?.map((item) => {
 
-                const isOutOfStock = item?.inventoryQuantity === 0 || item?.variants?.[0]?.inventoryQuantity === 0;
+                const isOutOfStock = item?.variants?.every(item => item.inventoryQuantity === 0) || item?.inventoryQuantity === 0;
                 const isRestocking = false;
                 return (
-                  <div>
-                    <Link
+                  <div onClick={
+                    isOutOfStock
+                      ? handleOutOfStockClick
+                      : isRestocking
+                        ? handleRestockClick
+                        : undefined
+                  }>
+                    {/* <Link
                       key={item.id}
                       to={`/product_description/${item.title.replace(
                         /\s+/g,
@@ -146,86 +151,100 @@ function Favourites() {
                             : undefined
                       }
                     >
-                      {/* IMAGE */}
-                      <div className="overflow-hidden rounded-2xl relative ">
-                        {item.images ?
-                          <Swiper>
-                            {(item?.variants?.map(v => v?.image) || item?.images)?.map((item, i) => (
-                              <SwiperSlide>
-                                <img src={item} alt="images" className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-[0.6]" : ""
-                                  } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} />
-                              </SwiperSlide>
-                            ))}
-                          </Swiper> :
+                     
 
-                          <img src={item.image} alt="images" className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-[0.6]" : ""
-                            } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} />
-                        }
+                    </Link > */}
+                    {/* IMAGE */}
+                    <div className="overflow-hidden rounded-2xl relative z-0 group ">
+                      {item.images ?
+                        <Swiper>
+                          {(item?.variants?.map(v => v?.image) || item?.images)?.map((item, i) => (
+                            <SwiperSlide>
+                              <img src={item} alt="images" className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-[0.6]" : ""
+                                } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} />
+                            </SwiperSlide>
+                          ))}
+                        </Swiper> :
 
-                        {/* SOLD OUT LABEL */}
-                        {item.isOutOfStock && (
-                          <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
-                            Sold Out
-                          </p>
-                        )}
+                        <img src={item.image} alt="images" className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-[0.6]" : ""
+                          } ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} />
+                      }
 
-                        {/* RESTOCK SOON LABEL */}
-                        {!item.isOutOfStock && item.isRestocking && (
-                          <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
-                            Restocking Soon
-                          </p>
-                        )}
+                      {/* SOLD OUT LABEL */}
+                      {isOutOfStock && (
+                        <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5 z-10">
+                          Sold Out
+                        </p>
+                      )}
+                      {/* RESTOCK SOON LABEL */}
+                      {!item.isOutOfStock && item.isRestocking && (
+                        <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
+                          Restocking Soon
+                        </p>
+                      )}
 
-                        {/* <LikeButton
-                            liked={item.liked}
-                            isOutOfStock={isOutOfStock}
-                            isRestocking={isRestocking}
-                            onToggle={() => toggleLike(item.productId, item.variantId)} 
-                          /> */}
-                        <button className="w-[40px] h-[40px] absolute top-3 right-3 z-10 transition-opacity duration-300 ease-in-out focus:outline-none lg:opacity-0 group-hover:opacity-100"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setProductToDelete(item);
-                            setIsDeleteModalOpen(true);
-                          }}>
-                          <img src={Filled_LikeIcon} alt="liked_icon" />
-                        </button>
+                      <button className="w-[40px] h-[40px] absolute top-3 right-3 z-20 transition-opacity duration-300 ease-in-out focus:outline-none lg:opacity-0 group-hover:opacity-100"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setProductToDelete(item);
+                          setIsDeleteModalOpen(true);
+                        }}>
+                        <img src={Filled_LikeIcon} alt="liked_icon" />
+                      </button>
+                    </div>
+
+                    {/* DETAILS */}
+                    <div className="mt-2 flex flex-wrap justify-between sm:my-4">
+                      <div>
+                        <h1 className="font-poppins text-[12px] font-semibold sm:text-[18px] text-wrap text-[#313131]">
+                          {item?.title}
+                        </h1>
                       </div>
 
-                      {/* DETAILS */}
-                      <div className="mt-2 flex flex-wrap justify-between sm:my-4">
-                        <div>
-                          <h1 className="font-poppins text-[12px] font-semibold sm:text-[18px] text-wrap text-[#313131]">
-                            {item?.title}
-                          </h1>
-                        </div>
+                      <div className="mt-1.3 flex flex-col sm:flex-row gap-y-2 items-start sm:items-center sm:justify-between w-full">
+                        <h3 className="font-poppins text-[13px] text-[#4E4E4E] font-medium sm:text-[18px] mt-1">
+                          ₹{" "}
+                          {item?.variants != null && item?.variants?.inventoryQuantity !== 0
+                            ? parseInt(item.variants?.[0]?.price).toLocaleString(
+                              "en-IN"
+                            )
+                            : parseInt(item.price).toLocaleString("en-in")}
+                        </h3>
 
-                        <div className="mt-1.3 flex flex-col sm:flex-row gap-y-2 items-start sm:items-center sm:justify-between w-full">
-                          <h3 className="font-poppins text-[13px] text-[#4E4E4E] font-medium sm:text-[18px] mt-1">
-                            ₹{" "}
-                            {item?.variants != null && item?.variants?.inventoryQuantity !== 0
-                              ? parseInt(item.variants?.[0]?.price).toLocaleString(
-                                "en-IN"
+                        {/*  COLOR TOGGLE BUTTONS */}
+                        <div className="flex flex-row items-center gap-x-2">
+                          {item?.variants !== null && item?.variants.length > 0 ?
+                            item.variants.map((variants, index) => {
+                              return (
+                                <>
+                                  <img key={variants?.variantId || index} src={colorAssets[variants?.colorVariant]} alt="color-assets" className={`w-[24px] h-[24px]`}/>
+                                </>
                               )
-                              : parseInt(item.price).toLocaleString("en-in")}
-                          </h3>
-
-                          {/*  COLOR TOGGLE BUTTONS */}
-                          <div className="flex flex-row items-center gap-x-1">
-                            {Object.values(colorAssets).map((i) => (
-                              <img src={i} alt="color_assets" className="w-[20px] h-[20px] sm:w-[25px] sm:h-[25px] p-[0.5px] hover:border-2 rounded-full border-primary" />
-                            ))}
-                          </div>
+                            }) : ""
+                          }
                         </div>
                       </div>
+                    </div>
 
-                    </Link >
-                    <AddToCartButton
+                    <Link
+                      key={item.id}
+                      to={`/product_description/${item.title.replace(
+                        /\s+/g,
+                        "-"
+                      )}`}
+                      state={!isOutOfStock && !isRestocking ? { product: item } : {}}
+                    >
+                      <button className="cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] rounded-full text-primary text-[12px] sm:text-[18px] font-medium mt-2
+                      transition-all duration-300 hover:bg-[#4B001A] hover:text-white w-full h-[40px] sm:h-[50px]" disabled={isOutOfStock}>View Product Details</button>
+                    </Link>
+
+
+                    {/* <AddToCartButton
                       productToCart={item}
                       isOutOfStock={item.isOutOfStock}
                       isRestocking={item.isRestocking}
                       isFavouritesPage={true}
-                    />
+                    /> */}
 
                   </div>
                 )
@@ -268,7 +287,7 @@ function Favourites() {
         }}
         onConfirm={() => {
           if (productToDelete) {
-            removeFromWishlist(productToDelete.variantId);
+            removeFromWishlist(productToDelete.productId);
           }
           setIsDeleteModalOpen(false);
           setProductToDelete(null);
