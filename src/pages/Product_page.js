@@ -22,7 +22,7 @@ function Product_page() {
     try {
       const response = await FetchAllProductByCollections(collectionId);
       console.log(
-        "respons from product_list fetch all products by collection",
+        "respons from productPage fetch all products/collection",
         response
       );
 
@@ -46,10 +46,12 @@ function Product_page() {
     return acc;
   }, {});
 
-  console.log(categorized)
 
   useEffect(() => {
+          console.log(productListData)
+
     setCategorizedProduct(productListData);
+
   }, [productListData]);
    useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });

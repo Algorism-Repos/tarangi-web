@@ -63,7 +63,7 @@ function Product_Listing({ productCatergory }) {
   //     return item;
   //   });
 
-  console.log(products);
+  // console.log(products);
 
   const changeVariant = (productId, index, item) => {
     console.log(productId, index, item);
@@ -76,7 +76,7 @@ function Product_Listing({ productCatergory }) {
     }));
   };
 
-  console.log(selectedVariants);
+  // console.log(selectedVariants);
 
   //  Like button toggle
   const toggleLike = (productId, variantId) => {
@@ -130,8 +130,8 @@ function Product_Listing({ productCatergory }) {
     return <LoadingScreen />;
   }
 
-  console.log("products", products);
-  console.log("Variant--select--", selectedVariants);
+  // console.log("products", products);
+  // console.log("Variant--select--", selectedVariants);
 
 
   if (products.length === 0) {

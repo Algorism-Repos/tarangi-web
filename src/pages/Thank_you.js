@@ -40,10 +40,10 @@ function ThankYou() {
   //         ...item,
   //         productImage: cartItems[key]?.image,
   //       }));
-  //       useEffect(()=>{
-  //               clearCart();
+        useEffect(()=>{
+                clearCart();
 
-        // },[])
+        },[])
   return (
     <>
       {/* Background */}

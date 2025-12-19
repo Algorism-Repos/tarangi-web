@@ -39,6 +39,12 @@ function Cart() {
 
   console.log(cartItems);
 
+const getProductPrice = (item) => {
+  if (item.variants && item.variants.length > 0) {
+    return Number(item.variants[0].price);
+  }
+  return Number(item.price);
+};
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -53,7 +59,7 @@ function Cart() {
       const filterOutofStockProducts = categorizedProduct.filter((item) => {
         const hasVariants = item.variants && item.variants.length > 0;
 
-        return hasVariants ? item.variants.every(i => i.inventoryQuantity !== 0) : item.inventoryQuantity !== 0;
+        return hasVariants ? item.variants.every(i => i.inventoryQuantity !== 0 && i.price <= 6000) : item.inventoryQuantity !== 0 && item.price<=6000;
       })
       setboughtTogether(filterOutofStockProducts);
     }
@@ -170,7 +176,7 @@ function Cart() {
 
                     {/* Free silver cleaning kit */}
                     {Number(item?.price ?? item?.variants?.[0]?.price) >=
-                      2000 && (
+                      10000 && (
                         <>
                           <hr className="border border-[#EDEDED] my-[14px]" />
                           <div className="flex items-center gap-x-[20px] justify-between">
@@ -280,7 +286,7 @@ function Cart() {
             </h1>
             <div className="sm:max-w-fit mx-auto xl:mx-0 ">
               <div className="grid grid-cols-2 sm:flex sm:flex-row sm:flex-wrap  gap-y-9 sm:gap-x-[50px] items-center justify-center max-[425px]:gap-x-[10px]">
-                {boughtTogether.slice(0,6)?.map((item) => (
+                {boughtTogether.slice(0,4)?.map((item) => (
                   <div className="bg-[#FFFAF3] max-w-[580px] p-[24px] rounded-[16px] shadow-2xl mt-[25px] max-[425px]:p-[16px] ">
                     <div className="relative space-y-[10px]">
                       {/* <input

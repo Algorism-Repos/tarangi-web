@@ -20,7 +20,6 @@ function CheckoutPage() {
   const { subtotal, shipping, tax, total } = location.state || {};
   const [useDifferentBilling, setUseDifferentBilling] = useState(false);
   const navigate = useNavigate();
-  const [giftWrapPrice, setGiftWrapPrice] = useState(0);
   const [orderId, setOrderId] = useState();
   const { cartItems, clearCart } = useContext(AppContext);
   const [showSummary, setShowSummary] = useState(false);
@@ -83,9 +82,13 @@ function CheckoutPage() {
     addGiftWrap: Yup.boolean(),
     orderNote: Yup.string(),
   });
+  const savedCheckoutForm = JSON.parse(
+  localStorage.getItem("checkoutForm") || "null"
+);
+
   // Formik
   const formik = useFormik({
-    initialValues: {
+    initialValues:savedCheckoutForm || {
       email: "",
       firstName: "",
       lastName: "",
@@ -138,19 +141,19 @@ function CheckoutPage() {
       }
     },
   });
-  useEffect(() => {
-    const navigationType = performance.getEntriesByType("navigation")[0]?.type;
+  // useEffect(() => {
+  //   const navigationType = performance.getEntriesByType("navigation")[0]?.type;
 
-    if (navigationType === "reload") {
-      localStorage.removeItem("checkoutForm");
-      formik.resetForm();
-    } else {
-      const saved = localStorage.getItem("checkoutForm");
-      if (saved) {
-        formik.setValues(JSON.parse(saved));
-      }
-    }
-  }, []);
+  //   if (navigationType === "reload") {
+  //     localStorage.removeItem("checkoutForm");
+  //     formik.resetForm();
+  //   } else {
+  //     const saved = localStorage.getItem("checkoutForm");
+  //     if (saved) {
+  //       formik.setValues(JSON.parse(saved));
+  //     }
+  //   }
+  // }, []);
 
   const handlePincodeCheck = async (field) => {
     console.log(field);
@@ -195,7 +198,7 @@ function CheckoutPage() {
         shipping_lines: [
           {
             title: "Standard Shipping",
-            price: 100,
+            price: 0,
           },
         ],
         customer: { id: customerId },
@@ -250,6 +253,14 @@ function CheckoutPage() {
       );
     }
   };
+  useEffect(() => {
+  if (!formik.values.city && cartItems?.[0]?.deliverDetails?.city) {
+    formik.setFieldValue("city", cartItems[0].deliverDetails.city);
+    formik.setFieldValue("state", cartItems[0].deliverDetails.state);
+    formik.setFieldValue("pincode", cartItems[0].deliverDetails.pincode);
+  }
+}, []);
+
   useEffect(() => {
     if (!orderCompleted) {
       localStorage.setItem("checkoutForm", JSON.stringify(formik.values));
@@ -363,16 +374,11 @@ function CheckoutPage() {
                     {shipping === 0 ? "Free" : `₹${shipping}`}
                   </span>
                 </div>
-                {giftWrapPrice > 0 && (
-                  <div className="flex justify-between">
-                    <span>Gift Wrap Price</span>
-                    <span>₹{giftWrapPrice.toLocaleString()}</span>
-                  </div>
-                )}
+
                 <div className="border-t border-[#EDEDED] my-2" />
                 <div className="flex justify-between text-[15px] font-semibold text-[#1E1E1E]">
                   <span>Total</span>
-                  <span>₹{(total + giftWrapPrice).toLocaleString()}</span>
+                  <span>₹{total .toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -842,7 +848,7 @@ function CheckoutPage() {
               {/* Gift wrap + Order note */}
               <section className="space-y-7">
                 <div className="relative">
-                  <label className="flex items-center custom-checkbox cursor-pointer">
+                  {/* <label className="flex items-center custom-checkbox cursor-pointer">
                     <input
                       type="checkbox"
                       name="addGiftWrap"
@@ -861,7 +867,7 @@ function CheckoutPage() {
                     <span className="text-[16px] text-[#313131] absolute top-0 left-8">
                       Add gift wrap for ₹50
                     </span>
-                  </label>
+                  </label> */}
                 </div>
 
                 <div>
@@ -987,16 +993,16 @@ function CheckoutPage() {
                     {shipping === 0 ? "Free" : `₹${shipping}`}
                   </span>
                 </div>
-                {giftWrapPrice > 0 && (
+                {/* {giftWrapPrice > 0 && (
                   <div className="flex justify-between">
                     <span>Gift Wrap Price</span>
                     <span>₹{giftWrapPrice.toLocaleString()}</span>
                   </div>
-                )}
+                )} */}
                 <div className="border-t border-[#EDEDED] my-3" />
                 <div className="flex justify-between text-base font-semibold text-[#1E1E1E]">
                   <span>Total</span>
-                  <span>₹{(total + giftWrapPrice).toLocaleString()}</span>
+                  <span>₹{total.toLocaleString()}</span>
                 </div>
               </div>
             </div>
