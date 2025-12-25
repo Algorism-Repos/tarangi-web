@@ -32,6 +32,7 @@ function Navbar() {
   const [menuVisible, setMenuVisible] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const {
     collection,
@@ -71,10 +72,15 @@ function Navbar() {
     handleClose();
   };
 
+  const handleSearch = (search) => {
+    if (!search) return;
+    // Navigate to ProductList page with search query
+    navigate(`/products/:handle?search=${encodeURIComponent(search)}`);
+  };
+
   // mobile products dropdown
   const [mobileProductDropdown, setMobileProductDropdown] = useState(false);
   const [mobileActiveTab, setMobileActiveTab] = useState("men"); // for mobile pills
- 
 
   const isActive = (path) => location.pathname === path;
   const isProductsRoute = location.pathname.startsWith("/products");
@@ -145,12 +151,6 @@ function Navbar() {
     setMenuVisible(false);
     navigate("/login");
   };
-
-
-  const handleSearch=async(e)=>{
-      console.log(e)
-  }
-  
   return (
     <>
       {/* Navbar - large screens */}
@@ -197,7 +197,7 @@ function Navbar() {
               Products
               <img className="w-[28px] h-[28px]" src={down_arrow} alt="" />
             </Link>
-            { productDropdown && (
+            {productDropdown && (
               <div className="absolute top-[111px] left-1/2 transform -translate-x-1/2 min-w-fit h-fit bg-[#FFF5E8] p-8 shadow-2xl z-30 rounded-lg">
                 <h2 className="font-atteron text-primary text-[32px] text-center mb-8">
                   Product Caterogry
@@ -205,7 +205,13 @@ function Navbar() {
                 <div className="flex flex-row justify-center flex-wrap overflow-hidden w-full gap-4">
                   {collection &&
                     collection
-                      ?.filter((item) => item.handle !== "best_seller" && item.body_html !== "<p>tarangi-specials</p>").reverse().map((item) => (
+                      ?.filter(
+                        (item) =>
+                          item.handle !== "best_seller" &&
+                          item.body_html !== "<p>tarangi-specials</p>"
+                      )
+                      .reverse()
+                      .map((item) => (
                         <Link
                           to={`/products/${item.handle}`}
                           state={{
@@ -248,7 +254,7 @@ function Navbar() {
         <div className="flex flex-row items-center gap-x-[20px]">
           {/* Search Button */}
           <div
-            onClick={() => setShowSearch((prev) => !prev)}
+            onChange={(e) => handleSearch(e.target.value)}
             className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] transition search-icon
                       ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"}
         `}
@@ -322,8 +328,8 @@ function Navbar() {
                     <input
                       type="text"
                       placeholder="Search for Products"
-                      className="w-full bg-white rounded-[12px] py-4 pl-5 pr-12 font-poppins text-[16px] placeholder:font-medium placeholder:text-[#ABABAB] outline-none" 
-                      onChange={(e)=>handleSearch(e.target.value)}
+                      className="w-full bg-white rounded-[12px] py-4 pl-5 pr-12 font-poppins text-[16px] placeholder:font-medium placeholder:text-[#ABABAB] outline-none"
+                      onChange={(e) => handleSearch(e.target.value)}
                     />
                     <img
                       src={Search_icon}
@@ -525,7 +531,7 @@ function Navbar() {
                   <input
                     type="text"
                     placeholder="Search for Products"
-                    onClick={() => setShowSearchDropdown(true)}
+                    onChange={(e) => handleSearch(e.target.value)}
                     className="w-full h-[48px] py-4 pl-5 pr-12 font-poppins text-[16px] outline-none placeholder:text-[#B0B0B0] placeholder:font-normal rounded-[12px]"
                   />
                   <img
@@ -648,7 +654,7 @@ function Navbar() {
                         mobileProductDropdown || isProductsRoute
                           ? "text-white font-semibold"
                           : "text-[#A0A0A0]"
-                        }`}
+                      }`}
                     >
                       Products
                     </button>
@@ -673,7 +679,13 @@ function Navbar() {
                           <div className="flex flex-col gap-3 w-full max-w-[260px] mt-5">
                             {collection &&
                               collection
-                                  ?.filter((item) => item.handle !== "best_seller" && item.body_html !== "<p>tarangi-specials</p>").reverse().map((item) => (
+                                ?.filter(
+                                  (item) =>
+                                    item.handle !== "best_seller" &&
+                                    item.body_html !== "<p>tarangi-specials</p>"
+                                )
+                                .reverse()
+                                .map((item) => (
                                   <button
                                     key={item.id}
                                     onClick={() => {

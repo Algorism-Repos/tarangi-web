@@ -1,15 +1,12 @@
 import axios from "axios";
 
 // let url = "http://localhost:8080/api/shopify";
-let url = "https://tarangi-staging.df.r.appspot.com/api/shopify"
+let url = "https://tarangi-staging.df.r.appspot.com/api/shopify";
 
- 
 export async function FetchAllProductFromShopify() {
   try {
-    const response = await axios.get(
-      `${url}/products`
-    );
-     console.log(response)
+    const response = await axios.get(`${url}/products`);
+    console.log(response);
     return response.data || [];
   } catch (error) {
     console.error("error fetching product:", error);
@@ -17,9 +14,7 @@ export async function FetchAllProductFromShopify() {
 }
 export async function FetchAllCollectionsFromShopify() {
   try {
-    const response = await axios.get(
-      `${url}/collections`
-    );
+    const response = await axios.get(`${url}/collections`);
     return response.data || [];
   } catch (error) {
     console.error("error fetching collections:", error);
@@ -27,24 +22,31 @@ export async function FetchAllCollectionsFromShopify() {
 }
 export async function FetchAllProductByCollections(collectionId) {
   try {
-    const response = await axios.get(
-      `${url}/products/${collectionId}`
-    );
+    const response = await axios.get(`${url}/products/${collectionId}`);
     return response.data || [];
   } catch (error) {
     console.error("Error fetching products:", error);
   }
 }
+
+export async function FetchProductBySearchv(searchInput) {
+   console.log(searchInput)
+  try {
+    const response = await axios.post(`${url}/shopify-search`, {
+      input: searchInput,
+    });
+    return response.data || [];
+  } catch (error) {
+    console.error("Error fetching searched products:", error);
+  }
+}
 // check the login customer is exit in  shopify
 export async function checkCustomer(logincredential) {
-  console.log(logincredential)
+  console.log(logincredential);
   try {
-    const response = await axios.post(
-      `${url}/check-customer`,
-      {
-        contact: logincredential.contact
-      }
-    );
+    const response = await axios.post(`${url}/check-customer`, {
+      contact: logincredential.contact,
+    });
     return response;
   } catch (error) {
     console.error("Customer check  failed:", error);
@@ -52,30 +54,24 @@ export async function checkCustomer(logincredential) {
 }
 export async function checkOrCreateCustomer(customer) {
   try {
-    const response = await axios.post(
-      `${url}/check-or-create-customer`,
-      {
-        email: customer.email,
-        firstName: customer.firstName,
-        lastName: customer.lastName,
-        phone: customer.mobile,
-      }
-    );
+    const response = await axios.post(`${url}/check-or-create-customer`, {
+      email: customer.email,
+      firstName: customer.firstName,
+      lastName: customer.lastName,
+      phone: customer.mobile,
+    });
     return response.data.customerId;
   } catch (error) {
     console.error("Customer check or create failed:", error);
   }
 }
-// fetch order details of customers based on customer id 
+// fetch order details of customers based on customer id
 export async function CustomersOrders(customerId) {
-  console.log(customerId)
+  console.log(customerId);
   try {
-    const response = await axios.post(
-      `${url}/customer-orders`,
-      {
-        customerId: customerId
-      }
-    );
+    const response = await axios.post(`${url}/customer-orders`, {
+      customerId: customerId,
+    });
     return response;
   } catch (error) {
     console.error("CustomersOrders check  failed:", error);
@@ -96,21 +92,19 @@ export async function FetchBlogPosts(blogId) {
   } catch (error) {
     console.error("fetchings blogs failed:", error);
   }
-};
+}
 export async function FetchOrderByMail(email) {
   //   try {
   // const response = await axios.post(`http://localhost:8080/api/shopify/orders/by-email`, { email });
-  //   return response.data;   
+  //   return response.data;
   // } catch (error) {
   //   console.error("fetchings orders  failed:", error);
   // }
-};
+}
 
 export async function FetchDeliveryByPincode(pincode) {
   try {
-    const response = await axios.get(
-      `${url}/pincode/${pincode}`
-    );
+    const response = await axios.get(`${url}/pincode/${pincode}`);
     console.log(response);
     return response.data || null;
   } catch (error) {
@@ -128,13 +122,10 @@ export async function FetchSilverRate() {
 }
 export async function FetchImageByVarient(varient_id) {
   try {
-    const response = await axios.post(
-      `${url}/variant/${varient_id}/image`
-    );
+    const response = await axios.post(`${url}/variant/${varient_id}/image`);
     return response.data;
   } catch (error) {
     console.error("Variant image fetch failed:", error);
     return null;
   }
 }
-

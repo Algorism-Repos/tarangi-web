@@ -40,6 +40,7 @@ function CheckoutPage() {
     address: Yup.string().required("Address is required"),
     landmark: Yup.string(),
     city: Yup.string().required("City is required"),
+    area: Yup.string().required("Area is required"),
     pincode: Yup.string()
       .matches(/^[0-9]{6}$/, "Enter a valid 6-digit PIN")
       .required("Pincode is required"),
@@ -83,12 +84,12 @@ function CheckoutPage() {
     orderNote: Yup.string(),
   });
   const savedCheckoutForm = JSON.parse(
-  localStorage.getItem("checkoutForm") || "null"
-);
+    localStorage.getItem("checkoutForm") || "null"
+  );
 
   // Formik
   const formik = useFormik({
-    initialValues:savedCheckoutForm || {
+    initialValues: savedCheckoutForm || {
       email: "",
       firstName: "",
       lastName: "",
@@ -98,6 +99,7 @@ function CheckoutPage() {
       address: "",
       landmark: "",
       city: "",
+      area: " ",
       pincode: "",
       state: "",
       country: "India",
@@ -106,6 +108,7 @@ function CheckoutPage() {
       billingAddress: "",
       billingLandmark: "",
       billingCity: "",
+      billingArea: "",
       billingPincode: "",
       billingState: "",
       billingCountry: "India",
@@ -162,15 +165,15 @@ function CheckoutPage() {
     try {
       const response = await FetchDeliveryByPincode(pincode);
       const state = response?.CSTATE || response?.data?.CSTATE || "";
-      const city = response?.CITY || response?.data?.CITY || "";
+      const area = response?.CITY || response?.data?.CITY || "";
 
-      if (!state || !city) return;
+      if (!state || !area) return;
 
       const mapping = {
-        pincode: { city: "city", state: "state" },
-        billingPincode: { city: "billingCity", state: "billingState" },
+        pincode: { area: "area", state: "state" },
+        billingPincode: { area: "billingArea", state: "billingState" },
       };
-      formik.setFieldValue(mapping[field].city, city);
+      formik.setFieldValue(mapping[field].area, area);
       formik.setFieldValue(mapping[field].state, state);
     } catch (error) {
       console.log("Error fetching pincode", error);
@@ -227,8 +230,6 @@ function CheckoutPage() {
       },
     };
 
-
-
     try {
       console.log(orderData);
       const response = await axios.post(
@@ -254,12 +255,12 @@ function CheckoutPage() {
     }
   };
   useEffect(() => {
-  if (!formik.values.city && cartItems?.[0]?.deliverDetails?.city) {
-    formik.setFieldValue("city", cartItems[0].deliverDetails.city);
-    formik.setFieldValue("state", cartItems[0].deliverDetails.state);
-    formik.setFieldValue("pincode", cartItems[0].deliverDetails.pincode);
-  }
-}, []);
+    if (!formik.values.area && cartItems?.[0]?.deliverDetails?.area) {
+      formik.setFieldValue("area", cartItems[0].deliverDetails.area);
+      formik.setFieldValue("state", cartItems[0].deliverDetails.state);
+      formik.setFieldValue("pincode", cartItems[0].deliverDetails.pincode);
+    }
+  }, []);
 
   useEffect(() => {
     if (!orderCompleted) {
@@ -378,7 +379,7 @@ function CheckoutPage() {
                 <div className="border-t border-[#EDEDED] my-2" />
                 <div className="flex justify-between text-[15px] font-semibold text-[#1E1E1E]">
                   <span>Total</span>
-                  <span>₹{total .toLocaleString()}</span>
+                  <span>₹{total.toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -583,6 +584,29 @@ function CheckoutPage() {
                     )}
                   </div>
                   <div className="flex-1 min-w-[45%]">
+                    <label className="text-sm block mb-1">Area</label>
+                    <input
+                      name="area"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={
+                        formik.values.area || cartItems[0]?.deliverDetails?.area
+                      }
+                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                        formik.errors.area && formik.touched.area
+                          ? "border-red-500"
+                          : "border-[#efe6e6]"
+                      }
+                       focus:outline-none focus:border-[#8C455E]`}
+                      placeholder="City"
+                    />
+                    {formik.touched.area && formik.errors.area && (
+                      <p className="text-xs text-red-500 mt-1">
+                        {formik.errors.area}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-[45%]">
                     <label className="text-sm block mb-1">City</label>
                     <input
                       name="city"
@@ -605,7 +629,6 @@ function CheckoutPage() {
                       </p>
                     )}
                   </div>
-
                   <div className="flex-1 min-w-[45%]">
                     <label className="text-sm block mb-1">State</label>
                     <input

@@ -3,7 +3,7 @@ import Product_Filter from "../components/Product_filter";
 import Product_Listing from "./Product_Listing";
 import { AppContext } from "../context/AppContext";
 import { useLocation } from "react-router";
-import { FetchAllProductByCollections } from "../handler/api_Handler";
+import { FetchAllProductByCollections, FetchProductBySearchv } from "../handler/api_Handler";
 import floating_up_arrow from "../assets/floating_up_arrow.png";
 import { formatProduct } from "../utils/productFormatter";
 
@@ -13,6 +13,11 @@ function Product_page() {
   const location = useLocation();
   const { collectionId, category } = location.state || {};
   const [productListData, setProductListData] = useState([]);
+  const searchParams = new URLSearchParams(location.search);
+  const searchInput = searchParams.get("search") || "";
+     console.log(searchInput)
+     console.log(searchParams)
+
   useEffect(() => {
     if (collectionId) {
       productList(collectionId);
@@ -37,7 +42,6 @@ function Product_page() {
       console.log(error);
     }
   };
-
   // product catogory
   const categorized = productListData.reduce((acc, product) => {
     const type = product.productType || "Uncategorized";
@@ -46,20 +50,39 @@ function Product_page() {
     return acc;
   }, {});
 
+  const productListBySearch = async (searchInput) => {
+     console.log(searchInput)
+    if (!searchInput) return;
+
+    try {
+      const response = await FetchProductBySearchv(searchInput);
+      console.log("respons from FetchProductBySearch", response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-          console.log(productListData)
+    productListBySearch(searchInput);
+  }, [searchInput]);
 
+  useEffect(() => {
     setCategorizedProduct(productListData);
-
   }, [productListData]);
-   useEffect(() => {
+  useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
   return (
     <>
       <div className="bg-[#FFF5E8] py-[10px] sm:py-[50px] relative">
-        <img src={floating_up_arrow} alt="floating_up_arrow" className="w-[50px] h-[48px] z-50 sm:w-[70px] sm:h-[67px] fixed bottom-20 lg:bottom-3 right-3  transform animate-bounce cursor-pointer" onClick={() => { window.scrollTo({ top: 0, behavior: "smooth" })}} />
+        <img
+          src={floating_up_arrow}
+          alt="floating_up_arrow"
+          className="w-[50px] h-[48px] z-50 sm:w-[70px] sm:h-[67px] fixed bottom-20 lg:bottom-3 right-3  transform animate-bounce cursor-pointer"
+          onClick={() => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        />
         <div className="max-w-[1350px] mx-auto lg:flex justify-between gap-x-[40px] my-[50px]">
           <Product_Filter
             productCatergory={categorized}
