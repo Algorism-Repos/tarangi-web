@@ -7,7 +7,7 @@ import brown_ellipse from "../assets/Products/brown_ellipse.png";
 
 export const AppContext = createContext();
 export function AppProvider({ children }) {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [collection, setCollections] = useState(() => {
     const saved = localStorage.getItem("collection");
     return saved ? JSON.parse(saved) : [];
@@ -116,22 +116,24 @@ useEffect(() => {
       localStorage.setItem("collection", JSON.stringify(collection));
     }
   }, [collection]);
-  const addToCart = (product) => {
-    console.log(product)
-    setCartItems((prev) => {
-      const existing = prev.find(
-        (item) => item?.variantId === product.variantId
+const addToCart = (product) => {
+  setCartItems((prev) => {
+    const existing = prev.find(
+      (item) => item.variantId === product.variantId
+    );
+
+    if (existing) {
+      return prev.map((item) =>
+        item.variantId === product.variantId
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
       );
-      if (existing) {
-        return prev.map((item) =>
-          item.variantId === product.variantId
-            ? { ...item, quantity: item.quantity + (product.quantity + 1) }
-            : item
-        );
-      }
-      return [...prev, { ...product, quantity: product.quantity || 1 }];
-    });
-  };
+    }
+
+    return [...prev, { ...product, quantity: 1 }];
+  });
+};
+
   const removeFromCart = (variantId) => {
     setCartItems((prev) => prev.filter((item) => item?.variantId !== variantId));
   };

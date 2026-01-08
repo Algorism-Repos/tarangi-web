@@ -14,6 +14,7 @@ import {
   checkOrCreateCustomer,
   FetchDeliveryByPincode,
 } from "../handler/api_Handler";
+import LoadingScreen from "../components/LoadingScreen";
 
 function CheckoutPage() {
   const location = useLocation();
@@ -25,6 +26,14 @@ function CheckoutPage() {
   const [showSummary, setShowSummary] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const [orderCompleted, setOrderCompleted] = useState(false);
+  const [deliveryInfo, setDeliveryInfo] = useState({});
+  const { pincodeDetails, setPincodeDetails, loading, setLoading } =
+    useContext(AppContext);
+
+  // const [pincodeStatus, setPincodeStatus] = useState({
+  //   loading: false,
+  //   activeField: null,
+  // });
 
   // Yup validation schema
   const validationSchema = Yup.object({
@@ -157,13 +166,37 @@ function CheckoutPage() {
   //     }
   //   }
   // }, []);
+  const getPincode = async (pincode) => {
+    try {
+      const response = await FetchDeliveryByPincode(pincode);
+      console.log(response);
+      setDeliveryInfo(response);
+    } catch (error) {
+      console.log("error fetching pincode", error);
+    }
+  };
+  function getDeliveryDate(daysToAdd) {
+    const today = new Date();
+    today.setDate(today.getDate() + daysToAdd);
+    return today;
+  }
+  const tatInHours = Number(deliveryInfo?.TAT || 0);
+  const daysToAdd = Math.ceil(tatInHours / 24);
 
+  const deliveryDate = getDeliveryDate(daysToAdd);
+  const dateOnly = deliveryDate.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
   const handlePincodeCheck = async (field) => {
     console.log(field);
     const pincode = formik.values[field];
     if (!pincode || pincode.length !== 6) return;
+    getPincode(pincode);
     try {
       const response = await FetchDeliveryByPincode(pincode);
+      // setLoading(true);
       const state = response?.CSTATE || response?.data?.CSTATE || "";
       const area = response?.CITY || response?.data?.CITY || "";
 
@@ -177,6 +210,8 @@ function CheckoutPage() {
       formik.setFieldValue(mapping[field].state, state);
     } catch (error) {
       console.log("Error fetching pincode", error);
+    } finally {
+      // setPincodeStatus({ loading: false, activeField: null });
     }
   };
   const handlePlaceOrder = async (formValues, customerId, Payment_key) => {
@@ -210,6 +245,7 @@ function CheckoutPage() {
           last_name: formValues.lastName,
           address1: formValues.address,
           city: formValues.city,
+          area: formValues.area,
           province: formValues.state,
           country: formValues.country,
           zip: formValues.pincode,
@@ -274,6 +310,7 @@ function CheckoutPage() {
     script.async = true;
     document.body.appendChild(script);
   }, []);
+  console.log(cartItems[0]?.deliveryDetails?.date, pincodeDetails);
   return (
     <div className="min-h-screen bg-[#FFF5E8] text-[#979797]  font-poppins overflow-x-hidden px-3 sm:px-6">
       <div className="max-w-[1440px] mx-auto py-10 space-y-10 ">
@@ -353,7 +390,8 @@ function CheckoutPage() {
                   className="w-4 h-4 object-contain"
                 />
                 <span>
-                  Est. delivery by {cartItems[0]?.deliverDetails?.date}
+                  Est. delivery by{" "}
+                  {dateOnly ? dateOnly : cartItems[0]?.deliveryDetails?.date}
                 </span>
               </div>
 
@@ -583,29 +621,34 @@ function CheckoutPage() {
                       </p>
                     )}
                   </div>
-                  <div className="flex-1 min-w-[45%]">
-                    <label className="text-sm block mb-1">Area</label>
-                    <input
-                      name="area"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={
-                        formik.values.area || cartItems[0]?.deliverDetails?.area
-                      }
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                        formik.errors.area && formik.touched.area
-                          ? "border-red-500"
-                          : "border-[#efe6e6]"
-                      }
+                  {loading ? (
+                    <LoadingScreen />
+                  ) : (
+                    <div className="flex-1 min-w-[45%]">
+                      <label className="text-sm block mb-1">Area</label>
+                      <input
+                        name="area"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={
+                          formik.values.area ||
+                          cartItems[0]?.deliverDetails?.area
+                        }
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                          formik.errors.area && formik.touched.area
+                            ? "border-red-500"
+                            : "border-[#efe6e6]"
+                        }
                        focus:outline-none focus:border-[#8C455E]`}
-                      placeholder="City"
-                    />
-                    {formik.touched.area && formik.errors.area && (
-                      <p className="text-xs text-red-500 mt-1">
-                        {formik.errors.area}
-                      </p>
-                    )}
-                  </div>
+                        placeholder="City"
+                      />
+                      {formik.touched.area && formik.errors.area && (
+                        <p className="text-xs text-red-500 mt-1">
+                          {formik.errors.area}
+                        </p>
+                      )}
+                    </div>
+                  )}
                   <div className="flex-1 min-w-[45%]">
                     <label className="text-sm block mb-1">City</label>
                     <input
@@ -764,10 +807,10 @@ function CheckoutPage() {
                   <div>
                     <label className="text-sm block mb-1">Landmark</label>
                     <input
-                      name="landmark"
+                      name="billingLandmark"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.landmark}
+                      value={formik.values.billingLandmark}
                       className="w-full h-[44px] px-3 border border-[#efe6e6] rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal focus:outline-none focus:border-[#8C455E]"
                       placeholder="Landmark (Optional)"
                     />
@@ -808,9 +851,30 @@ function CheckoutPage() {
                         )}
                     </div>
                     <div className="flex-1 min-w-[45%]">
+                      <label className="text-sm block mb-1">Area</label>
+                      <input
+                        name="billingArea"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.billingArea}
+                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                          formik.errors.area && formik.touched.area
+                            ? "border-red-500"
+                            : "border-[#efe6e6]"
+                        }
+                       focus:outline-none focus:border-[#8C455E]`}
+                        placeholder="City"
+                      />
+                      {formik.touched.area && formik.errors.area && (
+                        <p className="text-xs text-red-500 mt-1">
+                          {formik.errors.area}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-[45%]">
                       <label className="text-sm block mb-1">City</label>
                       <input
-                        name="city"
+                        name="billingCity"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.billingCity}
@@ -995,7 +1059,8 @@ function CheckoutPage() {
                   className="w-4 h-4 object-contain"
                 />
                 <span>
-                  Est. delivery by {cartItems[0]?.deliverDetails?.date}
+                  Est. delivery by{" "}
+                  {dateOnly ? dateOnly : cartItems[0]?.deliveryDetails?.date}
                 </span>
               </div>
 

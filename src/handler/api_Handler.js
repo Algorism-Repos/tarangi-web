@@ -113,12 +113,12 @@ export async function FetchDeliveryByPincode(pincode) {
   }
 }
 export async function FetchSilverRate() {
-  try {
-    const response = await axios.get(`${url}/silver-rate`);
-    return response.data;
-  } catch (error) {
-    console.error("Silver rate fetch failed:", error);
-  }
+  // try {
+  //   const response = await axios.get(`${url}/silver-rate`);
+  //   return response.data;
+  // } catch (error) {
+  //   console.error("Silver rate fetch failed:", error);
+  // }
 }
 export async function FetchImageByVarient(varient_id) {
   try {

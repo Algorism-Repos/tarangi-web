@@ -37,14 +37,14 @@ function Cart() {
   const total = subtotal + tax + shipping;
   // console.log(categorizedProduct)
 
-  console.log(cartItems);
+  // console.log(cartItems);
 
-const getProductPrice = (item) => {
-  if (item.variants && item.variants.length > 0) {
-    return Number(item.variants[0].price);
-  }
-  return Number(item.price);
-};
+  const getProductPrice = (item) => {
+    if (item.variants && item.variants.length > 0) {
+      return Number(item.variants[0].price);
+    }
+    return Number(item.price);
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -59,11 +59,14 @@ const getProductPrice = (item) => {
       const filterOutofStockProducts = categorizedProduct.filter((item) => {
         const hasVariants = item.variants && item.variants.length > 0;
 
-        return hasVariants ? item.variants.every(i => i.inventoryQuantity !== 0 && i.price <= 6000) : item.inventoryQuantity !== 0 && item.price<=6000;
-      })
+        return hasVariants
+          ? item.variants.every(
+              (i) => i.inventoryQuantity !== 0 && i.price <= 6000
+            )
+          : item.inventoryQuantity !== 0 && item.price <= 6000;
+      });
       setboughtTogether(filterOutofStockProducts);
     }
-
   }, [cartItems, categorizedProduct]);
 
   console.log(boughtTogether);
@@ -141,10 +144,9 @@ const getProductPrice = (item) => {
                           </Link>
                           <h3 className="text-[12px] font-semibold sm:text-[20px]">
                             ₹
-                            {parseInt(item?.price) ||
-                              parseInt(
-                                item?.variants?.[0]?.price
-                              ).toLocaleString("en-IN")}
+                            {Number(
+                              item?.price ?? item?.variants?.[0]?.price ?? 0
+                            ).toLocaleString("en-IN")}
                           </h3>
                         </div>
 
@@ -177,30 +179,30 @@ const getProductPrice = (item) => {
                     {/* Free silver cleaning kit */}
                     {Number(item?.price ?? item?.variants?.[0]?.price) >=
                       10000 && (
-                        <>
-                          <hr className="border border-[#EDEDED] my-[14px]" />
-                          <div className="flex items-center gap-x-[20px] justify-between">
-                            <div className="flex flex-row items-center gap-x-3 sm:gap-x-5">
-                              <img
-                                className="w-[37px] h-[38px] sm:w-[73px] sm:h-[74px] rounded-[4px] sm:rounded-[16px]"
-                                src={SilverCleaningKit}
-                                alt="free kit"
-                              />
-                              <div className="">
-                                <h3 className="text-[#404040] text-[12px] font-medium sm:text-[18px]  sm:mt-0">
-                                  Free Silver Cleaning Kit
-                                </h3>
-                                <h3 className="text-[10px] text-[#6E6E6E] sm:text-[16px]">
-                                  Added for products above ₹2000
-                                </h3>
-                              </div>
+                      <>
+                        <hr className="border border-[#EDEDED] my-[14px]" />
+                        <div className="flex items-center gap-x-[20px] justify-between">
+                          <div className="flex flex-row items-center gap-x-3 sm:gap-x-5">
+                            <img
+                              className="w-[37px] h-[38px] sm:w-[73px] sm:h-[74px] rounded-[4px] sm:rounded-[16px]"
+                              src={SilverCleaningKit}
+                              alt="free kit"
+                            />
+                            <div className="">
+                              <h3 className="text-[#404040] text-[12px] font-medium sm:text-[18px]  sm:mt-0">
+                                Free Silver Cleaning Kit
+                              </h3>
+                              <h3 className="text-[10px] text-[#6E6E6E] sm:text-[16px]">
+                                Added for products above ₹2000
+                              </h3>
                             </div>
-                            <p className="bg-[#C5A881] px-4 py-1 rounded-full text-[#404040] text-[12px]">
-                              Free
-                            </p>
                           </div>
-                        </>
-                      )}
+                          <p className="bg-[#C5A881] px-4 py-1 rounded-full text-[#404040] text-[12px]">
+                            Free
+                          </p>
+                        </div>
+                      </>
+                    )}
                   </div>
                 ))
               )}
@@ -286,7 +288,7 @@ const getProductPrice = (item) => {
             </h1>
             <div className="sm:max-w-fit mx-auto xl:mx-0 ">
               <div className="grid grid-cols-2 sm:flex sm:flex-row sm:flex-wrap  gap-y-9 sm:gap-x-[50px] items-center justify-center max-[425px]:gap-x-[10px]">
-                {boughtTogether.slice(0,4)?.map((item) => (
+                {boughtTogether.slice(0, 4)?.map((item) => (
                   <div className="bg-[#FFFAF3] max-w-[580px] p-[24px] rounded-[16px] shadow-2xl mt-[25px] max-[425px]:p-[16px] ">
                     <div className="relative space-y-[10px]">
                       {/* <input
@@ -304,7 +306,11 @@ const getProductPrice = (item) => {
                         </h3>
                         <h3 className="text-[16px] font-semibold sm:text-[20px] max-[425px]:text-[15px]">
                           ₹{" "}
-                          {item.variants !== null ? parseInt(item?.variants?.[0].price).toLocaleString("en-IN") : parseInt(item?.price).toLocaleString("en-IN")}
+                          {item.variants !== null
+                            ? parseInt(
+                                item?.variants?.[0].price
+                              ).toLocaleString("en-IN")
+                            : parseInt(item?.price).toLocaleString("en-IN")}
                         </h3>
                       </div>
                     </div>
@@ -316,10 +322,14 @@ const getProductPrice = (item) => {
                           /\s+/g,
                           "-"
                         )}`}
-                        state = { {product: item }}
+                        state={{ product: item }}
                       >
-                        <button className="cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] rounded-full text-primary text-[12px] sm:text-[18px] font-medium mt-2
-                                            transition-all duration-300 hover:bg-[#4B001A] hover:text-white w-full h-[40px] sm:h-[50px]">View Product Details</button>
+                        <button
+                          className="cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] rounded-full text-primary text-[12px] sm:text-[18px] font-medium mt-2
+                                            transition-all duration-300 hover:bg-[#4B001A] hover:text-white w-full h-[40px] sm:h-[50px]"
+                        >
+                          View Product Details
+                        </button>
                       </Link>
                     </div>
                   </div>

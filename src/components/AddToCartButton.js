@@ -30,7 +30,7 @@ function AddToCartButton({
   const handleClick = (e) => {
     e.preventDefault();
 
-    addToCart(productToCart);
+    addToCart({...productToCart,quantity: 1});
     setShowToast(true);
     document.body.style.overflow = "hidden";
     setTimeout(() => {
