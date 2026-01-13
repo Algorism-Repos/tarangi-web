@@ -213,7 +213,7 @@ function Favourites() {
 
                         {/*  COLOR TOGGLE BUTTONS */}
                         <div className="flex flex-row items-center gap-x-2">
-                          {item?.variants !== null && item?.variants.length > 0 ?
+                          {item?.variants !== null && item?.variants?.length > 0 ?
                             item.variants.map((variants, index) => {
                               return (
                                 <>

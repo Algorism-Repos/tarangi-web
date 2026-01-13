@@ -29,7 +29,7 @@ function CheckoutPage() {
   const [deliveryInfo, setDeliveryInfo] = useState({});
   const { pincodeDetails, setPincodeDetails, loading, setLoading } =
     useContext(AppContext);
-
+  const [fulfillmentType, setFulfillmentType] = useState("DELIVERY");
   // const [pincodeStatus, setPincodeStatus] = useState({
   //   loading: false,
   //   activeField: null,
@@ -93,7 +93,7 @@ function CheckoutPage() {
     orderNote: Yup.string(),
   });
   const savedCheckoutForm = JSON.parse(
-    localStorage.getItem("checkoutForm") || "null"
+    sessionStorage.getItem("checkoutForm") || "null"
   );
 
   // Formik
@@ -221,13 +221,16 @@ function CheckoutPage() {
 
     const orderData = {
       order: {
+        email: formValues.email,
+        send_receipt: true,
+        send_fulfillment_receipt: true,
         line_items: cartItems.map((item) => ({
           variant_id: item.variantId.split("/").pop(),
           quantity: item.quantity,
           price: item.price,
           tax_lines: [
             {
-              title: "GST 3%",
+              title: "GST",
               price: item.price * item.quantity * 0.03,
               rate: 0.03,
             },
@@ -261,7 +264,9 @@ function CheckoutPage() {
           zip: formValues.billingPincode,
           phone: formValues.mobile,
         },
-        tags: "Estimated Delivery: 2025-10-30",
+        tags: `Estimated Delivery: ${
+          dateOnly ? dateOnly : cartItems[0]?.deliveryDetails?.date
+        }`,
         financial_status: "paid",
       },
     };
@@ -300,9 +305,11 @@ function CheckoutPage() {
 
   useEffect(() => {
     if (!orderCompleted) {
-      localStorage.setItem("checkoutForm", JSON.stringify(formik.values));
+      sessionStorage.setItem("checkoutForm", JSON.stringify(formik.values));
     }
-  }, [formik.values]);
+  }, [formik.values, orderCompleted]);
+
+  sessionStorage.removeItem("checkoutForm");
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -310,7 +317,7 @@ function CheckoutPage() {
     script.async = true;
     document.body.appendChild(script);
   }, []);
-  console.log(cartItems[0]?.deliveryDetails?.date, pincodeDetails);
+  console.log(cartItems[0]?.deliveryDetails?.state, pincodeDetails);
   return (
     <div className="min-h-screen bg-[#FFF5E8] text-[#979797]  font-poppins overflow-x-hidden px-3 sm:px-6">
       <div className="max-w-[1440px] mx-auto py-10 space-y-10 ">
@@ -331,7 +338,56 @@ function CheckoutPage() {
           </Link>
         </div>
 
+        {/* TOGGLE TO RECEIVE CUSTOMER INPUT  */}
+        <div className="flex flex-col items-center space-y-4 text-center">
+          <p className="font-medium">
+            How would you like to receive your order?
+          </p>
+          <div className="flex items-center justify-center gap-6">
+            {" "}
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="fulfillment"
+                value="DELIVERY"
+                checked={fulfillmentType === "DELIVERY"}
+                onChange={() => setFulfillmentType("DELIVERY")}
+              />
+              Delivery to Address
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="fulfillment"
+                value="STORE_PICKUP"
+                checked={fulfillmentType === "STORE_PICKUP"}
+                onChange={() => setFulfillmentType("STORE_PICKUP")}
+              />
+              In-Store Purchase (Pick-up)
+            </label>
+          </div>
+        </div>
+
         {/* ======= Mobile Order Summary Dropdown ======= */}
+        <div>
+          {/* STORE LOCATION */}
+          {fulfillmentType === "STORE_PICKUP" && (
+            <div className="mt-2 w-[466px] h-[150px] xl:hidden  bg-[#FFFAF3] rounded-[10px] shadow-2xl border border-[#EDEDED] p-5">
+              <p className="font-semibold text-black">Store Location</p>
+              <p>Tarangi Jewels</p>
+              <p>431-435,VNA Complex, NSR Road</p>
+              <p>Saibaba Colony, Coimbatore-641011</p>
+              <a
+                href="https://maps.google.com/?q=Tarangi+Jewellery+Coimbatore"
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-600 underline"
+              >
+                Open in Google Maps
+              </a>
+            </div>
+          )}
+        </div>
         <div className="max-w-[660px] mx-auto block xl:hidden bg-[#FFFAF3] shadow-md border border-[#F6EFE6] mb-6">
           <button
             type="button"
@@ -546,7 +602,9 @@ function CheckoutPage() {
               {/* Shipping Address */}
               <section className="space-y-4">
                 <h3 className="text-[14px] text-[#6E0027] font-semibold">
-                  Shipping Address
+                  {fulfillmentType === "STORE_PICKUP"
+                    ? "Address"
+                    : "Shipping Address"}
                 </h3>
 
                 <div>
@@ -604,7 +662,7 @@ function CheckoutPage() {
                       }}
                       value={
                         formik?.values?.pincode ||
-                        cartItems[0]?.deliverDetails?.pincode
+                        cartItems[0]?.deliveryDetails?.pincode
                       }
                       className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
                         formik.errors.pincode && formik.touched.pincode
@@ -621,7 +679,7 @@ function CheckoutPage() {
                       </p>
                     )}
                   </div>
-                  {loading ? (
+                  {/* {loading ? (
                     <LoadingScreen />
                   ) : (
                     <div className="flex-1 min-w-[45%]">
@@ -648,16 +706,14 @@ function CheckoutPage() {
                         </p>
                       )}
                     </div>
-                  )}
+                  )} */}
                   <div className="flex-1 min-w-[45%]">
                     <label className="text-sm block mb-1">City</label>
                     <input
                       name="city"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={
-                        formik.values.city || cartItems[0]?.deliverDetails?.city
-                      }
+                      value={formik.values.city}
                       className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
                         formik.errors.city && formik.touched.city
                           ? "border-red-500"
@@ -680,7 +736,7 @@ function CheckoutPage() {
                       onBlur={formik.handleBlur}
                       value={
                         formik.values.state ||
-                        cartItems[0]?.deliverDetails?.state
+                        cartItems[0]?.deliveryDetails?.state
                       }
                       className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${
                         formik.errors.state && formik.touched.state
@@ -710,147 +766,153 @@ function CheckoutPage() {
                   </div>
                 </div>
               </section>
-
-              {/* Billing Address Section */}
-              <div className="mb-6">
-                {/* <label className="text-[14px] font-Poppins text-[#6E0027] mb-2 block">
+              {fulfillmentType === "DELIVERY" && (
+                <>
+                  {/* Billing Address Section */}
+                  <div className="mb-6">
+                    {/* <label className="text-[14px] font-Poppins text-[#6E0027] mb-2 block">
                   Billing Address
                 </label> */}
 
-                <div
-                  onClick={() => {
-                    setUseDifferentBilling(false);
-                  }}
-                  className={`cursor-pointer w-full p-4 rounded-md border transition-all duration-300
+                    <div
+                      onClick={() => {
+                        setUseDifferentBilling(false);
+                        formik.setFieldValue("useDifferentBilling", false);
+                      }}
+                      className={`cursor-pointer w-full p-4 rounded-md border transition-all duration-300
               ${
                 !useDifferentBilling
                   ? "bg-gradient-to-r from-[#f8e3e3] to-[#ffffff] border-[#8C455E] shadow-md"
                   : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
               }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <p className="text-16px font-Poppins text-[#313131]">
-                      Same as shipping address
-                    </p>
-                    <span
-                      className={`w-[22px] h-[22px] border-2 rounded-full flex items-center justify-center
+                    >
+                      <div className="flex items-center justify-between">
+                        <p className="text-16px font-Poppins text-[#313131]">
+                          Same as shipping address
+                        </p>
+                        <span
+                          className={`w-[22px] h-[22px] border-2 rounded-full flex items-center justify-center
                   ${
                     !useDifferentBilling
                       ? "border-[#6E0027]"
                       : "border-[#6E0027]"
                   }
                      `}
-                    >
-                      {!useDifferentBilling && (
-                        <span className="w-3 h-3 rounded-full bg-[#6E0027]" />
-                      )}
-                    </span>
-                  </div>
-                </div>
+                        >
+                          {!useDifferentBilling && (
+                            <span className="w-3 h-3 rounded-full bg-[#6E0027]" />
+                          )}
+                        </span>
+                      </div>
+                    </div>
 
-                <div
-                  onClick={() => {
-                    setUseDifferentBilling(true);
-                  }}
-                  className={`cursor-pointer w-full p-4 mt-3 rounded-md border transition-all duration-300
+                    <div
+                      onClick={() => {
+                        setUseDifferentBilling(true);
+                        formik.setFieldValue("useDifferentBilling", true);
+                      }}
+                      className={`cursor-pointer w-full p-4 mt-3 rounded-md border transition-all duration-300
               ${
                 useDifferentBilling
                   ? "bg-gradient-to-r from-[#DAB3C14F] to-[#ffffff]  border-[#8C455E] shadow-md"
                   : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
               }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-[16px] font-Poppins text-[#313131]">
-                      Use a different billing address
-                    </span>
-                    <span
-                      className={`w-[22px] h-[22px] border-2 rounded-full flex items-center justify-center
-        ${useDifferentBilling ? "border-[#6E0027]" : "border-[#6E0027]"}`}
                     >
-                      {useDifferentBilling && (
-                        <span className="w-3 h-3 rounded-full bg-[#6E0027]" />
-                      )}
-                    </span>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[16px] font-Poppins text-[#313131]">
+                          Use a different billing address
+                        </span>
+                        <span
+                          className={`w-[22px] h-[22px] border-2 rounded-full flex items-center justify-center
+        ${useDifferentBilling ? "border-[#6E0027]" : "border-[#6E0027]"}`}
+                        >
+                          {useDifferentBilling && (
+                            <span className="w-3 h-3 rounded-full bg-[#6E0027]" />
+                          )}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
 
-              {useDifferentBilling && (
-                <div className="mt-4">
-                  <label className="text-[14px] font-Poppins text-[#6E0027] mb-2 block">
-                    Billing Address
-                  </label>
-                  <div>
-                    <label className="text-sm block mb-1">Address</label>
-                    <input
-                      name="billingAddress"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.billingAddress}
-                      className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${
-                        formik.errors.billingAddress &&
-                        formik.touched.billingAddress
-                          ? "border-red-500"
-                          : "border-[#efe6e6]"
-                      }
+                  {useDifferentBilling && (
+                    <div className="mt-4">
+                      <label className="text-[14px] font-Poppins text-[#6E0027] mb-2 block">
+                        Billing Address
+                      </label>
+                      <div>
+                        <label className="text-sm block mb-1">Address</label>
+                        <input
+                          name="billingAddress"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.billingAddress}
+                          className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${
+                            formik.errors.billingAddress &&
+                            formik.touched.billingAddress
+                              ? "border-red-500"
+                              : "border-[#efe6e6]"
+                          }
                      focus:outline-none focus:border-[#8C455E]`}
-                      placeholder="Address (Flat No./ House No./Street/Area))"
-                    />
-                    {formik.touched.address && formik.errors.address && (
-                      <p className="text-xs text-red-500 mt-1">
-                        {formik.errors.address}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Landmark */}
-                  <div>
-                    <label className="text-sm block mb-1">Landmark</label>
-                    <input
-                      name="billingLandmark"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.billingLandmark}
-                      className="w-full h-[44px] px-3 border border-[#efe6e6] rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal focus:outline-none focus:border-[#8C455E]"
-                      placeholder="Landmark (Optional)"
-                    />
-                  </div>
-
-                  {/* City, PIN, State, Country */}
-                  <div className="flex flex-col sm:flex-wrap sm:flex-row gap-3">
-                    <div className="flex-1 min-w-[45%]">
-                      <label className="text-sm block mb-1">Pincode</label>
-                      <input
-                        type="tel"
-                        name="billingPincode"
-                        inputMode="numeric"
-                        maxLength={6}
-                        onChange={(e) => {
-                          const value = e.target.value?.replace(/\D/g, "");
-                          formik.setFieldValue("billingPincode", value);
-                        }}
-                        onBlur={(e) => {
-                          formik.handleBlur(e);
-                          handlePincodeCheck("billingPincode", e.target.value);
-                        }}
-                        value={formik.values.billingPincode}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                          formik.errors.billingPincode &&
-                          formik.touched.billingPincode
-                            ? "border-red-500"
-                            : "border-[#efe6e6]"
-                        } focus:outline-none focus:border-[#8C455E]`}
-                        placeholder="billingPincode"
-                      />
-
-                      {formik.touched.billingPincode &&
-                        formik.errors.billingPincode && (
+                          placeholder="Address (Flat No./ House No./Street/Area))"
+                        />
+                        {formik.touched.address && formik.errors.address && (
                           <p className="text-xs text-red-500 mt-1">
-                            {formik.errors.billingPincode}
+                            {formik.errors.address}
                           </p>
                         )}
-                    </div>
-                    <div className="flex-1 min-w-[45%]">
+                      </div>
+
+                      {/* Landmark */}
+                      <div>
+                        <label className="text-sm block mb-1">Landmark</label>
+                        <input
+                          name="billingLandmark"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.billingLandmark}
+                          className="w-full h-[44px] px-3 border border-[#efe6e6] rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal focus:outline-none focus:border-[#8C455E]"
+                          placeholder="Landmark (Optional)"
+                        />
+                      </div>
+
+                      {/* City, PIN, State, Country */}
+                      <div className="flex flex-col sm:flex-wrap sm:flex-row gap-3">
+                        <div className="flex-1 min-w-[45%]">
+                          <label className="text-sm block mb-1">Pincode</label>
+                          <input
+                            type="tel"
+                            name="billingPincode"
+                            inputMode="numeric"
+                            maxLength={6}
+                            onChange={(e) => {
+                              const value = e.target.value?.replace(/\D/g, "");
+                              formik.setFieldValue("billingPincode", value);
+                            }}
+                            onBlur={(e) => {
+                              formik.handleBlur(e);
+                              handlePincodeCheck(
+                                "billingPincode",
+                                e.target.value
+                              );
+                            }}
+                            value={formik.values.billingPincode}
+                            className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                              formik.errors.billingPincode &&
+                              formik.touched.billingPincode
+                                ? "border-red-500"
+                                : "border-[#efe6e6]"
+                            } focus:outline-none focus:border-[#8C455E]`}
+                            placeholder="billingPincode"
+                          />
+
+                          {formik.touched.billingPincode &&
+                            formik.errors.billingPincode && (
+                              <p className="text-xs text-red-500 mt-1">
+                                {formik.errors.billingPincode}
+                              </p>
+                            )}
+                        </div>
+                        {/* <div className="flex-1 min-w-[45%]">
                       <label className="text-sm block mb-1">Area</label>
                       <input
                         name="billingArea"
@@ -870,68 +932,72 @@ function CheckoutPage() {
                           {formik.errors.area}
                         </p>
                       )}
-                    </div>
-                    <div className="flex-1 min-w-[45%]">
-                      <label className="text-sm block mb-1">City</label>
-                      <input
-                        name="billingCity"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.billingCity}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                          formik.errors.billingCity &&
-                          formik.touched.billingCity
-                            ? "border-red-500"
-                            : "border-[#efe6e6]"
-                        }
+                    </div> */}
+                        <div className="flex-1 min-w-[45%]">
+                          <label className="text-sm block mb-1">City</label>
+                          <input
+                            name="billingCity"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.billingCity}
+                            className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                              formik.errors.billingCity &&
+                              formik.touched.billingCity
+                                ? "border-red-500"
+                                : "border-[#efe6e6]"
+                            }
                        focus:outline-none focus:border-[#8C455E]`}
-                        placeholder="City"
-                      />
-                      {formik.touched.city && formik.errors.city && (
-                        <p className="text-xs text-red-500 mt-1">
-                          {formik.errors.city}
-                        </p>
-                      )}
-                    </div>
+                            placeholder="City"
+                          />
+                          {formik.touched.city && formik.errors.city && (
+                            <p className="text-xs text-red-500 mt-1">
+                              {formik.errors.city}
+                            </p>
+                          )}
+                        </div>
 
-                    <div className="flex-1 min-w-[45%]">
-                      <label className="text-sm block mb-1 mt-2.5">State</label>
-                      <input
-                        name="billingState"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.billingState}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${
-                          formik.errors.billingState &&
-                          formik.touched.billingState
-                            ? "border-red-500"
-                            : "border-[#efe6e6]"
-                        }
+                        <div className="flex-1 min-w-[45%]">
+                          <label className="text-sm block mb-1 mt-2.5">
+                            State
+                          </label>
+                          <input
+                            name="billingState"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.billingState}
+                            className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${
+                              formik.errors.billingState &&
+                              formik.touched.billingState
+                                ? "border-red-500"
+                                : "border-[#efe6e6]"
+                            }
                      focus:outline-none focus:border-[#8C455E]`}
-                      />
-                      {formik.touched.billingState && formik.errors.state && (
-                        <p className="text-xs text-red-500 mt-1">
-                          {formik.errors.billingState}
-                        </p>
-                      )}
-                    </div>
+                          />
+                          {formik.touched.billingState &&
+                            formik.errors.state && (
+                              <p className="text-xs text-red-500 mt-1">
+                                {formik.errors.billingState}
+                              </p>
+                            )}
+                        </div>
 
-                    <div className="flex-1 min-w-[45%]">
-                      <label className="text-sm block mb-1">Country</label>
-                      <select
-                        name="country"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.country}
-                        className="w-full h-[44px] px-3 border border-[#efe6e6] focus:outline-none focus:border-[#8C455E] rounded-md text-[16px]"
-                      >
-                        <option value="India">India</option>
-                      </select>
+                        <div className="flex-1 min-w-[45%]">
+                          <label className="text-sm block mb-1">Country</label>
+                          <select
+                            name="country"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.country}
+                            className="w-full h-[44px] px-3 border border-[#efe6e6] focus:outline-none focus:border-[#8C455E] rounded-md text-[16px]"
+                          >
+                            <option value="India">India</option>
+                          </select>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  )}
+                </>
               )}
-
               {/* Gift wrap + Order note */}
               <section className="space-y-7">
                 <div className="relative">
@@ -1020,7 +1086,7 @@ function CheckoutPage() {
             </form>
           </div>
 
-          {/* Right Summary */}
+          {/* Right order Summary */}
           <div className="hidden xl:block ">
             <div className="w-[466px] h-[617px] bg-[#FFFAF3] rounded-[10px] shadow-2xl border border-[#EDEDED] p-5">
               <h3 className="font-semibold mb-4 text-base text-[#313131]">
@@ -1093,6 +1159,25 @@ function CheckoutPage() {
                   <span>₹{total.toLocaleString()}</span>
                 </div>
               </div>
+            </div>
+            <div>
+              {/* STORE LOCATION */}
+              {fulfillmentType === "STORE_PICKUP" && (
+                <div className="mt-2 w-[466px] h-[150px] bg-[#FFFAF3] rounded-[10px] shadow-2xl border border-[#EDEDED] p-5">
+                  <p className="font-semibold text-black">Store Location</p>
+                  <p>Tarangi Jewels</p>
+                  <p>431-435, VNA Complex, NSR Road</p>
+                  <p>Saibaba Colony, Coimbatore-641011</p>
+                  <a
+                    href="https://maps.google.com/?q=Tarangi+Jewellery+Coimbatore"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-blue-600 underline"
+                  >
+                    Open in Google Maps
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </div>

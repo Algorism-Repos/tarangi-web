@@ -120,30 +120,31 @@ function Home() {
     setTrendingProduct(FestiveFiltered);
   }, [FestiveFiltered]);
   
-  useEffect(() => {
-    async function loadSilver() {
-      const data = await FetchSilverRate();
-      setSilver(data);
-      if (data?.silverPerGram) {
-        setSilverRate(data.silverPerGram);
-      }
+useEffect(() => {
+  async function loadSilver() {
+    const data = await FetchSilverRate();
+    console.log(data )
 
-      const date = new Date();
-      setSilverPriceUpdatedTime(
-        date.toLocaleString("en-IN", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-          timeZone: "Asia/Kolkata",
-        })
-      );
-    }
+    if (!data?.success) return;
 
-    loadSilver();
-  }, []);
+    setSilver(data);
+    setSilverRate(data.silverPerGram);
+    setSilverPriceUpdatedTime(
+      new Date(data.lastUpdated).toLocaleString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+        timeZone: "Asia/Kolkata",
+      })
+    );
+  }
+
+  loadSilver();
+}, []);
+
    useEffect(() => {
     const timer = setTimeout(() => {
       setAnimate(true);
@@ -166,7 +167,7 @@ function Home() {
       {/* Silver price -Mobile */}
       <div className="w-full bg-[#FCE8CD] font-poppins lg:hidden">
         <p className="bg-[#CFA266] text-white font-medium text-center py-4 text-[18px]">
-          Silver Price Today
+         999  Silver Price Today
         </p>
 
         <div className="flex justify-between p-3">
@@ -205,7 +206,7 @@ function Home() {
         <div className="flex justify-between">
           <div className="flex items-center gap-x-[25px]">
             <p className="bg-[#CFA266] px-8 py-3 w-fit text-white font-medium">
-              Silver Price Today
+              999 Silver Price Today
             </p>
             <p className="text-[#28040E] text-[18px] font-normal">
               <span className="font-semibold">

@@ -90,7 +90,6 @@ const extractFAQ = (faqHtml) => {
     setOpenIndex(openIndex === i ? null : i);
   };
 
-
   return (
     <div className="bg-light-sandal font-poppins px-5 py-[60px] sm:py-[120px]">
       {/* HEADER */}
@@ -106,14 +105,14 @@ const extractFAQ = (faqHtml) => {
       {/* IMAGE */}
       <div className="max-w-[1000px] mx-auto">
         <img
-          src={blogDescription_banner}
+          src={blog?.image?.src}
           alt="Blog"
           className="w-full h-[200px] sm:h-[450px] object-cover my-[40px] sm:my-[80px]"
         />
       </div>
 
       {/* ARTICLE CONTENT */}
-      <div className="max-w-[1000px] mx-auto text-[#595959] space-y-6">
+      <div className="max-w-[1000px] mx-auto blog-content text-[#595959] space-y-6">
         {parse(content)}
       </div>
 

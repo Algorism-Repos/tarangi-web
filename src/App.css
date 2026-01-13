@@ -627,3 +627,11 @@ input::placeholder {
 .swiper-button-next {
   color: #cfa266 !important;
 }
+.blog-content h1,
+.blog-content h2,
+.blog-content h3,
+.blog-content h4,
+.blog-content h5,
+.blog-content h6 {
+  font-weight: 700;
+}

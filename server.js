@@ -1,4 +1,6 @@
 require('dotenv').config();
+require("./src/utils/silverCron");
+
 const express = require("express");
 const cors = require("cors");
 const path = require ("path");
