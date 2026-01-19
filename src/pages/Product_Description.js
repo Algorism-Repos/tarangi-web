@@ -273,7 +273,7 @@ function Product_Description() {
                       alt="plating icon"
                     />
                     <p className="text-[14px] font-semibold ">
-                      Life long plating
+                      Premium Quality 
                     </p>
                   </div>
                 </div>

@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
 
 //assets import
 import illustration from "../assets/about-banner-illustration.png";
@@ -8,8 +11,18 @@ import about_product_1 from "../assets/about-product-1.png";
 import about_product_2 from "../assets/about-product-2.png";
 import whatsapp_floating from "../assets/whatsapp_icon.svg";
 
+// components 
+import useCountUp from "../components/CountUp";
+
 function About() {
   const [animate, setAnimate] = useState(false);
+
+  const count = useCountUp(60, 2400);
+
+  // Aos Animation 
+  useEffect(() => {
+    AOS.init({ duration: 1000 });
+  }, []);
 
   useEffect(() => {
     // small timeout to ensure mount
@@ -34,8 +47,8 @@ function About() {
           src={whatsapp_floating}
           alt="Whatsapp_Icon"
           className={`w-[50px] sm:w-[70px] h-fit hover:scale-125 max-h-[70px] ${animate
-              ? " animate-bounce duration-300 transition-transform will-change-transform transform-gpu"
-              : ""
+            ? " animate-bounce duration-300 transition-transform will-change-transform transform-gpu"
+            : ""
             }`}
         />
       </a>
@@ -53,17 +66,17 @@ function About() {
 
       <div className="about-banner">
         <div className="text-center">
-          <h1 className="font-atteron text-[52px] sm:text-[100px] leading-normal font-normal text-white">
+          <h1 className="font-atteron text-[52px] sm:text-[100px] leading-normal font-normal text-white" data-aos="fade-up">
             Our Story
           </h1>
-          <h6 className="font-poppins text-[16px] sm:text-[22px] font-normal text-white ml-2">
+          <h6 className="font-poppins text-[16px] sm:text-[22px] font-normal text-white ml-2" data-aos="fade-up">
             Blending traditional artistry with a modern sensibility
           </h6>
         </div>
         <img
           src={illustration}
           alt="banner-illustration"
-          className="w-fit h-[270px] sm:w-[730px] sm:h-[450px] mt-12"
+          className="w-fit h-[270px] sm:w-[730px] sm:h-[450px] mt-12" data-aos="fade-up"
         />
         <div className="flex flex-row items-center gap-x-16 px-3"></div>
       </div>
@@ -71,23 +84,25 @@ function About() {
       {/* First Section */}
       <div className="about-first-section py-28 lg:py-[300px] relative">
         <div className="max-w-7xl mx-auto ">
-          <h1 className="font-atteron text-[52px] sm:text-[72px] text-[#5C0A1F] font-normal leading-normal tracking-[1px] text-center sm:w-[748px] mx-auto">
-            <span className="font-poppins font-extralight">6</span>0+ Years of
-            Experience
+
+          <h1 className="font-atteron text-[52px] sm:text-[72px] text-[#5C0A1F] font-normal leading-normal tracking-[1px] text-center sm:w-[748px] mx-auto" data-aos="fade-up">
+            <span className="font-poppins font-extralight text-[52px] sm:text-[80px]">{count}</span>+ Years of Experience
           </h1>
+
+          
 
           <div className="flex flex-col xl:flex-row items-center gap-x-16 mt-[200px] gap-y-8 mx-auto xl:absolute xl:bottom-60">
             <img
               src={crafted_jewellery}
               alt="product image"
-              className="w-[341px] h-[351px] sm:w-[577px] sm:h-[577px] rounded-[16px] mx-auto"
+              className="w-[341px] h-[351px] sm:w-[577px] sm:h-[577px] rounded-[16px] mx-auto" data-aos="fade-up"
             />
 
             <div className="max-w-[350px] sm:max-w-[620px] mx-auto px-3">
-              <h1 className="font-atteron text-[36px] sm:text-[63px] font-normal leading-tight text-[#5C0A1F] tracking-[1px] ">
+              <h1 className="font-atteron text-[36px] sm:text-[63px] font-normal leading-tight text-[#5C0A1F] tracking-[1px] " data-aos="fade-up">
                 trusted legacy timeless jewelry{" "}
               </h1>
-              <p className="font-poppins text-[16px] sm:text-[24px] font-normal leading-normal text-[#28040E] mt-5 sm:mt-9">
+              <p className="font-poppins text-[16px] sm:text-[24px] font-normal leading-normal text-[#28040E] mt-5 sm:mt-9" data-aos="fade-up">
                 Tarangi is founded by third generation Entreprenuers from the
                 family of jewellers. We are siblings united in vision to shape a
                 globally admired fine jewelry brand that blends timeless
@@ -100,12 +115,12 @@ function About() {
 
       {/* Second Section */}
       <div className="bg-[#4B001A] py-20 sm:py-40 relative">
-        <h1 className="section-heading px-2 sm:px-0 !text-[46px] sm:!text-[64px] sm:max-w-[890px] mx-auto tracking-[1px] !text-white">
+        <h1 className="section-heading px-2 sm:px-0 !text-[46px] sm:!text-[64px] sm:max-w-[890px] mx-auto tracking-[1px] !text-white" data-aos="fade-up">
           Handcrafted jewelry by local artisans
         </h1>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center mt-20 sm:mt-40 gap-x-32 gap-y-20 sm:gap-y-0">
-          <div className="w-[324px] h-[318px] sm:w-[619px] sm:h-[607px] border-[#FCD99F] border-2 relative">
+          <div className="w-[324px] h-[318px] sm:w-[619px] sm:h-[607px] border-[#FCD99F] border-2 relative" data-aos="fade-right">
             <img
               src={about_product_2}
               alt="about-product-1"
@@ -113,7 +128,7 @@ function About() {
             />
           </div>
 
-          <h5 className="font-poppins text-white text-[16px] sm:text-[24px] font-normal leading-normal sm:w-[623px] w-[361px] mx-auto px-3">
+          <h5 className="font-poppins text-white text-[16px] sm:text-[24px] font-normal leading-normal sm:w-[623px] w-[361px] mx-auto px-3" data-aos="fade-left">
             Every piece at Tarangi is handmade by skilled artisans, reflecting
             detail and elegance. We design and craft silver jewelry that is
             premium yet accessible.
@@ -121,14 +136,14 @@ function About() {
         </div>
 
         <div className="flex flex-col gap-y-24 sm:flex-row items-end sm:items-center sm:justify-between mt-20 sm:pl-28 overflow-hidden">
-          <h5 className="font-poppins text-white text-[16px] sm:text-[24px] font-normal leading-normal sm:w-[623px] w-[360px] mx-auto order-2 sm:order-1 px-3">
+          <h5 className="font-poppins text-white text-[16px] sm:text-[24px] font-normal leading-normal sm:w-[623px] w-[360px] mx-auto order-2 sm:order-1 px-3" data-aos="fade-right">
             Our collections are designed for everyone, across generations. From
             ear cuffs, haathphools, couple rings, brooches, hip chains, and
             statement jewelry for every generation, to classic kadas, cufflinks,
             bangles, and anklets, there’s something for all.
           </h5>
 
-          <div className="w-[253px] h-[298px] sm:w-[475px] sm:h-[716px] border-2 border-[#FCD99F] relative right-[-80px] sm:right-0 order-1 sm:order-2">
+          <div className="w-[253px] h-[298px] sm:w-[475px] sm:h-[716px] border-2 border-[#FCD99F] relative right-[-80px] sm:right-0 order-1 sm:order-2" data-aos="fade-left">
             <img
               src={about_product_1}
               alt="about-product-2"
