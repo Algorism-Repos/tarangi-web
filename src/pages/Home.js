@@ -165,7 +165,7 @@ useEffect(() => {
 
 
       {/* Silver price -Mobile */}
-      <div className="w-full bg-[#FCE8CD] font-poppins lg:hidden">
+      <div className="w-full bg-[#FCE8CD] font-poppins lg:hidden hidden">
         <p className="bg-[#CFA266] text-white font-medium text-center py-4 text-[18px]">
          999  Silver Price Today
         </p>
@@ -202,7 +202,7 @@ useEffect(() => {
       </div>
 
       {/* Silver price - Desktop */}
-      <div className="w-full bg-[#FCE8CD] font-poppins hidden lg:block">
+      <div className="w-full bg-[#FCE8CD] font-poppins hidden">
         <div className="flex justify-between">
           <div className="flex items-center gap-x-[25px]">
             <p className="bg-[#CFA266] px-8 py-3 w-fit text-white font-medium">

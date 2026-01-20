@@ -317,7 +317,62 @@ function CheckoutPage() {
     script.async = true;
     document.body.appendChild(script);
   }, []);
+
+     useEffect(() => {
+   if(orderId){
+    handleSendWhatsappConfirmation(orderId)
+   }
+  }, []);
+
+ const handleSendWhatsappConfirmation = async(orderId)=>{
+  const ACCESS_TOKEN = "EAAKkNDOqiLEBQjolbogcni8YqTMFWhHZAovfr376R85ToeDeRMvbRsAZCTTsrPMCuZCxfTNZAiRXiGRwzrszK1B0i56LZA1ZA2oZC9saMdGkIMYxxNmLOaPpXM8ye11shbX65F7gxDdp7ZAJDlgTbi1BLiMV1BnPs19pEuuxknWOQMeLKvw2NkPep2DNFNZBhzetZAXsgCQZCFTP7paXh9IWkkwqg5f8YYGg89WRg7YtrigdZCUcB8paKBOkL6lsKYWUNx7VlZAFyYqjRbN1zNcXREblNZCRuZC"; 
+const PHONE_NUMBER_ID = "1022783800908097";
+
+const url = `https://graph.facebook.com/v22.0/${PHONE_NUMBER_ID}/messages`;
+
+const payload = {
+  messaging_product: "whatsapp",
+  to: "9061568415",
+  type: "template",
+  template: {
+    name: "tarangi jewels",
+    language: {
+      code: "en_US",
+    },
+    components: [
+      {
+        type: "body",
+        parameters: [
+          { type: "text", text: "kRISHNA KUMAR " },
+          { type: "text", text: orderId },
+          { type: "text", text: "Jan 20, 2026" },
+        ],
+      },
+    ],
+  },
+};
+
+try {
+  const response = await axios.post(url, payload, {
+    headers: {
+      Authorization: `Bearer ${ACCESS_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  console.log("Message sent:", response.data);
+} catch (error) {
+  console.error(
+    "WhatsApp API error:",
+    error.response?.data || error.message
+  );
+}
+
+ }
+
+
   console.log(cartItems[0]?.deliveryDetails?.state, pincodeDetails);
+  
   return (
     <div className="min-h-screen bg-[#FFF5E8] text-[#979797]  font-poppins overflow-x-hidden px-3 sm:px-6">
       <div className="max-w-[1440px] mx-auto py-10 space-y-10 ">

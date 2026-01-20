@@ -64,20 +64,20 @@ function Product_Description() {
 
     if (product?.variants?.length > 0) {
       const variant = product?.variants?.find(
-        (element) => element.colorVariant === colorSelected
+        (element) => element?.colorVariant === colorSelected
       );
       if (variant) {
         setactiveVariant({
           ...variant,
           title: product?.title,
-          productId: product.productId,
+          productId: product?.productId,
           deliveryDetails: pincodeDetails,
         });
       }
     } else {
       setactiveVariant({
         ...product,
-        variantId: product.variantId,
+        variantId: product?.variantId,
         deliveryDetails: pincodeDetails,
       });
     }
@@ -152,9 +152,9 @@ function Product_Description() {
   //   }));
   // };
 
-  console.log("Product", product);
+  // console.log("Product", product);
   console.log("Active Variant", activeVariant);
-  console.log(" you may also like categorizedProduct ", youMayLike);
+  // console.log(" you may also like categorizedProduct ", youMayLike);
 
   return (
     <>
@@ -189,8 +189,8 @@ function Product_Description() {
                 pagination={{ dynamicBullets: true }}
                 modules={[Pagination]}
               >
-                {product?.variants && product?.variants.length > 0
-                  ? product.variants.map((item) => (
+                {product?.variants && product?.variants?.length > 0
+                  ? product?.variants.map((item) => (
                     <SwiperSlide>
                       <img className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px]" src={item?.image} />
                     </SwiperSlide>
@@ -219,7 +219,7 @@ function Product_Description() {
                   }
                 >
                   ₹
-                  {parseInt(activeVariant?.price).toLocaleString("en-IN") || product.price}
+                  {parseInt(activeVariant?.price).toLocaleString("en-IN") || product?.price}
                 </h2>
 
                 {/* Price with Discounted Price */}

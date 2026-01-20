@@ -17,7 +17,7 @@ function Recently_Viewed() {
   const [selectedVariants, setSelectedVariants] = useState({});
 
 
-  console.log(recentlyViewed)
+  // console.log(recentlyViewed)
   useEffect(() => {
     if (recentlyViewed) {
       setProducts(normalizeProducts(recentlyViewed));
@@ -26,14 +26,14 @@ function Recently_Viewed() {
   }, [recentlyViewed]);
   const normalizeProducts = (data) =>
     data.map((item) => {
-      if (!item.variants) {
+      if (!item?.variants) {
         return {
           ...item,
           variants: [
             {
-              variantId: item.variantId,
-              price: item.price,
-              image: item.image,
+              variantId: item?.variantId,
+              price: item?.price,
+              image: item?.image,
               colorVariant: null,
             },
           ],

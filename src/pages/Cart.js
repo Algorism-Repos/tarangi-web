@@ -35,7 +35,7 @@ function Cart() {
   const tax = subtotal * 0.03;
   const shipping = 0;
   const total = subtotal + tax + shipping;
-  console.log(categorizedProduct);
+  // console.log(categorizedProduct);
 
   // console.log(cartItems);
 
@@ -69,7 +69,7 @@ function Cart() {
     }
   }, [cartItems, categorizedProduct]);
 
-  console.log(boughtTogether);
+  
 
   const totalCartQuantity = cartItems.reduce(
     (sum, item) => sum + (Number(item.quantity) || 1),
@@ -103,6 +103,7 @@ function Cart() {
                 </Link>
               ) : (
                 cartItems?.map((item) => (
+                  
                   <div
                     key={item?.id}
                     className="bg-[#FFFAF3] max-w-[694px] p-[24px] rounded-[16px] shadow-2xl mb-[25px] max-[425px]:p-[16px]"
@@ -127,6 +128,7 @@ function Cart() {
 
                       <div className="space-y-[3px] sm:space-y-[15px]">
                         <div>
+                          
                           <Link
                             to={`/product_description/${item?.title?.replace(
                               /\s+/g,
@@ -135,9 +137,9 @@ function Cart() {
                             state={{
                               product: categorizedProduct.find((p) =>
                                 p.type === "simple"
-                                  ? p.variantId === item.variantId
+                                  ? p.variantId === item?.variantId
                                   : p.variants?.some(
-                                      (v) => v.variantId === item.variantId
+                                      (v) => v.variantId === item?.variantId
                                     )
                               ),
                             }}

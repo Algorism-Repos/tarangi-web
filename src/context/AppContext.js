@@ -163,7 +163,7 @@ const addToRecentlyViewed = (product) => {
   setRecentlyViewed((prev) => {
     const safePrev = Array.isArray(prev) ? prev : [];
     const filtered = safePrev.filter(
-      (item) => item.variantId !== product.variantId
+      (item) => item?.variantId !== product?.variantId
     );
     const updated = [product, ...filtered].slice(0, 10);
     localStorage.setItem("recentlyViewed", JSON.stringify(updated));
