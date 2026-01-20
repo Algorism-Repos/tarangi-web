@@ -95,6 +95,7 @@ function Favourites() {
 
   console.log("productToDelete", productToDelete);
   console.log("wishlistItems", wishlistItems);
+
   return (
     <>
       <div className="bg-[#FFF5E8] py-[70px] min-h-screen">
@@ -109,7 +110,7 @@ function Favourites() {
             Your Favourites
           </h1>
 
-          {wishlistItems.length === 0 ? (
+          {wishlistItems?.length === 0 ? (
             <Link to="/products/womens">
               <p className="text-center text-[18px] text-[#4B001A] mt-6 font-poppins">
                 No items yet. Find something you'll love
@@ -123,9 +124,9 @@ function Favourites() {
                   : "grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]"
               }
             >
-              {wishlistItems?.map((item) => {
+              {[...wishlistItems]?.slice().reverse()?.map((item) => {
 
-                const isOutOfStock = item?.variants?.every(item => item.inventoryQuantity === 0) || item?.inventoryQuantity === 0;
+                const isOutOfStock = item?.variants?.every(item => item?.inventoryQuantity === 0) || item?.inventoryQuantity === 0;
                 const isRestocking = false;
                 return (
                   <div onClick={

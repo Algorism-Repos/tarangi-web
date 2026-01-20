@@ -35,6 +35,8 @@ function Product_Listing({ productCatergory }) {
     wishlistItems,
     colorAssets
   } = useContext(AppContext);
+  const swiperRefs = useRef({});
+  console.log("SwiperRef ---", swiperRefs)
 
   useEffect(() => {
     if (productCatergory) {
@@ -44,6 +46,8 @@ function Product_Listing({ productCatergory }) {
       setLoading(false);
     }
   }, [productCatergory]);
+
+  console.log(products);
 
   // const normalizeProducts = (data) =>
   //   data.map((item) => {
@@ -66,17 +70,15 @@ function Product_Listing({ productCatergory }) {
   // console.log(products);
 
   const changeVariant = (productId, index, item) => {
-    console.log(productId, index, item);
-
-
+    // console.log(productId, index, item);
     setSelectedVariants((prev) => ({
       ...prev,
       [productId]: index,
 
     }));
+    swiperRefs.current[productId]?.slideTo(index);
   };
-
-  // console.log(selectedVariants);
+  console.log("Selected Variant List:", selectedVariants);
 
   //  Like button toggle
   const toggleLike = (productId, variantId) => {
@@ -163,7 +165,7 @@ function Product_Listing({ productCatergory }) {
       <div className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-[15px] sm:gap-y-10 sm:gap-x-[30px] px-1.5">
         {products.map((item) => {
           const isOutOfStock = item?.variants?.every(item => item.inventoryQuantity === 0) || item?.inventoryQuantity === 0;
-          const isRestocking = item.restock === true;
+          const isRestocking = item?.restock === true;
 
           const selectedIndex = selectedVariants[item?.productId] ?? 0;
           // const selectedVariant = item?.variants[selectedIndex];
@@ -187,13 +189,16 @@ function Product_Listing({ productCatergory }) {
             >
               {/* MAIN PRODUCT IMAGE */}
               <Swiper
-                onSwiper={(swiper) => (swiperRef.current = swiper)}
+                onSwiper={(swiper) => (swiperRefs.current[item.productId] = swiper)}
+
                 onSlideChange={(swiper) => {
-                  const id = swiper.activeIndex;
+                  setSelectedVariants((prev) => ({
+                    ...prev, [item.productId] : swiper.activeIndex,
+                  }))
                 }}
               >
-                {item.variants !== null && item.variants.length > 0 ?
-                  item.variants.map((i) => {
+                {item?.variants !== null && item.variants.length > 0 ?
+                  item?.variants.map((i) => {
                     return (
                       <SwiperSlide>
                         <img className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-60" : ""} ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} src={i.image} alt={item?.title} />
@@ -268,8 +273,8 @@ function Product_Listing({ productCatergory }) {
                       item.variants.map((variants, index) => {
                         return (
                           <>
-                            <img key={variants?.variantId || index} src={colorAssets[variants?.colorVariant]} alt="color-assets" className={`w-[24px] h-[24px] cursor-pointer ${selectedIndex === index ? "border-2 border-primary rounded-[24px] px-[0.2px]" : ""}`}
-                              onClick={(e) => { e.preventDefault(); changeVariant(item?.productId, index) }}
+                            <img key={variants?.variantId || index} src={colorAssets[variants?.colorVariant]} alt="color-assets" className={`w-[24px] h-[24px] cursor-pointer ${variants.length > 0 && selectedIndex === index ? "border-2 border-red-500 rounded-[24px] px-[0.2px]" : ""}`}
+                              onClick={(e) => { e.preventDefault(); changeVariant(item.productId, index) }}
                             />
                           </>
                         )

@@ -98,7 +98,7 @@ function Cart() {
               {cartItems?.length === 0 ? (
                 <Link to="/products/womens">
                   <h3 className="hover:underline text-center text-[18px] text-[#4B001A] mt-6 font-poppins">
-                    No items yet. Find something you'll love
+                    No items in your <span className="uppercase font-semibold">cart</span> yet. Find something you'll love
                   </h3>
                 </Link>
               ) : (
