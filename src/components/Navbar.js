@@ -24,8 +24,6 @@ import new_product_1 from "../assets/Frame 29.png";
 import down_arrow from "../assets/down_arrow.png";
 import up_arrow from "../assets/up_arrow.png";
 import { AppContext } from "../context/AppContext";
-import { FetchAllProductFromShopify } from "../handler/api_Handler";
-
 function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -41,6 +39,7 @@ function Navbar() {
     wishlistItems,
     cartItems,
     trendingProduct,
+    setSearchQuery 
   } = useContext(AppContext);
   // Product dropdown - desktop
   const [productDropdown, setProductDropdown] = useState(false);
@@ -73,9 +72,12 @@ function Navbar() {
   };
 
   const handleSearch = (search) => {
-    if (!search) return;
-    // Navigate to ProductList page with search query
-    navigate(`/products/:handle?search=${encodeURIComponent(search)}`);
+    console.log(search)
+   setSearchQuery(search);
+
+    // if (!search) return;
+    // // Navigate to ProductList page with search query
+    // navigate(`/products/:handle?search=${encodeURIComponent(search)}`);
   };
 
   // mobile products dropdown
@@ -87,7 +89,7 @@ function Navbar() {
   useEffect(() => {
     const syncFromStorage = () => {
       // login check
-      const storedLogin = localStorage.getItem("isLoggedIn") === "false";
+      const storedLogin = localStorage.getItem("isLoggedIn") === "true";
       setIsLoggedIn(storedLogin);
     };
     syncFromStorage();
@@ -248,13 +250,14 @@ function Navbar() {
           >
             Blog
           </Link> */}
+          
         </div>
 
         {/* Right Side Icons */}
         <div className="flex flex-row items-center gap-x-[20px]">
           {/* Search Button */}
           <div
-            onChange={(e) => handleSearch(e.target.value)}
+            onClick={()=> {setShowSearch(true)}}
             className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] transition search-icon
                       ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"}
         `}
@@ -335,6 +338,7 @@ function Navbar() {
                       src={Search_icon}
                       alt="search icon"
                       className="absolute right-4 top-1/2 -translate-y-1/2 w-[42px] h-[42px]"
+                      onClick={() => setShowSearch(true)}
                     />
                   </div>
                   <img
@@ -344,7 +348,7 @@ function Navbar() {
                   />
                 </div>
 
-                <div className="mt-6">
+                {/* <div className="mt-6">
                   <h3 className="text-white font-poppins text-[16px] mb-3">
                     Popular Searches
                   </h3>
@@ -366,7 +370,7 @@ function Navbar() {
                       Pendants
                     </button>
                   </div>
-                </div>
+                </div> */}
 
                 <div className="mt-8">
                   <h3 className="text-white font-poppins text-[16px] mb-3">
@@ -552,7 +556,7 @@ function Navbar() {
                         transition={{ duration: 0.25 }}
                         className="w-full py-6 "
                       >
-                        <h3 className="text-white font-poppins text-[16px] mb-3">
+                        {/* <h3 className="text-white font-poppins text-[16px] mb-3">
                           Popular Searches
                         </h3>
 
@@ -566,7 +570,7 @@ function Navbar() {
                             <img src={Trending_up} className="w-[16px]" />
                             Pendants
                           </button>
-                        </div>
+                        </div> */}
 
                         <h3 className="text-white font-poppins text-[16px] mb-3">
                           Trending Products

@@ -15,35 +15,22 @@ function ThankYou() {
   const navigate = useNavigate();
 
   const { cartItems, clearCart } = useContext(AppContext);
-  console.log(cartItems)
+  console.log(cartItems);
   const data = [
     {
       img: muthukrishan,
       name: "Muthukrishnan",
-      content: "A second-generation artisan who blends creativity and precision to craft exquisite jewels that reflect timeless craftsmanship and meticulous attention to detail."
+      content:
+        "A second-generation artisan who blends creativity and precision to craft exquisite jewels that reflect timeless craftsmanship and meticulous attention to detail.",
     },
     {
       img: ramesh,
       name: "Ramesh",
-      content: "A master craftsman who can infuse tradition with innovation, creating jewels that embody precision, novel artistry and generations of refined skillsets."
-    }
-  ]
-  // const mergedData =
-  //   cartItems.length === 1
-  //     ? [
-  //         {
-  //           ...data[0],
-  //           productImage: cartItems[0].image,
-  //         },
-  //       ]
-  //     : data.map((item, key) => ({
-  //         ...item,
-  //         productImage: cartItems[key]?.image,
-  //       }));
-        useEffect(()=>{
-                clearCart();
+      content:
+        "A master craftsman who can infuse tradition with innovation, creating jewels that embody precision, novel artistry and generations of refined skillsets.",
+    },
+  ];
 
-        },[])
   return (
     <>
       {/* Background */}
@@ -60,13 +47,18 @@ function ThankYou() {
 
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-[16px] mt-6 xl:justify-start">
-              <button className="flex items-center justify-center gap-x-[8px] bg-[#4B001A] w-[220px] h-[56px] rounded-full text-white text-[18px] font-medium " onClick={() => navigate("/home")}>
+              <button
+                className="flex items-center justify-center gap-x-[8px] bg-[#4B001A] w-[220px] h-[56px] rounded-full text-white text-[18px] font-medium "
+                onClick={() => navigate("/home")}
+              >
                 Back to home
               </button>
 
-              <Link to="/profile"><button className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-[210px] h-[56px] rounded-full text-primary text-[18px] font-medium ">
-                View my Orders
-              </button></Link>
+              <Link to="/profile">
+                <button className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-[210px] h-[56px] rounded-full text-primary text-[18px] font-medium ">
+                  View my Orders
+                </button>
+              </Link>
             </div>
           </div>
 
@@ -82,33 +74,23 @@ function ThankYou() {
               onSlideChange={() => console.log("slide change")}
               onSwiper={(swiper) => console.log(swiper)}
             >
-              {/* <SwiperSlide>
-                                <div className="sm:w-[472px] h-fit mx-auto bg-[#FFFAF3] rounded-[24px] shadow-2xl p-[25px] sm:p-[35px] z-10">
-                                    <img className="w-[399px] sm:h-[420px] " src={craftedby} alt='Handcrafeted' />
+              {cartItems?.map((items,index) => {
+                const artisan = data[index % data.length];
 
-                                    <div className="space-y-[3px] mt-[20px]">
-                                        <p className="text-[#6E6E6E] text-[16px]">This piece was handcrafted by</p>
-                                        <h2 className="text-[#404040] text-[24px] font-medium">Ramakrishana</h2>
-                                        <p className="text-primary text-[16px]">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                    </div>
-                                </div>
-                            </SwiperSlide> */}
-              {data?.map((items) => {
                 return (
                   <SwiperSlide>
                     <div className="w-full sm:w-[472px] h-fit mx-auto bg-[#FFFAF3] rounded-[24px] shadow-2xl p-[25px] sm:p-[35px] z-10">
                       <div className="relative">
                         <img
                           className="w-[399px] sm:h-[420px] rounded-[24px] object-cover relative"
-                          src={muthukrishan}
-                          alt="Handcrafeted"
+                          src={artisan.img}
+                          alt={artisan.name}
                         />
-                        {/* <img className="w-[130px] h-[130px] object-cover absolute bottom-0 right-0 rounded-[14px] border-white border-[16px]" src={product} alt="product_image" /> */}
                         <div className="w-[130px] h-[130px] absolute bottom-0 right-0 rounded-[14px] border-[16px] border-white overflow-hidden">
                           <img
                             className="w-full h-full object-cover rounded-[14px]"
-                            src={items?.featuredImage || items?.image}
-                            alt="product_image"
+                            src={items.image}
+                            alt={items.title}
                           />
                         </div>
                       </div>
@@ -118,10 +100,10 @@ function ThankYou() {
                           This piece was handcrafted by
                         </p>
                         <h2 className="text-[#404040] text-[24px] font-medium">
-                          Muthukrishnan
+                          {artisan.name}{" "}
                         </h2>
                         <p className="text-primary text-[16px]">
-                          A second-generation artisan who blends creativity and precision to craft exquisite jewels that reflect timeless craftsmanship and meticulous attention to detail.
+                          {artisan.content}
                         </p>
                       </div>
                     </div>

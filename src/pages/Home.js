@@ -32,13 +32,19 @@ import refresh_icon from "../assets/Refresh_icon.png";
 import right_arrow from "../assets/right_arrow.png";
 import left_arrow from "../assets/left_arrow.png";
 import { formatProduct } from "../utils/productFormatter";
+
 import {
-  FetchAllCollectionsFromShopify, FetchAllProductByCollections, FetchAllProductFromShopify, FetchSilverRate,} from "../handler/api_Handler";
+  FetchAllCollectionsFromShopify,
+  FetchAllProductByCollections,
+  FetchAllProductFromShopify,
+  FetchSilverRate,
+} from "../handler/api_Handler";
 import { AppContext } from "../context/AppContext";
 import LoadingScreen from "../components/LoadingScreen";
+import { formatRawShopifyProducts } from "../utils/formatter";
 
 function Home() {
-   const containerRef = useRef(null);
+  const containerRef = useRef(null);
   const sliderRef = useRef(null);
   const [silver, setSilver] = useState();
   const [silverRate, setSilverRate] = useState(null);
@@ -46,7 +52,8 @@ function Home() {
   const [animate, setAnimate] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
-  const [FestiveFiltered, setFestiveFiltered] = useState([]);  const bestsellerprevRef = useRef(null);
+  const [FestiveFiltered, setFestiveFiltered] = useState([]);
+  const bestsellerprevRef = useRef(null);
   const bestsellernextRef = useRef(null);
   const tarangispecialprevRef = useRef(null);
   const tarangisepecialnextRef = useRef(null);
@@ -67,11 +74,11 @@ function Home() {
   function toggle(product) {
     setSelectedType(product);
   }
- const showNavigation = FestiveFiltered.length > 1;
+  const showNavigation = FestiveFiltered.length > 1;
   const collectionsList = async () => {
     setLoading(false);
     try {
-      const response = await FetchAllCollectionsFromShopify();  
+      const response = await FetchAllCollectionsFromShopify();
       setCollections(response);
     } catch (error) {
       console.log("error fetching collections", error);
@@ -87,7 +94,9 @@ function Home() {
       try {
         const response = await FetchAllProductByCollections(bestSeller.id);
         const productEdges = response?.data?.collection?.products?.edges ?? [];
-        const formattedProducts = productEdges.map(item => formatProduct(item.node));
+        const formattedProducts = productEdges.map((item) =>
+          formatProduct(item.node),
+        );
         setFestiveFiltered(formattedProducts);
       } catch (err) {
         console.log(err);
@@ -119,55 +128,74 @@ function Home() {
     collectionsList();
     setTrendingProduct(FestiveFiltered);
   }, [FestiveFiltered]);
-  
-useEffect(() => {
-  async function loadSilver() {
-    const data = await FetchSilverRate();
-    console.log(data )
 
-    if (!data?.success) return;
+  useEffect(() => {
+    async function loadSilver() {
+      const data = await FetchSilverRate();
+      console.log(data);
 
-    setSilver(data);
-    setSilverRate(data.silverPerGram);
-    setSilverPriceUpdatedTime(
-      new Date(data.lastUpdated).toLocaleString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-        timeZone: "Asia/Kolkata",
-      })
-    );
-  }
+      if (!data?.success) return;
 
-  loadSilver();
-}, []);
+      setSilver(data);
+      setSilverRate(data.silverPerGram);
+      setSilverPriceUpdatedTime(
+        new Date(data.lastUpdated).toLocaleString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+          timeZone: "Asia/Kolkata",
+        }),
+      );
+    }
 
-   useEffect(() => {
+    loadSilver();
+  }, []);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       setAnimate(true);
     }, 100);
     return () => clearTimeout(timer);
   }, []);
   useEffect(() => {
-       window.scrollTo({ top: 0, behavior: "smooth" })
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  
+  const productSearch = async () => {
+    try {
+      const response = await FetchAllProductFromShopify();
+      const productEdges = response?.data ?? [];
+      const formattedProducts = formatRawShopifyProducts(productEdges); // NO .map here
+      console.log(formattedProducts);
+    } catch (error) {
+      console.log("error fetching collections", error);
+    }
+  };
+  useEffect(() => {
+    productSearch();
+  }, []);
   return (
     <>
       {/* Floating Whatsapp icon */}
-      <a href="https://wa.me/919003058300/?text=Hi," target="_blank" className="fixed bottom-3 right-3 sm:bottom-9 sm:right-7 z-30 ">
-        <img src={whatsapp_floating} alt="Whatsapp_Icon" className={`w-[50px] sm:w-[70px] h-fit hover:scale-125 max-h-[70px] ${animate ? " animate-bounce duration-300 transition-transform will-change-transform transform-gpu" : ""}`} />
+      <a
+        href="https://wa.me/919003058300/?text=Hi,"
+        target="_blank"
+        className="fixed bottom-3 right-3 sm:bottom-9 sm:right-7 z-30 "
+      >
+        <img
+          src={whatsapp_floating}
+          alt="Whatsapp_Icon"
+          className={`w-[50px] sm:w-[70px] h-fit hover:scale-125 max-h-[70px] ${animate ? " animate-bounce duration-300 transition-transform will-change-transform transform-gpu" : ""}`}
+        />
       </a>
-
 
       {/* Silver price -Mobile */}
       <div className="w-full bg-[#FCE8CD] font-poppins lg:hidden hidden">
         <p className="bg-[#CFA266] text-white font-medium text-center py-4 text-[18px]">
-         999  Silver Price Today
+          999 Silver Price Today
         </p>
 
         <div className="flex justify-between p-3">
@@ -254,16 +282,23 @@ useEffect(() => {
               Born from tradition Designed for today
             </h1>
             <h4 className="font-poppins text-[13px] w-[270px] sm:w-full sm:text-[22px] font-normal leading-normal text-white text-center xl:text-left mt-3 sm:mt-6 xl:mt-8 max-w-[640px] mx-auto xl:mx-0">
-              Because exculsive 925 silver jewelry should feel as unique as the one who wears it.
+              Because exculsive 925 silver jewelry should feel as unique as the
+              one who wears it.
             </h4>
             {/* <a
               href="#launchOffers"
               className="w-fit hover:scale-110 transition duration-300 mx-auto xl:mx-0"
             > */}
-              <button onClick={() => document.getElementById("launchOffers")?.scrollIntoView({ behavior: "smooth",})} 
-                className=" mt-4 sm:mt-7 xl:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer">
-                View our Best Sellers
-              </button>
+            <button
+              onClick={() =>
+                document
+                  .getElementById("launchOffers")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+              className=" mt-4 sm:mt-7 xl:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer"
+            >
+              View our Best Sellers
+            </button>
             {/* </a> */}
           </div>
         </SwiperSlide>
@@ -278,9 +313,18 @@ useEffect(() => {
               Because every exquisite 925 silver jewelry should perfectly
               reflect the grace of its wearer.
             </h4>
-              <Link to = {`/products/${collection?.[6]?.handle}`} state={{ category: collection?.[6]?.handle, collectionId: collection?.[6]?.id }} >
-                <button className=" mt-4 sm:mt-7 xl:mt-12 rounded-[32px] bg-[#5B3A09] font-poppins text-[16px] font-normal text-white py-[16px] px-[25px] cursor-pointer"> View our Womens Collections</button>
-              </Link>
+            <Link
+              to={`/products/${collection?.[6]?.handle}`}
+              state={{
+                category: collection?.[6]?.handle,
+                collectionId: collection?.[6]?.id,
+              }}
+            >
+              <button className=" mt-4 sm:mt-7 xl:mt-12 rounded-[32px] bg-[#5B3A09] font-poppins text-[16px] font-normal text-white py-[16px] px-[25px] cursor-pointer">
+                {" "}
+                View our Womens Collections
+              </button>
+            </Link>
           </div>
         </SwiperSlide>
 
@@ -294,9 +338,18 @@ useEffect(() => {
               Because distinguished 925 silver jewelry should feel as commanding
               as the one who wears it.
             </h4>
-               <Link to = {`/products/${collection?.[5]?.handle}`} state={{ category: collection?.[5]?.handle, collectionId: collection?.[5]?.id }} >
-                <button className=" mt-4 sm:mt-7 xl:mt-12 rounded-[32px] bg-[#5B3A09] font-poppins text-[16px] font-normal text-white py-[16px] px-[25px] cursor-pointer"> View our Mens Collections</button>
-              </Link>
+            <Link
+              to={`/products/${collection?.[5]?.handle}`}
+              state={{
+                category: collection?.[5]?.handle,
+                collectionId: collection?.[5]?.id,
+              }}
+            >
+              <button className=" mt-4 sm:mt-7 xl:mt-12 rounded-[32px] bg-[#5B3A09] font-poppins text-[16px] font-normal text-white py-[16px] px-[25px] cursor-pointer">
+                {" "}
+                View our Mens Collections
+              </button>
+            </Link>
           </div>
         </SwiperSlide>
       </Swiper>
@@ -335,7 +388,7 @@ useEffect(() => {
                     ?.filter(
                       (item) =>
                         item.handle !== "best_seller" &&
-                        item.body_html !== "<p>tarangi-specials</p>"
+                        item.body_html !== "<p>tarangi-specials</p>",
                     )
                     .map((item) => (
                       <Link
@@ -367,7 +420,7 @@ useEffect(() => {
                     <Link
                       to={`/product_description/${type?.title.replace(
                         /\s+/g,
-                        "-"
+                        "-",
                       )}`}
                       state={{ product: type }}
                     >
@@ -387,7 +440,10 @@ useEffect(() => {
                         </h5>
                         <h4 className="font-poppins text-[20px] font-semibold leading-normal text-[#FCD99F]">
                           ₹
-                          {(Number(type?.price) || Number(type?.variants?.[0]?.price)?.toLocaleString("en-IN"))}
+                          {Number(type?.price) ||
+                            Number(type?.variants?.[0]?.price)?.toLocaleString(
+                              "en-IN",
+                            )}
                         </h4>
                       </div>
                     </Link>
@@ -396,7 +452,10 @@ useEffect(() => {
               </div>
 
               {/* Best Sellers - Mobile View slider */}
-              <div id ="" className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden">
+              <div
+                id=""
+                className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden"
+              >
                 <h1 className="section-heading mb-9 !text-white tracking-[1px] text-center">
                   Best Sellers
                 </h1>
@@ -466,7 +525,7 @@ useEffect(() => {
                         <Link
                           to={`/product_description/${type.title.replace(
                             /\s+/g,
-                            "-"
+                            "-",
                           )}`}
                           state={{ product: type }}
                         >
@@ -481,7 +540,10 @@ useEffect(() => {
                             </h5>
                             <h4 className="font-poppins text-[16px] sm:text-[18px] md:text-[20px] font-semibold leading-normal text-[#FCD99F]">
                               ₹
-                              {(Number(type?.price) || Number(type?.variants?.[0]?.price)?.toLocaleString("en-IN"))}
+                              {Number(type?.price) ||
+                                Number(
+                                  type?.variants?.[0]?.price,
+                                )?.toLocaleString("en-IN")}
                             </h4>
                           </div>
                         </Link>
@@ -680,7 +742,8 @@ useEffect(() => {
           >
             {collection &&
               collection
-                ?.filter((item) => item.body_html === "<p>tarangi-specials</p>").map((item, index) => (
+                ?.filter((item) => item.body_html === "<p>tarangi-specials</p>")
+                .map((item, index) => (
                   <SwiperSlide key={index}>
                     <Link
                       to={`/products/${item.handle}`}

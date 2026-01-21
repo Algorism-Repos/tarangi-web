@@ -7,6 +7,7 @@ import brown_ellipse from "../assets/Products/brown_ellipse.png";
 
 export const AppContext = createContext();
 export function AppProvider({ children }) {
+   const[searchQuery,setSearchQuery]=useState("")
   const [loading, setLoading] = useState(false);
   const [collection, setCollections] = useState(() => {
     const saved = localStorage.getItem("collection");
@@ -218,6 +219,8 @@ useEffect(() => {
         pincodeDetails,
         setPincodeDetails,
         colorAssets,
+        searchQuery,
+        setSearchQuery
       }}
     >
       {children}

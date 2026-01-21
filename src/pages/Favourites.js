@@ -92,6 +92,7 @@ function Favourites() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+const reversedWishlistItems = [...wishlistItems].reverse();
 
   console.log("productToDelete", productToDelete);
   console.log("wishlistItems", wishlistItems);

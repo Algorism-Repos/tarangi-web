@@ -102,12 +102,11 @@ import product_2 from "../assets/Products/product_2.png";
 import logout_icon from "../assets/logout_icon.png";
 import trashcan from "../assets/Trash.png";
 
-
-
 import gold_ellipse from "../assets/Products/gold_ellipse.png";
 import silver_ellipse from "../assets/Products/silver_ellipse.png";
 import brown_ellipse from "../assets/Products/brown_ellipse.png";
-
+import circle from "../assets/Ellipse 12.png";
+import truck_icon from "../assets/truck_icon.png";
 import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 import OrderSummaryPopup from "../components/OrderSummaryPopup";
 import { AppContext } from "../context/AppContext";
@@ -124,25 +123,27 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(true);
   const [hasSavedOnce, setHasSavedOnce] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-
+  const [selectedOrder, setSelectedOrder] = useState(null);
   // delete modal state
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [addressToDelete, setAddressToDelete] = useState(null);
+  const [imageMap, setImageMap] = useState({});
 
   // favourites modals
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
+  const [showOrderPopup, setShowOrderPopup] = useState(false);
 
   // order popup
-  const { loggedCustomerId,wishlistItems } = useContext(AppContext);
+  const { loggedCustomerId, wishlistItems } = useContext(AppContext);
   const [orders, setorder] = useState([]);
   const savedCustomerId = localStorage.getItem("customerId");
- const profileRef = useRef(null);
+  const profileRef = useRef(null);
   const addressRef = useRef(null);
   const ordersRef = useRef(null);
   const favouritesRef = useRef(null);
-   const formik = useFormik({
+  const formik = useFormik({
     initialValues: {
       firstName: "",
       lastName: "",
@@ -161,14 +162,28 @@ const Profile = () => {
       console.log("✅ Form Submitted:", values);
     },
   });
-
-
+  const sendTrackOrder = (orderId) => {
+    const phoneNumber = "919003058300";
+    const message = `Hi, I would like to track my order with the Order ID: ${orderId}`;
+    const url = `https://wa.me/${phoneNumber}/?text=${encodeURIComponent(
+      message,
+    )}`;
+    window.open(url, "_blank");
+  };
+  const sendCancelOrder = (orderId) => {
+    const phoneNumber = "919003058300";
+    const message = `Hi, I would like to cancel my Order with the Order ID:  ${orderId}`;
+    const url = `https://wa.me/${phoneNumber}/?text=${encodeURIComponent(
+      message,
+    )}`;
+    window.open(url, "_blank");
+  };
 
   console.log(orders);
-const grouped = {
-  fulfilled: orders.filter(o => o.fulfillment_status === "fulfilled"),
-  unfulfilled: orders.filter(o => o.fulfillment_status !== "fulfilled")
-};
+  const grouped = {
+    fulfilled: orders.filter((o) => o.fulfillment_status === "fulfilled"),
+    unfulfilled: orders.filter((o) => o.fulfillment_status !== "fulfilled"),
+  };
   console.log(grouped);
 
   useEffect(() => {
@@ -179,7 +194,7 @@ const grouped = {
     }
   }, [loggedCustomerId]);
   // profile form
- 
+
   const handleEdit = () => setIsEditing(true);
   const handleCancel = () => setIsEditing(false);
 
@@ -308,15 +323,15 @@ const grouped = {
 
   const toggleLike = (id) => {
     setProducts((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, liked: !p.liked } : p))
+      prev.map((p) => (p.id === id ? { ...p, liked: !p.liked } : p)),
     );
   };
 
   const handleColorSelect = (productId, colorId) => {
     setProducts((prev) =>
       prev.map((p) =>
-        p.id === productId ? { ...p, selectedColor: colorId } : p
-      )
+        p.id === productId ? { ...p, selectedColor: colorId } : p,
+      ),
     );
   };
 
@@ -324,14 +339,14 @@ const grouped = {
 
   const handleRemove = (id) => {
     setProducts((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, liked: false } : item))
+      prev.map((item) => (item.id === id ? { ...item, liked: false } : item)),
     );
   };
 
   useEffect(() => {
     localStorage.setItem(
       "hasFavourites",
-      likedProducts.length > 0 ? "true" : "false"
+      likedProducts.length > 0 ? "true" : "false",
     );
   }, [likedProducts]);
 
@@ -339,12 +354,11 @@ const grouped = {
     setOpenSections((prev) => {
       const allClosed = Object.keys(prev).reduce(
         (acc, k) => ({ ...acc, [k]: false }),
-        {}
+        {},
       );
       return { ...allClosed, [key]: !prev[key] };
     });
   };
-
 
   const tax = 800;
   const shipping = 0;
@@ -400,7 +414,7 @@ const grouped = {
 
   const handleAddressSave = (values, { setSubmitting }) => {
     setAddresses((prev) =>
-      prev.map((a) => (a.id === values.id ? { ...values, isNew: false } : a))
+      prev.map((a) => (a.id === values.id ? { ...values, isNew: false } : a)),
     );
     setEditingAddressId(null);
     setSubmitting(false);
@@ -422,10 +436,10 @@ const grouped = {
   };
 
   const menuItems = [
-    { name: "Your Profile", icon: userIcon, activeIcon: userIconActive },
-    { name: "Saved Address", icon: addressIcon, activeIcon: addressIconActive },
+    // { name: "Your Profile", icon: userIcon, activeIcon: userIconActive },
+    // { name: "Saved Address", icon: addressIcon, activeIcon: addressIconActive },
     { name: "Orders", icon: ordersIcon, activeIcon: ordersIconActive },
-    { name: "Favourites", icon: favIcon, activeIcon: favIconActive },
+    // { name: "Favourites", icon: favIcon, activeIcon: favIconActive },
   ];
 
   const navigate = useNavigate();
@@ -441,8 +455,6 @@ const grouped = {
     window.dispatchEvent(new Event("cartUpdated"));
     navigate("/login");
   };
-
- 
 
   useEffect(() => {
     const sectionMap = {
@@ -468,107 +480,86 @@ const grouped = {
   }, []);
 
   const CustomerOrders = async (customerId) => {
-  try {
-    if (!customerId) return;
+    try {
+      if (!customerId) return;
 
-    const response = await CustomersOrders(customerId);
-    setorder(response.data.orders || []);
-  } catch (error) {
-    console.log(error);
-  }
-};
-useEffect(() => {
-  const customerId =
-    loggedCustomerId?.customer?.id || localStorage.getItem("customerId");
+      const response = await CustomersOrders(customerId);
+      setorder(response.data.orders || []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    const customerId =
+      loggedCustomerId?.customer?.id || localStorage.getItem("customerId");
 
-  if (customerId) {
-    CustomerOrders(customerId);
-  }
-}, [loggedCustomerId]);
-console.log("loggedCustomerId:", loggedCustomerId);
-console.log("order:", orders);
-
+    if (customerId) {
+      CustomerOrders(customerId);
+    }
+  }, [loggedCustomerId]);
+  console.log("loggedCustomerId:", loggedCustomerId);
+  console.log("order:", orders);
 
   return (
     <div className="min-h-fit bg-[#FFF5E8] py-16 px-2 sm:px-6 lg:px-16 xl:px-28">
       <div className="max-w-[1280px] mx-auto space-y-20">
         <div className="md:flex flex-auto justify-items-center">
           <h1 className="font-atteron text-[#5A0010] text-[28px] leading-[42px]">
-            PROFILE
+            Orders
           </h1>
+        </div>
+        <div>
+          <h2 className="text-[#2A2A2A] text-[16px] font-semibold font-poppins mb-2">
+            Orders
+          </h2>
+          {orders.map((fulfillmentsOrder) => (
+            <div className="border border-[#E0E0E0] rounded-lg bg-white p-5 shadow-sm mb-6">
+              <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center border-b border-[#E0E0E0] pb-3 mb-4 w-full">
+                <div className="flex gap-6 p-1">
+                  <div className="flex flex-col">
+                    <span className="text-[14px] text-[#4B4B4B] font-medium">
+                      Order ID : {fulfillmentsOrder.id}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-3 sm:gap-4 items-center flex-wrap">
+                {fulfillmentsOrder?.line_items?.map((line_items, idx) => (
+                  <div>
+                    <p>Product : {line_items.title}</p>
+                    <p>
+                      Price :{" "}
+                      {parseInt(line_items?.price).toLocaleString("en-IN")}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3 mt-5">
+                <button
+                  className="flex-1 bg-[#4B001A] text-white text-[14px] font-semibold py-2.5 rounded-full"
+                  onClick={() =>
+                    sendTrackOrder(fulfillmentsOrder.fulfillments[0]?.order_id)
+                  }
+                >
+                  Track Order
+                </button>
+                <button
+                  className="flex-1 border border-[#4B001A] text-[#4B001A] text-[14px] font-semibold py-2.5 rounded-full"
+                  onClick={() =>
+                    sendCancelOrder(fulfillmentsOrder.fulfillments[0]?.order_id)
+                  }
+                >
+                  Cancel Order
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* DESKTOP LAYOUT */}
         <div className="hidden md:flex flex-row gap-10 md:gap-16">
-          <div className="w-[220px] flex flex-col gap-8">
-            {menuItems.map((item) => {
-              const isActive = activeSection === item.name;
-              return (
-                <button
-                  key={item.name}
-                  onClick={() => setActiveSection(item.name)}
-                  className={`flex items-center gap-3 px-5 py-3 rounded-[8px] text-[16px] font-poppins transition-all w-full
-                      ${
-                        isActive
-                          ? "bg-[#5A0010] text-white"
-                          : "text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010]"
-                      }`}
-                >
-                  <img
-                    src={isActive ? item.activeIcon : item.icon}
-                    alt={item.name}
-                    className="w-[32px] h-[32px] transition-all"
-                  />
-                  {item.name}
-                </button>
-              );
-            })}
-
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-3 px-5 py-3 text-[#6D6D6D] mt-[240px] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
-            >
-              <img
-                src={logout_icon}
-                alt="Logout"
-                className="w-[30px] h-[30px] object-contain"
-              />
-              Logout
-            </button>
-          </div>
-
           <div className="flex-1 bg-transparent">
-            {activeSection === "Your Profile" && (
-              <ProfileSection
-                formik={formik}
-                isEditing={isEditing}
-                handleEdit={handleEdit}
-                handleSave={handleSave}
-                handleCancel={handleCancel}
-                hasSavedOnce={hasSavedOnce}
-                successMessage={successMessage}
-              />
-            )}
-
-            {activeSection === "Saved Address" && (
-              <AddressSection
-                addresses={addresses}
-                editingAddressId={editingAddressId}
-                handleAddNew={handleAddNew}
-                handleEditClick={handleAddressEditClick}
-                handleSave={handleAddressSave}
-                handleCancel={handleAddressCancel}
-                handleAddressDelete={handleAddressDelete}
-                successMessage={successMessage}
-              />
-            )}
-
-            {activeSection === "Orders" && (
-              <OrdersSection
-                grouped={grouped}
-                // setShowOrderPopup={setShowOrderPopup}
-              />
-            )}
+            {activeSection === "Orders" && <OrdersSection grouped={grouped} />}
 
             {activeSection === "Favourites" && (
               <FavouritesSection
@@ -698,86 +689,12 @@ console.log("order:", orders);
             </button>
             {openSections.orders && (
               <div className="border-t border-[#F6EFE6] px-4 py-4 bg-[#FFF5E8] transition-all duration-300">
-                <OrdersSection
-                grouped={grouped}
-               
-                />
+                <OrdersSection grouped={grouped} />
               </div>
             )}
           </div>
-
-          {/* Favourites Dropdown */}
-          <div
-            ref={favouritesRef}
-            tabIndex="-1"
-            className="bg-[#FFF5E8] rounded-[10px]"
-          >
-            <button
-              type="button"
-              onClick={() => toggleSection("favourites")}
-              className="w-full flex justify-between items-center px-4 py-3 text-[#6E0027] font-medium text-[16px]"
-            >
-              <div className="flex items-center gap-2">
-                <img
-                  src={favIcon}
-                  alt="Favourites"
-                  className="w-[30px] h-[30px]"
-                />
-                <span>Favourites</span>
-              </div>
-              <img
-                src={openSections.favourites ? upArrow : downArrow}
-                alt="Toggle"
-                className="w-[11px] h-[7px]"
-              />
-            </button>
-            {openSections.favourites && (
-              <div className="border-t border-[#F6EFE6] px-4 py-4 bg-[#FFF5E8]">
-                <FavouritesSection
-                  likedProducts={likedProducts}
-                  handleProductClick={handleProductClick}
-                  toggleLike={toggleLike}
-                  handleColorSelect={handleColorSelect}
-                  handleRemove={handleRemove}
-                  showOutStockModal={showOutStockModal}
-                  setShowOutStockModal={setShowOutStockModal}
-                  showRestockModal={showRestockModal}
-                  setShowRestockModal={setShowRestockModal}
-                  showRestockSuccess={showRestockSuccess}
-                  setShowRestockSuccess={setShowRestockSuccess}
-                />
-              </div>
-            )}
-          </div>
-
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-3  px-5 py-3 mt-[150px] text-[#6D6D6D] hover:bg-[#F4E7E7] hover:text-[#5A0010] rounded-[8px] text-[16px] font-poppins"
-          >
-            <img
-              src={logout_icon}
-              alt="Logout"
-              className="w-[30px] h-[30px] object-contain"
-            />
-            Logout
-          </button>
         </div>
       </div>
-
-      {/* Delete confirmation modal*/}
-      <DeleteConfirmationModal
-        isOpen={isDeleteModalOpen}
-        onCancel={() => setIsDeleteModalOpen(false)}
-        onConfirm={() => {
-          setAddresses((prev) => prev.filter((a) => a.id !== addressToDelete));
-          setIsDeleteModalOpen(false);
-        }}
-        title="Are you Sure"
-        message="You want to delete this address ??"
-        confirmText="Delete"
-        cancelText="Cancel"
-        icon={trashcan}
-      />
     </div>
   );
 };
