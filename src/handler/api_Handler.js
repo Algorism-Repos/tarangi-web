@@ -1,12 +1,12 @@
 import axios from "axios";
 
-// let url = "http://localhost:8080/api/shopify";
-let url = "https://tarangi-staging.df.r.appspot.com/api/shopify";
+let url = "http://localhost:8080/api/shopify";
+// let url = "https://tarangi-staging.df.r.appspot.com/api/shopify";
 
 export async function FetchAllProductFromShopify() {
   try {
-    const response = await axios.get(`${url}/products`);
-    console.log(response);
+    const response = await axios.post(`${url}/products`);
+    console.log(response.data);
     return response.data || [];
   } catch (error) {
     console.error("error fetching product:", error);
@@ -29,7 +29,7 @@ export async function FetchAllProductByCollections(collectionId) {
   }
 }
 
-export async function FetchProductBySearchv(searchInput) {
+export async function FetchProductBySearch(searchInput) {
    console.log(searchInput)
   try {
     const response = await axios.post(`${url}/shopify-search`, {

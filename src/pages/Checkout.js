@@ -96,6 +96,7 @@ function CheckoutPage() {
     sessionStorage.getItem("checkoutForm") || "null",
   );
 
+   console.log(cartItems)
   // Formik
   const formik = useFormik({
     initialValues: savedCheckoutForm || {

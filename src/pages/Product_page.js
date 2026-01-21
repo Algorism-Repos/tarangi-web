@@ -3,7 +3,7 @@ import Product_Filter from "../components/Product_filter";
 import Product_Listing from "./Product_Listing";
 import { AppContext } from "../context/AppContext";
 import { useLocation } from "react-router";
-import { FetchAllProductByCollections, FetchProductBySearchv } from "../handler/api_Handler";
+import { FetchAllProductByCollections, FetchProductBySearch, FetchProductBySearchv } from "../handler/api_Handler";
 import floating_up_arrow from "../assets/floating_up_arrow.png";
 import { formatProduct } from "../utils/productFormatter";
 
@@ -55,7 +55,7 @@ function Product_page() {
     if (!searchInput) return;
 
     try {
-      const response = await FetchProductBySearchv(searchInput);
+      const response = await FetchProductBySearch(searchInput);
       console.log("respons from FetchProductBySearch", response);
     } catch (error) {
       console.error(error);

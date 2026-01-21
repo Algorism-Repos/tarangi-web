@@ -24,8 +24,6 @@ import new_product_1 from "../assets/Frame 29.png";
 import down_arrow from "../assets/down_arrow.png";
 import up_arrow from "../assets/up_arrow.png";
 import { AppContext } from "../context/AppContext";
-import { FetchAllProductFromShopify } from "../handler/api_Handler";
-
 function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -41,6 +39,7 @@ function Navbar() {
     wishlistItems,
     cartItems,
     trendingProduct,
+    setSearchQuery 
   } = useContext(AppContext);
   // Product dropdown - desktop
   const [productDropdown, setProductDropdown] = useState(false);
@@ -73,9 +72,12 @@ function Navbar() {
   };
 
   const handleSearch = (search) => {
-    if (!search) return;
-    // Navigate to ProductList page with search query
-    navigate(`/products/:handle?search=${encodeURIComponent(search)}`);
+    console.log(search)
+   setSearchQuery(search);
+
+    // if (!search) return;
+    // // Navigate to ProductList page with search query
+    // navigate(`/products/:handle?search=${encodeURIComponent(search)}`);
   };
 
   // mobile products dropdown

@@ -38,33 +38,10 @@ function Product_Listing({ productCatergory }) {
 
   useEffect(() => {
     if (productCatergory) {
-      // setProducts(normalizeProducts(productCatergory));
-
       setProducts(productCatergory);
       setLoading(false);
     }
   }, [productCatergory]);
-
-  // const normalizeProducts = (data) =>
-  //   data.map((item) => {
-  //     if (!item.variants) {
-  //       return {
-  //         ...item,
-  //         variants: [
-  //           {
-  //             variantId: item.variantId,
-  //             price: item.price,
-  //             image: item.image,
-  //             colorVariant: null,
-  //           },
-  //         ],
-  //       };
-  //     }
-  //     return item;
-  //   });
-
-  // console.log(products);
-
   const changeVariant = (productId, index, item) => {
     console.log(productId, index, item);
 
@@ -75,8 +52,6 @@ function Product_Listing({ productCatergory }) {
 
     }));
   };
-
-  // console.log(selectedVariants);
 
   //  Like button toggle
   const toggleLike = (productId, variantId) => {
@@ -129,11 +104,6 @@ function Product_Listing({ productCatergory }) {
   if (loading) {
     return <LoadingScreen />;
   }
-
-  // console.log("products", products);
-  // console.log("Variant--select--", selectedVariants);
-
-
   if (products.length === 0) {
     return (
       <>
@@ -158,6 +128,7 @@ function Product_Listing({ productCatergory }) {
     );
   }
 
+   console.log(products)
   return (
     <>
       <div className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-[15px] sm:gap-y-10 sm:gap-x-[30px] px-1.5">
