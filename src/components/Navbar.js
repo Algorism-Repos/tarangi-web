@@ -87,7 +87,7 @@ function Navbar() {
   useEffect(() => {
     const syncFromStorage = () => {
       // login check
-      const storedLogin = localStorage.getItem("isLoggedIn") === "false";
+      const storedLogin = localStorage.getItem("isLoggedIn") === "true";
       setIsLoggedIn(storedLogin);
     };
     syncFromStorage();
@@ -248,13 +248,14 @@ function Navbar() {
           >
             Blog
           </Link> */}
+          
         </div>
 
         {/* Right Side Icons */}
         <div className="flex flex-row items-center gap-x-[20px]">
           {/* Search Button */}
           <div
-            onChange={(e) => handleSearch(e.target.value)}
+            onClick={()=> {setShowSearch(true)}}
             className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] transition search-icon
                       ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"}
         `}
@@ -335,6 +336,7 @@ function Navbar() {
                       src={Search_icon}
                       alt="search icon"
                       className="absolute right-4 top-1/2 -translate-y-1/2 w-[42px] h-[42px]"
+                      onClick={() => setShowSearch(true)}
                     />
                   </div>
                   <img

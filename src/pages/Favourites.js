@@ -92,6 +92,7 @@ function Favourites() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+const reversedWishlistItems = [...wishlistItems].reverse();
 
   console.log("productToDelete", productToDelete);
   console.log("wishlistItems", wishlistItems);
@@ -123,7 +124,7 @@ function Favourites() {
                   : "grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]"
               }
             >
-              {wishlistItems?.map((item) => {
+              {reversedWishlistItems?.map((item) => {
 
                 const isOutOfStock = item?.variants?.every(item => item.inventoryQuantity === 0) || item?.inventoryQuantity === 0;
                 const isRestocking = false;

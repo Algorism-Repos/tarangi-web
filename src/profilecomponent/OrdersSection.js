@@ -55,8 +55,6 @@ useEffect(() => {
         </h2>
         {grouped?.fulfilled.map((fulfillmentsOrder) => (
           <div
-            // key=                    {fulfillmentsOrder.id}
-
             className="border border-[#E0E0E0] rounded-lg bg-white p-5 shadow-sm mb-6"
           >
             <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center border-b border-[#E0E0E0] pb-3 mb-4 w-full">
@@ -150,11 +148,11 @@ useEffect(() => {
         ))}
       </div>
 
-      <div>
+      {/* <div>
         <h2 className="text-[#2A2A2A] text-[16px] font-semibold font-poppins mb-2">
           Delivered
         </h2>
-        {/* {deliveredOrders?.map((order) => (
+        {deliveredOrders?.map((order) => (
           <div
             key={order.id}
             className="border border-[#E0E0E0] rounded-lg bg-white p-5 shadow-sm mb-6"
@@ -203,14 +201,13 @@ useEffect(() => {
               Delivered on {order.deliveredOn}
             </p>
             {order?.items?.map((itm, idx) => (
-              <span>{itm.title}</span>
 
-              // <img
-              //   key={idx}
-              //   src={img}
-              //   alt="Product"
-              //   className="w-[90px] h-[90px] rounded-[8px] object-cover"
-              // />
+              <img
+                key={idx}
+                src={img}
+                alt="Product"
+                className="w-[90px] h-[90px] rounded-[8px] object-cover"
+              />
             ))}
 
             <div className="flex flex-col sm:flex-row gap-3 mt-5">
@@ -222,8 +219,8 @@ useEffect(() => {
               </button>
             </div>
           </div>
-        ))} */}
-      </div>
+        ))} 
+      </div> */}
       <OrderSummaryPopup
         open={showOrderPopup}
         onClose={() => setShowOrderPopup(false)}
