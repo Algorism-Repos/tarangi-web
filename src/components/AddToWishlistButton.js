@@ -26,7 +26,7 @@ function AddToWishlistButton({ productToFavorites, disabled }) {
 
   return (
     <>
-      <button disabled={disabled}
+      <button type="button" disabled={disabled}
         className="w-full sm:w-[190px] h-[56px] flex items-center justify-center gap-x-[8px]
           border-2 border-[#4B001A] rounded-full text-primary text-[16px] font-medium mt-2
           transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"

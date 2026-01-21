@@ -34,9 +34,7 @@ function Product_Description() {
     colorAssets,
     setRecentlyViewed
   } = useContext(AppContext);
-  const [colorSelected, setColorSelected] = useState(
-    product?.variants?.[0]?.colorVariant || ""
-  );
+  const [colorSelected, setColorSelected] = useState(product?.variants?.[0]?.colorVariant || "");
   const [products, setProducts] = useState([]);
   const [selectedVariants, setSelectedVariants] = useState({});
 
@@ -106,7 +104,6 @@ function Product_Description() {
     (item) => item?.variantId === activeVariant?.variantId
   );
   console.log(product);
-
   console.log("variantActive", activeVariant);
   console.log(" you may also like categorizedProduct ", categorizedProduct);
 
@@ -121,7 +118,7 @@ function Product_Description() {
       console.log(filterOutofStockProducts);
       const removingProductShown = filterOutofStockProducts.filter(item => item.productId !== product?.productId);
       console.log(product?.productId);
-      console.log("removingProductShown",removingProductShown);
+      console.log("removingProductShown", removingProductShown);
       setYouMayLike(removingProductShown);
     }
     setRecentlyViewed(categorizedProduct)
@@ -152,9 +149,10 @@ function Product_Description() {
   //   }));
   // };
 
-  // console.log("Product", product);
-  console.log("Active Variant", activeVariant);
-  // console.log(" you may also like categorizedProduct ", youMayLike);
+  console.log("Trial", colorAssets[product?.variants?.colorVariant])
+  console.log("Selected Color", colorSelected);
+
+
 
   return (
     <>
@@ -250,6 +248,9 @@ function Product_Description() {
               </div>
               {/* ----------------------------------------------------------------------------------------- */}
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px] sm:block hidden" />
+              
+              <h1 className={activeVariant?.inventoryQuantity === 0 ? "mb-4 font-poppins text-[#404040] text-[20px] font-medium leading-[52px] tracking-0 bg-[#B8B8B8] w-[125px] h-fit text-center rounded-[173px]": "hidden"}>Sold Out</h1>
+
               {/* Description */}
               <div>
                 <h3 className="text-[#6F6F6F] text-[14px] font-medium mt-5 sm:mt-0">
@@ -272,20 +273,13 @@ function Product_Description() {
                     Colors Available
                   </h3>
                   <div className="flex flex-row items-center mt-1 gap-x-3">
-                    {availableColors?.map((item) => (
-                      <img
-                        className={
-                          colorSelected === item?.value
-                            ? "w-[40px] sm:h-[40px] border-4 rounded-full border-primary cursor-pointer"
-                            : "w-[40px] sm:h-[40px] hover:border-4 rounded-full border-primary cursor-pointer"
-                        }
-                        src={item?.imgUrl}
-                        alt={`image_${item?.value}`}
-                        onClick={() => {
-                          handleColorChangeByButton(item?.value);
-                        }}
-                      />
-                    ))}
+                    {product?.variants?.map((item) => {
+                      return (
+                        <button type="button" disabled={item.inventoryQuantity === 0} onClick={() => handleColorChangeByButton(item?.colorVariant)}>
+                          <img className={`w-[40px] h-[40px] ${item?.inventoryQuantity === 0 ? "opacity-[30%]" : ""} ${activeVariant?.inventoryQuantity > 0 && colorSelected === item.colorVariant ? "border-4 rounded-full border-primary cursor-pointer px-[0.5px]" : ""}`} src={colorAssets[item.colorVariant]} alt="color-assets" />
+                        </button>
+                      )
+                    })}
                   </div>
 
                   <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
@@ -348,21 +342,14 @@ function Product_Description() {
                 <h3 className="font-poppins font-medium text-[14px] leading-normal text-[#6F6F6F] mt-3">
                   Colors Available
                 </h3>
-                <div className="flex flex-row items-center mt-1 gap-x-3">
-                  {availableColors?.map((item) => (
-                    <img
-                      className={
-                        colorSelected === item?.value
-                          ? "w-[40px] sm:h-[40px] border-4 rounded-full border-primary cursor-pointer"
-                          : "w-[40px] sm:h-[40px] hover:border-4 rounded-full border-primary cursor-pointer"
-                      }
-                      src={item?.imgUrl}
-                      alt={`image_${item?.value}`}
-                      onClick={() => {
-                        handleColorChangeByButton(item?.value);
-                      }}
-                    />
-                  ))}
+                <div className="flex flex-row items-center mt-2 gap-x-3">
+                  {product?.variants?.map((item, index) => {
+                    return (
+                      <button type="button" onClick={() => handleColorChangeByButton(item.colorVariant)}>
+                        <img className={`w-[40px] h-[40px] ${item?.inventoryQuantity === 0 ? "opacity-[30%]" : ""} ${colorSelected === item.colorVariant ? "border-4 rounded-full border-primary cursor-pointer px-[0.5px]" : ""}`} src={colorAssets[item.colorVariant]} alt="color-assets" />
+                      </button>
+                    )
+                  })}
                 </div>
 
                 <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
@@ -371,8 +358,8 @@ function Product_Description() {
               {/* Buttons */}
               <div className="max-w-[500px] mt-5">
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
-                  <AddToCartButton productToCart={activeVariant} />
-                  <AddToWishlistButton productToFavorites={product} disabled={isAlreadyInWishlist} />
+                  <AddToCartButton productToCart={activeVariant} buttonDisabled={activeVariant?.inventoryQuantity === 0} />
+                  <AddToWishlistButton productToFavorites={product} disabled={isAlreadyInWishlist || activeVariant?.inventoryQuantity === 0} />
                 </div>
               </div>
             </div>
@@ -394,7 +381,7 @@ function Product_Description() {
                   <div
                     key={item?.id}
                     className="font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0"
-                    onClick={() => {window.scrollTo({ top: 0, behavior: "smooth" });} }
+                    onClick={() => { window.scrollTo({ top: 0, behavior: "smooth" }); }}
                   >
                     <Link
                       to={`/product_description/${item?.title.replace(
@@ -415,29 +402,29 @@ function Product_Description() {
                         <h3 className="text-[12px] font-normal leading-normal sm:text-[16px] ">
                           ₹{" "}
                           {(item?.variants && item?.variants.length > 0
-                            ? parseInt(item?.variants?.[0]?.price) 
+                            ? parseInt(item?.variants?.[0]?.price)
                             : parseInt(item?.price)
                           )?.toLocaleString("en-IN")}
                         </h3>
                         <div className="flex flex-row items-center gap-x-2">
-                            {item?.variants !== null && item?.variants.length > 0 ?
-                              item.variants.map((variants, index) => {
-                                return (
-                                  <>
-                                    <img key={variants?.variantId || index} src={colorAssets[variants?.colorVariant]} alt="color-assets" className={`w-[20px] h-[20px] sm:w-[24px] sm:h-[24px] cursor-pointer`}
-                                    />
-                                  </>
-                                )
-                              }) : ""
-                            }
-                          </div>
+                          {item?.variants !== null && item?.variants.length > 0 ?
+                            item.variants.map((variants, index) => {
+                              return (
+                                <>
+                                  <img key={variants?.variantId || index} src={colorAssets[variants?.colorVariant]} alt="color-assets" className={`w-[20px] h-[20px] sm:w-[24px] sm:h-[24px] cursor-pointer`}
+                                  />
+                                </>
+                              )
+                            }) : ""
+                          }
+                        </div>
                       </div>
                     </div>
                   </div>
 
                 );
               })}
-           </div>
+            </div>
           </div>
 
           <Recently_Viewed />
