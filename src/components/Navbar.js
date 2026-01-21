@@ -346,7 +346,7 @@ function Navbar() {
                   />
                 </div>
 
-                <div className="mt-6">
+                {/* <div className="mt-6">
                   <h3 className="text-white font-poppins text-[16px] mb-3">
                     Popular Searches
                   </h3>
@@ -368,7 +368,7 @@ function Navbar() {
                       Pendants
                     </button>
                   </div>
-                </div>
+                </div> */}
 
                 <div className="mt-8">
                   <h3 className="text-white font-poppins text-[16px] mb-3">
@@ -554,7 +554,7 @@ function Navbar() {
                         transition={{ duration: 0.25 }}
                         className="w-full py-6 "
                       >
-                        <h3 className="text-white font-poppins text-[16px] mb-3">
+                        {/* <h3 className="text-white font-poppins text-[16px] mb-3">
                           Popular Searches
                         </h3>
 
@@ -568,7 +568,7 @@ function Navbar() {
                             <img src={Trending_up} className="w-[16px]" />
                             Pendants
                           </button>
-                        </div>
+                        </div> */}
 
                         <h3 className="text-white font-poppins text-[16px] mb-3">
                           Trending Products
