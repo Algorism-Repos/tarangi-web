@@ -106,9 +106,7 @@ useEffect(() => {
       );
     }
   }, [productListFromShopify]);
-  useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
+
   useEffect(() => {
     localStorage.setItem("wishlistItems", JSON.stringify(wishlistItems));
   }, [wishlistItems]);
@@ -119,22 +117,25 @@ useEffect(() => {
   }, [collection]);
 const addToCart = (product) => {
   setCartItems((prev) => {
-    const existing = prev.find(
+       const safePrev = Array.isArray(prev) ? prev : [];
+    const existing = safePrev.find(
       (item) => item.variantId === product.variantId
     );
 
     if (existing) {
-      return prev.map((item) =>
+      return safePrev.map((item) =>
         item.variantId === product.variantId
           ? { ...item, quantity: item.quantity + 1 }
           : item
       );
     }
 
-    return [...prev, { ...product, quantity: 1 }];
+    return [...safePrev, { ...product, quantity: 1 }];
   });
 };
-
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
   const removeFromCart = (variantId) => {
     setCartItems((prev) => prev.filter((item) => item?.variantId !== variantId));
   };

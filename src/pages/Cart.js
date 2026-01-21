@@ -15,7 +15,15 @@ import AddToCartButton from "../components/AddToCartButton";
 function Cart() {
   const [showSummary, setShowSummary] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [boughtTogether, setboughtTogether] = useState([]);
+  const [boughtTogether, setboughtTogether] = useState(() => {
+  try {
+    const saved = localStorage.getItem("boughtTogether");
+    return saved ? JSON.parse(saved) : [];
+  } catch {
+    return [];
+  }
+});
+
   const [productToDelete, setProductToDelete] = useState(null);
   const {
     cartItems,
@@ -48,28 +56,52 @@ function Cart() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    // localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    // localStorage.setItem(
+    //   "categorizedProduct",
+    //   JSON.stringify(categorizedProduct)
+    // );
+    if (!Array.isArray(categorizedProduct) || categorizedProduct.length === 0) {
+    return;
+  }
+
+  const filterOutofStockProducts = categorizedProduct.filter((item) => {
+    const hasVariants = item.variants && item.variants.length > 0;
+
+    return hasVariants
+      ? item.variants.every(
+          (v) => v.inventoryQuantity !== 0 && v.price <= 6000
+        )
+      : item.inventoryQuantity !== 0 && item.price <= 6000;
+  });
+
+  setboughtTogether(filterOutofStockProducts);
+}, [categorizedProduct]);
+
+  //   if (categorizedProduct) {
+  //     // setProducts(normalizeProducts(categorizedProduct));
+  //     const filterOutofStockProducts = categorizedProduct.filter((item) => {
+  //       const hasVariants = item.variants && item.variants.length > 0;
+
+  //       return hasVariants
+  //         ? item.variants.every(
+  //             (i) => i.inventoryQuantity !== 0 && i.price <= 6000
+  //           )
+  //         : item.inventoryQuantity !== 0 && item.price <= 6000;
+  //     });
+  //     setboughtTogether(filterOutofStockProducts);
+  //   }
+  // }, [cartItems, categorizedProduct]);
+
+  useEffect(() => {
+  if (boughtTogether.length > 0) {
     localStorage.setItem(
-      "categorizedProduct",
-      JSON.stringify(categorizedProduct)
+      "boughtTogether",
+      JSON.stringify(boughtTogether)
     );
+  }
+}, [boughtTogether]);
 
-    if (categorizedProduct) {
-      // setProducts(normalizeProducts(categorizedProduct));
-      const filterOutofStockProducts = categorizedProduct.filter((item) => {
-        const hasVariants = item.variants && item.variants.length > 0;
-
-        return hasVariants
-          ? item.variants.every(
-              (i) => i.inventoryQuantity !== 0 && i.price <= 6000
-            )
-          : item.inventoryQuantity !== 0 && item.price <= 6000;
-      });
-      setboughtTogether(filterOutofStockProducts);
-    }
-  }, [cartItems, categorizedProduct]);
-
-  
 
   const totalCartQuantity = cartItems.reduce(
     (sum, item) => sum + (Number(item.quantity) || 1),
