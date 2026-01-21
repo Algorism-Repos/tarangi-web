@@ -69,6 +69,8 @@ function Cart() {
     }
   }, [cartItems, categorizedProduct]);
 
+  console.log("Cart Array --", cartItems);
+
   
 
   const totalCartQuantity = cartItems.reduce(
@@ -90,6 +92,74 @@ function Cart() {
               {String(totalCartQuantity).padStart(2, "0")}
             </span>
           </h5>
+
+          {/* Mobile Version Summary */}
+          {cartItems?.length > 0 && (
+            <div className="block mt-7 sm:hidden">
+              {showSummary && (
+                <div className="bg-[#FFFAF3] p-4 max-w-[361px] rounded-[12px] shadow-lg mt-4 m-auto my-9 transition-all duration-300 ease-in-out">
+                  <h3 className="text-[15px] font-semibold text-[#404040] mb-3">
+                    Order Summary
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <p className="text-[14px] text-[#878787] font-semibold">
+                        Sub total
+                      </p>
+                      <p className="text-[14px] text-[#404040] font-medium">
+                        {subtotal.toLocaleString("en-IN")}
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-[14px] text-[#878787] font-semibold">
+                        Tax
+                      </p>
+                      <p className="text-[14px] text-[#404040] font-medium">
+                        {tax.toFixed(0)}
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-[14px] text-[#878787] font-semibold">
+                        Shipping
+                      </p>
+                      <p className="text-[14px] text-[#C70039] font-medium">
+                        Free
+                      </p>
+                    </div>
+                    <hr className="border border-[#EDEDED] my-[10px]" />
+                    <div className="flex items-center justify-between">
+                      <p className="text-[15px] text-[#878787] font-semibold">
+                        Total
+                      </p>
+                      <p className="text-[15px] text-[#404040] font-semibold">
+                        {total.toLocaleString("en-IN")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div className="w-full bg-[#FFFAF3] flex items-center justify-between px-5 py-3 z-50 bottom-0 left-0">
+                <div>
+                  <p className="text-[#404040] font-semibold text-[16px]">
+                    ₹ {Number(total).toLocaleString("en-IN")}
+                  </p>
+                  <button
+                    onClick={toggleSummary}
+                    className="text-[#6E0027] text-[12px] underline"
+                  >
+                    {showSummary ? "Hide Order Summary" : "View Order Summary"}
+                  </button>
+                </div>
+
+                {/* <Link to="/" className="flex items-center justify-center gap-x-[8px] bg-[#4B001A] w-[220px] h-[56px] rounded-full text-white text-[18px] font-medium ">
+                  Continue Shopping
+                </Link > */}
+                <button className="bg-[#4B001A] text-white px-6 py-2 rounded-full font-medium text-[14px]">
+                  Place Order
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Main container */}
           <div className="flex flex-wrap justify-between gap-y-14 px-3 my-[60px] sm:px-0 sm:my-[80px] max-[425px]:my-[40px] max-[375px]:my-[30px] ">
@@ -148,12 +218,14 @@ function Cart() {
                               {item.title}
                             </h3>
                           </Link>
-                          <h3 className="text-[12px] font-semibold sm:text-[20px]">
-                            ₹
-                            {Number(
-                              item?.price ?? item?.variants?.[0]?.price ?? 0
-                            ).toLocaleString("en-IN")}
-                          </h3>
+                          {/* Price - when compare at price is null */}
+                          <h3 className={item?.compareAtPrice === null ? "text-[12px] font-semibold sm:text-[20px]" : "hidden"}>₹{Number(item?.price || 0).toLocaleString("en-IN")}</h3>
+
+                          {/* Price - when compare at price is true -- shows price with discounted price */}
+                          <div className={item?.compareAtPrice !== null ? "flex flex-row items-center gap-x-3" : "hidden"}>
+                                <h3 className="text-[10px] text-red-500 line-through  font-semibold sm:text-[16px]">₹{Number(item?.compareAtPrice || 0).toLocaleString("en-IN")}</h3>
+                                <h3 className="text-[12px] font-semibold sm:text-[20px]">₹{Number(item?.price || 0).toLocaleString("en-IN")}</h3>
+                          </div>
                         </div>
 
                         <div
@@ -183,8 +255,7 @@ function Cart() {
                     </div>
 
                     {/* Free silver cleaning kit */}
-                    {Number(item?.price ?? item?.variants?.[0]?.price) >=
-                      10000 && (
+                    {Number(item?.price ?? item?.variants?.[0]?.price) >= 10000 && (
                       <>
                         <hr className="border border-[#EDEDED] my-[14px]" />
                         <div className="flex items-center gap-x-[20px] justify-between">
@@ -343,74 +414,6 @@ function Cart() {
               </div>
             </div>
           </div>
-
-          {/* Mobile Version Summary */}
-          {cartItems?.length > 0 && (
-            <div className="block sm:hidden">
-              {showSummary && (
-                <div className="bg-[#FFFAF3] p-4 max-w-[361px] rounded-[12px] shadow-lg mt-4 m-auto my-9 transition-all duration-300 ease-in-out">
-                  <h3 className="text-[15px] font-semibold text-[#404040] mb-3">
-                    Order Summary
-                  </h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <p className="text-[14px] text-[#878787] font-semibold">
-                        Sub total
-                      </p>
-                      <p className="text-[14px] text-[#404040] font-medium">
-                        {subtotal.toLocaleString("en-IN")}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-[14px] text-[#878787] font-semibold">
-                        Tax
-                      </p>
-                      <p className="text-[14px] text-[#404040] font-medium">
-                        {tax.toFixed(0)}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-[14px] text-[#878787] font-semibold">
-                        Shipping
-                      </p>
-                      <p className="text-[14px] text-[#C70039] font-medium">
-                        Free
-                      </p>
-                    </div>
-                    <hr className="border border-[#EDEDED] my-[10px]" />
-                    <div className="flex items-center justify-between">
-                      <p className="text-[15px] text-[#878787] font-semibold">
-                        Total
-                      </p>
-                      <p className="text-[15px] text-[#404040] font-semibold">
-                        {total.toLocaleString("en-IN")}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-              <div className="w-full bg-[#FFFAF3] flex items-center justify-between px-5 py-3 z-50 bottom-0 left-0">
-                <div>
-                  <p className="text-[#404040] font-semibold text-[16px]">
-                    ₹{total.toFixed(0)}
-                  </p>
-                  <button
-                    onClick={toggleSummary}
-                    className="text-[#6E0027] text-[12px] underline"
-                  >
-                    {showSummary ? "Hide Order Summary" : "View Order Summary"}
-                  </button>
-                </div>
-
-                {/* <Link to="/" className="flex items-center justify-center gap-x-[8px] bg-[#4B001A] w-[220px] h-[56px] rounded-full text-white text-[18px] font-medium ">
-                  Continue Shopping
-                </Link > */}
-                <button className="bg-[#4B001A] text-white px-6 py-2 rounded-full font-medium text-[14px]">
-                  Place Order
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
