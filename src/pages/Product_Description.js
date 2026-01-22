@@ -29,6 +29,7 @@ import { formatProduct } from "../utils/productFormatter";
 function Product_Description() {
   const swiperRef = useRef(null);
   const swiperRefs = useRef({});
+  const {params} = useParams();
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);

@@ -1,7 +1,7 @@
 import axios from "axios";
 
-let url = "http://localhost:8080/api/shopify";
-// let url = "https://tarangi-staging.df.r.appspot.com/api/shopify";
+// let url = "http://localhost:8080/api/shopify";
+let url = "https://tarangi-staging.df.r.appspot.com/api/shopify";
 
 export async function FetchAllProductFromShopify() {
   try {

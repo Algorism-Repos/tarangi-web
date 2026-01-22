@@ -5,6 +5,7 @@ import CartToast from "./CartToast";
 import { AppContext } from "../context/AppContext";
 import Wishlist_Popup from "./Wishlist_Popup";
 import { useNavigate } from "react-router-dom";
+import filled_icon from "../assets/filled_wishlist_icon.png"
 
 function AddToWishlistButton({ productToFavorites, buttonDisabled, productOutofStock }) {
   const { addToWishlist } = useContext(AppContext);
@@ -28,7 +29,7 @@ function AddToWishlistButton({ productToFavorites, buttonDisabled, productOutofS
     <>
       {!buttonDisabled && (
         <button type="button"
-          className="w-full sm:w-[190px] h-[56px] flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] rounded-full text-primary text-[16px] font-medium mt-2 transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
+          className="w-full sm:w-[190px] h-[50px] sm:h-[56px] flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] rounded-full text-primary text-[16px] font-medium mt-2 transition-all duration-300 ease-in-out hover:bg-[#4B001A] hover:text-white"
           onMouseEnter={() => setWishIconSrc(favorie_icon_white)}
           onMouseLeave={() => setWishIconSrc(favorie_icon)}
           onClick={handleAddToWish}
@@ -40,9 +41,9 @@ function AddToWishlistButton({ productToFavorites, buttonDisabled, productOutofS
 
       {buttonDisabled && (
         <button type="button"
-          className="w-full sm:w-[210px] h-[56px] flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] rounded-full text-primary text-[16px] font-medium mt-2 transition-all duration-300 ease-in-out bg-transparent cursor-not-allowed "
+          className="w-full sm:w-[210px] h-[50px]  sm:h-[56px] flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] rounded-full text-primary text-[16px] font-medium mt-2 transition-all duration-300 ease-in-out bg-transparent cursor-not-allowed "
         >
-          <img src={wishIconSrc} className="w-[32px] h-[32px]" />
+          <img src={filled_icon} className="w-[20px] h-[20px]" />
           Added to Wishlist
         </button>
       )}

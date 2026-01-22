@@ -335,7 +335,7 @@ function CheckoutPage() {
 
     const payload = {
       messaging_product: "whatsapp",
-      to: "919061568415",
+      to: formValues.mobile,
       type: "template",
       template: {
         name: "tarangi",
