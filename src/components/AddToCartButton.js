@@ -13,6 +13,7 @@ function AddToCartButton({
   isRestocking,
   isFavouritesPage = false,
   onRemoveFromFavourites,
+  buttonDisabled,
 }) {
   const [showToast, setShowToast] = useState(false);
   const [cartIconSrc, setCartIconSrc] = useState(shoppingCart_red);
@@ -30,7 +31,7 @@ function AddToCartButton({
   const handleClick = (e) => {
     e.preventDefault();
 
-    addToCart({...productToCart,quantity: 1});
+    addToCart({ ...productToCart, quantity: 1 });
     setShowToast(true);
     document.body.style.overflow = "hidden";
     setTimeout(() => {
@@ -52,33 +53,62 @@ function AddToCartButton({
       return;
     }
   };
+
+  const placeEnquiry = (e) => {
+    alert("Button Clicked")
+  }
   return (
     <>
-      <button
-        className={`cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]
-        ${
-          pathname === "/favourites"
-            ? "w-full h-[56px]"
-            : "w-full h-[40px] sm:w-[205px] sm:h-[56px]"
-        } rounded-full text-primary text-[16px] font-medium mt-2
+      {/* Add to Cart Button */}
+      {!buttonDisabled && (
+        <button
+          className={`cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]
+        ${pathname === "/favourites" ? "w-full h-[56px]" : "w-full h-[40px] sm:w-[205px] sm:h-[56px]"} rounded-full text-primary text-[16px] font-medium mt-2
         transition-all duration-300 hover:bg-[#4B001A] hover:text-white`}
-        onMouseEnter={() =>
-          !isDisabledInFavourites && setCartIconSrc(shoppingCart_white)
-        }
-        onMouseLeave={() =>
-          !isDisabledInFavourites && setCartIconSrc(shoppingCart_red)
-        }
-        onClick={handleClick}
-      >
-        {!isDisabledInFavourites && (
-          <img
-            className="w-[32px] h-[32px]"
-            src={cartIconSrc}
-            alt="cart icon"
-          />
-        )}
-        {isDisabledInFavourites ? "Remove from favourites" : "Add to cart"}
-      </button>
+          onMouseEnter={() =>
+            !isDisabledInFavourites && setCartIconSrc(shoppingCart_white)
+          }
+          onMouseLeave={() =>
+            !isDisabledInFavourites && setCartIconSrc(shoppingCart_red)
+          }
+          onClick={handleClick}
+        >
+          {!isDisabledInFavourites && (
+            <img
+              className="w-[32px] h-[32px]"
+              src={cartIconSrc}
+              alt="cart icon"
+            />
+          )}
+          {isDisabledInFavourites ? "Remove from favourites" : "Add to cart"}
+        </button>
+      )}
+
+      {/* Enquiry for stock out product */}
+      {buttonDisabled && (
+        <button
+          className={`cursor-pointer flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A]
+        ${pathname === "/favourites" ? "w-full h-[56px]" : "w-full h-[40px] sm:w-[205px] sm:h-[56px]"} rounded-full text-primary text-[16px] font-medium mt-2
+        transition-all duration-300 hover:bg-[#4B001A] hover:text-white`}
+          onMouseEnter={() =>
+            !isDisabledInFavourites && setCartIconSrc(shoppingCart_white)
+          }
+          onMouseLeave={() =>
+            !isDisabledInFavourites && setCartIconSrc(shoppingCart_red)
+          }
+          onClick={placeEnquiry}
+        >
+          {!isDisabledInFavourites && (
+            <img
+              className="w-[32px] h-[32px]"
+              src={cartIconSrc}
+              alt="cart icon"
+            />
+          )}
+          {isDisabledInFavourites ? "Remove from favourites" : "Place an Enquiry"}
+        </button>
+      )}
+
       {/* Toast */}
       <CartToast show={showToast} onClose={() => setShowToast(false)} />
       {/* Out of stock */}

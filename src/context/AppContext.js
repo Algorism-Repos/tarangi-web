@@ -47,7 +47,9 @@ const [categorizedProduct, setCategorizedProduct] = useState(() => {
   });
   const [wishlistItems, setWishlistItems] = useState(() => {
     const saved = localStorage.getItem("wishlistItems");
+    const parsed = saved ? JSON.parse(saved): [];
     return saved ? JSON.parse(saved) : [];
+    // return parsed.slice().reverse();
   });
   const [cartItems, setCartItems] = useState(() => {
     const saved = localStorage.getItem("cartItems");

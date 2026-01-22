@@ -8,6 +8,7 @@ import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import truck_icon from "../assets/truck_icon.png";
 import LineImg from "../assets/line.png";
+import location_icon from "../assets/location_icon.png"
 import red_arrow from "../assets/Products/down_arrow_red.png";
 import downArrow from "../assets/arrowDown.png";
 import {
@@ -27,13 +28,8 @@ function CheckoutPage() {
   const [formValues, setFormValues] = useState([]);
   const [orderCompleted, setOrderCompleted] = useState(false);
   const [deliveryInfo, setDeliveryInfo] = useState({});
-  const { pincodeDetails, setPincodeDetails, loading, setLoading } =
+  const { pincodeDetails} =
     useContext(AppContext);
-  // const [fulfillmentType, setFulfillmentType] = useState("DELIVERY");
-  // const [pincodeStatus, setPincodeStatus] = useState({
-  //   loading: false,
-  //   activeField: null,
-  // });
 
   // Yup validation schema
   const validationSchema = Yup.object({
@@ -96,7 +92,7 @@ function CheckoutPage() {
     sessionStorage.getItem("checkoutForm") || "null",
   );
 
-   console.log(cartItems)
+  console.log(cartItems)
   // Formik
   const formik = useFormik({
     initialValues: savedCheckoutForm || {
@@ -155,20 +151,7 @@ function CheckoutPage() {
       }
     },
   });
-  
-  // useEffect(() => {
-  //   const navigationType = performance.getEntriesByType("navigation")[0]?.type;
 
-  //   if (navigationType === "reload") {
-  //     localStorage.removeItem("checkoutForm");
-  //     formik.resetForm();
-  //   } else {
-  //     const saved = localStorage.getItem("checkoutForm");
-  //     if (saved) {
-  //       formik.setValues(JSON.parse(saved));
-  //     }
-  //   }
-  // }, []);
   const getPincode = async (pincode) => {
     try {
       const response = await FetchDeliveryByPincode(pincode);
@@ -293,7 +276,7 @@ function CheckoutPage() {
         navigate("/thankyou");
       }
       console.log("Order placed successfully:", response.data);
-       await handleSendWhatsappConfirmation();
+      await handleSendWhatsappConfirmation();
     } catch (error) {
       console.error(
         "Error placing order:",
@@ -331,7 +314,7 @@ function CheckoutPage() {
   }, []);
 
   const handleSendWhatsappConfirmation = async () => {
-  console.log(" Sending WhatsApp message...");
+    console.log(" Sending WhatsApp message...");
     const ACCESS_TOKEN =
       "EAAKkNDOqiLEBQr6VqBcxEuXUrvDvfLEXRz9HlRGgaZABUpoZCjmOfODTngb8TR6qKZCE5XgB9czYikqSFDm5yQ4BXxNmykQ14oDuZBWVXvzunb0kGUpSgSyZBjFjPPnUmqMFpJkZAahNNW8xeMOjNmlj4P0kjjueipUsWsfJigyz7QuupbshC48XLoak6yZBh67pwZDZD";
     const PHONE_NUMBER_ID = "1022783800908097";
@@ -375,79 +358,28 @@ function CheckoutPage() {
   console.log(cartItems[0]?.deliveryDetails?.state, pincodeDetails);
 
   return (
-    <div className="min-h-screen bg-[#FFF5E8] text-[#979797]  font-poppins overflow-x-hidden px-3 sm:px-6">
+    <div className="min-h-screen bg-[#FFF5E8] text-[#979797] font-poppins overflow-x-hidden px-3 sm:px-6">
       <div className="max-w-[1440px] mx-auto py-10 space-y-10 ">
         {/* Header */}
-        <div className="flex items-center relative px-2 sm:px-4 md:px-6 lg:px-10 py-2">
+        <div className="flex items-center relative sm:px-4 md:px-6 lg:px-10 py-2">
           <Link
             to="/cart"
-            className="flex flex-row items-center gap-x-[6px] px-5 max-[425px]:gap-x-[4px] max-[425px]:px-4"
+            className="flex flex-row items-center gap-x-[6px] sm:px-5"
           >
             <img
               className="w-[26px] rotate-90 max-[425px]:w-[26px]"
               src={red_arrow}
               alt="Arrow icon"
             />
-            <h3 className="text-primary text-[16px] font-semibold max-[425px]:text-[16px] max-[375px]:text-[15px] hidden lg:block">
+            <h3 className="text-primary text-[16px] font-semibold max-[425px]:text-[16px] max-[375px]:text-[15px] ">
               Go back
             </h3>
           </Link>
         </div>
 
-        {/* TOGGLE TO RECEIVE CUSTOMER INPUT  */}
-        <div className="flex flex-col items-center space-y-4 text-center">
-          <p className="font-medium">
-            How would you like to receive your order?
-          </p>
-          <div className="flex items-center justify-center gap-6">
-           
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="fulfillmentType"
-                value="DELIVERY"
- checked={formik.values.fulfillmentType === "DELIVERY"}
-                   onChange={() =>
-      formik.setFieldValue("fulfillmentType", "DELIVERY")
-    }
-              />
-              Delivery to Address
-            </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="fulfillmentType"
-                value="STORE_PICKUP"
-               checked={formik.values.fulfillmentType === "STORE_PICKUP"}
-                  onChange={() =>
-      formik.setFieldValue("fulfillmentType", "STORE_PICKUP")
-    }
-              />
-              In-Store Purchase (Pick-up)
-            </label>
-          </div>
-        </div>
+
 
         {/* ======= Mobile Order Summary Dropdown ======= */}
-        <div>
-          {/* STORE LOCATION */}
-          {formik.values.fulfillmentType === "STORE_PICKUP" && (
-            <div className="mt-2 w-[466px] h-[150px] xl:hidden  bg-[#FFFAF3] rounded-[10px] shadow-2xl border border-[#EDEDED] p-5">
-              <p className="font-semibold text-black">Store Location</p>
-              <p>Tarangi Jewels</p>
-              <p>431-435,VNA Complex, NSR Road</p>
-              <p>Saibaba Colony, Coimbatore-641011</p>
-              <a
-                href="https://maps.google.com/?q=Tarangi+Jewellery+Coimbatore"
-                target="_blank"
-                rel="noreferrer"
-                className="text-blue-600 underline"
-              >
-                Open in Google Maps
-              </a>
-            </div>
-          )}
-        </div>
         <div className="max-w-[660px] mx-auto block xl:hidden bg-[#FFFAF3] shadow-md border border-[#F6EFE6] mb-6">
           <button
             type="button"
@@ -455,18 +387,17 @@ function CheckoutPage() {
             className="w-full flex justify-between items-center px-4 py-3 text-[#6E0027] font-Poppins text-[14px]"
           >
             <div className="flex items-center gap-2">
-              <span>View Order Summary</span>
+              <h1>{showSummary ? "Hide" : "View"} Order Summary</h1>
               <img
                 src={downArrow}
                 alt="Dropdown Arrow"
-                className={`w-[11px] h-[7px] transition-transform duration-300 ${
-                  showSummary ? "rotate-180" : "rotate-0"
-                }`}
+                className={`w-[11px] h-[7px] transition-transform duration-300 ${showSummary ? "rotate-180" : "rotate-0"
+                  }`}
               />
             </div>
 
             <p className="font-semibold text-[#404040]">
-              ₹{total.toLocaleString()}
+              ₹{Number(total).toLocaleString("en-IN")}
             </p>
           </button>
 
@@ -475,7 +406,7 @@ function CheckoutPage() {
               {/* Order Items */}
               <div className="space-y-3">
                 {cartItems.map((item, i) => (
-                  <div key={i} className="flex items-center gap-3">
+                  <div key={i} className="flex items-center gap-3 w-full">
                     <div className="w-14 h-14 rounded-md border border-[#f2eaea] overflow-hidden">
                       <img
                         src={item.image}
@@ -483,7 +414,7 @@ function CheckoutPage() {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="flex-11 space-y-1">
+                    <div className="space-y-1">
                       <div className="text-[14px] font-Poppins text-[#6F6F6F]">
                         {item.title}
                       </div>
@@ -491,7 +422,7 @@ function CheckoutPage() {
                         Quantity: {item.quantity}
                       </div>
                       <div className="text-[14px] text-[#313131] font-semibold">
-                        {item.free ? "Free" : `₹${item.price.toLocaleString()}`}
+                        ₹{Number(item?.price * item?.quantity).toLocaleString("en-IN")}
                       </div>
                     </div>
                   </div>
@@ -499,7 +430,7 @@ function CheckoutPage() {
               </div>
 
               {/* Delivery info */}
-              <div className="flex max-w-[205px] items-center gap-2 text-[12px] text-[#A84C32]  bg-gradient-to-r from-[#DAB3C1] to-[#FFFFFF] rounded-none px-3 py-2">
+              <div className={fulfillmentType === "DELIVERY" ? "flex !mt-5 max-w-full w-fit items-center gap-2 text-[10px] sm:text-[12px] text-[#A84C32]  bg-gradient-to-r from-[#DAB3C1] to-[#FFFFFF] rounded-none px-3 py-1": "hidden"}>
                 <img
                   src={truck_icon}
                   alt="truck icon"
@@ -511,7 +442,17 @@ function CheckoutPage() {
                 </span>
               </div>
 
-              <div className="border-t border-[#EDEDED] my-3" />
+              {/* Delivery Details - fulfillment Type is In-Store Pickup */}
+              {fulfillmentType === "STORE_PICKUP" && (
+                <a href="https://maps.app.goo.gl/Czdvg1VjKf2jcY7Z9" target="_blank" >
+                  <div className="flex flex-row items-center gap-x-1 my-5 !w-[250px]">
+                    <img src={location_icon} className="w-[15px] h-[15px]" alt="location-icon" />
+                    <h5 className="font-poppins text-primary font-medium text-[12px]  underline">Click for Store Location</h5>
+                  </div>
+                </a>
+              )}
+
+              <hr className="border-t border-[#EDEDED] my-3" />
 
               {/* Summary values */}
               <div className="text-[13px] space-y-2">
@@ -523,7 +464,7 @@ function CheckoutPage() {
                   <span>Tax</span>
                   <span>₹{tax.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className={fulfillmentType === "DELIVERY" ? "flex justify-between" : "hidden"}>
                   <span>Shipping</span>
                   <span className="text-[#6E0027]">
                     {shipping === 0 ? "Free" : `₹${shipping}`}
@@ -544,32 +485,42 @@ function CheckoutPage() {
         <div className="flex max-w-[1300px]">
           {/* Left Form */}
           <div className="w-[700px]  mx-auto">
-            <h3 className="text-primary text-[30px] font-medium font-atteron uppercase text-center">
+            <h3 className="text-primary text-[30px] font-medium font-atteron uppercase text-center mb-7 sm:mb-0">
               Checkout Form
             </h3>
             <form
               onSubmit={formik.handleSubmit}
-              className="bg-[#FFF5E8] rounded-xl  p-4 sm:p-6 space-y-6"
+              className="bg-[#FFF5E8] rounded-xl px-1 sm:p-6 space-y-6"
             >
+
+              {/* TOGGLE TO RECEIVE CUSTOMER INPUT  */}
+              <p className="text-[14px] text-[#6E0027] font-semibold my-1">
+                How would you like to receive your order?
+              </p>
+
+              <div className="flex items-center sm:gap-x-12 gap-x-3">
+                <button onClick={() => { setFulfillmentType("DELIVERY") }} type="button" className={`${fulfillmentType === "DELIVERY" ? "bg-gradient-to-r from-[#f8e3e3] to-[#FFFFFF] border-[0.8px] border-[#8C455E] text-black" : "bg-transparent border-[0.8px] border-gray-300 text-black-400"} w-[150px] h-[40px] sm:w-[200px] sm:h-[50px] rounded-[8px] font-poppins text-[12px] sm:text-[15px] `}>Delivery to Address</button>
+                <button onClick={() => { setFulfillmentType("STORE_PICKUP") }} type="button" className={`${fulfillmentType === "STORE_PICKUP" ? "bg-gradient-to-r from-[#f8e3e3] to-[#FFFFFF] border-[0.8px] border-[#8C455E] text-black" : "bg-transparent border-[0.8px] border-gray-300 text-black-400"} w-[200px] h-[40px] sm:w-[250px] sm:h-[50px] rounded-[8px] font-poppins text-[12px] sm:text-[15px] `}>In-Store Purchase (Pick-up)</button>
+              </div>
+
               {/* Contact Details */}
               <section className="space-y-4">
                 <h2 className="text-[14px] text-[#6E0027] font-semibold">
                   Contact Details
                 </h2>
 
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <div className="flex-1">
+                <div className="flex flex-col items-start sm:flex-row gap-3">
+                  <div className="w-[95%] sm:w-full">
                     <label className="text-sm block mb-1">First Name</label>
                     <input
                       name="firstName"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.firstName}
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                        formik.errors.firstName && formik.touched.firstName
-                          ? "border-red-500"
-                          : "border-[#efe6e6]"
-                      }
+                      className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.firstName && formik.touched.firstName
+                        ? "border-red-500"
+                        : "border-[#efe6e6]"
+                        }
                       focus:outline-none focus:border-[#8C455E]`}
                       placeholder="First Name"
                     />
@@ -580,18 +531,17 @@ function CheckoutPage() {
                     )}
                   </div>
 
-                  <div className="flex-1">
+                  <div className="w-[95%] sm:w-full">
                     <label className="text-sm block mb-1">Last Name</label>
                     <input
                       name="lastName"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.lastName}
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                        formik.errors.lastName && formik.touched.lastName
-                          ? "border-red-500"
-                          : "border-[#efe6e6]"
-                      }
+                      className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.lastName && formik.touched.lastName
+                        ? "border-red-500"
+                        : "border-[#efe6e6]"
+                        }
                              focus:outline-none focus:border-[#8C455E]`}
                       placeholder="Last Name"
                     />
@@ -603,14 +553,13 @@ function CheckoutPage() {
                   </div>
                 </div>
 
-                <div>
+                <div className="w-[95%] sm:w-full">
                   <label className="text-sm block mb-1">Mobile Number</label>
                   <div
-                    className={`flex items-center w-full h-[44px] px-3 border rounded-md text-[16px] bg-white ${
-                      formik.errors.mobile && formik.touched.mobile
-                        ? "border-red-500"
-                        : "border-[#efe6e6]"
-                    }
+                    className={`flex items-center w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] bg-white ${formik.errors.mobile && formik.touched.mobile
+                      ? "border-red-500"
+                      : "border-[#efe6e6]"
+                      }
                     focus:outline-none focus:border-[#8C455E]`}
                   >
                     <span className="text-[#800020] font-semibold mr-2 whitespace-nowrap">
@@ -634,8 +583,8 @@ function CheckoutPage() {
                   )}
                 </div>
 
-                <div>
-                  <label className="text-sm block mb-1">Email Id</label>
+                <div className="w-[95%] sm:w-full">
+                  <label className="text-sm block mb-1">Email ID</label>
 
                   <input
                     name="email"
@@ -643,12 +592,11 @@ function CheckoutPage() {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.email}
-                    className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                      formik.errors.email && formik.touched.email
-                        ? "border-red-500"
-                        : "border-[#efe6e6]"
-                    } focus:outline-none focus:border-[#8C455E]`}
-                    placeholder="Email Id"
+                    className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.email && formik.touched.email
+                      ? "border-red-500"
+                      : "border-[#efe6e6]"
+                      } focus:outline-none focus:border-[#8C455E]`}
+                    placeholder="Email ID"
                   />
 
                   {formik.touched.email && formik.errors.email && (
@@ -662,23 +610,22 @@ function CheckoutPage() {
               {/* Shipping Address */}
               <section className="space-y-4">
                 <h3 className="text-[14px] text-[#6E0027] font-semibold">
-                  {formik.values.fulfillmentType === "STORE_PICKUP"
-                    ? "Address"
+                  {fulfillmentType === "STORE_PICKUP"
+                    ? "Billing Address"
                     : "Shipping Address"}
                 </h3>
 
-                <div>
+                <div className="w-[95%] sm:w-full">
                   <label className="text-sm block mb-1">Address</label>
                   <input
                     name="address"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.address}
-                    className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${
-                      formik.errors.address && formik.touched.address
-                        ? "border-red-500"
-                        : "border-[#efe6e6]"
-                    }
+                    className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${formik.errors.address && formik.touched.address
+                      ? "border-red-500"
+                      : "border-[#efe6e6]"
+                      }
                      focus:outline-none focus:border-[#8C455E]`}
                     placeholder="Address (Flat No./ House No./Street/Area))"
                   />
@@ -690,21 +637,21 @@ function CheckoutPage() {
                 </div>
 
                 {/* Landmark */}
-                <div>
+                <div className="w-[95%] sm:w-full">
                   <label className="text-sm block mb-1">Landmark</label>
                   <input
                     name="landmark"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.landmark}
-                    className="w-full h-[44px] px-3 border border-[#efe6e6] rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal focus:outline-none focus:border-[#8C455E]"
+                    className="w-full h-[40px] sm:h-[44px] px-3 border border-[#efe6e6] rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal focus:outline-none focus:border-[#8C455E]"
                     placeholder="Landmark (Optional)"
                   />
                 </div>
 
                 {/* City, PIN, State, Country */}
                 <div className="flex flex-col sm:flex-wrap sm:flex-row gap-3">
-                  <div className="flex-1 min-w-[45%]">
+                  <div className="w-[95%] sm:w-full min-w-[45%]">
                     <label className="text-sm block mb-1">Pincode</label>
 
                     <input
@@ -724,11 +671,10 @@ function CheckoutPage() {
                         formik?.values?.pincode ||
                         cartItems[0]?.deliveryDetails?.pincode
                       }
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                        formik.errors.pincode && formik.touched.pincode
-                          ? "border-red-500"
-                          : "border-[#efe6e6]"
-                      }
+                      className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.pincode && formik.touched.pincode
+                        ? "border-red-500"
+                        : "border-[#efe6e6]"
+                        }
                       focus:outline-none focus:border-[#8C455E]`}
                       placeholder="Pincode"
                     />
@@ -739,46 +685,17 @@ function CheckoutPage() {
                       </p>
                     )}
                   </div>
-                  {/* {loading ? (
-                    <LoadingScreen />
-                  ) : (
-                    <div className="flex-1 min-w-[45%]">
-                      <label className="text-sm block mb-1">Area</label>
-                      <input
-                        name="area"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={
-                          formik.values.area ||
-                          cartItems[0]?.deliverDetails?.area
-                        }
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                          formik.errors.area && formik.touched.area
-                            ? "border-red-500"
-                            : "border-[#efe6e6]"
-                        }
-                       focus:outline-none focus:border-[#8C455E]`}
-                        placeholder="City"
-                      />
-                      {formik.touched.area && formik.errors.area && (
-                        <p className="text-xs text-red-500 mt-1">
-                          {formik.errors.area}
-                        </p>
-                      )}
-                    </div>
-                  )} */}
-                  <div className="flex-1 min-w-[45%]">
+                  <div className="w-[95%] sm:w-full min-w-[45%]">
                     <label className="text-sm block mb-1">City</label>
                     <input
                       name="city"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.city}
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                        formik.errors.city && formik.touched.city
-                          ? "border-red-500"
-                          : "border-[#efe6e6]"
-                      }
+                      className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.city && formik.touched.city
+                        ? "border-red-500"
+                        : "border-[#efe6e6]"
+                        }
                        focus:outline-none focus:border-[#8C455E]`}
                       placeholder="City"
                     />
@@ -788,7 +705,7 @@ function CheckoutPage() {
                       </p>
                     )}
                   </div>
-                  <div className="flex-1 min-w-[45%]">
+                  <div className="w-[95%] sm:w-full min-w-[45%]">
                     <label className="text-sm block mb-1">State</label>
                     <input
                       name="state"
@@ -798,11 +715,10 @@ function CheckoutPage() {
                         formik.values.state ||
                         cartItems[0]?.deliveryDetails?.state
                       }
-                      className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${
-                        formik.errors.state && formik.touched.state
-                          ? "border-red-500"
-                          : "border-[#efe6e6]"
-                      }
+                      className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px]  ${formik.errors.state && formik.touched.state
+                        ? "border-red-500"
+                        : "border-[#efe6e6]"
+                        }
                      focus:outline-none focus:border-[#8C455E]`}
                     />
                     {formik.touched.state && formik.errors.state && (
@@ -812,14 +728,14 @@ function CheckoutPage() {
                     )}
                   </div>
 
-                  <div className="flex-1 min-w-[45%]">
+                  <div className="w-[95%] sm:w-full min-w-[45%]">
                     <label className="text-sm block mb-1">Country</label>
                     <select
                       name="country"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.country}
-                      className="w-full h-[44px] px-3 border border-[#efe6e6] focus:outline-none focus:border-[#8C455E] rounded-md text-[16px]"
+                      className="w-full h-[40px] sm:h-[44px] px-3 border border-[#efe6e6] focus:outline-none focus:border-[#8C455E] rounded-md text-[16px]"
                     >
                       <option value="India">India</option>
                     </select>
@@ -830,33 +746,27 @@ function CheckoutPage() {
                 <>
                   {/* Billing Address Section */}
                   <div className="mb-6">
-                    {/* <label className="text-[14px] font-Poppins text-[#6E0027] mb-2 block">
-                  Billing Address
-                </label> */}
-
                     <div
                       onClick={() => {
                         setUseDifferentBilling(false);
                         formik.setFieldValue("useDifferentBilling", false);
                       }}
-                      className={`cursor-pointer w-full p-4 rounded-md border transition-all duration-300
-              ${
-                !useDifferentBilling
-                  ? "bg-gradient-to-r from-[#f8e3e3] to-[#ffffff] border-[#8C455E] shadow-md"
-                  : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
-              }`}
+                      className={`cursor-pointer w-[95%]  sm:w-full p-4 rounded-md border transition-all duration-300
+              ${!useDifferentBilling
+                          ? "bg-gradient-to-r from-[#f8e3e3] to-[#ffffff] border-[#8C455E] shadow-md"
+                          : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
+                        }`}
                     >
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between ">
                         <p className="text-16px font-Poppins text-[#313131]">
                           Same as shipping address
                         </p>
                         <span
                           className={`w-[22px] h-[22px] border-2 rounded-full flex items-center justify-center
-                  ${
-                    !useDifferentBilling
-                      ? "border-[#6E0027]"
-                      : "border-[#6E0027]"
-                  }
+                  ${!useDifferentBilling
+                              ? "border-[#6E0027]"
+                              : "border-[#6E0027]"
+                            }
                      `}
                         >
                           {!useDifferentBilling && (
@@ -871,12 +781,10 @@ function CheckoutPage() {
                         setUseDifferentBilling(true);
                         formik.setFieldValue("useDifferentBilling", true);
                       }}
-                      className={`cursor-pointer w-full p-4 mt-3 rounded-md border transition-all duration-300
-              ${
-                useDifferentBilling
-                  ? "bg-gradient-to-r from-[#DAB3C14F] to-[#ffffff]  border-[#8C455E] shadow-md"
-                  : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
-              }`}
+                      className={`cursor-pointer w-[95%]  sm:w-full p-4 mt-3 rounded-md border transition-all duration-300 ${useDifferentBilling
+                        ? "bg-gradient-to-r from-[#DAB3C14F] to-[#ffffff]  border-[#8C455E] shadow-md"
+                        : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
+                        }`}
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-[16px] font-Poppins text-[#313131]">
@@ -884,7 +792,7 @@ function CheckoutPage() {
                         </span>
                         <span
                           className={`w-[22px] h-[22px] border-2 rounded-full flex items-center justify-center
-        ${useDifferentBilling ? "border-[#6E0027]" : "border-[#6E0027]"}`}
+          ${useDifferentBilling ? "border-[#6E0027]" : "border-[#6E0027]"}`}
                         >
                           {useDifferentBilling && (
                             <span className="w-3 h-3 rounded-full bg-[#6E0027]" />
@@ -896,22 +804,21 @@ function CheckoutPage() {
 
                   {useDifferentBilling && (
                     <div className="mt-4">
-                      <label className="text-[14px] font-Poppins text-[#6E0027] mb-2 block">
+                      <label className="text-[14px] text-[#6E0027] font-semibold ">
                         Billing Address
                       </label>
-                      <div>
+                      <div className="mt-4 w-[95%] sm:w-full">
                         <label className="text-sm block mb-1">Address</label>
                         <input
                           name="billingAddress"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.billingAddress}
-                          className={`w-full h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${
-                            formik.errors.billingAddress &&
+                          className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${formik.errors.billingAddress &&
                             formik.touched.billingAddress
-                              ? "border-red-500"
-                              : "border-[#efe6e6]"
-                          }
+                            ? "border-red-500"
+                            : "border-[#efe6e6]"
+                            }
                      focus:outline-none focus:border-[#8C455E]`}
                           placeholder="Address (Flat No./ House No./Street/Area))"
                         />
@@ -923,21 +830,21 @@ function CheckoutPage() {
                       </div>
 
                       {/* Landmark */}
-                      <div>
+                      <div className="w-[95%] sm:w-full">
                         <label className="text-sm block mb-1">Landmark</label>
                         <input
                           name="billingLandmark"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.billingLandmark}
-                          className="w-full h-[44px] px-3 border border-[#efe6e6] rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal focus:outline-none focus:border-[#8C455E]"
+                          className="w-full h-[40px] sm:h-[44px] px-3 border border-[#efe6e6] rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal focus:outline-none focus:border-[#8C455E]"
                           placeholder="Landmark (Optional)"
                         />
                       </div>
 
                       {/* City, PIN, State, Country */}
                       <div className="flex flex-col sm:flex-wrap sm:flex-row gap-3">
-                        <div className="flex-1 min-w-[45%]">
+                        <div className="w-[95%] sm:w-full min-w-[45%]">
                           <label className="text-sm block mb-1">Pincode</label>
                           <input
                             type="tel"
@@ -956,12 +863,11 @@ function CheckoutPage() {
                               );
                             }}
                             value={formik.values.billingPincode}
-                            className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                              formik.errors.billingPincode &&
+                            className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.billingPincode &&
                               formik.touched.billingPincode
-                                ? "border-red-500"
-                                : "border-[#efe6e6]"
-                            } focus:outline-none focus:border-[#8C455E]`}
+                              ? "border-red-500"
+                              : "border-[#efe6e6]"
+                              } focus:outline-none focus:border-[#8C455E]`}
                             placeholder="billingPincode"
                           />
 
@@ -979,7 +885,7 @@ function CheckoutPage() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.billingArea}
-                        className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                        className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
                           formik.errors.area && formik.touched.area
                             ? "border-red-500"
                             : "border-[#efe6e6]"
@@ -993,19 +899,18 @@ function CheckoutPage() {
                         </p>
                       )}
                     </div> */}
-                        <div className="flex-1 min-w-[45%]">
+                        <div className="w-[95%] sm:w-full min-w-[45%]">
                           <label className="text-sm block mb-1">City</label>
                           <input
                             name="billingCity"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.billingCity}
-                            className={`w-full h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
-                              formik.errors.billingCity &&
+                            className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.billingCity &&
                               formik.touched.billingCity
-                                ? "border-red-500"
-                                : "border-[#efe6e6]"
-                            }
+                              ? "border-red-500"
+                              : "border-[#efe6e6]"
+                              }
                        focus:outline-none focus:border-[#8C455E]`}
                             placeholder="City"
                           />
@@ -1016,7 +921,7 @@ function CheckoutPage() {
                           )}
                         </div>
 
-                        <div className="flex-1 min-w-[45%]">
+                        <div className="w-[95%] sm:w-full min-w-[45%]">
                           <label className="text-sm block mb-1 mt-2.5">
                             State
                           </label>
@@ -1025,12 +930,11 @@ function CheckoutPage() {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.billingState}
-                            className={`w-full h-[44px] px-3 border rounded-md text-[16px]  ${
-                              formik.errors.billingState &&
+                            className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px]  ${formik.errors.billingState &&
                               formik.touched.billingState
-                                ? "border-red-500"
-                                : "border-[#efe6e6]"
-                            }
+                              ? "border-red-500"
+                              : "border-[#efe6e6]"
+                              }
                      focus:outline-none focus:border-[#8C455E]`}
                           />
                           {formik.touched.billingState &&
@@ -1041,14 +945,14 @@ function CheckoutPage() {
                             )}
                         </div>
 
-                        <div className="flex-1 min-w-[45%]">
+                        <div className="w-[95%] sm:w-full min-w-[45%]">
                           <label className="text-sm block mb-1">Country</label>
                           <select
                             name="country"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.country}
-                            className="w-full h-[44px] px-3 border border-[#efe6e6] focus:outline-none focus:border-[#8C455E] rounded-md text-[16px]"
+                            className="w-full h-[40px] sm:h-[44px] px-3 border border-[#efe6e6] focus:outline-none focus:border-[#8C455E] rounded-md text-[16px]"
                           >
                             <option value="India">India</option>
                           </select>
@@ -1083,7 +987,7 @@ function CheckoutPage() {
                   </label> */}
                 </div>
 
-                <div>
+                <div className="w-[95%] sm:w-full">
                   <label className="text-[14px] text-[#6E0027] block mb-1">
                     Order Note
                   </label>
@@ -1138,7 +1042,7 @@ function CheckoutPage() {
                 {/* Proceed Button */}
                 <button
                   type="submit"
-                  className="w-full h-12 rounded-full bg-[#4B001A] text-white text-[18px] font-semibold hover:bg-[#6E0027]"
+                  className="w-[95%] !mt-9 sm:w-full h-12 rounded-full bg-[#4B001A] text-white text-[18px] font-semibold hover:bg-[#6E0027]"
                 >
                   Proceed to Payment
                 </button>
@@ -1148,7 +1052,7 @@ function CheckoutPage() {
 
           {/* Right order Summary */}
           <div className="hidden xl:block ">
-            <div className="w-[466px] h-[617px] bg-[#FFFAF3] rounded-[10px] shadow-2xl border border-[#EDEDED] p-5">
+            <div className="w-[466px] h-fit bg-[#FFFAF3] rounded-[10px] shadow-2xl border border-[#EDEDED] px-5 pt-5 pb-12">
               <h3 className="font-semibold mb-4 text-base text-[#313131]">
                 Order Summary
               </h3>
@@ -1156,88 +1060,83 @@ function CheckoutPage() {
               <div className="space-y-4">
                 {cartItems.map((item, i) => (
                   <div key={i} className="flex items-center gap-3 sp">
-                    <div className="w-[98px] h-[101px] rounded-md border border-[#f2eaea] gap-[33px] overflow-hidden">
+                    <div className="w-[98px] h-[101px] rounded-md border border-[#f2EAEA] gap-[33px] overflow-hidden">
                       <img
                         src={item.image}
                         alt={item.alt}
                         className="w-[98px] h-[101px] object-contain"
                       />
                     </div>
-                    <div className="flex-1 w-[123px] h-[95px] space-y-1">
+                    <div className=" w-full h-[95px] space-y-1 ">
                       <div className=" text-14px font-Poppins text-[#6F6F6F]">
                         {item.title}
                       </div>
                       <div className="text-14px text-[#6F6F6F] ">
-                        Quantity:{item.quantity}
+                        Quantity: {item.quantity}
                       </div>
                       <div className=" text-18px text-[#313131]   font-semibold">
-                        ₹{parseInt(item.price).toLocaleString()}
+                        ₹{Number(item.price * item.quantity).toLocaleString("en-IN")}
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="flex  max-w-[205px] max-h-[24px] items-center gap-2 text-[12px]  text-[#A84C32]  bg-gradient-to-r from-[#DAB3C1] to-[#FFFFFF] rounded-none px-3 py-2 mt-5">
-                <img
-                  src={truck_icon}
-                  alt="truck icon"
-                  className="w-4 h-4 object-contain"
-                />
-                <span>
-                  Est. delivery by{" "}
-                  {dateOnly ? dateOnly : cartItems[0]?.deliveryDetails?.date}
-                </span>
-              </div>
-
-              <div className="border-t border-[#EDEDED] my-4" />
-
-              <div className="text-[14px] space-y-3">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span>₹{subtotal.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Tax</span>
-                  <span>₹{tax.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Shipping</span>
-                  <span className="text-[#6E0027]">
-                    {shipping === 0 ? "Free" : `₹${shipping}`}
+              {/* Delivery Details - fulfillmentType is Delivery */}
+              {fulfillmentType === "DELIVERY" && (
+                <div className="flex  w-fit max-w-[250px] max-h-[24px] items-center gap-2 text-[12px]  text-[#A84C32]  bg-gradient-to-r from-[#DAB3C1] to-[#FFFFFF] rounded-none px-3 py-2 mt-5">
+                  <img
+                    src={truck_icon}
+                    alt="truck icon"
+                    className="w-4 h-4 object-contain"
+                  />
+                  <span>
+                    Est. delivery by{" "}
+                    {dateOnly ? dateOnly : cartItems[0]?.deliveryDetails?.date}
                   </span>
                 </div>
-                {/* {giftWrapPrice > 0 && (
-                  <div className="flex justify-between">
-                    <span>Gift Wrap Price</span>
-                    <span>₹{giftWrapPrice.toLocaleString()}</span>
+              )}
+
+              {/* Delivery Details - fulfillment Type is In-Store Pickup */}
+              {fulfillmentType === "STORE_PICKUP" && (
+                <a href="https://maps.app.goo.gl/Czdvg1VjKf2jcY7Z9" target="_blank" >
+                  <div className="flex flex-row items-start gap-x-1 my-5 !w-[250px]">
+                    <img src={location_icon} className="w-[20px] h-[20px]" alt="location-icon" />
+                    <h5 className="font-poppins text-primary font-medium  underline">Click for Store Location</h5>
                   </div>
-                )} */}
-                <div className="border-t border-[#EDEDED] my-3" />
-                <div className="flex justify-between text-base font-semibold text-[#1E1E1E]">
-                  <span>Total</span>
-                  <span>₹{total.toLocaleString()}</span>
+                </a>
+              )}
+
+              <div className="border-t border-[#EDEDED] my-4 py-3">
+
+                <div className="text-[14px] space-y-3">
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>₹{subtotal.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Tax</span>
+                    <span>₹{tax.toLocaleString()}</span>
+                  </div>
+                  <div className={fulfillmentType === "DELIVERY" ? "flex justify-between" : "hidden"}>
+                    <span>Shipping</span>
+                    <span className="text-[#6E0027]">
+                      {shipping === 0 ? "Free" : `₹${shipping}`}
+                    </span>
+                  </div>
+                  {/* {giftWrapPrice > 0 && (
+                    <div className="flex justify-between">
+                      <span>Gift Wrap Price</span>
+                      <span>₹{giftWrapPrice.toLocaleString()}</span>
+                    </div>
+                  )} */}
+                  <div className="border-t border-[#EDEDED] my-3" />
+                  <div className="flex justify-between text-base font-semibold text-[#1E1E1E]">
+                    <span>Total</span>
+                    <span>₹{total.toLocaleString()}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div>
-              {/* STORE LOCATION */}
-              {formik.values.fulfillmentType === "STORE_PICKUP" && (
-                <div className="mt-2 w-[466px] h-[150px] bg-[#FFFAF3] rounded-[10px] shadow-2xl border border-[#EDEDED] p-5">
-                  <p className="font-semibold text-black">Store Location</p>
-                  <p>Tarangi Jewels</p>
-                  <p>431-435, VNA Complex, NSR Road</p>
-                  <p>Saibaba Colony, Coimbatore-641011</p>
-                  <a
-                    href="https://maps.google.com/?q=Tarangi+Jewellery+Coimbatore"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-blue-600 underline"
-                  >
-                    Open in Google Maps
-                  </a>
-                </div>
-              )}
             </div>
           </div>
         </div>
