@@ -16,13 +16,13 @@ function Cart() {
   const [showSummary, setShowSummary] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [boughtTogether, setboughtTogether] = useState(() => {
-  try {
-    const saved = localStorage.getItem("boughtTogether");
-    return saved ? JSON.parse(saved) : [];
-  } catch {
-    return [];
-  }
-});
+    try {
+      const saved = localStorage.getItem("boughtTogether");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
 
   const [productToDelete, setProductToDelete] = useState(null);
   const {
@@ -62,21 +62,21 @@ function Cart() {
     //   JSON.stringify(categorizedProduct)
     // );
     if (!Array.isArray(categorizedProduct) || categorizedProduct.length === 0) {
-    return;
-  }
+      return;
+    }
 
-  const filterOutofStockProducts = categorizedProduct.filter((item) => {
-    const hasVariants = item.variants && item.variants.length > 0;
+    const filterOutofStockProducts = categorizedProduct.filter((item) => {
+      const hasVariants = item.variants && item.variants.length > 0;
 
-    return hasVariants
-      ? item.variants.every(
+      return hasVariants
+        ? item.variants.every(
           (v) => v.inventoryQuantity !== 0 && v.price <= 6000
         )
-      : item.inventoryQuantity !== 0 && item.price <= 6000;
-  });
+        : item.inventoryQuantity !== 0 && item.price <= 6000;
+    });
 
-  setboughtTogether(filterOutofStockProducts);
-}, [categorizedProduct]);
+    setboughtTogether(filterOutofStockProducts);
+  }, [categorizedProduct]);
 
   //   if (categorizedProduct) {
   //     // setProducts(normalizeProducts(categorizedProduct));
@@ -94,13 +94,13 @@ function Cart() {
   // }, [cartItems, categorizedProduct]);
 
   useEffect(() => {
-  if (boughtTogether.length > 0) {
-    localStorage.setItem(
-      "boughtTogether",
-      JSON.stringify(boughtTogether)
-    );
-  }
-}, [boughtTogether]);
+    if (boughtTogether.length > 0) {
+      localStorage.setItem(
+        "boughtTogether",
+        JSON.stringify(boughtTogether)
+      );
+    }
+  }, [boughtTogether]);
 
 
   const totalCartQuantity = cartItems.reduce(
@@ -137,7 +137,7 @@ function Cart() {
                         Sub total
                       </p>
                       <p className="text-[14px] text-[#404040] font-medium">
-                        {subtotal.toLocaleString("en-IN")}
+                        ₹ {Number(subtotal).toLocaleString("en-IN")}
                       </p>
                     </div>
                     <div className="flex items-center justify-between">
@@ -145,14 +145,14 @@ function Cart() {
                         Tax
                       </p>
                       <p className="text-[14px] text-[#404040] font-medium">
-                        {tax.toFixed(0)}
+                        ₹ {Number(tax).toLocaleString("en-IN")}
                       </p>
                     </div>
                     <div className="flex items-center justify-between">
                       <p className="text-[14px] text-[#878787] font-semibold">
                         Shipping
                       </p>
-                      <p className="text-[14px] text-[#C70039] font-medium">
+                      <p className="text-[14px] text-primary font-medium">
                         Free
                       </p>
                     </div>
@@ -162,7 +162,7 @@ function Cart() {
                         Total
                       </p>
                       <p className="text-[15px] text-[#404040] font-semibold">
-                        {total.toLocaleString("en-IN")}
+                        {Number(total).toLocaleString("en-IN")}
                       </p>
                     </div>
                   </div>
@@ -181,12 +181,19 @@ function Cart() {
                   </button>
                 </div>
 
-                {/* <Link to="/" className="flex items-center justify-center gap-x-[8px] bg-[#4B001A] w-[220px] h-[56px] rounded-full text-white text-[18px] font-medium ">
-                  Continue Shopping
-                </Link > */}
-                <button className="bg-[#4B001A] text-white w-[130px] h-[40px] rounded-full font-medium text-[14px]">
-                  Place Order
-                </button>
+                <Link
+                  to="/checkout"
+                  state={{
+                    subtotal: subtotal,
+                    shipping: shipping,
+                    tax: tax,
+                    total: total,
+                  }}
+                >
+                  <button className="bg-[#4B001A] text-white w-[130px] h-[40px] rounded-full font-medium text-[14px]">
+                    Place Order
+                  </button>
+                </Link>
               </div>
             </div>
           )}
@@ -203,7 +210,7 @@ function Cart() {
                 </Link>
               ) : (
                 cartItems?.map((item) => (
-                  
+
                   <div
                     key={item?.id}
                     className="bg-[#FFFAF3] max-w-[694px] p-[24px] rounded-[16px] shadow-2xl mb-[25px] max-[425px]:p-[16px]"
@@ -228,7 +235,7 @@ function Cart() {
 
                       <div className="space-y-[10px] sm:space-y-[15px]">
                         <div>
-                          
+
                           <Link
                             to={`/product_description/${item?.title?.replace(
                               /\s+/g,
@@ -239,8 +246,8 @@ function Cart() {
                                 p.type === "simple"
                                   ? p.variantId === item?.variantId
                                   : p.variants?.some(
-                                      (v) => v.variantId === item?.variantId
-                                    )
+                                    (v) => v.variantId === item?.variantId
+                                  )
                               ),
                             }}
                           >
@@ -253,8 +260,8 @@ function Cart() {
 
                           {/* Price - when compare at price is true -- shows price with discounted price */}
                           <div className={item?.compareAtPrice !== null ? "flex flex-row items-center gap-x-3" : "hidden"}>
-                                <h3 className="text-[10px] text-red-500 line-through  font-semibold sm:text-[16px]">₹{Number(item?.compareAtPrice || 0).toLocaleString("en-IN")}</h3>
-                                <h3 className="text-[12px] font-semibold sm:text-[20px]">₹{Number(item?.price || 0).toLocaleString("en-IN")}</h3>
+                            <h3 className="text-[10px] text-red-500 line-through  font-semibold sm:text-[16px]">₹{Number(item?.compareAtPrice || 0).toLocaleString("en-IN")}</h3>
+                            <h3 className="text-[12px] font-semibold sm:text-[20px]">₹{Number(item?.price || 0).toLocaleString("en-IN")}</h3>
                           </div>
                         </div>
 
@@ -297,7 +304,7 @@ function Cart() {
                             />
                             <div className="">
                               <h3 className="text-[#404040] text-[12px] font-medium sm:text-[18px]  sm:mt-0">
-                              Silver Cleaning Kit
+                                Silver Cleaning Kit
                               </h3>
                               <h3 className="text-[10px] text-[#6E6E6E] sm:text-[16px]">
                                 Added for products above ₹10,000
@@ -394,29 +401,29 @@ function Cart() {
                 : "Our favourites, just for you"}
             </h1>
             <div className="sm:max-w-fit mx-auto xl:mx-0 ">
-              <div className="grid grid-cols-2 sm:flex sm:flex-row sm:flex-wrap  gap-y-9 sm:gap-x-[50px] items-center justify-center max-[425px]:gap-x-[10px]">
+              <div className="grid grid-cols-2 sm:flex sm:flex-row sm:flex-wrap  gap-y-5 sm:gap-y-9 sm:gap-x-[50px] items-center justify-center max-[425px]:gap-x-[10px]">
                 {boughtTogether.slice(0, 4)?.map((item) => (
-                  <div className="bg-[#FFFAF3] max-w-[580px] p-[24px] rounded-[16px] shadow-2xl mt-[25px] max-[425px]:p-[16px] ">
+                  <div className="bg-[#FFFAF3] max-w-[580px] p-[24px] rounded-[16px] shadow-2xl mt-[25px] max-[425px]:p-2 ">
                     <div className="relative">
                       {/* <input
                         type="checkbox"
                         className="absolute top-5 right-3 w-[18px] h-[18px] accent-[#6E0027] border-2 border-[#6E0027] outline-[#6E0027] rounded-sm cursor-pointer"
                       /> */}
                       <img
-                        className="w-[148px] sm:w-[233px] h-[239px] object-cover rounded-[12px]"
+                        className="w-full h-[210px] sm:w-[233px] sm:h-[239px] object-cover rounded-[12px]"
                         src={item?.images?.[0]}
                         alt="product image"
                       />
                       <div>
-                        <h3 className="text-[14px] font-medium text-[#6F6F6F] sm:text-[16px] max-[425px]:text-[13px] mt-6">
+                        <h3 className="text-[14px] font-medium text-[#6F6F6F] sm:text-[16px] max-[425px]:text-[12px] mt-6">
                           {item?.title}
                         </h3>
                         <h3 className="text-[16px] font-semibold sm:text-[20px] max-[425px]:text-[15px]">
                           ₹
                           {item.variants !== null
                             ? parseInt(
-                                item?.variants?.[0].price
-                              ).toLocaleString("en-IN")
+                              item?.variants?.[0].price
+                            ).toLocaleString("en-IN")
                             : parseInt(item?.price).toLocaleString("en-IN")}
                         </h3>
                       </div>

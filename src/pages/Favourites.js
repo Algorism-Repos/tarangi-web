@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { Link, useLocation } from "react-router";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -15,9 +15,6 @@ import OutOfStockModal from "../components/OutOfStockModal";
 import RestockModal from "../components/RestockModal";
 import RestockSuccessModal from "../components/RestockSuccessModal";
 
-import gold_ellipse from "../assets/Products/gold_ellipse.png";
-import silver_ellipse from "../assets/Products/silver_ellipse.png";
-import brown_ellipse from "../assets/Products/brown_ellipse.png";
 import { AppContext } from "../context/AppContext";
 
 function Favourites() {
@@ -26,7 +23,7 @@ function Favourites() {
   const isVisible = pathname === "/profile";
 
   const initialProducts = [];
-
+  const swiperRefs = useRef({});
   const [products, setProducts] = useState(initialProducts);
   // const [favorites, setFavorites] = useState([]);
   const [showOutStockModal, setShowOutStockModal] = useState(false);
@@ -35,6 +32,8 @@ function Favourites() {
   const { wishlistItems, removeFromWishlist, colorAssets, } = useContext(AppContext);
   const [productToDelete, setProductToDelete] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedVariants, setSelectedVariants] = useState({});
+
 
 
   const likedProducts = products.filter((p) => p.liked);
@@ -46,6 +45,16 @@ function Favourites() {
   }, [likedProducts]);
 
   console.log(wishlistItems);
+
+  const changeVariant = (productId, index, item) => {
+    // console.log(productId, index, item);
+    setSelectedVariants((prev) => ({
+      ...prev,
+      [productId]: index,
+
+    }));
+    swiperRefs.current[productId]?.slideTo(index);
+  };
 
   //  Like button toggle
   // const toggleLike = (productId, variantId) => {
@@ -92,7 +101,7 @@ function Favourites() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-const reversedWishlistItems = [...wishlistItems].reverse();
+  const reversedWishlistItems = [...wishlistItems].reverse();
 
   console.log("productToDelete", productToDelete);
   console.log("wishlistItems", wishlistItems);
@@ -122,13 +131,15 @@ const reversedWishlistItems = [...wishlistItems].reverse();
               className={
                 isVisible
                   ? "grid grid-cols-2 lg:grid-cols-3 gap-[15px] px-2 sm:gap-[25px]"
-                  : "grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[15px] gap-y-6 mt-[25px] px-2 sm:gap-x-[24px]"
+                  : "grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[18px] gap-y-6 mt-[25px] px-2 sm:gap-x-[30px]"
               }
             >
               {[...wishlistItems]?.slice().reverse()?.map((item) => {
 
                 const isOutOfStock = item?.variants?.every(item => item?.inventoryQuantity === 0) || item?.inventoryQuantity === 0;
                 const isRestocking = false;
+
+                const selectedIndex = selectedVariants[item?.productId] ?? 0;
                 return (
                   <div onClick={
                     isOutOfStock
@@ -159,7 +170,15 @@ const reversedWishlistItems = [...wishlistItems].reverse();
                     {/* IMAGE */}
                     <div className="overflow-hidden rounded-2xl relative z-0 group ">
                       {item.images ?
-                        <Swiper>
+                        <Swiper
+                          onSwiper={(swiper) => (swiperRefs.current[item.productId] = swiper)}
+                          onSlideChange={(swiper) => {
+                            setSelectedVariants((prev) => ({
+                              ...prev, [item.productId]: swiper.activeIndex,
+                            }))
+                          }}
+
+                        >
                           {(item?.variants?.map(v => v?.image) || item?.images)?.map((item, i) => (
                             <SwiperSlide>
                               <img src={item} alt="images" className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-[0.6]" : ""
@@ -204,14 +223,25 @@ const reversedWishlistItems = [...wishlistItems].reverse();
                       </div>
 
                       <div className="mt-1.3 flex flex-col sm:flex-row gap-y-2 items-start sm:items-center sm:justify-between w-full">
-                        <h3 className="font-poppins text-[13px] text-[#4E4E4E] font-medium sm:text-[18px] mt-1">
-                          ₹{" "}
-                          {item?.variants != null && item?.variants?.inventoryQuantity !== 0
-                            ? parseInt(item.variants?.[0]?.price).toLocaleString(
-                              "en-IN"
-                            )
-                            : parseInt(item.price).toLocaleString("en-in")}
-                        </h3>
+                        {/* Pricing without discount */}
+                        <h3 className={item?.compareAtPrice === null || item?.variants?.[selectedIndex]?.compareAtPrice === null ? "font-poppins text-[12px] sm:text-[16px] font-normal leading-normal" : "hidden"}>₹ {item.variants !== null && item.variants.length > 0 ? parseInt(item?.variants?.[selectedIndex]?.price).toLocaleString("en-IN") : parseInt(item?.price)?.toLocaleString("en-IN")}</h3>
+
+                        {/* Pricing with discount */}
+                        {item?.variants?.length > 0 && item?.variants?.[selectedIndex]?.compareAtPrice !== null ?
+                          (
+                            <div className="flex flex-row items-center flex-nowrap gap-x-2">
+                              <h3 className="font-poppins text-[10px] sm:text-[14px]  leading-normal text-red-500 line-through font-semibold ">₹ {parseInt(item?.variants[selectedIndex]?.compareAtPrice).toLocaleString("en-IN")}</h3>
+                              <h3 className="font-poppins text-[12px] sm:text-[16px] font-normal leading-normal">₹ {parseInt(item?.variants[selectedIndex]?.price).toLocaleString("en-IN")}</h3>
+                            </div>
+                          )
+
+                          : (
+                            <div className={!item?.compareAtPrice || item?.compareAtPrice === null ? "hidden" : "flex flex-row items-center flex-nowrap gap-x-2"}>
+                              <h3 className="font-poppins text-[10px] sm:text-[14px]  leading-normal text-red-500 line-through font-semibold ">₹ {parseInt(item?.compareAtPrice).toLocaleString("en-IN")}</h3>
+                              <h3 className="font-poppins text-[12px] sm:text-[16px] font-normal leading-normal"> ₹{parseInt(item?.price).toLocaleString("en-IN")}</h3>
+                            </div>
+                          )
+                        }
 
                         {/*  COLOR TOGGLE BUTTONS */}
                         <div className="flex flex-row items-center gap-x-2">
@@ -219,7 +249,12 @@ const reversedWishlistItems = [...wishlistItems].reverse();
                             item.variants.map((variants, index) => {
                               return (
                                 <>
-                                  <img key={variants?.variantId || index} src={colorAssets[variants?.colorVariant]} alt="color-assets" className={`w-[24px] h-[24px]`}/>
+                                  <button type="button" disabled={variants?.inventoryQuantity === 0}>
+                                    <img key={variants?.variantId || index} src={colorAssets[variants?.colorVariant]} alt="color-assets"
+                                      className={`w-[24px] h-[24px] cursor-pointer ${variants.inventoryQuantity === 0 ? "opacity-[30%]" : ""} ${variants?.inventoryQuantity !== 0 && item?.variants?.length > 1 && selectedIndex === index ? "border-2 border-primary rounded-[24px] px-[0.2px]" : "border-none"}`}
+                                      onClick={(e) => { e.preventDefault(); changeVariant(item?.productId, index) }}
+                                    />
+                                  </button>
                                 </>
                               )
                             }) : ""
@@ -255,9 +290,9 @@ const reversedWishlistItems = [...wishlistItems].reverse();
           )}
         </div>
 
-        {/* <div className={isVisible ? "hidden" : "block"}>
+        <div className={isVisible ? "hidden" : "block"}>
           <Recently_Viewed />
-        </div> */}
+        </div>
       </div >
       <OutOfStockModal
         open={showOutStockModal}

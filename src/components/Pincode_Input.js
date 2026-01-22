@@ -98,7 +98,7 @@ function Pincode_Input() {
     setPincode(savedPincode);
     setHandleReSubmit(false);
   };
-  // console.log(deliveryInfo);
+
   return (
     <>
       <div

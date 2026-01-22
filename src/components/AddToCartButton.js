@@ -4,6 +4,7 @@ import shoppingCart_red from "../assets/Products/shoppingcart_red.png";
 import shoppingCart_white from "../assets/Products/shoppingcart_white.png";
 import { AppContext } from "../context/AppContext";
 import OutOfStockModal from "./OutOfStockModal";
+import enquiry_icon from "../assets/enquiry_icon.png"
 import RestockSuccessModal from "./RestockSuccessModal";
 import RestockModal from "./RestockModal";
 import CartToast from "./CartToast";
@@ -98,14 +99,7 @@ function AddToCartButton({
           }
           onClick={placeEnquiry}
         >
-          {!isDisabledInFavourites && (
-            <img
-              className="w-[32px] h-[32px]"
-              src={cartIconSrc}
-              alt="cart icon"
-            />
-          )}
-          {isDisabledInFavourites ? "Remove from favourites" : "Place an Enquiry"}
+          Place an Enquiry
         </button>
       )}
 

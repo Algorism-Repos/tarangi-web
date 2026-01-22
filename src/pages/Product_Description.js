@@ -13,6 +13,7 @@ import { AppContext } from "../context/AppContext";
 import pure_silver from "../assets/pure_silver_icon.png";
 import shipping from "../assets/shipping_icon.png";
 import plating from "../assets/plating_icon.png";
+
 // components
 import PincodeInput from "../components/Pincode_Input";
 import Recently_Viewed from "../components/Recently-Viewed";
@@ -100,9 +101,11 @@ function Product_Description() {
     console.log(idx);
     swiperRef.current.slideTo(idx);
   }
-  const isAlreadyInWishlist = wishlistItems.some(
-    (item) => item?.variantId === activeVariant?.variantId
-  );
+
+  const isAlreadyInWishlist = wishlistItems.some((item) => item?.variantId === activeVariant?.variantId || item?.variants?.some((i) => i.variantId === activeVariant?.variantId)  );
+
+  console.log("Wishlist Status -- ", isAlreadyInWishlist);
+  console.log("Wishlist -- ", wishlistItems);
   console.log(product);
   console.log("variantActive", activeVariant);
   console.log(" you may also like categorizedProduct ", categorizedProduct);
@@ -204,9 +207,7 @@ function Product_Description() {
             {/* Product Detail */}
             <div className="min-w-full sm:min-w-[633px]">
               <div className="space-y-[5px]">
-                <h1 className="font-atteron text-primary text-[24px] sm:text-[32px] tracking-[1px] mt-3 sm:mt-0">
-                  {product?.title}
-                </h1>
+                <h1 className="font-atteron text-primary text-[24px] sm:text-[32px] tracking-[1px] mt-3 sm:mt-0">{product?.title} </h1>
                 {/* Price Section */}
                 {/* Price alone */}
                 <h2
@@ -216,8 +217,7 @@ function Product_Description() {
                       : "hidden"
                   }
                 >
-                  ₹
-                  {parseInt(activeVariant?.price).toLocaleString("en-IN") || product?.price}
+                  ₹ {Number(activeVariant?.price).toLocaleString("en-IN") || product?.price}
                 </h2>
 
                 {/* Price with Discounted Price */}
@@ -357,7 +357,7 @@ function Product_Description() {
               <div className="max-w-[500px] mt-5">
                 <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
                   <AddToCartButton productToCart={activeVariant} buttonDisabled={activeVariant?.inventoryQuantity === 0} />
-                  <AddToWishlistButton productToFavorites={product} disabled={isAlreadyInWishlist || activeVariant?.inventoryQuantity === 0} />
+                  <AddToWishlistButton productToFavorites={product} buttonDisabled={isAlreadyInWishlist} />
                 </div>
               </div>
             </div>

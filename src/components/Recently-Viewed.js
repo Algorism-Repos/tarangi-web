@@ -3,9 +3,7 @@ import product_1 from "../assets/Products/product_1.png";
 import product_2 from "../assets/Products/product_2.png";
 import product_3 from "../assets/Products/product_1.png"; // brown color image
 
-import gold_ellipse from "../assets/Products/gold_ellipse.png";
-import silver_ellipse from "../assets/Products/silver_ellipse.png";
-import brown_ellipse from "../assets/Products/brown_ellipse.png";
+
 
 import { AppContext } from "../context/AppContext";
 import LikeButton from "../components/LikeButton";

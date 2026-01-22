@@ -1038,7 +1038,7 @@ function CheckoutPage() {
                       />
                       <span className="checkmark"></span>
                     </label>
-                    <p className=" text-[16px] mx-2  text-[#313131] absolute top-0 left-6">
+                    <p className="text-[14px] sm:text-[16px] mx-2  text-[#313131] absolute top-0 left-6">
                       I agree to the{" "}
                       <Link to="/terms" className="underline text-primary">
                         Terms & Conditions

@@ -4,9 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 // Image
-import gold_ellipse from "../assets/Products/gold_ellipse.png";
-import silver_ellipse from "../assets/Products/silver_ellipse.png";
-import brown_ellipse from "../assets/Products/brown_ellipse.png";
+
 import { useEffect, useState } from "react";
 import OutOfStockModal from "../components/OutOfStockModal";
 import LikeButton from "../components/LikeButton";
