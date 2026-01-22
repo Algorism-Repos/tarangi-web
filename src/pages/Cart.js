@@ -102,24 +102,6 @@ function Cart() {
   }
 }, [boughtTogether]);
 
-    if (categorizedProduct) {
-      // setProducts(normalizeProducts(categorizedProduct));
-      const filterOutofStockProducts = categorizedProduct.filter((item) => {
-        const hasVariants = item.variants && item.variants.length > 0;
-
-        return hasVariants
-          ? item.variants.every(
-              (i) => i.inventoryQuantity !== 0 && i.price <= 6000
-            )
-          : item.inventoryQuantity !== 0 && item.price <= 6000;
-      });
-      setboughtTogether(filterOutofStockProducts);
-    }
-  }, [cartItems, categorizedProduct]);
-
-  console.log("Cart Array --", cartItems);
-
-  
 
   const totalCartQuantity = cartItems.reduce(
     (sum, item) => sum + (Number(item.quantity) || 1),
@@ -202,7 +184,7 @@ function Cart() {
                 {/* <Link to="/" className="flex items-center justify-center gap-x-[8px] bg-[#4B001A] w-[220px] h-[56px] rounded-full text-white text-[18px] font-medium ">
                   Continue Shopping
                 </Link > */}
-                <button className="bg-[#4B001A] text-white px-6 py-2 rounded-full font-medium text-[14px]">
+                <button className="bg-[#4B001A] text-white w-[130px] h-[40px] rounded-full font-medium text-[14px]">
                   Place Order
                 </button>
               </div>
@@ -244,7 +226,7 @@ function Cart() {
                         alt="product image"
                       />
 
-                      <div className="space-y-[3px] sm:space-y-[15px]">
+                      <div className="space-y-[10px] sm:space-y-[15px]">
                         <div>
                           
                           <Link
@@ -262,7 +244,7 @@ function Cart() {
                               ),
                             }}
                           >
-                            <h3 className="text-[10px] font-medium text-[#6F6F6F] sm:text-[16px]">
+                            <h3 className="text-[8px] font-medium text-[#6F6F6F] sm:text-[16px]">
                               {item.title}
                             </h3>
                           </Link>

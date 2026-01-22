@@ -256,9 +256,7 @@ function Product_Description() {
                 <h3 className="text-[#6F6F6F] text-[14px] font-medium mt-5 sm:mt-0">
                   Description
                 </h3>
-                <p className="text-[#484848] text-[16px] font-medium ">
-                  At Tarangi Jewels, every piece of 92.5 silver jewellery reflects impeccable artistry and sophisticated charm. Experience jewellery that is as beautiful as it is timeless.
-                </p>
+                <p className="text-[#484848] text-[16px] font-medium">{product?.description || "Description not available"}</p>
 
                 {/*Colors Available Section - Mobile  */}
                 <div
