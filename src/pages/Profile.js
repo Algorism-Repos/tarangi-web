@@ -1,88 +1,8 @@
-// import React, { useContext, useEffect, useState } from "react";
-// import { useFormik } from "formik";
-// import * as Yup from "yup";
-
-// import userIcon from "../assets/user.png";
-// import addressIcon from "../assets/address.png";
-// import ordersIcon from "../assets/orders.png";
-// import favIcon from "../assets/favourites.png";
-// import { AppContext } from "../context/AppContext";
-// import editIcon from "../assets/editIcon.png";
-// import deleteIcon from "../assets/deleteIcon.png";
-// import cartIcon from "../assets/cart.png";
-// import truck_icon from "../assets/truck_icon.png";
-// import { CustomersOrders, FetchOrderByMail } from "../handler/api_Handler";
-
-// import product_1 from "../assets/Products/product_1.png";
-// import product_2 from "../assets/Products/product_2.png";
-
-// const Profile = () => {
-//   const [activeSection, setActiveSection] = useState("Your Profile");
-//   const { loggedCustomerId } = useContext(AppContext);
-//   const [orders, setorder] = useState([])
-
-//   const formik = useFormik({
-//     initialValues: {
-//       firstName: "",
-//       lastName: "",
-//       mobile: "",
-//       email: "",
-//     },
-//     validationSchema: Yup.object({
-//       firstName: Yup.string().required("First name is required"),
-//       lastName: Yup.string().required("Last name is required"),
-//       mobile: Yup.string()
-//         .matches(/^[0-9]{10}$/, "Enter a valid 10-digit number")
-//         .required("Mobile number is required"),
-//       email: Yup.string().email("Invalid email").required("Email is required"),
-//     }),
-//     onSubmit: (values) => {
-//       console.log(values);
-//     },
-//   });
-
-//   const menuItems = [
-//     { name: "Your Profile", icon: userIcon },
-//     { name: "Saved Address", icon: addressIcon },
-//     { name: "Orders", icon: ordersIcon },
-//     { name: "Favourites", icon: favIcon },
-//   ];
-
-//  useEffect(() => {
-//     if (loggedCustomerId) {
-//       // setAddresses(loggedCustomerId?.customer?.addresses);
-//     }
-//   }, [loggedCustomerId]);
-
-//   const CustomerOrders = async () => {
-
-//     try {
-//       const response = await CustomersOrders(loggedCustomerId?.customer?.id);
-//       console.log(response);
-//       setorder(response.data.orders)
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-//  useEffect(() => {
-//     CustomerOrders()
-//     // orderByEmail();
-//   }, []);
-
-//   // const orderByEmail = async () => {
-//   //   try {
-//   //     const response = await FetchOrderByMail("bob@example.com");
-//   //     console.log(response);
-//   //   } catch (error) {
-//   //     console.log(error);
-//   //   }
-//   // };
-
 // src/pages/Profile.js
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import userIcon from "../assets/user.png";
 import addressIcon from "../assets/address.png";
@@ -509,51 +429,67 @@ const Profile = () => {
           </h1>
         </div>
         <div>
-          <h2 className="text-[#2A2A2A] text-[16px] font-semibold font-poppins mb-2">
-            Orders
-          </h2>
-          {orders.map((fulfillmentsOrder) => (
-            <div className="border border-[#E0E0E0] rounded-lg bg-white p-5 shadow-sm mb-6">
-              <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center border-b border-[#E0E0E0] pb-3 mb-4 w-full">
-                <div className="flex gap-6 p-1">
-                  <div className="flex flex-col">
-                    <span className="text-[14px] text-[#4B4B4B] font-medium">
-                      Order ID : {fulfillmentsOrder.id}
-                    </span>
+          {!orders || orders.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16">
+              <p className="text-[#4B4B4B] text-[32px] mb-4 font-semibold">
+                You have no orders yet
+              </p>
+
+              <Link
+                to={"/products/:handle"}
+                className="text-[15px] border-primary border-2 rounded-full py-6 px-6 text-primary"
+              >
+                Continue Shopping
+              </Link>
+            </div>
+          ) : (
+            orders.map((fulfillmentsOrder) => (
+              <div className="border border-[#E0E0E0] rounded-lg bg-white p-5 shadow-sm mb-6">
+                <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center border-b border-[#E0E0E0] pb-3 mb-4 w-full">
+                  <div className="flex gap-6 p-1">
+                    <div className="flex flex-col">
+                      <span className="text-[14px] text-[#4B4B4B] font-medium">
+                        Order ID : {fulfillmentsOrder.id}
+                      </span>
+                    </div>
                   </div>
                 </div>
+                <div className="flex gap-3 sm:gap-4 items-center flex-wrap">
+                  {fulfillmentsOrder?.line_items?.map((line_items, idx) => (
+                    <div>
+                      <p>Product : {line_items.title}</p>
+                      <p>
+                        Price :{" "}
+                        {parseInt(line_items?.price).toLocaleString("en-IN")}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3 mt-5">
+                  <button
+                    className="flex-1 bg-[#4B001A] text-white text-[14px] font-semibold py-2.5 rounded-full"
+                    onClick={() =>
+                      sendTrackOrder(
+                        fulfillmentsOrder.fulfillments[0]?.order_id,
+                      )
+                    }
+                  >
+                    Track Order
+                  </button>
+                  <button
+                    className="flex-1 border border-[#4B001A] text-[#4B001A] text-[14px] font-semibold py-2.5 rounded-full"
+                    onClick={() =>
+                      sendCancelOrder(
+                        fulfillmentsOrder.fulfillments[0]?.order_id,
+                      )
+                    }
+                  >
+                    Cancel Order
+                  </button>
+                </div>
               </div>
-              <div className="flex gap-3 sm:gap-4 items-center flex-wrap">
-                {fulfillmentsOrder?.line_items?.map((line_items, idx) => (
-                  <div>
-                    <p>Product : {line_items.title}</p>
-                    <p>
-                      Price :{" "}
-                      {parseInt(line_items?.price).toLocaleString("en-IN")}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              <div className="flex flex-col sm:flex-row gap-3 mt-5">
-                <button
-                  className="flex-1 bg-[#4B001A] text-white text-[14px] font-semibold py-2.5 rounded-full"
-                  onClick={() =>
-                    sendTrackOrder(fulfillmentsOrder.fulfillments[0]?.order_id)
-                  }
-                >
-                  Track Order
-                </button>
-                <button
-                  className="flex-1 border border-[#4B001A] text-[#4B001A] text-[14px] font-semibold py-2.5 rounded-full"
-                  onClick={() =>
-                    sendCancelOrder(fulfillmentsOrder.fulfillments[0]?.order_id)
-                  }
-                >
-                  Cancel Order
-                </button>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         {/* DESKTOP LAYOUT */}

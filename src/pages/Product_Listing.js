@@ -39,11 +39,16 @@ function Product_Listing({ productCatergory }) {
   useEffect(() => {
     if (productCatergory) {
       setProducts(productCatergory);
-      setLoading(false);
-    }
+  setLoading(true); 
+  
+  
+ setTimeout(() => {
+      setLoading(false);       
+    }, 300);
+  }
   }, [productCatergory]);
   const changeVariant = (productId, index, item) => {
-    // console.log(productId, index, item);
+   
     setSelectedVariants((prev) => ({
       ...prev,
       [productId]: index,

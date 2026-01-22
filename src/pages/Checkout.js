@@ -8,7 +8,7 @@ import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import truck_icon from "../assets/truck_icon.png";
 import LineImg from "../assets/line.png";
-import location_icon from "../assets/location_icon.png"
+import location_icon from "../assets/location_icon.png";
 import red_arrow from "../assets/Products/down_arrow_red.png";
 import downArrow from "../assets/arrowDown.png";
 import {
@@ -28,14 +28,8 @@ function CheckoutPage() {
   const [formValues, setFormValues] = useState([]);
   const [orderCompleted, setOrderCompleted] = useState(false);
   const [deliveryInfo, setDeliveryInfo] = useState({});
-  const { pincodeDetails, setPincodeDetails, loading, setLoading } =
-    useContext(AppContext);
-  const [fulfillmentType, setFulfillmentType] = useState("DELIVERY");
-  // const [pincodeStatus, setPincodeStatus] = useState({
-  //   loading: false,
-  //   activeField: null,
-  // });
-
+  const { pincodeDetails } = useContext(AppContext);
+  const [fulfillmentType, setFulfillmentType] = useState("");
   // Yup validation schema
   const validationSchema = Yup.object({
     // Contact
@@ -97,7 +91,7 @@ function CheckoutPage() {
     sessionStorage.getItem("checkoutForm") || "null",
   );
 
-  console.log(cartItems)
+  console.log(cartItems);
   // Formik
   const formik = useFormik({
     initialValues: savedCheckoutForm || {
@@ -114,7 +108,7 @@ function CheckoutPage() {
       pincode: "",
       state: "",
       country: "India",
-
+      fulfillmentType: "DELIVERY",
       // Billing
       billingAddress: "",
       billingLandmark: "",
@@ -157,19 +151,6 @@ function CheckoutPage() {
     },
   });
 
-  // useEffect(() => {
-  //   const navigationType = performance.getEntriesByType("navigation")[0]?.type;
-
-  //   if (navigationType === "reload") {
-  //     localStorage.removeItem("checkoutForm");
-  //     formik.resetForm();
-  //   } else {
-  //     const saved = localStorage.getItem("checkoutForm");
-  //     if (saved) {
-  //       formik.setValues(JSON.parse(saved));
-  //     }
-  //   }
-  // }, []);
   const getPincode = async (pincode) => {
     try {
       const response = await FetchDeliveryByPincode(pincode);
@@ -179,20 +160,29 @@ function CheckoutPage() {
       console.log("error fetching pincode", error);
     }
   };
+
   function getDeliveryDate(daysToAdd) {
     const today = new Date();
     today.setDate(today.getDate() + daysToAdd);
     return today;
   }
-  const tatInHours = Number(deliveryInfo?.TAT || 0);
-  const daysToAdd = Math.ceil(tatInHours / 24);
+  let dateOnly = null;
 
-  const deliveryDate = getDeliveryDate(daysToAdd);
-  const dateOnly = deliveryDate.toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
+  if (deliveryInfo?.TAT && Number(deliveryInfo.TAT) > 0) {
+    const tatInHours = Number(deliveryInfo.TAT);
+    const daysToAdd = Math.ceil(tatInHours / 24);
+
+    const deliveryDate = getDeliveryDate(daysToAdd);
+    dateOnly = deliveryDate.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  }
+
+  console.log(dateOnly);
+  console.log(cartItems[0]?.deliveryDetails?.date);
+
   const handlePincodeCheck = async (field) => {
     console.log(field);
     const pincode = formik.values[field];
@@ -268,8 +258,15 @@ function CheckoutPage() {
           zip: formValues.billingPincode,
           phone: formValues.mobile,
         },
-        tags: `Estimated Delivery: ${dateOnly ? dateOnly : cartItems[0]?.deliveryDetails?.date
-          }`,
+
+        tags: [
+          formValues.fulfillmentType,
+          ...(formValues.fulfillmentType === "DELIVERY"
+            ? [
+                `estimated-delivery-${dateOnly || cartItems[0]?.deliveryDetails?.date}`,
+              ]
+            : []),
+        ].join(", "),
         financial_status: "paid",
       },
     };
@@ -369,7 +366,7 @@ function CheckoutPage() {
       );
     }
   };
-
+  console.log(formValues);
   console.log(cartItems[0]?.deliveryDetails?.state, pincodeDetails);
 
   return (
@@ -392,8 +389,6 @@ function CheckoutPage() {
           </Link>
         </div>
 
-
-
         {/* ======= Mobile Order Summary Dropdown ======= */}
         <div className="max-w-[660px] mx-auto block xl:hidden bg-[#FFFAF3] shadow-md border border-[#F6EFE6] mb-6">
           <button
@@ -406,8 +401,9 @@ function CheckoutPage() {
               <img
                 src={downArrow}
                 alt="Dropdown Arrow"
-                className={`w-[11px] h-[7px] transition-transform duration-300 ${showSummary ? "rotate-180" : "rotate-0"
-                  }`}
+                className={`w-[11px] h-[7px] transition-transform duration-300 ${
+                  showSummary ? "rotate-180" : "rotate-0"
+                }`}
               />
             </div>
 
@@ -437,7 +433,10 @@ function CheckoutPage() {
                         Quantity: {item.quantity}
                       </div>
                       <div className="text-[14px] text-[#313131] font-semibold">
-                        ₹{Number(item?.price * item?.quantity).toLocaleString("en-IN")}
+                        ₹
+                        {Number(item?.price * item?.quantity).toLocaleString(
+                          "en-IN",
+                        )}
                       </div>
                     </div>
                   </div>
@@ -445,7 +444,13 @@ function CheckoutPage() {
               </div>
 
               {/* Delivery info */}
-              <div className={fulfillmentType === "DELIVERY" ? "flex !mt-5 max-w-full w-fit items-center gap-2 text-[10px] sm:text-[12px] text-[#A84C32]  bg-gradient-to-r from-[#DAB3C1] to-[#FFFFFF] rounded-none px-3 py-1": "hidden"}>
+              <div
+                className={
+                  formik.values.fulfillmentType === "DELIVERY"
+                    ? "flex !mt-5 max-w-full w-fit items-center gap-2 text-[10px] sm:text-[12px] text-[#A84C32]  bg-gradient-to-r from-[#DAB3C1] to-[#FFFFFF] rounded-none px-3 py-1"
+                    : "hidden"
+                }
+              >
                 <img
                   src={truck_icon}
                   alt="truck icon"
@@ -458,11 +463,20 @@ function CheckoutPage() {
               </div>
 
               {/* Delivery Details - fulfillment Type is In-Store Pickup */}
-              {fulfillmentType === "STORE_PICKUP" && (
-                <a href="https://maps.app.goo.gl/Czdvg1VjKf2jcY7Z9" target="_blank" >
+              {formik.values.fulfillmentType === "STORE_PICKUP" && (
+                <a
+                  href="https://maps.app.goo.gl/Czdvg1VjKf2jcY7Z9"
+                  target="_blank"
+                >
                   <div className="flex flex-row items-center gap-x-1 my-5 !w-[250px]">
-                    <img src={location_icon} className="w-[15px] h-[15px]" alt="location-icon" />
-                    <h5 className="font-poppins text-primary font-medium text-[12px]  underline">Click for Store Location</h5>
+                    <img
+                      src={location_icon}
+                      className="w-[15px] h-[15px]"
+                      alt="location-icon"
+                    />
+                    <h5 className="font-poppins text-primary font-medium text-[12px]  underline">
+                      Click for Store Location
+                    </h5>
                   </div>
                 </a>
               )}
@@ -479,7 +493,13 @@ function CheckoutPage() {
                   <span>Tax</span>
                   <span>₹{tax.toLocaleString()}</span>
                 </div>
-                <div className={fulfillmentType === "DELIVERY" ? "flex justify-between" : "hidden"}>
+                <div
+                  className={
+                    formik.values.fulfillmentType === "DELIVERY"
+                      ? "flex justify-between"
+                      : "hidden"
+                  }
+                >
                   <span>Shipping</span>
                   <span className="text-[#6E0027]">
                     {shipping === 0 ? "Free" : `₹${shipping}`}
@@ -507,15 +527,32 @@ function CheckoutPage() {
               onSubmit={formik.handleSubmit}
               className="bg-[#FFF5E8] rounded-xl px-1 sm:p-6 space-y-6"
             >
-
               {/* TOGGLE TO RECEIVE CUSTOMER INPUT  */}
               <p className="text-[14px] text-[#6E0027] font-semibold my-1">
                 How would you like to receive your order?
               </p>
 
               <div className="flex items-center sm:gap-x-12 gap-x-3">
-                <button onClick={() => { setFulfillmentType("DELIVERY") }} type="button" className={`${fulfillmentType === "DELIVERY" ? "bg-gradient-to-r from-[#f8e3e3] to-[#FFFFFF] border-[0.8px] border-[#8C455E] text-black" : "bg-transparent border-[0.8px] border-gray-300 text-black-400"} w-[150px] h-[40px] sm:w-[200px] sm:h-[50px] rounded-[8px] font-poppins text-[12px] sm:text-[15px] `}>Delivery to Address</button>
-                <button onClick={() => { setFulfillmentType("STORE_PICKUP") }} type="button" className={`${fulfillmentType === "STORE_PICKUP" ? "bg-gradient-to-r from-[#f8e3e3] to-[#FFFFFF] border-[0.8px] border-[#8C455E] text-black" : "bg-transparent border-[0.8px] border-gray-300 text-black-400"} w-[200px] h-[40px] sm:w-[250px] sm:h-[50px] rounded-[8px] font-poppins text-[12px] sm:text-[15px] `}>In-Store Purchase (Pick-up)</button>
+                <button
+                  onClick={() => {
+                    formik.setFieldValue("fulfillmentType", "DELIVERY");
+                  }}
+                  type="button"
+                  value={formik.values.fulfillmentType}
+                  className={`${formik.values.fulfillmentType === "DELIVERY" ? "bg-gradient-to-r from-[#f8e3e3] to-[#FFFFFF] border-[0.8px] border-[#8C455E] text-black" : "bg-transparent border-[0.8px] border-gray-300 text-black-400"} w-[150px] h-[40px] sm:w-[200px] sm:h-[50px] rounded-[8px] font-poppins text-[12px] sm:text-[15px] `}
+                >
+                  Delivery to Address
+                </button>
+                <button
+                  onClick={() => {
+                    formik.setFieldValue("fulfillmentType", "STORE_PICKUP");
+                  }}
+                  type="button"
+                  value={formik.values.fulfillmentType}
+                  className={`${formik.values.fulfillmentType === "STORE_PICKUP" ? "bg-gradient-to-r from-[#f8e3e3] to-[#FFFFFF] border-[0.8px] border-[#8C455E] text-black" : "bg-transparent border-[0.8px] border-gray-300 text-black-400"} w-[200px] h-[40px] sm:w-[250px] sm:h-[50px] rounded-[8px] font-poppins text-[12px] sm:text-[15px] `}
+                >
+                  In-Store Purchase (Pick-up)
+                </button>
               </div>
 
               {/* Contact Details */}
@@ -532,10 +569,11 @@ function CheckoutPage() {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.firstName}
-                      className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.firstName && formik.touched.firstName
-                        ? "border-red-500"
-                        : "border-[#efe6e6]"
-                        }
+                      className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                        formik.errors.firstName && formik.touched.firstName
+                          ? "border-red-500"
+                          : "border-[#efe6e6]"
+                      }
                       focus:outline-none focus:border-[#8C455E]`}
                       placeholder="First Name"
                     />
@@ -553,10 +591,11 @@ function CheckoutPage() {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.lastName}
-                      className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.lastName && formik.touched.lastName
-                        ? "border-red-500"
-                        : "border-[#efe6e6]"
-                        }
+                      className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                        formik.errors.lastName && formik.touched.lastName
+                          ? "border-red-500"
+                          : "border-[#efe6e6]"
+                      }
                              focus:outline-none focus:border-[#8C455E]`}
                       placeholder="Last Name"
                     />
@@ -571,10 +610,11 @@ function CheckoutPage() {
                 <div className="w-[95%] sm:w-full">
                   <label className="text-sm block mb-1">Mobile Number</label>
                   <div
-                    className={`flex items-center w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] bg-white ${formik.errors.mobile && formik.touched.mobile
-                      ? "border-red-500"
-                      : "border-[#efe6e6]"
-                      }
+                    className={`flex items-center w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] bg-white ${
+                      formik.errors.mobile && formik.touched.mobile
+                        ? "border-red-500"
+                        : "border-[#efe6e6]"
+                    }
                     focus:outline-none focus:border-[#8C455E]`}
                   >
                     <span className="text-[#800020] font-semibold mr-2 whitespace-nowrap">
@@ -607,10 +647,11 @@ function CheckoutPage() {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.email}
-                    className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.email && formik.touched.email
-                      ? "border-red-500"
-                      : "border-[#efe6e6]"
-                      } focus:outline-none focus:border-[#8C455E]`}
+                    className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                      formik.errors.email && formik.touched.email
+                        ? "border-red-500"
+                        : "border-[#efe6e6]"
+                    } focus:outline-none focus:border-[#8C455E]`}
                     placeholder="Email ID"
                   />
 
@@ -637,10 +678,11 @@ function CheckoutPage() {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.address}
-                    className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${formik.errors.address && formik.touched.address
-                      ? "border-red-500"
-                      : "border-[#efe6e6]"
-                      }
+                    className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${
+                      formik.errors.address && formik.touched.address
+                        ? "border-red-500"
+                        : "border-[#efe6e6]"
+                    }
                      focus:outline-none focus:border-[#8C455E]`}
                     placeholder="Address (Flat No./ House No./Street/Area))"
                   />
@@ -686,10 +728,11 @@ function CheckoutPage() {
                         formik?.values?.pincode ||
                         cartItems[0]?.deliveryDetails?.pincode
                       }
-                      className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.pincode && formik.touched.pincode
-                        ? "border-red-500"
-                        : "border-[#efe6e6]"
-                        }
+                      className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                        formik.errors.pincode && formik.touched.pincode
+                          ? "border-red-500"
+                          : "border-[#efe6e6]"
+                      }
                       focus:outline-none focus:border-[#8C455E]`}
                       placeholder="Pincode"
                     />
@@ -707,10 +750,11 @@ function CheckoutPage() {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.city}
-                      className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.city && formik.touched.city
-                        ? "border-red-500"
-                        : "border-[#efe6e6]"
-                        }
+                      className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                        formik.errors.city && formik.touched.city
+                          ? "border-red-500"
+                          : "border-[#efe6e6]"
+                      }
                        focus:outline-none focus:border-[#8C455E]`}
                       placeholder="City"
                     />
@@ -730,10 +774,11 @@ function CheckoutPage() {
                         formik.values.state ||
                         cartItems[0]?.deliveryDetails?.state
                       }
-                      className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px]  ${formik.errors.state && formik.touched.state
-                        ? "border-red-500"
-                        : "border-[#efe6e6]"
-                        }
+                      className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px]  ${
+                        formik.errors.state && formik.touched.state
+                          ? "border-red-500"
+                          : "border-[#efe6e6]"
+                      }
                      focus:outline-none focus:border-[#8C455E]`}
                     />
                     {formik.touched.state && formik.errors.state && (
@@ -757,7 +802,7 @@ function CheckoutPage() {
                   </div>
                 </div>
               </section>
-              {fulfillmentType === "DELIVERY" && (
+              {formik.values.fulfillmentType === "DELIVERY" && (
                 <>
                   {/* Billing Address Section */}
                   <div className="mb-6">
@@ -767,10 +812,11 @@ function CheckoutPage() {
                         formik.setFieldValue("useDifferentBilling", false);
                       }}
                       className={`cursor-pointer w-[95%]  sm:w-full p-4 rounded-md border transition-all duration-300
-              ${!useDifferentBilling
-                          ? "bg-gradient-to-r from-[#f8e3e3] to-[#ffffff] border-[#8C455E] shadow-md"
-                          : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
-                        }`}
+              ${
+                !useDifferentBilling
+                  ? "bg-gradient-to-r from-[#f8e3e3] to-[#ffffff] border-[#8C455E] shadow-md"
+                  : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
+              }`}
                     >
                       <div className="flex items-center justify-between ">
                         <p className="text-16px font-Poppins text-[#313131]">
@@ -778,10 +824,11 @@ function CheckoutPage() {
                         </p>
                         <span
                           className={`w-[22px] h-[22px] border-2 rounded-full flex items-center justify-center
-                  ${!useDifferentBilling
-                              ? "border-[#6E0027]"
-                              : "border-[#6E0027]"
-                            }
+                  ${
+                    !useDifferentBilling
+                      ? "border-[#6E0027]"
+                      : "border-[#6E0027]"
+                  }
                      `}
                         >
                           {!useDifferentBilling && (
@@ -796,10 +843,11 @@ function CheckoutPage() {
                         setUseDifferentBilling(true);
                         formik.setFieldValue("useDifferentBilling", true);
                       }}
-                      className={`cursor-pointer w-[95%]  sm:w-full p-4 mt-3 rounded-md border transition-all duration-300 ${useDifferentBilling
-                        ? "bg-gradient-to-r from-[#DAB3C14F] to-[#ffffff]  border-[#8C455E] shadow-md"
-                        : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
-                        }`}
+                      className={`cursor-pointer w-[95%]  sm:w-full p-4 mt-3 rounded-md border transition-all duration-300 ${
+                        useDifferentBilling
+                          ? "bg-gradient-to-r from-[#DAB3C14F] to-[#ffffff]  border-[#8C455E] shadow-md"
+                          : "bg-transparent hover:bg-gradient-to-r hover:from-[#fff7f7] hover:to-[#ffeaea]"
+                      }`}
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-[16px] font-Poppins text-[#313131]">
@@ -829,11 +877,12 @@ function CheckoutPage() {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.billingAddress}
-                          className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${formik.errors.billingAddress &&
+                          className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md placeholder-[#979797] placeholder:font-normal text-[16px] ${
+                            formik.errors.billingAddress &&
                             formik.touched.billingAddress
-                            ? "border-red-500"
-                            : "border-[#efe6e6]"
-                            }
+                              ? "border-red-500"
+                              : "border-[#efe6e6]"
+                          }
                      focus:outline-none focus:border-[#8C455E]`}
                           placeholder="Address (Flat No./ House No./Street/Area))"
                         />
@@ -878,11 +927,12 @@ function CheckoutPage() {
                               );
                             }}
                             value={formik.values.billingPincode}
-                            className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.billingPincode &&
+                            className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                              formik.errors.billingPincode &&
                               formik.touched.billingPincode
-                              ? "border-red-500"
-                              : "border-[#efe6e6]"
-                              } focus:outline-none focus:border-[#8C455E]`}
+                                ? "border-red-500"
+                                : "border-[#efe6e6]"
+                            } focus:outline-none focus:border-[#8C455E]`}
                             placeholder="billingPincode"
                           />
 
@@ -921,11 +971,12 @@ function CheckoutPage() {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.billingCity}
-                            className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${formik.errors.billingCity &&
+                            className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px] placeholder-[#979797] placeholder:font-normal ${
+                              formik.errors.billingCity &&
                               formik.touched.billingCity
-                              ? "border-red-500"
-                              : "border-[#efe6e6]"
-                              }
+                                ? "border-red-500"
+                                : "border-[#efe6e6]"
+                            }
                        focus:outline-none focus:border-[#8C455E]`}
                             placeholder="City"
                           />
@@ -945,11 +996,12 @@ function CheckoutPage() {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.billingState}
-                            className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px]  ${formik.errors.billingState &&
+                            className={`w-full h-[40px] sm:h-[44px] px-3 border rounded-md text-[16px]  ${
+                              formik.errors.billingState &&
                               formik.touched.billingState
-                              ? "border-red-500"
-                              : "border-[#efe6e6]"
-                              }
+                                ? "border-red-500"
+                                : "border-[#efe6e6]"
+                            }
                      focus:outline-none focus:border-[#8C455E]`}
                           />
                           {formik.touched.billingState &&
@@ -1090,7 +1142,10 @@ function CheckoutPage() {
                         Quantity: {item.quantity}
                       </div>
                       <div className=" text-18px text-[#313131]   font-semibold">
-                        ₹{Number(item.price * item.quantity).toLocaleString("en-IN")}
+                        ₹
+                        {Number(item.price * item.quantity).toLocaleString(
+                          "en-IN",
+                        )}
                       </div>
                     </div>
                   </div>
@@ -1098,7 +1153,7 @@ function CheckoutPage() {
               </div>
 
               {/* Delivery Details - fulfillmentType is Delivery */}
-              {fulfillmentType === "DELIVERY" && (
+              {formik.values.fulfillmentType === "DELIVERY" && (
                 <div className="flex  w-fit max-w-[250px] max-h-[24px] items-center gap-2 text-[12px]  text-[#A84C32]  bg-gradient-to-r from-[#DAB3C1] to-[#FFFFFF] rounded-none px-3 py-2 mt-5">
                   <img
                     src={truck_icon}
@@ -1107,23 +1162,31 @@ function CheckoutPage() {
                   />
                   <span>
                     Est. delivery by{" "}
-                    {dateOnly ? dateOnly : cartItems[0]?.deliveryDetails?.date}
+                    {dateOnly ? dateOnly : cartItems?.[cartItems.length - 1]?.deliveryDetails?.date}
                   </span>
                 </div>
               )}
 
               {/* Delivery Details - fulfillment Type is In-Store Pickup */}
-              {fulfillmentType === "STORE_PICKUP" && (
-                <a href="https://maps.app.goo.gl/Czdvg1VjKf2jcY7Z9" target="_blank" >
+              {formik.values.fulfillmentType === "STORE_PICKUP" && (
+                <a
+                  href="https://maps.app.goo.gl/Czdvg1VjKf2jcY7Z9"
+                  target="_blank"
+                >
                   <div className="flex flex-row items-start gap-x-1 my-5 !w-[250px]">
-                    <img src={location_icon} className="w-[20px] h-[20px]" alt="location-icon" />
-                    <h5 className="font-poppins text-primary font-medium  underline">Click for Store Location</h5>
+                    <img
+                      src={location_icon}
+                      className="w-[20px] h-[20px]"
+                      alt="location-icon"
+                    />
+                    <h5 className="font-poppins text-primary font-medium  underline">
+                      Click for Store Location
+                    </h5>
                   </div>
                 </a>
               )}
 
               <div className="border-t border-[#EDEDED] my-4 py-3">
-
                 <div className="text-[14px] space-y-3">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
@@ -1133,7 +1196,13 @@ function CheckoutPage() {
                     <span>Tax</span>
                     <span>₹{tax.toLocaleString()}</span>
                   </div>
-                  <div className={fulfillmentType === "DELIVERY" ? "flex justify-between" : "hidden"}>
+                  <div
+                    className={
+                      fulfillmentType === "DELIVERY"
+                        ? "flex justify-between"
+                        : "hidden"
+                    }
+                  >
                     <span>Shipping</span>
                     <span className="text-[#6E0027]">
                       {shipping === 0 ? "Free" : `₹${shipping}`}

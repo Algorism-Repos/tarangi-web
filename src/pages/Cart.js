@@ -93,14 +93,15 @@ function Cart() {
   //   }
   // }, [cartItems, categorizedProduct]);
 
-  useEffect(() => {
-    if (boughtTogether.length > 0) {
-      localStorage.setItem(
-        "boughtTogether",
-        JSON.stringify(boughtTogether)
-      );
-    }
-  }, [boughtTogether]);
+useEffect(() => {
+  if (!Array.isArray(boughtTogether) || boughtTogether.length === 0) return;
+
+  localStorage.setItem(
+    "boughtTogether",
+    JSON.stringify(boughtTogether)
+  );
+}, [boughtTogether]);
+
 
 
   const totalCartQuantity = cartItems.reduce(
