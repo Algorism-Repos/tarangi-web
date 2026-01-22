@@ -11,8 +11,10 @@ export function AppProvider({ children }) {
   const [pincodeDetails, setPincodeDetails] = useState({});
   const [deliveryDate, setdeliveryDate] = useState();
   const [filteredProducts, setFilteredProducts] = useState([]);
-   const [recentlyViewed, setRecentlyViewed] = useState([]);
-  const [trendingProduct, setTrendingProduct] = useState(() => {
+const [recentlyViewed, setRecentlyViewed] = useState(() => {
+  const saved = localStorage.getItem("recentlyViewed");
+  return saved ? JSON.parse(saved) : [];
+});  const [trendingProduct, setTrendingProduct] = useState(() => {
     const saved = localStorage.getItem("trendingProduct");
     return saved ? JSON.parse(saved) : [];
   });
@@ -128,15 +130,19 @@ const [categorizedProduct, setCategorizedProduct] = useState(() => {
     );
   };
   const clearWishlist = () => setWishlistItems([]);
+
   const addToRecentlyViewed = (product) => {
-    if (!product?.variantId) return;
-    setRecentlyViewed((prev) => {
-      const filtered = prev.filter(
-        (item) => item.variantId !== product.variantId
-      );
-      return [product, ...filtered].slice(0, 10);
-    });
-  };
+  if (!product?.productId) return;
+
+  setRecentlyViewed(prev => {
+    const filtered = prev.filter(
+      p => p.productId !== product.productId
+    );
+    const updated = [product, ...filtered].slice(0, 8);
+    localStorage.setItem("recentlyViewed", JSON.stringify(updated));
+    return updated;
+  });
+};
   const clearRecentlyViewed = () => {
     setRecentlyViewed([]);
     localStorage.removeItem("recentlyViewed");

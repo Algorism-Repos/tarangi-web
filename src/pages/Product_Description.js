@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useParams } from "react-router";
 // images
 import grey_arrow from "../assets/Products/grey_arrow.png";
 import gold_ellipse from "../assets/Products/gold_ellipse.png";
@@ -24,14 +24,18 @@ import { formatProduct } from "../utils/productFormatter";
 
 function Product_Description() {
   const swiperRef = useRef(null);
+  const params = useParams();
+
   const location = useLocation();
-  const { product } = location.state || {};
+  const { product } = location?.state || categorizedProduct.find(
+    p => p.title.replace(/\s+/g, "-") === params.handle
+  );
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});
-const [youMayLike, setYouMayLike] = useState(() => {
-  const stored = localStorage.getItem("youMayLike");
-  return stored ? JSON.parse(stored) : [];
-});
+  const [youMayLike, setYouMayLike] = useState(() => {
+    const stored = localStorage.getItem("youMayLike");
+    return stored ? JSON.parse(stored) : [];
+  });
   const {
     categorizedProduct,
     wishlistItems,
@@ -39,15 +43,14 @@ const [youMayLike, setYouMayLike] = useState(() => {
     addToRecentlyViewed,
     colorAssets,
     setRecentlyViewed,
-    recentlyViewed
+    recentlyViewed,
   } = useContext(AppContext);
+
   const [colorSelected, setColorSelected] = useState(
     product?.variants?.[0]?.colorVariant || "",
   );
 
   useEffect(() => {
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
     if (product?.variants?.length > 0) {
       const variant = product?.variants?.find(
         (element) => element?.colorVariant === colorSelected,
@@ -68,21 +71,19 @@ const [youMayLike, setYouMayLike] = useState(() => {
       });
     }
   }, [colorSelected, pincodeDetails]);
-useEffect(() => {
-  if (!categorizedProduct?.length || !product?.productId) return;
+  useEffect(() => {
+    if (!categorizedProduct?.length || !product?.productId) return;
 
-  const filtered = categorizedProduct.filter(
-    (item) => item.productId !== product.productId
-  );
-
-  setYouMayLike(filtered);
-  localStorage.setItem("youMayLike", JSON.stringify(filtered));
-  
-}, [categorizedProduct, product?.productId]);
-useEffect(() => {
-  if (!product) return;
-  addToRecentlyViewed(product);
-}, [product]);
+    const filtered = categorizedProduct.filter(
+      (item) => item.productId !== product.productId,
+    );
+    setYouMayLike(filtered);
+    localStorage.setItem("youMayLike", JSON.stringify(filtered));
+  }, [categorizedProduct, product?.productId]);
+  useEffect(() => {
+    if (!product) return;
+    addToRecentlyViewed(product);
+  }, [product?.productId]);
 
   // click on  color toggle
   function handleColorChangeByButton(color) {
@@ -110,14 +111,14 @@ useEffect(() => {
       const removingProductShown = filterOutofStockProducts.filter(
         (item) => item.productId !== product?.productId,
       );
-      // setYouMayLike(removingProductShown);
     }
-    setRecentlyViewed(categorizedProduct);
-
+    // setRecentlyViewed(categorizedProduct);
   }, [categorizedProduct, location.pathname]);
+// useEffect(() => {
+//   setRecentlyViewed(categorizedProduct);
+// }, [categorizedProduct, location.pathname]);
 
- console.log("recently viewd",recentlyViewed)
-  console.log(" you may also like categorizedProduct ", categorizedProduct);
+  console.log("recently viewd", recentlyViewed);
 
   return (
     <>
@@ -383,7 +384,6 @@ useEffect(() => {
 
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[20px] gap-y-6 mt-[25px] sm:gap-x-[20px]">
               {youMayLike?.slice(0, 4).map((item) => {
-              
                 return (
                   <div
                     key={item?.id}
