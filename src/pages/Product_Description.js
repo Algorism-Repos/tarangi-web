@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useParams } from "react-router";
 // images
 import grey_arrow from "../assets/Products/grey_arrow.png";
 import gold_ellipse from "../assets/Products/gold_ellipse.png";
@@ -35,7 +35,9 @@ function Product_Description() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [selectedVariants, setSelectedVariants] = useState({});
   const location = useLocation();
-  const { product } = location.state || {};
+  const { product } = location?.state || categorizedProduct.find(
+    p => p.title.replace(/\s+/g, "-") === params.handle
+  );
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});
   const [youMayLike, setYouMayLike] = useState(() => {
@@ -49,15 +51,14 @@ function Product_Description() {
     addToRecentlyViewed,
     colorAssets,
     setRecentlyViewed,
-    recentlyViewed
+    recentlyViewed,
   } = useContext(AppContext);
+
   const [colorSelected, setColorSelected] = useState(
     product?.variants?.[0]?.colorVariant || "",
   );
 
   useEffect(() => {
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
     if (product?.variants?.length > 0) {
       const variant = product?.variants?.find(
         (element) => element?.colorVariant === colorSelected,
@@ -119,11 +120,12 @@ function Product_Description() {
       const removingProductShown = filterOutofStockProducts.filter(
         (item) => item.productId !== product?.productId,
       );
-      // setYouMayLike(removingProductShown);
     }
-    setRecentlyViewed(categorizedProduct);
-
+    // setRecentlyViewed(categorizedProduct);
   }, [categorizedProduct, location.pathname]);
+// useEffect(() => {
+//   setRecentlyViewed(categorizedProduct);
+// }, [categorizedProduct, location.pathname]);
 
   const changeVariant = (productId, index, item) => {
 
@@ -148,8 +150,7 @@ function Product_Description() {
   };
 
   console.log(youMayLike);
-
-
+  
   return (
     <>
       {/* Backgound */}
