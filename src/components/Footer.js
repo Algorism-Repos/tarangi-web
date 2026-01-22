@@ -9,6 +9,8 @@ import logo from "../assets/logo.png"
 import instagram from "../assets/instagram_icon.svg"
 import whatsapp from '../assets/whatsapp_icon.svg'
 import Modal from "./Modal";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 // Clients 
 import client_1 from '../assets/Clients/client_1.png'
@@ -21,10 +23,17 @@ import client_7 from '../assets/Clients/client_7.png'
 import client_8 from '../assets/Clients/client_8.png'
 import client_9 from '../assets/Clients/client_9.png'
 import client_10 from '../assets/Clients/client_10.png'
+import client_11 from '../assets/Clients/client_11.png'
+import client_12 from '../assets/Clients/client_12.png'
 
 function Footer() {
 
     const { collection } = useContext(AppContext);
+    // Aos Animation 
+    useEffect(() => {
+        AOS.init({ duration: 1000 });
+    }, []);
+
 
     // Modal State & Function
     const [modalToggle, setModalToggle] = useState(false);
@@ -45,7 +54,9 @@ function Footer() {
         { src: client_7 },
         { src: client_8 },
         { src: client_9 },
-        { src: client_10 }
+        { src: client_10 },
+        { src: client_11 },
+        { src: client_12 }
     ]
 
     function ScrollToTop() {
@@ -58,11 +69,11 @@ function Footer() {
     return (
         <>
             {/* Coming Soon - Section */}
-            <div className={isVisible ? "coming-soon py-[80px]  sm:py-[100px]" : "hidden"}>
-                <h1 className="font-atteron text-[32px] sm:text-[49px] font-normal leading-normal text-white text-center tracking-[1px]">Our Happy Customers,<br className="hidden sm:block" /> the stars of Tarangi</h1>
+            <div className={isVisible ? "coming-soon py-[80px]  sm:py-[100px]" : "hidden"}  >
+                <h1 className="font-atteron text-[32px] sm:text-[49px] font-normal leading-normal text-white text-center tracking-[1px]"  data-aos="fade-up">Our Happy Customers,<br className="hidden sm:block" /> the stars of Tarangi</h1>
 
                 {/* Clients */}
-                <div className="w-full mx-auto my-[60px]  px-4 sm:px-6 sm:my-[80px] lg:px-8">
+                <div className="w-full mx-auto my-[60px]  px-4 sm:px-6 sm:my-[80px] lg:px-8"  data-aos="fade-up">
                     <Marquee pauseOnHover={true} speed={80} gradient={false}>
                         <div className="flex items-center gap-x-8 sm:gap-x-12 lg:gap-x-16 px-4 sm:px-6 lg:px-8">
                             {
@@ -80,7 +91,7 @@ function Footer() {
                 </div>
 
                 {/* Insta Button */}
-                <a href="https://www.instagram.com/tarangistars" target="_blank"><button className="font-poppins text-white text-[20px] font-extralight leading-normal bg-[#4B001A] rounded-[93px] py-[10px] px-[20px] cursor-pointer sm:text-[24px] sm:mt-6 ">Explore More</button></a>
+                <a href="https://www.instagram.com/tarangistars" target="_blank"><button className="font-poppins text-white text-[20px] font-extralight leading-normal bg-[#4B001A] rounded-[93px] py-[10px] px-[20px] cursor-pointer sm:text-[24px] sm:mt-6"  data-aos="fade-up">Explore More</button></a>
             </div>
 
 
@@ -93,7 +104,7 @@ function Footer() {
                     <div className="flex flex-wrap gap-x-[60px] gap-y-10 ">
                         {/* Logo & Social */}
                         <div className="sm:m-auto xl:m-0">
-                            <img src={logo} alt="brand-logo" className="w-[231px] h-fit" />
+                            <img src={logo} alt="brand-logo" className="w-[231px] h-fit"/>
 
                             <div className=" flex flex-row items-center gap-x-6 w-fit mx-auto ">
                                 <a href="https://www.instagram.com/tarangijewels/" target="_blank"><img src={instagram} className="w-[30px] h-[31px]" /></a>

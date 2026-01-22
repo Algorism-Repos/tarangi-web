@@ -9,6 +9,8 @@ import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { Link } from "react-router";
 import Modal from "../components/Modal";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 //asset import
 import fast_selling_1 from "../assets/fast_selling_1.png";
 import fast_selling_2 from "../assets/fast_selling_2.png";
@@ -48,6 +50,12 @@ function Home() {
   const sliderRef = useRef(null);
   const [silver, setSilver] = useState();
   const [silverRate, setSilverRate] = useState(null);
+
+  // Aos Animation 
+  useEffect(() => {
+    AOS.init({ duration: 1000 });
+  }, []);
+
   const [silverPriceUpdatedTime, setSilverPriceUpdatedTime] = useState();
   const [animate, setAnimate] = useState(false);
   const [modalToggle, setModalToggle] = useState(false);
@@ -309,9 +317,8 @@ function Home() {
             <h1 className="font-atteron uppercase text-[#5B3A09] text-[40px] text-center xl:text-left sm:text-[50px] xl:text-[65px] font-normal w-full sm:max-w-[780px] tracking-[1px]">
               Embrace your beauty Shine with Elegance
             </h1>
-            <h4 className="font-poppins text-[12px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-[#5B3A09] text-center sm:text-left mt-3 sm:mt-8 max-w-[640px]">
-              Because every exquisite 925 silver jewelry should perfectly
-              reflect the grace of its wearer.
+            <h4 className="font-poppins text-[13px] w-[257px] sm:w-full sm:text-[22px] font-normal leading-normal text-[#5B3A09] text-center xl:text-left mt-3 sm:mt-6 xl:mt-8 max-w-[640px]">
+              Silver Jewellery that celebrates YOU
             </h4>
             <Link
               to={`/products/${collection?.[6]?.handle}`}
@@ -329,7 +336,7 @@ function Home() {
         </SwiperSlide>
 
         {/* Men Banner */}
-        <SwiperSlide>
+        {/* <SwiperSlide>
           <div className="men-banner-slider">
             <h1 className="font-atteron uppercase text-white text-[40px] text-center xl:text-left sm:text-[50px] xl:text-[62px] font-normal w-full sm:max-w-[700px] tracking-[1px]">
               More than Jewelry Its your Signature
@@ -351,15 +358,15 @@ function Home() {
               </button>
             </Link>
           </div>
-        </SwiperSlide>
+        </SwiperSlide> */}
       </Swiper>
 
       <div className="whyus">
-        <h1 className="font-atteron text-[52px] sm:text-[72px] text-center text-[#5C0A1F] leading-normal">
+        <h1 className="font-atteron text-[52px] sm:text-[72px] text-center text-[#5C0A1F] leading-normal" data-aos="fade-up">
           WHY US?
         </h1>
 
-        <div className="font-poppins text-center text-[16px] sm:text-[20px] font-normal text-[#28040E] max-w-[318px] sm:max-w-[1035px] mt-5 sm:mt-9 ">
+        <div className="font-poppins text-center text-[16px] sm:text-[20px] font-normal text-[#28040E] max-w-[318px] sm:max-w-[1035px] mt-5 sm:mt-9" data-aos="fade-up">
           <p>
             With nearly 60 years of heritage, Tarangi carries forward the
             craftsmanship and trust of their family's tradition, reimagined for
@@ -378,11 +385,11 @@ function Home() {
           {/* Collections - Section */}
           <div className="design-section py-40 relative">
             <div className="max-w-7xl mx-auto tracking-[1px]">
-              <h1 className="section-heading px-3 !text-[47px]  !text-white">
+              <h1 className="section-heading px-3 !text-[47px]  !text-white" data-aos="fade-up">
                 Our Curations
               </h1>
 
-              <div className="flex flex-col gap-y-[100px] sm:gap-y-20 sm:flex-row sm:flex-wrap items-center justify-center  gap-x-12 my-36 sm:mt-40 sm:mb-56 relative ">
+              <div className="flex flex-col gap-y-[100px] sm:gap-y-20 sm:flex-row sm:flex-wrap items-center justify-center  gap-x-12 my-36 sm:mt-40 sm:mb-56 relative " data-aos="fade-up">
                 {collection &&
                   collection
                     ?.filter(
@@ -411,11 +418,11 @@ function Home() {
 
               {/* Best Sellers - Desktop View */}
               <div id="launchOffers" className="sm:block hidden">
-                <h1 className="section-heading !text-white tracking-[1px] text-center">
+                <h1 className="section-heading !text-white tracking-[1px] text-center" data-aos="fade-up">
                   Best Sellers
                 </h1>
 
-                <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center gap-x-9 justify-center  mt-20 sm:mt-36 ">
+                <div className="flex flex-col flex-wrap sm:flex-row gap-y-20 items-center gap-x-9 justify-center  mt-20 sm:mt-36 " data-aos="fade-up">
                   {FestiveFiltered?.map((type) => (
                     <Link
                       to={`/product_description/${type?.title.replace(
@@ -452,11 +459,9 @@ function Home() {
               </div>
 
               {/* Best Sellers - Mobile View slider */}
-              <div
-                id=""
-                className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden"
-              >
-                <h1 className="section-heading mb-9 !text-white tracking-[1px] text-center">
+              <div className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden">
+
+                <h1 className="section-heading mb-9 !text-white tracking-[1px] text-center" data-aos="fade-up">
                   Best Sellers
                 </h1>
 
@@ -564,10 +569,10 @@ function Home() {
       {/* Gold vs Gold Plated Silver Section */}
       <div className="bg-secondary">
         <div className="max-w-[1220px] mx-auto py-20 sm:pt-40 sm:pb-20  px-3 ">
-          <h1 className="section-heading lg:w-[846px] w-[336px] mx-auto tracking-[1px]">
+          <h1 className="section-heading lg:w-[846px] w-[336px] mx-auto tracking-[1px]" data-aos="fade-up">
             Gold vs Silver Jewellery
           </h1>
-          <p className="section-content text-center sm:max-w-[1034px] mx-auto mt-14">
+          <p className="section-content text-center sm:max-w-[1034px] mx-auto mt-14" data-aos="fade-up">
             Gold jewelry has always been cherished for its permanence, but often
             feels out of reach for everyday style. Gold-plated silver brings the
             same timeless look with the ease and affordability to make elegance
@@ -577,12 +582,12 @@ function Home() {
 
           {/* Images */}
 
-          <h1 className="max-w-[340px] sm:max-w-[680px] mx-auto text-center font-atteron text-[#5C0A1F] text-[26px] sm:text-[40px] font-semibold tracking-[1px] sm:tracking-[1px] mt-16 sm:mt-20">
+          <h1 className="max-w-[340px] sm:max-w-[680px] mx-auto text-center font-atteron text-[#5C0A1F] text-[26px] sm:text-[40px] font-semibold tracking-[1px] sm:tracking-[1px] mt-16 sm:mt-20" data-aos="fade-up">
             Enjoy stunning designs without the heavy price tag
           </h1>
 
           <div className="flex flex-col sm:flex-row sm:flex-wrap items-center  justify-center gap-x-20 gap-y-12 sm:gap-y-12 w-full mt-16 sm:mt-20">
-            <div className="relative border">
+            <div className="relative border" data-aos="fade-up">
               <img
                 src={silver_jewel}
                 alt="silver_jewel"
@@ -597,7 +602,7 @@ function Home() {
               </h2>
             </div>
 
-            <div className="relative">
+            <div className="relative" data-aos="fade-up">
               <img
                 src={gold_jewel}
                 alt="silver_jewel"
@@ -613,31 +618,31 @@ function Home() {
           </div>
 
           <div className="max-w-6xl mx-auto mt-8 sm:mt-28 px-4 py-12">
-            <h1 className="font-atteron text-[30px] font-bold text-[#5C0A1F] text-center tracking-[2px] sm:text-[48px]">
+            <h1 className="font-atteron text-[30px] font-bold text-[#5C0A1F] text-center tracking-[2px] sm:text-[48px]" data-aos="fade-up">
               Why choose Tarangi’s
               <br className="hidden md:block" /> silver jewelry?
             </h1>
 
             <div className="flex flex-col w-fit mx-auto gap-y-7 mt-16 px-4 sm:px-0">
-              <div className="flex flex-row items-center gap-x-4">
+              <div className="flex flex-row items-center gap-x-4" data-aos="fade-up">
                 <img className="w-[28px]" src={bullet_icon} />
                 <p className="font-poppins text-left text-[18px] sm:text-[22px]">
                   The luminous beauty of gold, made affordable.
                 </p>
               </div>
-              <div className="flex flex-row items-center gap-x-4">
+              <div className="flex flex-row items-center gap-x-4" data-aos="fade-up">
                 <img className="w-[28px]" src={bullet_icon} />
                 <p className="font-poppins text-left text-[18px] sm:text-[22px]">
                   Lightweight and comfortable for everyday wear.
                 </p>
               </div>
-              <div className="flex flex-row items-center gap-x-4">
+              <div className="flex flex-row items-center gap-x-4" data-aos="fade-up">
                 <img className="w-[28px]" src={bullet_icon} />
                 <p className="font-poppins text-left text-[18px] sm:text-[22px]">
                   Versatile, from casual looks to special occasions.
                 </p>
               </div>
-              <div className="flex flex-row items-center gap-x-4">
+              <div className="flex flex-row items-center gap-x-4" data-aos="fade-up">
                 <img className="w-[28px]" src={bullet_icon} />
                 <p className="font-poppins text-left text-[18px] sm:text-[22px]">
                   Crafted with lasting artistry and care.
@@ -651,11 +656,11 @@ function Home() {
       {/* Tarangi Specials */}
       <div className="newproducts-section tracking-[1px]">
         <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
-          <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-10 sm:mt-0  overflow-x-hidden">
+          <h1 className="section-heading !text-[52px] sm:!text-[64px] !text-white mt-10 sm:mt-0  overflow-x-hidden" data-aos="fade-up">
             Tarangi Specials
           </h1>
 
-          <div className="hidden sm:flex flex-col sm:flex-row items-center sm:gap-x-12 gap-y-24 sm:flex-wrap justify-center mt-10 sm:mt-44">
+          <div className="hidden sm:flex flex-col sm:flex-row items-center sm:gap-x-12 gap-y-24 sm:flex-wrap justify-center mt-10 sm:mt-44" data-aos="fade-up">
             {collection &&
               collection
                 ?.filter((item) => item.body_html === "<p>tarangi-specials</p>")
@@ -895,7 +900,7 @@ function Home() {
       {/* Before After Slider */}
       <div className="before-after-section ">
         <div className="max-w-7xl mx-auto py-20 sm:py-40 px-3 sm:px-0">
-          <h1 className="font-atteron section-heading text-[26px]  sm:text-[64px] text-center text-[#5C0A1F] mb-16">
+          <h1 className="font-atteron section-heading text-[26px]  sm:text-[64px] text-center text-[#5C0A1F] mb-16" data-aos="fade-up">
             <span className="text-[28px] sm:text-[64px]">
               {" "}
               Enhance Your Look With
@@ -903,7 +908,7 @@ function Home() {
             <br /> Tarangi
           </h1>
 
-          <div className="container" ref={containerRef}>
+          <div className="container" ref={containerRef} data-aos="fade-up">
             <div className="image-container">
               <img
                 className="image-before slider-image"

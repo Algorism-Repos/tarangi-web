@@ -4,7 +4,7 @@
 }
 
 .banner-section {
-  background: url("./assets/backgrounds/banner_background.png");
+  background: url("./assets/backgrounds/Home_banner_1.png");
   height: 780px;
   background-size: cover;
   background-repeat: no-repeat;
@@ -390,6 +390,20 @@ input::placeholder {
     object-fit: contain;
   }
 
+  .banner-section  {
+    background-image: url("./assets/Home_banner/banner_1_ipad.png");
+    height: 780px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 110px 0px;
+    background-position: center center;
+  }
+
   .women-banner-slider {
     background-image: url("./assets/Home_banner/banner_2_ipad.png");
     height: 780px;
@@ -430,7 +444,7 @@ input::placeholder {
   }
 
   .banner-section {
-    background-image: url("./assets/backgrounds/banner_background_mobile.png");
+    background-image: url("./assets/Home_banner//banner_1_mobile.png");
     height: 790px;
     background-size: cover;
     background-repeat: no-repeat;
