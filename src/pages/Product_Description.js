@@ -62,10 +62,7 @@ function Product_Description() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    localStorage.setItem(
-      "categorizedProduct",
-      JSON.stringify(categorizedProduct)
-    );
+
     if (product?.variants?.length > 0) {
       const variant = product?.variants?.find(
         (element) => element?.colorVariant === colorSelected
