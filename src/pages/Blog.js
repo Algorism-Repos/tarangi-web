@@ -24,7 +24,8 @@ function Blog() {
 
   //  fetching blogs
   const Blogs = async () => {
-    try {
+setLoading(true)    
+try {
       const response = await FetchAllBlogsFromShopify();
       setBlogs(response.blogs);
     } catch (error) {

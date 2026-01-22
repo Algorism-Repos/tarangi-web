@@ -15,7 +15,6 @@ function ThankYou() {
   const navigate = useNavigate();
 
   const { cartItems, clearCart } = useContext(AppContext);
-  console.log(cartItems);
   const data = [
     {
       img: muthukrishan,
@@ -30,7 +29,7 @@ function ThankYou() {
         "A master craftsman who can infuse tradition with innovation, creating jewels that embody precision, novel artistry and generations of refined skillsets.",
     },
   ];
-
+ clearCart()
   return (
     <>
       {/* Background */}

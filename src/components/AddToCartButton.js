@@ -7,6 +7,7 @@ import OutOfStockModal from "./OutOfStockModal";
 import RestockSuccessModal from "./RestockSuccessModal";
 import RestockModal from "./RestockModal";
 import CartToast from "./CartToast";
+import axios from "axios";
 function AddToCartButton({
   productToCart,
   isOutOfStock,
@@ -54,9 +55,14 @@ function AddToCartButton({
     }
   };
 
-  const placeEnquiry = (e) => {
-    alert("Button Clicked")
-  }
+  const placeEnquiry = async (e) => {
+    const phoneNumber = "919003058300";
+    const message = `I am interested in "${productToCart.title}" in "${productToCart.colorVariant}", please let me know when it's back in stock `;
+    const url = `https://wa.me/${phoneNumber}/?text=${encodeURIComponent(
+      message,
+    )}`;
+    window.open(url, "_blank");
+  };
   return (
     <>
       {/* Add to Cart Button */}
@@ -105,7 +111,9 @@ function AddToCartButton({
               alt="cart icon"
             />
           )}
-          {isDisabledInFavourites ? "Remove from favourites" : "Place an Enquiry"}
+          {isDisabledInFavourites
+            ? "Remove from favourites"
+            : "Place an Enquiry"}
         </button>
       )}
 
