@@ -11,6 +11,7 @@ export function AppProvider({ children }) {
   const [pincodeDetails, setPincodeDetails] = useState({});
   const [deliveryDate, setdeliveryDate] = useState();
   const [filteredProducts, setFilteredProducts] = useState([]);
+   const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [trendingProduct, setTrendingProduct] = useState(() => {
     const saved = localStorage.getItem("trendingProduct");
     return saved ? JSON.parse(saved) : [];
@@ -47,16 +48,10 @@ const [categorizedProduct, setCategorizedProduct] = useState(() => {
   });
   const [wishlistItems, setWishlistItems] = useState(() => {
     const saved = localStorage.getItem("wishlistItems");
-    const parsed = saved ? JSON.parse(saved): [];
     return saved ? JSON.parse(saved) : [];
-    // return parsed.slice().reverse();
   });
   const [cartItems, setCartItems] = useState(() => {
     const saved = localStorage.getItem("cartItems");
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [recentlyViewed, setRecentlyViewed] = useState(() => {
-    const saved = localStorage.getItem("recentlyViewed");
     return saved ? JSON.parse(saved) : [];
   });
   const updateCartItemQuantity = (id, newQty) => {
@@ -133,20 +128,15 @@ const [categorizedProduct, setCategorizedProduct] = useState(() => {
     );
   };
   const clearWishlist = () => setWishlistItems([]);
-
   const addToRecentlyViewed = (product) => {
+    if (!product?.variantId) return;
     setRecentlyViewed((prev) => {
-      const safePrev = Array.isArray(prev) ? prev : [];
-      const filtered = safePrev.filter(
-        (item) => item?.variantId !== product?.variantId,
+      const filtered = prev.filter(
+        (item) => item.variantId !== product.variantId
       );
-      const updated = [product, ...filtered].slice(0, 10);
-      localStorage.setItem("recentlyViewed", JSON.stringify(updated));
-
-      return updated;
+      return [product, ...filtered].slice(0, 10);
     });
   };
-
   const clearRecentlyViewed = () => {
     setRecentlyViewed([]);
     localStorage.removeItem("recentlyViewed");
@@ -181,11 +171,14 @@ useEffect(() => {
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
+  useEffect(() => {
+    const saved = localStorage.getItem("recentlyViewed");
+    if (saved) setRecentlyViewed(JSON.parse(saved));
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("recentlyViewed", JSON.stringify(recentlyViewed));
   }, [recentlyViewed]);
-
   return (
     <AppContext.Provider
       value={{

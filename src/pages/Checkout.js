@@ -160,20 +160,29 @@ function CheckoutPage() {
       console.log("error fetching pincode", error);
     }
   };
+
   function getDeliveryDate(daysToAdd) {
     const today = new Date();
     today.setDate(today.getDate() + daysToAdd);
     return today;
   }
-  const tatInHours = Number(deliveryInfo?.TAT || 0);
-  const daysToAdd = Math.ceil(tatInHours / 24);
+  let dateOnly = null;
 
-  const deliveryDate = getDeliveryDate(daysToAdd);
-  const dateOnly = deliveryDate.toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
+  if (deliveryInfo?.TAT && Number(deliveryInfo.TAT) > 0) {
+    const tatInHours = Number(deliveryInfo.TAT);
+    const daysToAdd = Math.ceil(tatInHours / 24);
+
+    const deliveryDate = getDeliveryDate(daysToAdd);
+    dateOnly = deliveryDate.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  }
+
+  console.log(dateOnly);
+  console.log(cartItems[0]?.deliveryDetails?.date);
+
   const handlePincodeCheck = async (field) => {
     console.log(field);
     const pincode = formik.values[field];
@@ -249,13 +258,15 @@ function CheckoutPage() {
           zip: formValues.billingPincode,
           phone: formValues.mobile,
         },
-      
-    tags: [
-      formValues.fulfillmentType,
-      ...(formValues.fulfillmentType === "DELIVERY"
-        ? [`estimated-delivery-${dateOnly || cartItems[0]?.deliveryDetails?.date}`]
-        : []),
-    ].join(", "),
+
+        tags: [
+          formValues.fulfillmentType,
+          ...(formValues.fulfillmentType === "DELIVERY"
+            ? [
+                `estimated-delivery-${dateOnly || cartItems[0]?.deliveryDetails?.date}`,
+              ]
+            : []),
+        ].join(", "),
         financial_status: "paid",
       },
     };
@@ -1151,7 +1162,7 @@ function CheckoutPage() {
                   />
                   <span>
                     Est. delivery by{" "}
-                    {dateOnly ? dateOnly : cartItems[0]?.deliveryDetails?.date}
+                    {dateOnly ? dateOnly : cartItems?.[cartItems.length - 1]?.deliveryDetails?.date}
                   </span>
                 </div>
               )}

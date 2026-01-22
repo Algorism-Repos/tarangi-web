@@ -17,13 +17,14 @@ function Recently_Viewed() {
   const [selectedVariants, setSelectedVariants] = useState({});
 
 
-  // console.log(recentlyViewed)
+  console.log(recentlyViewed)
   useEffect(() => {
     if (recentlyViewed) {
       setProducts(normalizeProducts(recentlyViewed));
 
     }
   }, [recentlyViewed]);
+
   const normalizeProducts = (data) =>
     data.map((item) => {
       if (!item?.variants) {
