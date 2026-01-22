@@ -18,7 +18,7 @@ import LoadingScreen from "../components/LoadingScreen";
 import { Autoplay } from "swiper/modules";
 
 function Product_Listing({ productCatergory }) {
-  const swiperRef = useRef(null);
+  
   const [products, setProducts] = useState([]);
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
@@ -156,7 +156,7 @@ function Product_Listing({ productCatergory }) {
                   ? `/product_description/${item?.title.replace(/\s+/g, "-")}`
                   : "#"
               }
-              state={!isOutOfStock && !isRestocking ? { product: item } : {}}
+              state={!isOutOfStock && !isRestocking ? { product: item,} : {}}
               onClick={
                 isOutOfStock
                   ? handleOutOfStockClick

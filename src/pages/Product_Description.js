@@ -20,19 +20,28 @@ import Recently_Viewed from "../components/Recently-Viewed";
 import AddToCartButton from "../components/AddToCartButton";
 import Wishlist_Popup from "../components/Wishlist_Popup";
 import AddToWishlistButton from "../components/AddToWishlistButton";
+import OutOfStockModal from "../components/OutOfStockModal";
+import RestockModal from "../components/RestockModal";
+import RestockSuccessModal from "../components/RestockSuccessModal";
 import { FetchAllProductFromShopify } from "../handler/api_Handler";
 import { formatProduct } from "../utils/productFormatter";
 
 function Product_Description() {
   const swiperRef = useRef(null);
+  const swiperRefs = useRef({});
+  const [showOutStockModal, setShowOutStockModal] = useState(false);
+  const [showRestockSuccess, setShowRestockSuccess] = useState(false);
+  const [showRestockModal, setShowRestockModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [selectedVariants, setSelectedVariants] = useState({});
   const location = useLocation();
   const { product } = location.state || {};
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});
-const [youMayLike, setYouMayLike] = useState(() => {
-  const stored = localStorage.getItem("youMayLike");
-  return stored ? JSON.parse(stored) : [];
-});
+  const [youMayLike, setYouMayLike] = useState(() => {
+    const stored = localStorage.getItem("youMayLike");
+    return stored ? JSON.parse(stored) : [];
+  });
   const {
     categorizedProduct,
     wishlistItems,
@@ -69,21 +78,20 @@ const [youMayLike, setYouMayLike] = useState(() => {
       });
     }
   }, [colorSelected, pincodeDetails]);
-useEffect(() => {
-  if (!categorizedProduct?.length || !product?.productId) return;
+  useEffect(() => {
+    if (!categorizedProduct?.length || !product?.productId) return;
 
-  const filtered = categorizedProduct.filter(
-    (item) => item.productId !== product.productId
-  );
+    const filtered = categorizedProduct.filter((item) => item.productId !== product.productId);
+    console.log("filtered",filtered)
 
-  setYouMayLike(filtered);
-  localStorage.setItem("youMayLike", JSON.stringify(filtered));
-  
-}, [categorizedProduct, product?.productId]);
-useEffect(() => {
-  if (!product) return;
-  addToRecentlyViewed(product);
-}, [product]);
+    setYouMayLike(filtered);
+    localStorage.setItem("youMayLike", JSON.stringify(filtered));
+
+  }, [categorizedProduct, product?.productId]);
+  useEffect(() => {
+    if (!product) return;
+    addToRecentlyViewed(product);
+  }, [product]);
 
   // click on  color toggle
   function handleColorChangeByButton(color) {
@@ -95,13 +103,8 @@ useEffect(() => {
     swiperRef.current.slideTo(idx);
   }
 
-  const isAlreadyInWishlist = wishlistItems.some((item) => item?.variantId === activeVariant?.variantId || item?.variants?.some((i) => i.variantId === activeVariant?.variantId)  );
+  const isAlreadyInWishlist = wishlistItems.some((item) => item?.variantId === activeVariant?.variantId || item?.variants?.some((i) => i.variantId === activeVariant?.variantId));
 
-  console.log("Wishlist Status -- ", isAlreadyInWishlist);
-  console.log("Wishlist -- ", wishlistItems);
-  console.log(product);
-  console.log("variantActive", activeVariant);
-  console.log(" you may also like categorizedProduct ", categorizedProduct);
 
   useEffect(() => {
     if (categorizedProduct) {
@@ -122,8 +125,30 @@ useEffect(() => {
 
   }, [categorizedProduct, location.pathname]);
 
- console.log("recently viewd",recentlyViewed)
-  console.log(" you may also like categorizedProduct ", categorizedProduct);
+  const changeVariant = (productId, index, item) => {
+
+    setSelectedVariants((prev) => ({
+      ...prev,
+      [productId]: index,
+
+    }));
+    swiperRefs.current[productId]?.slideTo(index);
+  };
+
+  const handleSuccess = () => {
+    setShowRestockModal(false);
+    setShowSuccessModal(true);
+  };
+  const handleOutOfStockClick = () => {
+    setShowOutStockModal(true);
+  };
+
+  const handleRestockClick = () => {
+    setShowRestockModal(true);
+  };
+
+  console.log(youMayLike);
+
 
   return (
     <>
@@ -160,21 +185,21 @@ useEffect(() => {
               >
                 {product?.variants && product?.variants?.length > 0
                   ? product?.variants.map((item) => (
-                      <SwiperSlide>
-                        <img
-                          className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px]"
-                          src={item?.image}
-                        />
-                      </SwiperSlide>
-                    ))
+                    <SwiperSlide>
+                      <img
+                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px]"
+                        src={item?.image}
+                      />
+                    </SwiperSlide>
+                  ))
                   : product?.images.map((img) => (
-                      <SwiperSlide>
-                        <img
-                          className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px]"
-                          src={img}
-                        />
-                      </SwiperSlide>
-                    ))}
+                    <SwiperSlide>
+                      <img
+                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px]"
+                        src={img}
+                      />
+                    </SwiperSlide>
+                  ))}
               </Swiper>
             </div>
 
@@ -376,63 +401,125 @@ useEffect(() => {
 
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[20px] gap-y-6 mt-[25px] sm:gap-x-[20px]">
               {youMayLike?.slice(0, 4).map((item) => {
-              
+
+                const isOutOfStock = item?.variants?.every(item => item.inventoryQuantity === 0) || item?.inventoryQuantity === 0;
+                const isRestocking = false;
+
+                const selectedIndex = selectedVariants[item?.productId] ?? 0;
+
                 return (
-                  <div
-                    key={item?.id}
-                    className="font-poppins w-[170px] sm:w-[300px] mx-auto lg:mx-0"
-                    onClick={() => {
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
+                  <Link
+                    className="font-poppins w-[170px] sm:w-[310px] mx-auto relative sm:hover:scale-105 transition duration-300 ease-in-out group"
+                    key={item?.productId}
+                    to={
+                      !isOutOfStock
+                        ? `/product_description/${item?.title.replace(/\s+/g, "-")}`
+                        : "#"
+                    }
+                    state={!isOutOfStock && !isRestocking ? { product: item, } : {}}
+                    onClick={
+                      isOutOfStock
+                        ? handleOutOfStockClick
+                        : isRestocking
+                          ? handleRestockClick
+                          : undefined
+                    }
                   >
-                    <Link
-                      to={`/product_description/${item?.title.replace(
-                        /\s+/g,
-                        "-",
-                      )}`}
-                      state={{ product: item }}
+                    <Swiper
+                      onSwiper={(swiper) => (swiperRefs.current[item.productId] = swiper)}
+
+                      onSlideChange={(swiper) => {
+                        setSelectedVariants((prev) => ({
+                          ...prev, [item.productId]: swiper.activeIndex,
+                        }))
+                      }}
                     >
-                      <img
-                        className="w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[24px]"
-                        src={item?.images?.[0]}
-                        alt={`${item?.alt || item?.title}_image`}
-                      />
-                    </Link>
-                    <div>
-                      <h1 className="font-poppins font-semibold sm:text-[18px] text-[12px] leading-[140%] mt-2 mb-1">
-                        {item?.title}
-                      </h1>
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-y-1 sm:gap-y-0 justify-between w-full ">
-                        <h3 className="text-[12px] font-normal leading-normal sm:text-[16px] ">
-                          ₹{" "}
-                          {(item?.variants && item?.variants.length > 0
-                            ? parseInt(item?.variants?.[0]?.price)
-                            : parseInt(item?.price)
-                          )?.toLocaleString("en-IN")}
-                        </h3>
-                        <div className="flex flex-row items-center gap-x-2">
-                          {item?.variants !== null && item?.variants.length > 0
-                            ? item.variants.map((variants, index) => {
-                                return (
-                                  <>
-                                    <img
-                                      key={variants?.variantId || index}
-                                      src={colorAssets[variants?.colorVariant]}
-                                      alt="color-assets"
-                                      className={`w-[20px] h-[20px] sm:w-[24px] sm:h-[24px] cursor-pointer`}
+                      {item?.variants !== null && item.variants.length > 0 ?
+                        item?.variants?.map((i) => {
+                          return (
+                            <SwiperSlide>
+                              <img className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-60" : ""} ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} src={i.image} alt={item?.title} />
+                            </SwiperSlide>
+                          )
+                        })
+                        :
+                        item.images.map((i) => {
+                          return (
+                            <SwiperSlide>
+                              <img className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-60" : ""} ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} src={i} alt={item?.title} />
+                            </SwiperSlide>
+                          )
+                        })
+                      }
+                    </Swiper>
+
+                    {/* SOLD OUT LABEL */}
+                    {isOutOfStock && (
+                      <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5 z-10">
+                        Sold Out
+                      </p>
+                    )}
+
+                    {/* RESTOCK SOON LABEL */}
+                    {!isOutOfStock && isRestocking && (
+                      <p className="bg-[#FFF5E8] text-[#404040] font-semibold text-[11px] md:text-[15px] px-4 py-1.5 rounded-full absolute right-2.5 top-2.5">
+                        Restocking Soon
+                      </p>
+                    )}
+
+                    <div className="mt-2 flex flex-wrap justify-between sm:mt-3">
+                      <div>
+                        <h1 className="text-[12px] font-semibold sm:text-[18px] text-wrap text-[#313131]">
+                          {item?.title}
+                        </h1>
+                      </div>
+
+                      <div className="mt-1.3 flex flex-col sm:flex-row gap-y-2 items-start sm:items-center sm:justify-between w-full">
+                        {/* Pricing without discount */}
+                        <h3 className={item?.compareAtPrice === null || item?.variants?.[selectedIndex]?.compareAtPrice === null ? "font-poppins text-[12px] sm:text-[16px] font-normal leading-normal" : "hidden"}>₹ {item.variants !== null && item.variants.length > 0 ? parseInt(item?.variants?.[selectedIndex]?.price).toLocaleString("en-IN") : parseInt(item?.price)?.toLocaleString("en-IN")}</h3>
+
+                        {/* Pricing with discount */}
+                        {item?.variants?.length > 0 && item?.variants?.[selectedIndex]?.compareAtPrice !== null ?
+                          (
+                            <div className="flex flex-row items-center flex-nowrap gap-x-2">
+                              <h3 className="font-poppins text-[10px] sm:text-[14px]  leading-normal text-red-500 line-through font-semibold ">₹ {parseInt(item?.variants[selectedIndex]?.compareAtPrice).toLocaleString("en-IN")}</h3>
+                              <h3 className="font-poppins text-[12px] sm:text-[16px] font-normal leading-normal">₹ {parseInt(item?.variants[selectedIndex]?.price).toLocaleString("en-IN")}</h3>
+                            </div>
+                          )
+
+                          : (
+                            <div className={!item?.compareAtPrice || item?.compareAtPrice === null ? "hidden" : "flex flex-row items-center flex-nowrap gap-x-2"}>
+                              <h3 className="font-poppins text-[10px] sm:text-[14px]  leading-normal text-red-500 line-through font-semibold ">₹ {parseInt(item?.compareAtPrice).toLocaleString("en-IN")}</h3>
+                              <h3 className="font-poppins text-[12px] sm:text-[16px] font-normal leading-normal"> ₹{parseInt(item?.price).toLocaleString("en-IN")}</h3>
+                            </div>
+                          )
+                        }
+
+                        {/*  COLOR TOGGLE BUTTONS */}
+                        <div className={item?.variants?.some(v => colorAssets?.[v.colorVariant]) ? "flex flex-row items-center gap-x-2" : "hidden"}>
+                          {item?.variants !== null && item?.variants.length > 0 ?
+                            item.variants.map((variants, index) => {
+                              return (
+                                <>
+                                  <button type="button" disabled={variants?.inventoryQuantity === 0}>
+                                    <img key={variants?.variantId || index} src={colorAssets[variants?.colorVariant]} alt="color-assets" className={`w-[24px] h-[24px] cursor-pointer ${variants?.inventoryQuantity === 0 ? "opacity-[30%]" : ""} ${variants?.inventoryQuantity !== 0 && item?.variants?.length > 1 && selectedIndex === index ? "border-2 border-primary rounded-[24px] px-[0.2px]" : "border-none"}`}
+                                      onClick={(e) => { e.preventDefault(); changeVariant(item?.productId, index) }}
                                     />
-                                  </>
-                                );
-                              })
-                            : ""}
+                                  </button>
+                                </>
+                              )
+                            }) : ""
+                          }
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
+                  </Link>
+                )
               })}
             </div>
           </div>
+
+
           <Recently_Viewed />
         </div>
 
@@ -441,6 +528,24 @@ useEffect(() => {
           onClose={() => setShowWishlistPopup(false)}
         />
       </div>
+
+      {/* OUT OF STOCK MODAL */}
+      <OutOfStockModal
+        open={showOutStockModal}
+        onClose={() => setShowOutStockModal(false)}
+      />
+
+      {/* Restock modal */}
+      <RestockModal
+        open={showRestockModal}
+        onClose={() => setShowRestockModal(false)}
+        onSuccess={handleSuccess}
+      />
+
+      <RestockSuccessModal
+        open={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+      />
     </>
   );
 }

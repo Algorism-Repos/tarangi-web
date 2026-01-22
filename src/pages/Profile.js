@@ -431,15 +431,15 @@ const Profile = () => {
         <div>
           {!orders || orders.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16">
-              <p className="text-[#4B4B4B] text-[32px] mb-4 font-semibold">
-                You have no orders yet
+              <p className="text-[#4B4B4B] text-[20px] sm:text-[32px] mb-4 font-semibold">
+                You have not placed any orders yet.
               </p>
 
               <Link
                 to={"/products/:handle"}
-                className="text-[15px] border-primary border-2 rounded-full py-6 px-6 text-primary"
+                className="text-[20px] underline uppercase p-4 text-primary"
               >
-                Continue Shopping
+                Find Something You Love
               </Link>
             </div>
           ) : (
@@ -516,7 +516,7 @@ const Profile = () => {
         </div>
 
         {/* MOBILE DROPDOWN LAYOUT */}
-        <div className="block md:hidden gap-y-4 flex flex-col">
+        <div className="hidden gap-y-4 flex flex-col">
           {/* Profile Dropdown */}
           <div
             ref={profileRef}
