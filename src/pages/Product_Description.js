@@ -27,6 +27,7 @@ function Product_Description() {
   const location = useLocation();
   const { product } = location.state || {};
   const {
+     
     categorizedProduct,
     wishlistItems,
     pincodeDetails,
@@ -61,7 +62,10 @@ function Product_Description() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-
+    localStorage.setItem(
+      "categorizedProduct",
+      JSON.stringify(categorizedProduct)
+    );
     if (product?.variants?.length > 0) {
       const variant = product?.variants?.find(
         (element) => element?.colorVariant === colorSelected
@@ -109,6 +113,8 @@ function Product_Description() {
 
   console.log("variantActive", activeVariant);
   console.log(" you may also like categorizedProduct ", categorizedProduct);
+    console.log(" you may also like youMayLike ", youMayLike);
+
 
   useEffect(() => {
     if (categorizedProduct) {
@@ -127,32 +133,7 @@ function Product_Description() {
     setRecentlyViewed(categorizedProduct)
   }, [categorizedProduct, location.pathname]);
 
-  // const normalizeProducts = (data) =>
-  //   data.map((item) => {
-  //     if (!item.variants) {
-  //       return {
-  //         ...item,
-  //         variants: [
-  //           {
-  //             variantId: item.variantId,
-  //             price: item.price,
-  //             image: item.image,
-  //             colorVariant: null,
-  //           },
-  //         ],
-  //       };
-  //     }
-  //     return item;
-  //   });
 
-  // const changeVariant = (productId, index) => {
-  //   setSelectedVariants((prev) => ({
-  //     ...prev,
-  //     [productId]: index,
-  //   }));
-  // };
-
-  // console.log("Product", product);
   console.log("Active Variant", activeVariant);
   // console.log(" you may also like categorizedProduct ", youMayLike);
 

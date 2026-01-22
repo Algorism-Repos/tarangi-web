@@ -30,9 +30,7 @@ function Product_page() {
         "respons from productPage fetch all products/collection",
         response
       );
-
       const productEdges = response?.data?.collection?.products?.edges ?? [];
-
       const formattedProducts = productEdges.map((item) =>
         formatProduct(item.node)
       );

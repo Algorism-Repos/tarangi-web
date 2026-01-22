@@ -29,7 +29,7 @@ function CheckoutPage() {
   const [deliveryInfo, setDeliveryInfo] = useState({});
   const { pincodeDetails, setPincodeDetails, loading, setLoading } =
     useContext(AppContext);
-  const [fulfillmentType, setFulfillmentType] = useState("DELIVERY");
+  // const [fulfillmentType, setFulfillmentType] = useState("DELIVERY");
   // const [pincodeStatus, setPincodeStatus] = useState({
   //   loading: false,
   //   activeField: null,
@@ -113,7 +113,7 @@ function CheckoutPage() {
       pincode: "",
       state: "",
       country: "India",
-
+      fulfillmentType: "DELIVERY",
       // Billing
       billingAddress: "",
       billingLandmark: "",
@@ -267,9 +267,11 @@ function CheckoutPage() {
           zip: formValues.billingPincode,
           phone: formValues.mobile,
         },
-        tags: `Estimated Delivery: ${
-          dateOnly ? dateOnly : cartItems[0]?.deliveryDetails?.date
-        }`,
+ tags: [
+      `estimated-delivery-${dateOnly || cartItems[0]?.deliveryDetails?.date}`,
+      formValues.fulfillmentType,
+    
+    ].join(", "),
         financial_status: "paid",
       },
     };
@@ -369,7 +371,7 @@ function CheckoutPage() {
       );
     }
   };
-
+ console.log(formValues)
   console.log(cartItems[0]?.deliveryDetails?.state, pincodeDetails);
 
   return (
@@ -398,24 +400,28 @@ function CheckoutPage() {
             How would you like to receive your order?
           </p>
           <div className="flex items-center justify-center gap-6">
-            {" "}
+           
             <label className="flex items-center gap-2">
               <input
                 type="radio"
-                name="fulfillment"
+                name="fulfillmentType"
                 value="DELIVERY"
-                checked={fulfillmentType === "DELIVERY"}
-                onChange={() => setFulfillmentType("DELIVERY")}
+ checked={formik.values.fulfillmentType === "DELIVERY"}
+                   onChange={() =>
+      formik.setFieldValue("fulfillmentType", "DELIVERY")
+    }
               />
               Delivery to Address
             </label>
             <label className="flex items-center gap-2">
               <input
                 type="radio"
-                name="fulfillment"
+                name="fulfillmentType"
                 value="STORE_PICKUP"
-                checked={fulfillmentType === "STORE_PICKUP"}
-                onChange={() => setFulfillmentType("STORE_PICKUP")}
+               checked={formik.values.fulfillmentType === "STORE_PICKUP"}
+                  onChange={() =>
+      formik.setFieldValue("fulfillmentType", "STORE_PICKUP")
+    }
               />
               In-Store Purchase (Pick-up)
             </label>
@@ -425,7 +431,7 @@ function CheckoutPage() {
         {/* ======= Mobile Order Summary Dropdown ======= */}
         <div>
           {/* STORE LOCATION */}
-          {fulfillmentType === "STORE_PICKUP" && (
+          {formik.values.fulfillmentType === "STORE_PICKUP" && (
             <div className="mt-2 w-[466px] h-[150px] xl:hidden  bg-[#FFFAF3] rounded-[10px] shadow-2xl border border-[#EDEDED] p-5">
               <p className="font-semibold text-black">Store Location</p>
               <p>Tarangi Jewels</p>
@@ -656,7 +662,7 @@ function CheckoutPage() {
               {/* Shipping Address */}
               <section className="space-y-4">
                 <h3 className="text-[14px] text-[#6E0027] font-semibold">
-                  {fulfillmentType === "STORE_PICKUP"
+                  {formik.values.fulfillmentType === "STORE_PICKUP"
                     ? "Address"
                     : "Shipping Address"}
                 </h3>
@@ -820,7 +826,7 @@ function CheckoutPage() {
                   </div>
                 </div>
               </section>
-              {fulfillmentType === "DELIVERY" && (
+              {formik.values.fulfillmentType === "DELIVERY" && (
                 <>
                   {/* Billing Address Section */}
                   <div className="mb-6">
@@ -1216,7 +1222,7 @@ function CheckoutPage() {
             </div>
             <div>
               {/* STORE LOCATION */}
-              {fulfillmentType === "STORE_PICKUP" && (
+              {formik.values.fulfillmentType === "STORE_PICKUP" && (
                 <div className="mt-2 w-[466px] h-[150px] bg-[#FFFAF3] rounded-[10px] shadow-2xl border border-[#EDEDED] p-5">
                   <p className="font-semibold text-black">Store Location</p>
                   <p>Tarangi Jewels</p>
