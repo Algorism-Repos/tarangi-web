@@ -39,7 +39,15 @@ function Product_Filter({ productCatergory, collectionName }) {
 
   const [showMorePrice, setShowMorePrice] = useState(false);
 
-  const categories = Object.keys(productCatergory);
+  // const categories = Object.keys(productCatergory);
+  const categories = Array.from(
+  new Set(
+    productListFromShopify.map(
+      (p) => p.productType || "Uncategorized"
+    )
+  )
+);
+
 
   const visibleCategories = showMoreCategory
     ? categories

@@ -71,9 +71,11 @@ try {
     }
   }, [blogs]);
   useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
     Blogs();
   }, []);
-
+  
   const SortOptions = ["Latest", "Oldest"];
 
   

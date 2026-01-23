@@ -77,6 +77,7 @@ function Product_Description() {
     const filtered = categorizedProduct.filter(
       (item) => item.productId !== product.productId,
     );
+     console.log(filtered)
     setYouMayLike(filtered);
     localStorage.setItem("youMayLike", JSON.stringify(filtered));
   }, [categorizedProduct, product?.productId]);

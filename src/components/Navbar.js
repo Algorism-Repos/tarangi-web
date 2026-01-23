@@ -289,7 +289,7 @@ function Navbar() {
             />
           </Link>
 
-          {isLoggedIn ? (
+          {/* {isLoggedIn ? ( */}
             <Link to="/profile">
               <img
                 className={`w-[48px] h-[48px] rounded-[8px] transition ${
@@ -299,7 +299,7 @@ function Navbar() {
                 alt="profile"
               />
             </Link>
-          ) : (
+          {/* ) : (
             <>
               <Link to="/signup">
                 <button className="rounded-[32px] border border-[#CFA266] w-[137px] font-poppins text-[16px] font-normal text-white py-[10px] px-[16px] cursor-pointer">
@@ -312,7 +312,7 @@ function Navbar() {
                 </button>
               </Link>
             </>
-          )}
+          )} */}
         </div>
 
         {/* Search Dropdown (desktop) */}
@@ -448,7 +448,7 @@ function Navbar() {
             />
           </Link>
 
-          {isLoggedIn && (
+          {/* {isLoggedIn && ( */}
             <Link to="/profile">
               <img
                 className={`w-[32px] h-[32px] rounded-[8px] transition ${
@@ -458,7 +458,7 @@ function Navbar() {
                 alt="profile"
               />
             </Link>
-          )}
+          {/* )} */}
         </div>
 
         {/* Mobile Menu */}
@@ -733,7 +733,7 @@ function Navbar() {
                 </Link> */}
 
                 {/* User Profile text link (like your design) */}
-                {isLoggedIn && (
+                {/* {isLoggedIn && ( */}
                   <Link to="/profile" onClick={() => setMenuVisible(false)}>
                     <h2
                       className={`font-poppins text-[18px] leading-normal text-center ${
@@ -742,14 +742,14 @@ function Navbar() {
                           : "text-[#A0A0A0]"
                       }`}
                     >
-                      User Profile
+                      Orders
                     </h2>
                   </Link>
-                )}
+                {/* )} */}
               </div>
 
               {/* LOGOUT BUTTON */}
-              {isLoggedIn && (
+              {/* {isLoggedIn && (
                 <button
                   onClick={handleLogout}
                   className="mt-36 mb-4 rounded-[32px] bg-[#CFA266] w-[319px] h-[52px] font-poppins text-[18px] text-white flex items-center justify-center gap-2"
@@ -761,7 +761,7 @@ function Navbar() {
                   />
                   Logout
                 </button>
-              )}
+              )} */}
 
               {/* LOGIN / SIGNUP */}
               {!isLoggedIn && (
