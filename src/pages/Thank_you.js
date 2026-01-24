@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -13,8 +13,18 @@ import { useNavigate } from "react-router-dom";
 
 function ThankYou() {
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const { orderId } = location.state || {};
   const { cartItems, clearCart } = useContext(AppContext);
+  const [orderItems, setOrderItems] = useState([]);
+useEffect(() => {
+  if (cartItems?.length) {
+    setOrderItems(cartItems); 
+    clearCart();              
+  }
+}, []);
+  // const clearedRef = useRef(false);
+   console.log(orderId)
   const data = [
     {
       img: muthukrishan,
@@ -29,7 +39,35 @@ function ThankYou() {
         "A master craftsman who can infuse tradition with innovation, creating jewels that embody precision, novel artistry and generations of refined skillsets.",
     },
   ];
- clearCart()
+const saveOrderToLocal = (orderId) => {
+  const existingOrders =
+    JSON.parse(localStorage.getItem("guestOrders")) || [];
+
+  const alreadyExists = existingOrders.some(
+    (o) => String(o.orderId) === String(orderId)
+  );
+
+  if (alreadyExists) {
+    console.log("Order already stored:", orderId);
+    return;
+  }
+
+  const updatedOrders = [
+    ...existingOrders,
+    {
+      orderId,
+      date: new Date().toISOString(),
+    },
+  ];
+
+  localStorage.setItem("guestOrders", JSON.stringify(updatedOrders));
+};
+useEffect(() => {
+  if (!orderId) return;
+  saveOrderToLocal(orderId);
+}, [orderId]);
+
+
   return (
     <>
       {/* Background */}
@@ -43,7 +81,7 @@ function ThankYou() {
             <h1 className="font-atteron text-[40px] text-center text-primary sm:text-[50px] lg:text-[64px] xl:text-left">
               Thank you for your purchase
             </h1>
-
+            
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-[16px] mt-6 xl:justify-start">
               <button
@@ -53,7 +91,8 @@ function ThankYou() {
                 Back to home
               </button>
 
-              <Link to="/profile">
+              <Link to="/profile"   state={{ orderId }}
+>
                 <button className="flex items-center justify-center gap-x-[8px] border-2 border-[#4B001A] w-[210px] h-[56px] rounded-full text-primary text-[18px] font-medium ">
                   View my Orders
                 </button>
@@ -73,7 +112,7 @@ function ThankYou() {
               onSlideChange={() => console.log("slide change")}
               onSwiper={(swiper) => console.log(swiper)}
             >
-              {cartItems?.map((items,index) => {
+              {orderItems?.map((items, index) => {
                 const artisan = data[index % data.length];
 
                 return (

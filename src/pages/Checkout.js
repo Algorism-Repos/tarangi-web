@@ -278,17 +278,23 @@ function CheckoutPage() {
         // "https://localhost:8080/api/shopify/order",
         orderData,
       );
-      setOrderId(response.data.id);
+      setOrderId(response.data.order.id);
+      console.log("orderid",response.data.order.id)
 
       // sendWhatsapp(response.data.id);
-      if (Payment_key) {
+      if (Payment_key && response.data.order.id) {
         setOrderCompleted(true);
         localStorage.removeItem("checkoutForm");
         formik.resetForm();
-        navigate("/thankyou");
+        navigate("/thankyou", {
+          state: {
+            orderId:response.data.order.id,
+          },
+        });
       }
-      console.log("Order placed successfully:", response.data);
-      await handleSendWhatsappConfirmation();
+      console.log("Order placed successfully:", response.data.order.id);
+      const newOrderId = response.data.order.id;
+      await handleSendWhatsappConfirmation(formValues, newOrderId);
     } catch (error) {
       console.error(
         "Error placing order:",
@@ -319,37 +325,45 @@ function CheckoutPage() {
     document.body.appendChild(script);
   }, []);
 
-  useEffect(() => {
-    if (orderId) {
-      handleSendWhatsappConfirmation(orderId);
-    }
-  }, []);
-
-  const handleSendWhatsappConfirmation = async () => {
+  const handleSendWhatsappConfirmation = async (formValues, orderId) => {
     console.log(" Sending WhatsApp message...");
-    const ACCESS_TOKEN =
-      "EAAKkNDOqiLEBQr6VqBcxEuXUrvDvfLEXRz9HlRGgaZABUpoZCjmOfODTngb8TR6qKZCE5XgB9czYikqSFDm5yQ4BXxNmykQ14oDuZBWVXvzunb0kGUpSgSyZBjFjPPnUmqMFpJkZAahNNW8xeMOjNmlj4P0kjjueipUsWsfJigyz7QuupbshC48XLoak6yZBh67pwZDZD";
+    if (!formValues || !orderId) {
+      console.log("Missing data", formValues, orderId);
+      return;
+    }
+    const reciverPhone = `91${formValues.mobile}`;
+    const name = formValues.firstName;
+    const newOrderId = orderId;
+
     const PHONE_NUMBER_ID = "1022783800908097";
 
-    const url = `https://graph.facebook.com/v22.0/${PHONE_NUMBER_ID}/messages`;
+    const ACCESS_TOKEN =
+      "EAAKkNDOqiLEBQr6VqBcxEuXUrvDvfLEXRz9HlRGgaZABUpoZCjmOfODTngb8TR6qKZCE5XgB9czYikqSFDm5yQ4BXxNmykQ14oDuZBWVXvzunb0kGUpSgSyZBjFjPPnUmqMFpJkZAahNNW8xeMOjNmlj4P0kjjueipUsWsfJigyz7QuupbshC48XLoak6yZBh67pwZDZD";
 
+    console.log(reciverPhone, name, newOrderId);
+    const url = `https://graph.facebook.com/v22.0/${PHONE_NUMBER_ID}/messages`;
     const payload = {
       messaging_product: "whatsapp",
-      to: formValues.mobile,
+      to: reciverPhone,
       type: "template",
       template: {
-        name: "tarangi",
-        language: {
-          code: "en",
-        },
+        name: "tarangi_order_confirmation",
+        language: { code: "en_US" },
         components: [
           {
             type: "body",
+            parameters: [
+              { type: "text", text: name },
+              { type: "text", text: "purchase" },
+              { type: "text", text: newOrderId },
+              { type: "text", text: "Product" },
+              { type: "text", text: "We will inform you shortly" },
+            ],
           },
         ],
       },
     };
-
+    console.log(payload);
     try {
       const response = await axios.post(url, payload, {
         headers: {
@@ -666,7 +680,7 @@ function CheckoutPage() {
               {/* Shipping Address */}
               <section className="space-y-4">
                 <h3 className="text-[14px] text-[#6E0027] font-semibold">
-                  {fulfillmentType === "STORE_PICKUP"
+                  {formik.values.fulfillmentType === "STORE_PICKUP"
                     ? "Billing Address"
                     : "Shipping Address"}
                 </h3>
@@ -1162,7 +1176,10 @@ function CheckoutPage() {
                   />
                   <span>
                     Est. delivery by{" "}
-                    {dateOnly ? dateOnly : cartItems?.[cartItems.length - 1]?.deliveryDetails?.date}
+                    {dateOnly
+                      ? dateOnly
+                      : cartItems?.[cartItems.length - 1]?.deliveryDetails
+                          ?.date}
                   </span>
                 </div>
               )}
@@ -1190,11 +1207,11 @@ function CheckoutPage() {
                 <div className="text-[14px] space-y-3">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>₹{subtotal.toLocaleString()}</span>
+                    <span>₹{subtotal?.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Tax</span>
-                    <span>₹{tax.toLocaleString()}</span>
+                    <span>₹{tax?.toLocaleString()}</span>
                   </div>
                   <div
                     className={
@@ -1217,7 +1234,7 @@ function CheckoutPage() {
                   <div className="border-t border-[#EDEDED] my-3" />
                   <div className="flex justify-between text-base font-semibold text-[#1E1E1E]">
                     <span>Total</span>
-                    <span>₹{total.toLocaleString()}</span>
+                    <span>₹{total?.toLocaleString()}</span>
                   </div>
                 </div>
               </div>

@@ -426,7 +426,7 @@ function Navbar() {
             />
           </Link>
 
-          {isLoggedIn && (
+          {/* {isLoggedIn && ( */}
             <Link to="/profile">
               <img
                 className={`w-[25px] h-[25px] rounded-[8px] transition ${isActive("/profile") ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"
@@ -435,7 +435,7 @@ function Navbar() {
                 alt="profile"
               />
             </Link>
-          )}
+          {/* )} */}
         </div>
 
         {/* Mobile Menu */}
