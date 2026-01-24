@@ -390,7 +390,7 @@ const sortProducts = (products, sortBy) => {
             </div>
 
             {/* Mobile Version Filter bar */}
-            <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden z-10 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
+            <div className="w-full bg-[#EBBB85] fixed font-poppins bottom-0 p-5 lg:hidden z-20 shadow-[0_-2px_8px_rgba(0,0,0,0.1)]">
               <div className="flex justify-between ">
                 {/* SORT BUTTON */}
                 <div

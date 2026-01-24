@@ -99,6 +99,8 @@ function Product_Listing({ productCatergory }) {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
+
   // after form success
   const handleSuccess = () => {
     setShowRestockModal(false);

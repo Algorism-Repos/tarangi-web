@@ -298,10 +298,10 @@ function Home() {
               className="w-fit hover:scale-110 transition duration-300 mx-auto xl:mx-0"
             > */}
             <button
-              onClick={() =>
-                document
-                  .getElementById("launchOffers")
-                  ?.scrollIntoView({ behavior: "smooth" })
+              onClick={() => {
+                const targetId = window.matchMedia("(max-width: 640px)").matches ? "mobile-launchOffers" : "launchOffers";
+                document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" })
+              }
               }
               className=" mt-4 sm:mt-7 xl:mt-12 rounded-[32px] bg-[#CFA266] w-[259px] font-poppins text-[16px] font-normal text-white py-[16px] px-[14px] cursor-pointer"
             >
@@ -459,7 +459,7 @@ function Home() {
               </div>
 
               {/* Best Sellers - Mobile View slider */}
-              <div className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden">
+              <div id="mobile-launchOffers" className="relative mt-14 sm:mt-20 md:mt-28 px-4 sm:px-6 md:px-10 lg:px-0  sm:hidden">
 
                 <h1 className="section-heading mb-9 !text-white tracking-[1px] text-center" data-aos="fade-up">
                   Best Sellers

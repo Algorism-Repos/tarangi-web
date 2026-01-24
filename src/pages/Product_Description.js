@@ -29,7 +29,7 @@ import { formatProduct } from "../utils/productFormatter";
 function Product_Description() {
   const swiperRef = useRef(null);
   const swiperRefs = useRef({});
-  const {params} = useParams();
+  const { params } = useParams();
   const [showOutStockModal, setShowOutStockModal] = useState(false);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
@@ -80,11 +80,13 @@ function Product_Description() {
       });
     }
   }, [colorSelected, pincodeDetails]);
+
+
   useEffect(() => {
     if (!categorizedProduct?.length || !product?.productId) return;
 
     const filtered = categorizedProduct.filter((item) => item.productId !== product.productId);
-    console.log("filtered",filtered)
+    console.log("filtered", filtered)
 
     setYouMayLike(filtered);
     localStorage.setItem("youMayLike", JSON.stringify(filtered));
@@ -94,6 +96,8 @@ function Product_Description() {
     if (!product) return;
     addToRecentlyViewed(product);
   }, [product]);
+
+
 
   // click on  color toggle
   function handleColorChangeByButton(color) {
@@ -124,9 +128,9 @@ function Product_Description() {
     }
     // setRecentlyViewed(categorizedProduct);
   }, [categorizedProduct, location.pathname]);
-// useEffect(() => {
-//   setRecentlyViewed(categorizedProduct);
-// }, [categorizedProduct, location.pathname]);
+  // useEffect(() => {
+  //   setRecentlyViewed(categorizedProduct);
+  // }, [categorizedProduct, location.pathname]);
 
   const changeVariant = (productId, index, item) => {
 
@@ -150,8 +154,9 @@ function Product_Description() {
     setShowRestockModal(true);
   };
 
+
   console.log(youMayLike);
-  
+
   return (
     <>
       {/* Backgound */}
@@ -333,7 +338,7 @@ function Product_Description() {
                       alt="plating icon"
                     />
                     <p className="text-[14px] font-semibold ">
-                      Premium Quality 
+                      Premium Quality
                     </p>
                   </div>
                 </div>
@@ -419,13 +424,27 @@ function Product_Description() {
                         : "#"
                     }
                     state={!isOutOfStock && !isRestocking ? { product: item, } : {}}
-                    onClick={
-                      isOutOfStock
-                        ? handleOutOfStockClick
-                        : isRestocking
-                          ? handleRestockClick
-                          : undefined
-                    }
+                    // onClick={isOutOfStock
+                    //   ? handleOutOfStockClick
+                    //   : isRestocking
+                    //     ? handleRestockClick
+                    //     : undefined}
+
+                    onClick={(e) => {
+                      if (isOutOfStock) {
+                        e.preventDefault();
+                        handleOutOfStockClick();
+                        return;
+                      }
+
+                      if(isRestocking) {
+                        e.preventDefault();
+                        handleRestockClick();
+                        return;
+                      }
+
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
                   >
                     <Swiper
                       onSwiper={(swiper) => (swiperRefs.current[item.productId] = swiper)}
