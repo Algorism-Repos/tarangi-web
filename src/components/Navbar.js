@@ -71,14 +71,7 @@ function Navbar() {
     handleClose();
   };
 
-  const handleSearch = (search) => {
-    console.log(search)
-   setSearchQuery(search);
-
-    // if (!search) return;
-    // // Navigate to ProductList page with search query
-    // navigate(`/products/:handle?search=${encodeURIComponent(search)}`);
-  };
+ 
 
   // mobile products dropdown
   const [mobileProductDropdown, setMobileProductDropdown] = useState(false);
@@ -147,12 +140,58 @@ function Navbar() {
     };
   }, [menuVisible]);
 
-  const handleLogout = () => {
-    localStorage.setItem("isLoggedIn", "false");
-    setIsLoggedIn(false);
-    setMenuVisible(false);
-    navigate("/login");
-  };
+// -------------search-----------------------
+  
+const COLLECTION_KEYWORDS = {
+  "bridal-collections": ["bridal", "marriage", "wedding", "bride","festive","chain","festival"],
+  "gifting": ["gift", "present", "surprise","anniversary"],
+  "women": ["womens", "ladies", "female","womens","earring","womens earrings","necklace","womens earring"],
+  "men": ["men", "gents", "male","mens","mens earrings","kada","earring for men","mens earring"],
+  "gold-look-alike": ["gold", "golden",'antique'],
+  "diamond-look-alike": ["diamond", "stone"],
+};
+const findMatchingCollection = (query) => {
+  return collection.find((col) => {
+    const handle = col.handle.toLowerCase();
+    const title = col.title.toLowerCase();
+    const keywords = COLLECTION_KEYWORDS[handle] || [];
+
+    return (
+      handle.includes(query) ||
+      title.includes(query) ||
+      keywords.some((word) => word.includes(query))
+    );
+  });
+};
+
+const handleSearch = (e) => {
+  const value = e.target.value;
+ 
+  const query = value.trim().toLowerCase();
+  if (query.length < 3) return;
+
+  const matchedCollection = findMatchingCollection(query);
+  const productKeyword = query
+    .replace(matchedCollection?.handle || "", "")
+    .replace(/mens|men|womens|women/g, "")
+    .trim();
+  navigate(
+    `/products?search=${encodeURIComponent(query)}`,
+    {
+      state: {
+        collectionId: matchedCollection?.id || null,
+         searchKeyword: productKeyword || query,
+      },
+    }
+  );
+  setShowSearch(false);          // close desktop search
+  setShowSearchDropdown(false);  //close mobile search 
+  setMenuVisible(false);         // close mobile navbar
+  e.target.blur();
+   window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+
   return (
     <>
       {/* Navbar - large screens */}
@@ -332,7 +371,7 @@ function Navbar() {
                       type="text"
                       placeholder="Search for Products"
                       className="w-full bg-white rounded-[12px] py-4 pl-5 pr-12 font-poppins text-[16px] placeholder:font-medium placeholder:text-[#ABABAB] outline-none"
-                      onChange={(e) => handleSearch(e.target.value)}
+                      onChange={(e) => handleSearch(e)}
                     />
                     <img
                       src={Search_icon}
@@ -535,7 +574,7 @@ function Navbar() {
                   <input
                     type="text"
                     placeholder="Search for Products"
-                    onChange={(e) => handleSearch(e.target.value)}
+                    onChange={(e) => handleSearch(e)}
                     className="w-full h-[48px] py-4 pl-5 pr-12 font-poppins text-[16px] outline-none placeholder:text-[#B0B0B0] placeholder:font-normal rounded-[12px]"
                   />
                   <img

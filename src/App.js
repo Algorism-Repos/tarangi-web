@@ -32,6 +32,7 @@ function App() {
           <Route path='/home' element={<Home />} />
           <Route path='/about' element={<About />} />
           <Route path='/products/:handle' element={<Product_page />} />
+          <Route path="/products" element={<Product_page />} />
           <Route path='/product_description/:productName' element={<Product_Description />} />
           <Route path='/favourites' element={<Favourites />} />
           <Route path='/checkout' element={<Checkout />} />

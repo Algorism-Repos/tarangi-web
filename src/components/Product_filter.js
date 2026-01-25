@@ -8,7 +8,7 @@ import Product_Listing from "../pages/Product_Listing";
 import { AppContext } from "../context/AppContext";
 import { ref } from "yup";
 
-function Product_Filter({ productCatergory, collectionName }) {
+function Product_Filter({ productCatergory, collectionName,searchKeyword }) {
   const [productCount, setProductCount] = useState(0);
   const [selectedOccasions, setSelectedOccasions] = useState([]);
 
@@ -20,7 +20,7 @@ function Product_Filter({ productCatergory, collectionName }) {
   const [tab, setTab] = useState("productCatergory");
   const { productListFromShopify, filteredProducts, setFilteredProducts } =
     useContext(AppContext);
-
+const [matchedCategory, setMatchedCategory] = useState(null);
   const SortOptions = ["Price Low to High", "Price High to Low" ];
   const priceRanges = [
     { label: "₹10,000 – ₹15,000" },
@@ -47,6 +47,7 @@ function Product_Filter({ productCatergory, collectionName }) {
     )
   )
 );
+
 
 
   const visibleCategories = showMoreCategory

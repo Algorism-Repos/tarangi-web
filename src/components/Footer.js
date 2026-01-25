@@ -113,7 +113,7 @@ function Footer() {
 
                             {/* Product Catergory */}
                             <div className="flex flex-col gap-y-[15px] text-[17px] sm:text-[18px] ml-7 sm:ml-0">
-                                {collection && collection
+                                {Array.isArray(collection) && collection
                                     ?.filter((item) => item.handle !== "best_seller" && item.body_html !== "<p>tarangi-specials</p>")
                                     .map((item) => (
                                         <Link

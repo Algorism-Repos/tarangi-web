@@ -27,9 +27,11 @@ function Product_Description() {
   const params = useParams();
 
   const location = useLocation();
-  const { product } = location?.state || categorizedProduct.find(
-    p => p.title.replace(/\s+/g, "-") === params.handle
-  );
+  const { product } =
+    location?.state ||
+    categorizedProduct.find(
+      (p) => p.title.replace(/\s+/g, "-") === params.handle,
+    );
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});
   const [youMayLike, setYouMayLike] = useState(() => {
@@ -77,8 +79,18 @@ function Product_Description() {
     const filtered = categorizedProduct.filter(
       (item) => item.productId !== product.productId,
     );
-     console.log(filtered)
-    setYouMayLike(filtered);
+
+//  remove the products where the inventory quantity is 0
+    const removeSoldOut = filtered.filter((item) =>
+      item.type === "simple"
+        ? item.inventoryQuantity > 0
+        : item.variants?.some((variant) => variant.inventoryQuantity > 0),
+    );
+    // setYouMayLike(filtered);
+
+    setYouMayLike(removeSoldOut);
+
+
     localStorage.setItem("youMayLike", JSON.stringify(filtered));
   }, [categorizedProduct, product?.productId]);
   useEffect(() => {
@@ -115,9 +127,9 @@ function Product_Description() {
     }
     // setRecentlyViewed(categorizedProduct);
   }, [categorizedProduct, location.pathname]);
-// useEffect(() => {
-//   setRecentlyViewed(categorizedProduct);
-// }, [categorizedProduct, location.pathname]);
+  // useEffect(() => {
+  //   setRecentlyViewed(categorizedProduct);
+  // }, [categorizedProduct, location.pathname]);
 
   console.log("recently viewd", recentlyViewed);
 

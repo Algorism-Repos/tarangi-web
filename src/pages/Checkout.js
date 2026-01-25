@@ -247,6 +247,7 @@ function CheckoutPage() {
           country: formValues.country,
           zip: formValues.pincode,
           phone: formValues.mobile,
+
         },
         billing_address: {
           first_name: formValues.firstName,
@@ -347,17 +348,15 @@ function CheckoutPage() {
       to: reciverPhone,
       type: "template",
       template: {
-        name: "tarangi_order_confirmation",
-        language: { code: "en_US" },
+        name: "tarangi_jewels_india",
+        language: { code: "en" },
         components: [
           {
             type: "body",
             parameters: [
               { type: "text", text: name },
-              { type: "text", text: "purchase" },
               { type: "text", text: newOrderId },
-              { type: "text", text: "Product" },
-              { type: "text", text: "We will inform you shortly" },
+              ,
             ],
           },
         ],
