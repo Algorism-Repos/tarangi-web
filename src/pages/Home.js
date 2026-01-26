@@ -83,7 +83,7 @@ function Home() {
   function toggle(product) {
     setSelectedType(product);
   }
-  const showNavigation = FestiveFiltered.length > 1;
+  const showNavigation = FestiveFiltered?.length > 1;
   const collectionsList = async () => {
     setLoading(false);
     try {
@@ -97,7 +97,7 @@ function Home() {
   };
   useEffect(() => {
     if (!collection) return;
-    const bestSeller = collection.find((item) => item.handle === "best_seller");
+    const bestSeller = collection?.find((item) => item?.handle === "best_seller");
     if (!bestSeller) return;
     const fetchBestSellerProducts = async () => {
       try {
@@ -141,7 +141,7 @@ function Home() {
   useEffect(() => {
     async function loadSilver() {
       const data = await FetchSilverRate();
-      console.log(data);
+      // console.log(data);
 
       if (!data?.success) return;
 
@@ -179,7 +179,7 @@ function Home() {
       const response = await FetchAllProductFromShopify();
       const productEdges = response?.data ?? [];
       const formattedProducts = formatRawShopifyProducts(productEdges); // NO .map here
-      console.log(formattedProducts);
+      // console.log(formattedProducts);
     } catch (error) {
       console.log("error fetching collections", error);
     }
@@ -391,13 +391,13 @@ function Home() {
                 Our Curations
               </h1>
 
-              <div className="flex flex-col gap-y-[100px] sm:gap-y-20 sm:flex-row sm:flex-wrap items-center justify-center  gap-x-12 my-36 sm:mt-40 sm:mb-56 relative " data-aos="fade-up">
-                {collection &&
+              <div className="flex flex-col gap-y-[100px] sm:gap-y-20 sm:flex-row sm:flex-wrap items-center justify-center  gap-x-12 my-36 sm:mt-40 sm:mb-56 relative ">
+                {Array.isArray(collection) &&
                   collection
                     ?.filter(
                       (item) =>
-                        item.handle !== "best_seller" &&
-                        item.body_html !== "<p>tarangi-specials</p>",
+                        item?.handle !== "best_seller" &&
+                        item?.body_html !== "<p>tarangi-specials</p>",
                     )
                     .map((item) => (
                       <Link
@@ -523,8 +523,8 @@ function Home() {
                   }}
                   className="!overflow-hidden  !h-[515px]"
                 >
-                  {FestiveFiltered.length > 0 ? (
-                    FestiveFiltered.map((type, index) => (
+                  {FestiveFiltered?.length > 0 ? (
+                    FestiveFiltered?.map((type, index) => (
                       <SwiperSlide key={index}>
                         <Link
                           to={`/product_description/${type.title.replace(
@@ -659,8 +659,8 @@ function Home() {
             Tarangi Specials
           </h1>
 
-          <div className="hidden sm:flex flex-col sm:flex-row items-center sm:gap-x-12 gap-y-24 sm:flex-wrap justify-center mt-10 sm:mt-44" data-aos="fade-up">
-            {collection &&
+          <div className="hidden sm:flex flex-col sm:flex-row items-center sm:gap-x-12 gap-y-24 sm:flex-wrap justify-center mt-10 sm:mt-44">
+            {Array.isArray(collection) &&
               collection
                 ?.filter((item) => item.body_html === "<p>tarangi-specials</p>")
                 .map((item, index) => (
@@ -744,7 +744,7 @@ function Home() {
             }}
             className="!overflow-hidden !h-[620px]"
           >
-            {collection &&
+            {Array.isArray(collection) &&
               collection
                 ?.filter((item) => item.body_html === "<p>tarangi-specials</p>")
                 .map((item, index) => (

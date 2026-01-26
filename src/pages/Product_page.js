@@ -8,28 +8,40 @@ import floating_up_arrow from "../assets/floating_up_arrow.png";
 import { formatProduct } from "../utils/productFormatter";
 
 function Product_page() {
-  const { setProductListFromShopify, setCategorizedProduct } =
+   const location = useLocation();
+
+  const { setProductListFromShopify, setCategorizedProduct,collection } =
     useContext(AppContext);
-  const location = useLocation();
-  const { collectionId, category } = location.state || {};
-  const [productListData, setProductListData] = useState([]);
-  const searchParams = new URLSearchParams(location.search);
-  const searchInput = searchParams.get("search") || "";
-     console.log(searchInput)
-     console.log(searchParams)
+  
+  const { collectionId, category ,searchKeyword } = location.state || {};
+  const [baseProducts, setBaseProducts] = useState([]); // original API data
+const [productListData, setProductListData] = useState([]); // filtered
+
+const searchParams = new URLSearchParams(location.search);
+const searchQuery = searchParams.get("search") || "";
+const isSearch = searchQuery && searchQuery.trim() !== "";
+
+console.log(searchQuery)
+console.log(searchKeyword)
 
   useEffect(() => {
     if (collectionId) {
       productList(collectionId);
+    }else if(isSearch){
+      productList()
     }
   }, [collectionId]);
+
+
+
+
   const productList = async (collectionId) => {
     try {
       const response = await FetchAllProductByCollections(collectionId);
-      console.log(
-        "respons from productPage fetch all products/collection",
-        response
-      );
+      // console.log(
+      //   "respons from productPage fetch all products/collection",
+      //   response
+      // );
       const productEdges = response?.data?.collection?.products?.edges ?? [];
       const formattedProducts = productEdges.map((item) =>
         formatProduct(item.node)
@@ -40,6 +52,19 @@ function Product_page() {
       console.log(error);
     }
   };
+
+
+
+console.log(searchQuery)
+
+
+  useEffect(() => {
+  if (productListData.length) {
+    setCategorizedProduct(productListData); // update context
+    sessionStorage.setItem("allProducts", JSON.stringify(productListData));
+  }
+}, [productListData]);
+
   // product catogory
   const categorized = productListData.reduce((acc, product) => {
     const type = product.productType || "Uncategorized";
@@ -48,28 +73,13 @@ function Product_page() {
     return acc;
   }, {});
 
-  const productListBySearch = async (searchInput) => {
-     console.log(searchInput)
-    if (!searchInput) return;
-
-    try {
-      const response = await FetchProductBySearch(searchInput);
-      console.log("respons from FetchProductBySearch", response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    productListBySearch(searchInput);
-  }, [searchInput]);
-
   useEffect(() => {
     setCategorizedProduct(productListData);
   }, [productListData]);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+  console.log(categorized)
   return (
     <>
       <div className="bg-[#FFF5E8] py-[10px] sm:py-[50px] relative">
@@ -85,7 +95,10 @@ function Product_page() {
           <Product_Filter
             productCatergory={categorized}
             collectionName={category}
+            searchKeyword={searchKeyword}
+
           />
+          
         </div>
       </div>
     </>

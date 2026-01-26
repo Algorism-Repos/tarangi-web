@@ -36,9 +36,11 @@ function Product_Description() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [selectedVariants, setSelectedVariants] = useState({});
   const location = useLocation();
-  const { product } = location?.state || categorizedProduct.find(
-    p => p.title.replace(/\s+/g, "-") === params.handle
-  );
+  const { product } =
+    location?.state ||
+    categorizedProduct.find(
+      (p) => p.title.replace(/\s+/g, "-") === params.handle,
+    );
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});
   const [youMayLike, setYouMayLike] = useState(() => {
@@ -85,10 +87,21 @@ function Product_Description() {
   useEffect(() => {
     if (!categorizedProduct?.length || !product?.productId) return;
 
-    const filtered = categorizedProduct.filter((item) => item.productId !== product.productId);
-    console.log("filtered", filtered)
+    const filtered = categorizedProduct.filter(
+      (item) => item.productId !== product.productId,
+    );
 
-    setYouMayLike(filtered);
+//  remove the products where the inventory quantity is 0
+    const removeSoldOut = filtered.filter((item) =>
+      item.type === "simple"
+        ? item.inventoryQuantity > 0
+        : item.variants?.some((variant) => variant.inventoryQuantity > 0),
+    );
+    // setYouMayLike(filtered);
+
+    setYouMayLike(removeSoldOut);
+
+
     localStorage.setItem("youMayLike", JSON.stringify(filtered));
 
   }, [categorizedProduct, product?.productId]);

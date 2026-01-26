@@ -34,7 +34,7 @@ function Product_Listing({ productCatergory }) {
     colorAssets
   } = useContext(AppContext);
   const swiperRefs = useRef({});
-  console.log("SwiperRef ---", swiperRefs)
+  // console.log("SwiperRef ---", swiperRefs)
 
   useEffect(() => {
     if (productCatergory) {
@@ -56,11 +56,11 @@ function Product_Listing({ productCatergory }) {
     }));
     swiperRefs.current[productId]?.slideTo(index);
   };
-  console.log("Selected Variant List:", selectedVariants);
+  // console.log("Selected Variant List:", selectedVariants);
 
   useEffect(() => {
     const array = [2,3,1];
-    console.log("Trial Array --- ", array.some(i => i>5));
+    // console.log("Trial Array --- ", array.some(i => i>5));
   },[])
 
   //  Like button toggle
@@ -113,6 +113,9 @@ function Product_Listing({ productCatergory }) {
   const handleRestockClick = () => {
     setShowRestockModal(true);
   };
+
+
+
   if (loading) {
     return <LoadingScreen />;
   }
@@ -140,7 +143,7 @@ function Product_Listing({ productCatergory }) {
     );
   }
 
-   console.log(products)
+  //  console.log(products)
   return (
     <>
       <div className="w-full mx-auto h-fit grid grid-cols-2 xl:grid-cols-3 gap-[15px] sm:gap-y-10 sm:gap-x-[30px] px-1.5">

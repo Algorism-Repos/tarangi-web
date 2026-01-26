@@ -6,7 +6,7 @@ let url = "http://localhost:8080/api/shopify";
 export async function FetchAllProductFromShopify() {
   try {
     const response = await axios.post(`${url}/products`);
-    console.log(response.data);
+    // console.log(response.data);
     return response.data || [];
   } catch (error) {
     console.error("error fetching product:", error);
@@ -29,17 +29,17 @@ export async function FetchAllProductByCollections(collectionId) {
   }
 }
 
-export async function FetchProductBySearch(searchInput) {
-   console.log(searchInput)
-  try {
-    const response = await axios.post(`${url}/shopify-search`, {
-      input: searchInput,
-    });
-    return response.data || [];
-  } catch (error) {
-    console.error("Error fetching searched products:", error);
-  }
-}
+// export async function FetchProductBySearch(searchInput) {
+//    console.log(searchInput)
+//   try {
+//     const response = await axios.post(`${url}/shopify-search`, {
+//       input: searchInput,
+//     });
+//     return response.data || [];
+//   } catch (error) {
+//     console.error("Error fetching searched products:", error);
+//   }
+// }
 // check the login customer is exit in  shopify
 export async function checkCustomer(logincredential) {
   console.log(logincredential);
@@ -121,12 +121,19 @@ export async function FetchSilverRate() {
     console.error("Silver rate fetch failed:", error);
   }
 }
-export async function FetchImageByVarient(varient_id) {
-  try {
-    const response = await axios.post(`${url}/variant/${varient_id}/image`);
-    return response.data;
-  } catch (error) {
-    console.error("Variant image fetch failed:", error);
-    return null;
-  }
+// export async function FetchImageByVarient(varient_id) {
+//   try {
+//     const response = await axios.post(`${url}/variant/${varient_id}/image`);
+//     return response.data;
+//   } catch (error) {
+//     console.error("Variant image fetch failed:", error);
+//     return null;
+//   }
+// }
+// api_Handler.js
+export async function FetchProductBySearch(searchText) {
+  return axios.post(
+    "http://localhost:8080/api/shopify/shopify-search",
+    { input: searchText }
+  );
 }
