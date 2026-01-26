@@ -1,5 +1,5 @@
 import './App.css';
-import { Routes, Route, Navigate } from 'react-router'
+import { Routes, Route, Navigate } from 'react-router-dom'
 
 // Pages Import
 import Navbar from './components/Navbar.js';
@@ -18,38 +18,44 @@ import Blog from './pages/Blog.js';
 import Terms_Condition from './pages/Terms_Condition.js';
 import Privacy_Policy from './pages/Privacy_Policy.js';
 import Blog_Description from './pages/Blog_Description.js';
-
+import ScrollToTop from './components/ScrollToTop.js';
 
 import ThankYou from './pages/Thank_you.js';
 import Cart from './pages/Cart.js'
 
 
 function App() {
+
+  function ScrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   return (
     <>
+      <ScrollToTop />
       <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path='/home' element={<Home />} />
-          <Route path='/about' element={<About />} />
-          <Route path='/products/:handle' element={<Product_page />} />
-          <Route path='/product_description/:productName' element={<Product_Description />} />
-          <Route path='/favourites' element={<Favourites />} />
-          <Route path='/checkout' element={<Checkout />} />
-          <Route path='/thankyou' element={<ThankYou />} />
-          <Route path='/cart' element={<Cart />} />
-          <Route path='/profile' element={<Profile />} />
-          <Route path="*" element={<Error />} />
-          <Route path="/login" element={<Login />}/>
-          <Route path="/signup" element={<Signup/>}/>
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/terms" element={<Terms_Condition/>}/>
-          <Route path='/privacy' element={<Privacy_Policy />}/>
-          <Route path='/blogdescription' element={<Blog_Description />} />
-        </Routes>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path='/home' element={<Home />} />
+        <Route path='/about' element={<About />} />
+        <Route path='/products/:handle' element={<Product_page />} />
+        <Route path='/product_description/:productName' element={<Product_Description />} />
+        <Route path='/favourites' element={<Favourites />} />
+        <Route path='/checkout' element={<Checkout />} />
+        <Route path='/thankyou' element={<ThankYou />} />
+        <Route path='/cart' element={<Cart />} />
+        <Route path='/profile' element={<Profile />} />
+        <Route path="*" element={<Error />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/terms" element={<Terms_Condition />} />
+        <Route path='/privacy' element={<Privacy_Policy />} />
+        <Route path='/blogdescription' element={<Blog_Description />} />
+      </Routes>
       <Footer />
     </>
   );
-} 
+}
 
 export default App;

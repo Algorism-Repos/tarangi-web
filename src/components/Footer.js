@@ -32,6 +32,7 @@ function Footer() {
     // Aos Animation 
     useEffect(() => {
         AOS.init({ duration: 1000 });
+        window.scrollTo({top:0, behavior: "smooth"})
     }, []);
 
 
@@ -62,9 +63,7 @@ function Footer() {
     function ScrollToTop() {
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
-    useEffect(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    }, []);
+    // +
 
     return (
         <>
@@ -104,7 +103,7 @@ function Footer() {
                     <div className="flex flex-wrap gap-x-[60px] gap-y-10 ">
                         {/* Logo & Social */}
                         <div className="sm:m-auto xl:m-0">
-                            <img src={logo} alt="brand-logo" className="w-[231px] h-fit"/>
+                            <img src={logo} alt="brand-logo" className="w-[231px] h-[155px] "/>
 
                             <div className=" flex flex-row items-center gap-x-6 w-fit mx-auto ">
                                 <a href="https://www.instagram.com/tarangijewels/" target="_blank"><img src={instagram} className="w-[30px] h-[31px]" /></a>

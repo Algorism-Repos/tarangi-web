@@ -44,6 +44,7 @@ import {
 import { AppContext } from "../context/AppContext";
 import LoadingScreen from "../components/LoadingScreen";
 import { formatRawShopifyProducts } from "../utils/formatter";
+import ScrollToTop from "../components/ScrollToTop";
 
 function Home() {
   const containerRef = useRef(null);
@@ -171,6 +172,7 @@ function Home() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+  
 
   const productSearch = async () => {
     try {
@@ -205,7 +207,7 @@ function Home() {
         <p className="bg-[#CFA266] text-white font-medium text-center py-4 text-[18px]">
           999 Silver Price Today
         </p>
-
+        <ScrollToTop />
         <div className="flex justify-between p-3">
           <div className="flex items-center w-[161px] sm:w-[175px]">
             <p className="text-[#28040E] text-[15px] font-normal  sm:text-[16px]">
@@ -447,10 +449,7 @@ function Home() {
                         </h5>
                         <h4 className="font-poppins text-[20px] font-semibold leading-normal text-[#FCD99F]">
                           ₹
-                          {Number(type?.price) ||
-                            Number(type?.variants?.[0]?.price)?.toLocaleString(
-                              "en-IN",
-                            )}
+                          {type?.price ? Number(type?.price).toLocaleString("en-IN") : Number(type?.variants?.[0]?.price).toLocaleString("en-IN")}
                         </h4>
                       </div>
                     </Link>

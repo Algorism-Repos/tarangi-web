@@ -50,6 +50,7 @@ const Profile = () => {
           <h1 className="font-atteron text-[#5A0010] text-[40px] leading-[42px] text-center">
             Orders
           </h1>
+
         </div>
         <div>
           {uniqueOrders.length === 0 ? (
