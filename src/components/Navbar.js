@@ -293,14 +293,14 @@ const handleSearch = (e) => {
         {/* Right Side Icons */}
         <div className="flex flex-row items-center gap-x-[20px]">
           {/* Search Button */}
-          <div
+          {/* <div
             onClick={() => { setShowSearch(true) }}
             className={`cursor-pointer w-[42px] h-[42px] flex items-center justify-center rounded-[8px] transition search-icon
                       ${showSearch ? "bg-[#CFA266]" : "hover:bg-[#D6A76F4F]"}
         `}
           >
             <img src={Search_icon_white} className="w-[42px] h-[42px]" />
-          </div>
+          </div> */}
 
           <Link to="/favourites">
             <img
@@ -545,7 +545,7 @@ const handleSearch = (e) => {
             <div className="flex flex-col items-center mt-10 gap-y-12 ">
               {/* Search Input */}
               <div className="w-full px-0 py-2 mx-auto">
-                <div className="relative">
+                {/* <div className="relative">
                   <input
                     type="text"
                     placeholder="Search for Products"
@@ -557,7 +557,7 @@ const handleSearch = (e) => {
                     alt="Search"
                     className="absolute right-4 top-1/2 transform -translate-y-1/2 w-[42px] h-[42px]"
                   />
-                </div>
+                </div> */}
 
                 {/* Search Dropdown (mobile) */}
                 <div ref={mobileSearchRef} className="relative w-full">

@@ -8,7 +8,7 @@ import Product_Listing from "../pages/Product_Listing";
 import { AppContext } from "../context/AppContext";
 import { ref } from "yup";
 
-function Product_Filter({ productCatergory, collectionName,searchKeyword }) {
+function Product_Filter({ productCatergory, collectionName, searchKeyword }) {
   const [productCount, setProductCount] = useState(0);
   const [selectedOccasions, setSelectedOccasions] = useState([]);
 
@@ -20,9 +20,11 @@ function Product_Filter({ productCatergory, collectionName,searchKeyword }) {
   const [tab, setTab] = useState("productCatergory");
   const { productListFromShopify, filteredProducts, setFilteredProducts } =
     useContext(AppContext);
-const [matchedCategory, setMatchedCategory] = useState(null);
-  const SortOptions = ["Price Low to High", "Price High to Low" ];
+  const [matchedCategory, setMatchedCategory] = useState(null);
+  const SortOptions = ["Price Low to High", "Price High to Low"];
   const priceRanges = [
+    { label: "₹1,000 – ₹5,000" },
+    { label: "₹5,000 – ₹10,000" },
     { label: "₹10,000 – ₹15,000" },
     { label: "₹15,000 – ₹25,000" },
     { label: "₹25,000 – ₹35,000" },
@@ -41,15 +43,13 @@ const [matchedCategory, setMatchedCategory] = useState(null);
 
   // const categories = Object.keys(productCatergory);
   const categories = Array.from(
-  new Set(
-    productListFromShopify.map(
-      (p) => p.productType || "Uncategorized"
+    new Set(
+      productListFromShopify.map(
+        (p) => p.productType || "Uncategorized"
+      )
     )
-  )
-);
-
-
-
+  );
+  
   const visibleCategories = showMoreCategory
     ? categories
     : categories.slice(0, 5);
@@ -110,34 +110,34 @@ const [matchedCategory, setMatchedCategory] = useState(null);
   };
 
 
-const getPrice = (product) => {
-  if (product.type === "simple") {
-    return Number(product.price);
-  }
-  return Number(product.variants?.[0]?.price || 0);
-};
-const sortProducts = (products, sortBy) => {
-  const sorted = [...products];
+  const getPrice = (product) => {
+    if (product.type === "simple") {
+      return Number(product.price);
+    }
+    return Number(product.variants?.[0]?.price || 0);
+  };
+  const sortProducts = (products, sortBy) => {
+    const sorted = [...products];
 
-  if (sortBy === "Latest") {
-    sorted.sort(
-      (item, key) =>
-        new Date(key.createdAt).getTime() - new Date(item.createdAt).getTime()
-    );
-  }
-  else if (sortBy === "Price High to Low") {
-    sorted.sort((item, key) => getPrice(key) - getPrice(item));
-  }
+    if (sortBy === "Latest") {
+      sorted.sort(
+        (item, key) =>
+          new Date(key.createdAt).getTime() - new Date(item.createdAt).getTime()
+      );
+    }
+    else if (sortBy === "Price High to Low") {
+      sorted.sort((item, key) => getPrice(key) - getPrice(item));
+    }
 
-  else if (sortBy === "Price Low to High") {
-    sorted.sort((item, key) => getPrice(item) - getPrice(key));
-  }
+    else if (sortBy === "Price Low to High") {
+      sorted.sort((item, key) => getPrice(item) - getPrice(key));
+    }
 
-  else if (sortBy === "Featured") {
-  }
+    else if (sortBy === "Featured") {
+    }
 
-  return sorted;
-};
+    return sorted;
+  };
 
   const handleSortSelection = (option) => {
     setSortOption(option);
@@ -308,9 +308,8 @@ const sortProducts = (products, sortBy) => {
                     className="flex mt-4 cursor-pointer gap-x-[8px] items-center select-none"
                   >
                     <img
-                      className={`w-[26px] transform transition-transform duration-300 ${
-                        showMore ? "rotate-180" : ""
-                      }`}
+                      className={`w-[26px] transform transition-transform duration-300 ${showMore ? "rotate-180" : ""
+                        }`}
                       src={showMore ? down_arrow_red : down_arrow_red}
                       alt="toggle_arrow"
                     />
@@ -357,9 +356,8 @@ const sortProducts = (products, sortBy) => {
                     onClick={() => setShowMoreCategory(!showMoreCategory)}
                   >
                     <img
-                      className={`w-[26px] transform transition-transform duration-300 ${
-                        showMoreCategory ? "rotate-180" : ""
-                      }`}
+                      className={`w-[26px] transform transition-transform duration-300 ${showMoreCategory ? "rotate-180" : ""
+                        }`}
                       src={showMore ? down_arrow_red : down_arrow_red}
                       alt="toggle_arrow"
                     />
@@ -474,7 +472,7 @@ const sortProducts = (products, sortBy) => {
                   Sort Designs By
                 </h2>
 
-                {SortOptions.map((items) =>(
+                {SortOptions.map((items) => (
                   <button className={`text-[16px] font-medium text-left ${items === sortOption ? "text-primary" : ""} `} onClick={() => handleSortSelection(items)}>
                     {items}
                   </button>
@@ -518,11 +516,10 @@ const sortProducts = (products, sortBy) => {
                 {/* Tabs */}
                 <div className="flex flex-col items-start text-[14px] space-y-6 text-[#747474]">
                   <button
-                    className={`${
-                      tab === "productCatergory"
+                    className={`${tab === "productCatergory"
                         ? "text-primary font-medium"
                         : ""
-                    }`}
+                      }`}
                     onClick={() => setTab("productCatergory")}
                   >
                     Category
@@ -589,9 +586,8 @@ const sortProducts = (products, sortBy) => {
                         onClick={() => setShowMoreCategory(!showMoreCategory)}
                       >
                         <img
-                          className={`w-[26px] transform transition-transform duration-300 ${
-                            showMoreCategory ? "rotate-180" : ""
-                          }`}
+                          className={`w-[26px] transform transition-transform duration-300 ${showMoreCategory ? "rotate-180" : ""
+                            }`}
                           src={down_arrow_red}
                           alt="toggle_arrow"
                         />
@@ -637,9 +633,8 @@ const sortProducts = (products, sortBy) => {
                         onClick={() => setShowMorePrice(!showMorePrice)}
                       >
                         <img
-                          className={`w-[26px] transform transition-transform duration-300 ${
-                            showMorePrice ? "rotate-180" : ""
-                          }`}
+                          className={`w-[26px] transform transition-transform duration-300 ${showMorePrice ? "rotate-180" : ""
+                            }`}
                           src={down_arrow_red}
                           alt="toggle_arrow"
                         />

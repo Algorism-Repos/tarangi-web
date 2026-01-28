@@ -119,6 +119,7 @@ function Footer() {
                                 <Link to="/about" className="transition-transform duration-300 hover:scale-105" onClick={ScrollToTop}>About</Link>
                                 <Link to="/privacy" className="transition-transform duration-300 hover:scale-105" onClick={ScrollToTop}>Privacy Policy</Link>
                                 <Link to="/terms" className="transition-transform duration-300 hover:scale-105" onClick={ScrollToTop}>Terms & Conditions</Link>
+                                <Link to ="/jewellery_care" className="transition-transform duration-300 hover:scale-105" onClick={ScrollToTop}>Jewellery Care</Link>
                             </div>
 
                             {/* Product Catergory */}

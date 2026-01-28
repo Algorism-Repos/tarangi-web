@@ -147,18 +147,18 @@ function Pincode_Input() {
       <div
         className={
           pathname === "product_description" && pincode.length === 6
-            ? "block ml-2"
+            ? "block  sm:float-right "
             : "hidden"
         }
       >
-        <div className="flex items-center gap-x-[8px] mt-4 ml-2 ">
+        <div className="flex items-center gap-x-[8px] mt-4 sm:mt-12 sm:ml-0 ml-2 ">
           <img
             className="w-[18px] h-[22px]"
             src={shopping_bag}
             alt="Shopping bag icon"
           />
           {deliveryInfo ? (
-            <p className="text-[#484848] text-[15px] font-medium">
+            <p className="text-[#484848] text-[15px] font-medium text-wrap">
               Expected to deliver by{" "}
               <span className="font-bold"> {pincodeDetails.date} </span>
             </p>

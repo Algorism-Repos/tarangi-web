@@ -18,17 +18,15 @@ import Blog from './pages/Blog.js';
 import Terms_Condition from './pages/Terms_Condition.js';
 import Privacy_Policy from './pages/Privacy_Policy.js';
 import Blog_Description from './pages/Blog_Description.js';
-import ScrollToTop from './components/ScrollToTop.js';
 
+import ScrollToTop from './components/ScrollToTop.js';
+import Care from './pages/Care.js'
 import ThankYou from './pages/Thank_you.js';
 import Cart from './pages/Cart.js'
 
 
 function App() {
 
-  function ScrollToTop() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
 
   return (
     <>
@@ -52,6 +50,7 @@ function App() {
         <Route path="/terms" element={<Terms_Condition />} />
         <Route path='/privacy' element={<Privacy_Policy />} />
         <Route path='/blogdescription' element={<Blog_Description />} />
+        <Route path = "/jewellery_care" element={<Care />} />
       </Routes>
       <Footer />
     </>

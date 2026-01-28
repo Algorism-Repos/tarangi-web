@@ -17,8 +17,6 @@ import useCountUp from "../components/CountUp";
 function About() {
   const [animate, setAnimate] = useState(false);
 
-  const count = useCountUp(60, 2400);
-
   // Aos Animation 
   useEffect(() => {
     AOS.init({ duration: 1000 });
@@ -86,7 +84,7 @@ function About() {
                 </div>
             </div> */}
 
-      <div className="about-banner">
+      <div className="about-banner ">
         <div className="text-center">
           <h1 className="font-atteron text-[52px] sm:text-[100px] leading-normal font-normal text-white" data-aos="fade-up">
             Our Story
@@ -136,7 +134,7 @@ function About() {
       </div>
 
       {/* Second Section */}
-      <div className="bg-[#4B001A] py-20 sm:py-40 relative">
+      <div className="bg-[#4B001A] py-20 sm:py-40 relative !overflow-hidden">
         <h1 className="section-heading px-2 sm:px-0 !text-[46px] sm:!text-[64px] sm:max-w-[890px] mx-auto tracking-[1px] !text-white" data-aos="fade-up">
           Handcrafted jewelry by local artisans
         </h1>

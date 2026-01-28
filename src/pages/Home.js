@@ -172,7 +172,7 @@ function Home() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-  
+
 
   const productSearch = async () => {
     try {
@@ -186,7 +186,10 @@ function Home() {
   };
   useEffect(() => {
     productSearch();
+    console.log(collection);
   }, []);
+
+
   return (
     <>
       {/* Floating Whatsapp icon */}
@@ -275,10 +278,10 @@ function Home() {
       <Swiper
         spaceBetween={30}
         centeredSlides={true}
-        // autoplay={{
-        //   delay: 3500,
-        //   disableOnInteraction: false,
-        // }}
+        autoplay={{
+          delay: 4000,
+          disableOnInteraction: false,
+        }}
         // pagination={{
         //     clickable: true,
         // }}
@@ -399,6 +402,7 @@ function Home() {
                         item?.handle !== "best_seller" &&
                         item?.body_html !== "<p>tarangi-specials</p>",
                     )
+                    ?.reverse()
                     .map((item) => (
                       <Link
                         to={`/products/${item.handle}`}
@@ -496,7 +500,7 @@ function Home() {
 
                 <Swiper
                   modules={[Navigation, Autoplay]}
-                  autoplay={{ delay: 2000 }}
+                  // autoplay={{ delay: 2000 }}
                   navigation={{
                     prevEl: bestsellerprevRef.current,
                     nextEl: bestsellernextRef.current,
@@ -535,7 +539,7 @@ function Home() {
                         >
                           <div className="w-[360px] h-[450px] mx-auto flex flex-col items-center gap-y-2 transform transition-transform duration-300 ease-out hover:scale-105 cursor-pointer">
                             <img
-                              src={type?.variants?.[0].image}
+                              src={type?.variants === null ? type?.images[0] : type?.variants?.[0].image}
                               alt={type?.name}
                               className="px-2 sm:px-0 w-[360px] h-[460px]"
                             />
@@ -544,10 +548,8 @@ function Home() {
                             </h5>
                             <h4 className="font-poppins text-[16px] sm:text-[18px] md:text-[20px] font-semibold leading-normal text-[#FCD99F]">
                               ₹
-                              {Number(type?.price) ||
-                                Number(
-                                  type?.variants?.[0]?.price,
-                                )?.toLocaleString("en-IN")}
+                              {type?.price ? Number(type?.price).toLocaleString("en-IN") : Number(type?.variants?.[0]?.price).toLocaleString("en-IN")}
+
                             </h4>
                           </div>
                         </Link>

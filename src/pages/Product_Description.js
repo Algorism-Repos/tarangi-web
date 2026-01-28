@@ -2,17 +2,21 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
-import { Pagination } from "swiper/modules";
+import { Pagination, Navigation } from "swiper/modules";
 import { Link, useLocation, useParams } from "react-router";
 // images
 import grey_arrow from "../assets/Products/grey_arrow.png";
-import gold_ellipse from "../assets/Products/gold_ellipse.png";
-import silver_ellipse from "../assets/Products/silver_ellipse.png";
-import brown_ellipse from "../assets/Products/brown_ellipse.png";
+
 import { AppContext } from "../context/AppContext";
 import pure_silver from "../assets/pure_silver_icon.png";
 import shipping from "../assets/shipping_icon.png";
 import plating from "../assets/plating_icon.png";
+import arrow_left from "../assets/left_arrow_border.png"
+import arrow_right from "../assets/right_arrow_border.png"
+import closeIcon from "../assets/close_icon_sandal.png"
+import toggle_plus_icon from "../assets/toggle_plus.png"
+import toggle_minus_icon from "../assets/toggle_minus.png"
+
 
 // components
 import PincodeInput from "../components/Pincode_Input";
@@ -29,8 +33,16 @@ import { formatProduct } from "../utils/productFormatter";
 function Product_Description() {
   const swiperRef = useRef(null);
   const swiperRefs = useRef({});
+  const lightBoxSwiper = useRef(null);
+  const lightBox_prevRef = useRef(null);
+  const ligthBox_nextRef = useRef(null);
+  const lightBox_pagination = useRef(null);
+  const [lightBoxClose, setlightBoxClose] = useState(false);
+  const [lightBoxBottomClose, setlightBoxBottomClose] = useState(false);
   const { params } = useParams();
   const [showOutStockModal, setShowOutStockModal] = useState(false);
+  const [lightBox, setlightBox] = useState(false);
+  const [swiperActiveIndex, setswiperActiveIndex] = useState(0);
   const [showRestockSuccess, setShowRestockSuccess] = useState(false);
   const [showRestockModal, setShowRestockModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -43,6 +55,9 @@ function Product_Description() {
     );
   const [showWishlistPopup, setShowWishlistPopup] = useState(false);
   const [activeVariant, setactiveVariant] = useState({});
+  const [colorSelected, setColorSelected] = useState("");
+  const [jewelleryCareToggle, setjewelleryCareToggle] = useState(false);
+  const [shippingToggle, setshippingToggle] = useState(false);
   const [youMayLike, setYouMayLike] = useState(() => {
     const stored = localStorage.getItem("youMayLike");
     return stored ? JSON.parse(stored) : [];
@@ -53,13 +68,33 @@ function Product_Description() {
     pincodeDetails,
     addToRecentlyViewed,
     colorAssets,
-    setRecentlyViewed,
-    recentlyViewed,
   } = useContext(AppContext);
 
-  const [colorSelected, setColorSelected] = useState(
-    product?.variants?.[0]?.colorVariant || "",
-  );
+
+  console.log(product);
+
+  const jewelleryCare_content = [
+    "Avoid wearing your jewellery while sweating or exercising.",
+    "Do not apply perfume, lotion, or sunscreen after wearing your jewellery.",
+    "Remove jewellery before washing hands, bathing, or swimming.",
+    "Keep away from hard surfaces, friction, and direct heat.",
+    "Avoid wearing while sleeping.",
+    "Store pieces in a plastic zip pouch or airtight box when not in use — avoid velvet boxes.",
+    "Do not clean with harsh chemicals or silver polish liquids.",
+    "Gently wipe with a soft, dry cotton cloth after each use to restore its shine."
+  ];
+
+
+  // setting the color selected
+  useEffect(() => {
+    if (product?.variants?.length === 1) {
+      setColorSelected(product?.variants?.[0].colorVariant);
+    } else if (product?.variants?.length > 1) {
+      const firstProduct = product?.variants?.findIndex((i) => i.inventoryQuantity > 0);
+      setColorSelected(product?.variants?.[firstProduct].colorVariant);
+      swiperRef.current.slideTo(firstProduct);
+    }
+  }, [location.pathname])
 
   useEffect(() => {
     if (product?.variants?.length > 0) {
@@ -91,7 +126,7 @@ function Product_Description() {
       (item) => item.productId !== product.productId,
     );
 
-//  remove the products where the inventory quantity is 0
+    //  remove the products where the inventory quantity is 0
     const removeSoldOut = filtered.filter((item) =>
       item.type === "simple"
         ? item.inventoryQuantity > 0
@@ -105,6 +140,7 @@ function Product_Description() {
     localStorage.setItem("youMayLike", JSON.stringify(filtered));
 
   }, [categorizedProduct, product?.productId]);
+
   useEffect(() => {
     if (!product) return;
     addToRecentlyViewed(product);
@@ -167,6 +203,24 @@ function Product_Description() {
     setShowRestockModal(true);
   };
 
+  function openLightBox() {
+    setlightBox(true);
+    lightBoxSwiper.current?.slideTo(swiperActiveIndex);
+
+    if(product?.variants === null && product?.images.length === 1){
+      setlightBoxClose(true);
+    } else if(product?.variants?.length === 1) {
+      setlightBoxClose(true);
+    } else {
+      setlightBoxBottomClose(true);
+    }
+  }
+  function closeLightBox() {
+    setlightBox(false);
+    swiperRef.current?.slideTo(swiperActiveIndex);
+
+  }
+
 
   console.log(youMayLike);
 
@@ -198,25 +252,28 @@ function Product_Description() {
                   if (product?.variants != null) {
                     setColorSelected(product?.variants[id]?.colorVariant);
                   }
+                  setswiperActiveIndex(id);
                 }}
                 spaceBetween={30}
                 pagination={{ dynamicBullets: true }}
                 modules={[Pagination]}
               >
                 {product?.variants && product?.variants?.length > 0
-                  ? product?.variants.map((item) => (
+                  ? product?.variants?.map((item) => (
                     <SwiperSlide>
                       <img
-                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px]"
+                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px] cursor-zoom-in"
                         src={item?.image}
+                        onClick={openLightBox}
                       />
                     </SwiperSlide>
                   ))
-                  : product?.images.map((img) => (
+                  : product?.images?.map((img) => (
                     <SwiperSlide>
                       <img
-                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px]"
+                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px] cursor-zoom-in"
                         src={img}
+                        onClick={openLightBox}
                       />
                     </SwiperSlide>
                   ))}
@@ -224,7 +281,7 @@ function Product_Description() {
             </div>
 
             {/* Product Detail */}
-            <div className="min-w-full sm:min-w-[633px]">
+            <div className="min-w-full sm:min-w-[633px] max-w-[650px]">
               <div className="space-y-[5px]">
                 <h1 className="font-atteron text-primary text-[24px] sm:text-[32px] tracking-[1px] mt-3 sm:mt-0">{product?.title} </h1>
                 {/* Price Section */}
@@ -322,7 +379,7 @@ function Product_Description() {
                   <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
                 </div>
 
-                <div className=" max-w-full sm:max-w-[305px] flex flex-wrap justify-between  font-[poppins] text-center text-[#313131] mt-9 sm:my-5">
+                <div className=" max-w-full sm:max-w-[305px] flex flex-wrap justify-between  font-[poppins] text-center text-[#313131] mt-7 sm:my-5">
                   <div className="max-w-[75px]">
                     <img
                       className="w-[42px] h-[42px] mx-auto"
@@ -365,16 +422,9 @@ function Product_Description() {
                 </h3>
                 <PincodeInput />
               </div>
-              <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px] sm:hidden block" />
 
               {/*Colors Available Section - Above Mobile (large screens) */}
-              <div
-                className={
-                  product?.variants !== null ? "sm:block hidden" : "hidden"
-                }
-              >
-                <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
-
+              <div className={product?.variants !== null ? "sm:block mt-9 hidden" : "hidden"}>
                 {/* Color Icons */}
                 <h3 className="font-poppins font-medium text-[14px] leading-normal text-[#6F6F6F] mt-3">
                   Colors Available
@@ -398,16 +448,47 @@ function Product_Description() {
                   })}
                 </div>
 
-                <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
+                <hr className="border-[0.50px] bsorder-t-[#D9D9D9] w-full my-[16px]" />
               </div>
 
               {/* Buttons */}
-              <div className="max-w-[500px] mt-5">
-                <div className="flex flex-col w-full sm:flex-row items-center gap-[16px]">
+              <div className="mt-2">
+                <div className="max-w-[500px] flex flex-col w-full sm:flex-row items-center gap-[16px]">
                   <AddToCartButton productToCart={activeVariant} buttonDisabled={activeVariant?.inventoryQuantity === 0} />
                   <AddToWishlistButton productToFavorites={product} buttonDisabled={isAlreadyInWishlist} />
                 </div>
+                <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
               </div>
+
+              {/* Jewellery Care */}
+              <div className="mb-5">
+                <div className="flex flex-row items-center justify-between w-full cursor-pointer" onClick={() => setjewelleryCareToggle(!jewelleryCareToggle)}>
+                  <h3 className="font-poppins text-[18px] font-medium text-font-grey">Jewellery Care</h3>
+                  <img src={jewelleryCareToggle ? toggle_minus_icon : toggle_plus_icon} alt="toggle_icon" className="w-[30px] h-[30px] cursor-pointer" onClick={() => setjewelleryCareToggle(!jewelleryCareToggle)} />
+                </div>
+                <div className={jewelleryCareToggle ? "block" : "hidden"}>
+                  <h4 className="font-poppins text-[15px] text-black font-medium mt-3 ml-3">To keep your Tarangi pieces shining beautifully, follow these simple steps,</h4>
+
+                  <ul className="list-disc mt-5 ml-5 sm:ml-7 space-y-2">
+                    {jewelleryCare_content.map((i) => (
+                      <li className="font-poppins text-[14px] text-black font-normal">{i}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
+
+
+              {/* Shipping Details */}
+              <div className="mb-12 sm:mb-0">
+                <div className="flex flex-row items-center justify-between w-full cursor-pointer " onClick={() => setshippingToggle(!shippingToggle)}>
+                  <h3 className="font-poppins text-[18px] font-medium text-font-grey">Shipping & Delivery Details</h3>
+                  <img src={shippingToggle ? toggle_minus_icon : toggle_plus_icon} alt="plus-icon" className="w-[30px] h-[30px] cursor-pointer" onClick={() => setshippingToggle(!shippingToggle)} />
+                </div>
+                <h5 className={shippingToggle ? "font-poppins text-[14px] font-normal text-black mt-3 ml-2" : "hidden"}>At Tarangi, all orders are carefully packed and delivered within 5 to 15 business days.
+                  Delivery timelines may vary depending on the customer’s location and courier service availability.</h5>
+              </div>
+
             </div>
           </div>
         </div>
@@ -450,7 +531,7 @@ function Product_Description() {
                         return;
                       }
 
-                      if(isRestocking) {
+                      if (isRestocking) {
                         e.preventDefault();
                         handleRestockClick();
                         return;
@@ -580,6 +661,58 @@ function Product_Description() {
         open={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
       />
+
+      {/* Product Image Lightbox */}
+      <div className={lightBox === true ? "fixed inset-0 bg-black/60 flex items-center justify-center z-50 mx-auto" : "hidden"}>
+        <div>
+          <div className={`relative max-w-7xl w-[380px] sm:w-[600px] rounded-[24px] `}>
+            <img src={closeIcon} alt="close_icon" className={ lightBoxClose ? "w-[30px] h-[30px] sm:w-[50px] sm:h-[50px] cursor-pointer absolute top-[-60px] right-0" : "hidden"} onClick={closeLightBox} />
+            <Swiper
+              onSwiper={(swiper) => lightBoxSwiper.current = swiper}
+              onSlideChange={(swiper) => {
+                setswiperActiveIndex(swiper.activeIndex);
+              }}
+              modules={[Navigation, Pagination]}
+              navigation={{
+                prevEl: lightBox_prevRef.current,
+                nextEl: ligthBox_nextRef.current
+              }}
+              pagination={{ el: lightBox_pagination.current, dynamicBullets: true, clickable: true }}
+            >
+              {product?.variants !== null && product?.variants?.length > 0 ?
+                product?.variants?.map((item) => (
+                  <SwiperSlide>
+                    <img src={item.image} alt="lightbox_images" className=" sm:w-[600px] sm:h-[600px] w-[380px] h-[380px] object-contain rounded-[24px] cursor-zoom-out" onClick={closeLightBox} />
+                  </SwiperSlide>
+                )) : product?.images?.map((i) => (
+                  <div>
+                    <SwiperSlide>
+                      <img src={i} alt="lightbox_images" className="sm:w-[600px] sm:h-[600px] w-[380px] h-[380px] object-contain rounded-[24px] cursor-zoom-out" onClick={closeLightBox} />
+                    </SwiperSlide>
+                  </div>
+                ))
+              }
+            </Swiper>
+          </div>
+          <div className={lightBoxBottomClose ? "bg-light-sandal relative mx-auto w-[250px] sm:w-[400px] mt-5 py-4 sm:py-5 rounded-[24px] border-2 border-primary " : "hidden"}>
+            <div className="flex flex-row items-center justify-center flex-nowrap gap-x-8 sm:gap-x-12 mb-7">
+              <button type="button" ref={lightBox_prevRef}>
+                <img src={arrow_left} alt="left_arrow" className="w-[30px] h-[30px] sm:w-[60px] sm:h-[60px]" />
+              </button>
+              <img src={closeIcon} alt="close_icon" className="w-[30px] h-[30px] sm:w-[50px] sm:h-[50px] cursor-pointer" onClick={closeLightBox} />
+              <button type="button" ref={ligthBox_nextRef}>
+                <img src={arrow_right} alt="right_arrow" className="w-[30px] h-[30px] sm:w-[60px] sm:h-[60px]" />
+              </button>
+            </div>
+            <div className="sm:absolute sm:bottom-2 sm:left-[50%] sm:right-[50%]">
+              <div className="" ref={lightBox_pagination}></div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
     </>
   );
 }

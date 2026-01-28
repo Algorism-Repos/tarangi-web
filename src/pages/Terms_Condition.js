@@ -36,7 +36,7 @@ function Terms_Condition() {
         },
         {
             title: "7. Product Nature, Representation and Handcrafted Variations",
-            content: "Tarangi specialises in handcrafted silver jewellery. You acknowledge that handmade products inherently carry natural variations in colour tone, texture, finish, polish, weight, appearance and minute detailing. These variations reflect artisanal craftsmanship and are not considered defects. Photographs shown on the website are intended to accurately represent the products; however, slight differences may arise due to lighting conditions, camera settings, individual workmanship or screen display configurations. Tarangi does not warrant that product descriptions or photographs are free from minor discrepancies, although every effort is made to maintain accuracy and transparency. Custom-made products are crafted specifically based on customer instructions, and reasonable artistic deviations may occur."
+            content: "Tarangi specialises in handcrafted silver jewellery. You acknowledge that handmade products inherently carry natural variations in colour tone, texture, finish, polish, weight, appearance and minute detailing. These variations reflect artisanal craftsmanship and are not considered defects. Photographs shown on the website are intended to accurately represent the products; however, slight differences may arise due to lighting conditions, camera settings, individual workmanship or screen display configurations. Tarangi does not warrant that product descriptions or photographs are free from minor discrepancies, although every effort is made to maintain accuracy and transparency."
         },
         {
             title: "8. Pricing Policy and Silver Market Fluctuation",
