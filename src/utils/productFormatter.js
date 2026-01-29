@@ -10,6 +10,7 @@ export function formatProduct(productNode) {
     productType,
     tags,
     createdAt,
+     productDetails,
   } = productNode;
 
   // Extract all images
@@ -44,6 +45,8 @@ export function formatProduct(productNode) {
       image: featuredImage?.url || allImages[0],
       images: allImages,
       variants: null,
+        productDetails,
+
     };
   }
 
@@ -70,5 +73,7 @@ export function formatProduct(productNode) {
     featuredImage: featuredImage?.url,
     images: allImages,
     variants: formattedVariants,
+      productDetails,
+
   };
 }

@@ -38,10 +38,10 @@ console.log(searchKeyword)
   const productList = async (collectionId) => {
     try {
       const response = await FetchAllProductByCollections(collectionId);
-      // console.log(
-      //   "respons from productPage fetch all products/collection",
-      //   response
-      // );
+      console.log(
+        "respons from productPage fetch all products/collection",
+        response
+      );
       const productEdges = response?.data?.collection?.products?.edges ?? [];
       const formattedProducts = productEdges.map((item) =>
         formatProduct(item.node)

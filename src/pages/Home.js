@@ -102,6 +102,7 @@ function Home() {
     const fetchBestSellerProducts = async () => {
       try {
         const response = await FetchAllProductByCollections(bestSeller.id);
+         console.log(response)
         const productEdges = response?.data?.collection?.products?.edges ?? [];
         const formattedProducts = productEdges.map((item) =>
           formatProduct(item.node),
