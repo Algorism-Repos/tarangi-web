@@ -85,6 +85,7 @@ function Product_Description() {
   ];
 
 
+
   // setting the color selected
   useEffect(() => {
     if (product?.variants?.length === 1) {
@@ -207,9 +208,9 @@ function Product_Description() {
     setlightBox(true);
     lightBoxSwiper.current?.slideTo(swiperActiveIndex);
 
-    if(product?.variants === null && product?.images.length === 1){
+    if (product?.variants === null && product?.images.length === 1) {
       setlightBoxClose(true);
-    } else if(product?.variants?.length === 1) {
+    } else if (product?.variants?.length === 1) {
       setlightBoxClose(true);
     } else {
       setlightBoxBottomClose(true);
@@ -221,7 +222,8 @@ function Product_Description() {
 
   }
 
-
+  const test = product?.productDetails?.value.split("\n");
+  console.log("Test", test)
   console.log(youMayLike);
 
   return (
@@ -344,6 +346,11 @@ function Product_Description() {
                   {product?.description || "Description not available"}
                 </p>
 
+                <ul>
+                  {test.map((i) => (
+                    <li>{i}</li>
+                  ))}
+                </ul>
                 {/*Colors Available Section - Mobile  */}
                 <div
                   className={
@@ -666,7 +673,7 @@ function Product_Description() {
       <div className={lightBox === true ? "fixed inset-0 bg-black/60 flex items-center justify-center z-50 mx-auto" : "hidden"}>
         <div>
           <div className={`relative max-w-7xl w-[380px] sm:w-[600px] rounded-[24px] `}>
-            <img src={closeIcon} alt="close_icon" className={ lightBoxClose ? "w-[30px] h-[30px] sm:w-[50px] sm:h-[50px] cursor-pointer absolute top-[-60px] right-0" : "hidden"} onClick={closeLightBox} />
+            <img src={closeIcon} alt="close_icon" className={lightBoxClose ? "w-[30px] h-[30px] sm:w-[50px] sm:h-[50px] cursor-pointer absolute top-[-60px] right-0" : "hidden"} onClick={closeLightBox} />
             <Swiper
               onSwiper={(swiper) => lightBoxSwiper.current = swiper}
               onSlideChange={(swiper) => {
