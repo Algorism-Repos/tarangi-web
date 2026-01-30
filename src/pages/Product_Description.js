@@ -11,12 +11,11 @@ import { AppContext } from "../context/AppContext";
 import pure_silver from "../assets/pure_silver_icon.png";
 import shipping from "../assets/shipping_icon.png";
 import plating from "../assets/plating_icon.png";
-import arrow_left from "../assets/left_arrow_border.png"
-import arrow_right from "../assets/right_arrow_border.png"
-import closeIcon from "../assets/close_icon_sandal.png"
-import toggle_plus_icon from "../assets/toggle_plus.png"
-import toggle_minus_icon from "../assets/toggle_minus.png"
-
+import arrow_left from "../assets/left_arrow_border.png";
+import arrow_right from "../assets/right_arrow_border.png";
+import closeIcon from "../assets/close_icon_sandal.png";
+import toggle_plus_icon from "../assets/toggle_plus.png";
+import toggle_minus_icon from "../assets/toggle_minus.png";
 
 // components
 import PincodeInput from "../components/Pincode_Input";
@@ -70,7 +69,6 @@ function Product_Description() {
     colorAssets,
   } = useContext(AppContext);
 
-
   console.log(product);
 
   const jewelleryCare_content = [
@@ -81,20 +79,21 @@ function Product_Description() {
     "Avoid wearing while sleeping.",
     "Store pieces in a plastic zip pouch or airtight box when not in use — avoid velvet boxes.",
     "Do not clean with harsh chemicals or silver polish liquids.",
-    "Gently wipe with a soft, dry cotton cloth after each use to restore its shine."
+    "Gently wipe with a soft, dry cotton cloth after each use to restore its shine.",
   ];
-
 
   // setting the color selected
   useEffect(() => {
     if (product?.variants?.length === 1) {
       setColorSelected(product?.variants?.[0].colorVariant);
     } else if (product?.variants?.length > 1) {
-      const firstProduct = product?.variants?.findIndex((i) => i.inventoryQuantity > 0);
+      const firstProduct = product?.variants?.findIndex(
+        (i) => i.inventoryQuantity > 0,
+      );
       setColorSelected(product?.variants?.[firstProduct].colorVariant);
       swiperRef.current.slideTo(firstProduct);
     }
-  }, [location.pathname])
+  }, [location.pathname]);
 
   useEffect(() => {
     if (product?.variants?.length > 0) {
@@ -118,7 +117,6 @@ function Product_Description() {
     }
   }, [colorSelected, pincodeDetails]);
 
-
   useEffect(() => {
     if (!categorizedProduct?.length || !product?.productId) return;
 
@@ -136,17 +134,13 @@ function Product_Description() {
 
     setYouMayLike(removeSoldOut);
 
-
     localStorage.setItem("youMayLike", JSON.stringify(filtered));
-
   }, [categorizedProduct, product?.productId]);
 
   useEffect(() => {
     if (!product) return;
     addToRecentlyViewed(product);
   }, [product]);
-
-
 
   // click on  color toggle
   function handleColorChangeByButton(color) {
@@ -158,8 +152,11 @@ function Product_Description() {
     swiperRef.current.slideTo(idx);
   }
 
-  const isAlreadyInWishlist = wishlistItems.some((item) => item?.variantId === activeVariant?.variantId || item?.variants?.some((i) => i.variantId === activeVariant?.variantId));
-
+  const isAlreadyInWishlist = wishlistItems.some(
+    (item) =>
+      item?.variantId === activeVariant?.variantId ||
+      item?.variants?.some((i) => i.variantId === activeVariant?.variantId),
+  );
 
   useEffect(() => {
     if (categorizedProduct) {
@@ -182,11 +179,9 @@ function Product_Description() {
   // }, [categorizedProduct, location.pathname]);
 
   const changeVariant = (productId, index, item) => {
-
     setSelectedVariants((prev) => ({
       ...prev,
       [productId]: index,
-
     }));
     swiperRefs.current[productId]?.slideTo(index);
   };
@@ -207,9 +202,9 @@ function Product_Description() {
     setlightBox(true);
     lightBoxSwiper.current?.slideTo(swiperActiveIndex);
 
-    if(product?.variants === null && product?.images.length === 1){
+    if (product?.variants === null && product?.images.length === 1) {
       setlightBoxClose(true);
-    } else if(product?.variants?.length === 1) {
+    } else if (product?.variants?.length === 1) {
       setlightBoxClose(true);
     } else {
       setlightBoxBottomClose(true);
@@ -218,12 +213,11 @@ function Product_Description() {
   function closeLightBox() {
     setlightBox(false);
     swiperRef.current?.slideTo(swiperActiveIndex);
-
   }
 
-
   console.log(youMayLike);
-
+  const test = product?.productDetails?.value.split("\n");
+   console.log(test)
   return (
     <>
       {/* Backgound */}
@@ -260,30 +254,32 @@ function Product_Description() {
               >
                 {product?.variants && product?.variants?.length > 0
                   ? product?.variants?.map((item) => (
-                    <SwiperSlide>
-                      <img
-                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px] cursor-zoom-in"
-                        src={item?.image}
-                        onClick={openLightBox}
-                      />
-                    </SwiperSlide>
-                  ))
+                      <SwiperSlide>
+                        <img
+                          className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px] cursor-zoom-in"
+                          src={item?.image}
+                          onClick={openLightBox}
+                        />
+                      </SwiperSlide>
+                    ))
                   : product?.images?.map((img) => (
-                    <SwiperSlide>
-                      <img
-                        className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px] cursor-zoom-in"
-                        src={img}
-                        onClick={openLightBox}
-                      />
-                    </SwiperSlide>
-                  ))}
+                      <SwiperSlide>
+                        <img
+                          className="w-[361px] h-[373px] sm:w-[388px] sm:h-[399px] rounded-[24px] cursor-zoom-in"
+                          src={img}
+                          onClick={openLightBox}
+                        />
+                      </SwiperSlide>
+                    ))}
               </Swiper>
             </div>
 
             {/* Product Detail */}
             <div className="min-w-full sm:min-w-[633px] max-w-[650px]">
               <div className="space-y-[5px]">
-                <h1 className="font-atteron text-primary text-[24px] sm:text-[32px] tracking-[1px] mt-3 sm:mt-0">{product?.title} </h1>
+                <h1 className="font-atteron text-primary text-[24px] sm:text-[32px] tracking-[1px] mt-3 sm:mt-0">
+                  {product?.title}{" "}
+                </h1>
                 {/* Price Section */}
                 {/* Price alone */}
                 <h2
@@ -293,7 +289,9 @@ function Product_Description() {
                       : "hidden"
                   }
                 >
-                  ₹ {Number(activeVariant?.price).toLocaleString("en-IN") || product?.price}
+                  ₹{" "}
+                  {Number(activeVariant?.price).toLocaleString("en-IN") ||
+                    product?.price}
                 </h2>
 
                 {/* Price with Discounted Price */}
@@ -343,6 +341,13 @@ function Product_Description() {
                 <p className="text-[#484848] text-[16px] font-medium">
                   {product?.description || "Description not available"}
                 </p>
+                
+                  <ul className="list-disc">
+                    {test.map((i) => (
+                      <li>{i}</li>
+                    ))}
+                  </ul>
+       
 
                 {/*Colors Available Section - Mobile  */}
                 <div
@@ -424,7 +429,11 @@ function Product_Description() {
               </div>
 
               {/*Colors Available Section - Above Mobile (large screens) */}
-              <div className={product?.variants !== null ? "sm:block mt-9 hidden" : "hidden"}>
+              <div
+                className={
+                  product?.variants !== null ? "sm:block mt-9 hidden" : "hidden"
+                }
+              >
                 {/* Color Icons */}
                 <h3 className="font-poppins font-medium text-[14px] leading-normal text-[#6F6F6F] mt-3">
                   Colors Available
@@ -454,41 +463,82 @@ function Product_Description() {
               {/* Buttons */}
               <div className="mt-2">
                 <div className="max-w-[500px] flex flex-col w-full sm:flex-row items-center gap-[16px]">
-                  <AddToCartButton productToCart={activeVariant} buttonDisabled={activeVariant?.inventoryQuantity === 0} />
-                  <AddToWishlistButton productToFavorites={product} buttonDisabled={isAlreadyInWishlist} />
+                  <AddToCartButton
+                    productToCart={activeVariant}
+                    buttonDisabled={activeVariant?.inventoryQuantity === 0}
+                  />
+                  <AddToWishlistButton
+                    productToFavorites={product}
+                    buttonDisabled={isAlreadyInWishlist}
+                  />
                 </div>
                 <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
               </div>
 
               {/* Jewellery Care */}
               <div className="mb-5">
-                <div className="flex flex-row items-center justify-between w-full cursor-pointer" onClick={() => setjewelleryCareToggle(!jewelleryCareToggle)}>
-                  <h3 className="font-poppins text-[18px] font-medium text-font-grey">Jewellery Care</h3>
-                  <img src={jewelleryCareToggle ? toggle_minus_icon : toggle_plus_icon} alt="toggle_icon" className="w-[30px] h-[30px] cursor-pointer" onClick={() => setjewelleryCareToggle(!jewelleryCareToggle)} />
+                <div
+                  className="flex flex-row items-center justify-between w-full cursor-pointer"
+                  onClick={() => setjewelleryCareToggle(!jewelleryCareToggle)}
+                >
+                  <h3 className="font-poppins text-[18px] font-medium text-font-grey">
+                    Jewellery Care
+                  </h3>
+                  <img
+                    src={
+                      jewelleryCareToggle ? toggle_minus_icon : toggle_plus_icon
+                    }
+                    alt="toggle_icon"
+                    className="w-[30px] h-[30px] cursor-pointer"
+                    onClick={() => setjewelleryCareToggle(!jewelleryCareToggle)}
+                  />
                 </div>
                 <div className={jewelleryCareToggle ? "block" : "hidden"}>
-                  <h4 className="font-poppins text-[15px] text-black font-medium mt-3 ml-3">To keep your Tarangi pieces shining beautifully, follow these simple steps,</h4>
+                  <h4 className="font-poppins text-[15px] text-black font-medium mt-3 ml-3">
+                    To keep your Tarangi pieces shining beautifully, follow
+                    these simple steps,
+                  </h4>
 
                   <ul className="list-disc mt-5 ml-5 sm:ml-7 space-y-2">
                     {jewelleryCare_content.map((i) => (
-                      <li className="font-poppins text-[14px] text-black font-normal">{i}</li>
+                      <li className="font-poppins text-[14px] text-black font-normal">
+                        {i}
+                      </li>
                     ))}
                   </ul>
                 </div>
               </div>
               <hr className="border-[0.50px] border-t-[#D9D9D9] w-full my-[16px]" />
 
-
               {/* Shipping Details */}
               <div className="mb-12 sm:mb-0">
-                <div className="flex flex-row items-center justify-between w-full cursor-pointer " onClick={() => setshippingToggle(!shippingToggle)}>
-                  <h3 className="font-poppins text-[18px] font-medium text-font-grey">Shipping & Delivery Details</h3>
-                  <img src={shippingToggle ? toggle_minus_icon : toggle_plus_icon} alt="plus-icon" className="w-[30px] h-[30px] cursor-pointer" onClick={() => setshippingToggle(!shippingToggle)} />
+                <div
+                  className="flex flex-row items-center justify-between w-full cursor-pointer "
+                  onClick={() => setshippingToggle(!shippingToggle)}
+                >
+                  <h3 className="font-poppins text-[18px] font-medium text-font-grey">
+                    Shipping & Delivery Details
+                  </h3>
+                  <img
+                    src={shippingToggle ? toggle_minus_icon : toggle_plus_icon}
+                    alt="plus-icon"
+                    className="w-[30px] h-[30px] cursor-pointer"
+                    onClick={() => setshippingToggle(!shippingToggle)}
+                  />
                 </div>
-                <h5 className={shippingToggle ? "font-poppins text-[14px] font-normal text-black mt-3 ml-2" : "hidden"}>At Tarangi, all orders are carefully packed and delivered within 5 to 15 business days.
-                  Delivery timelines may vary depending on the customer’s location and courier service availability.</h5>
+                <h5
+                  className={
+                    shippingToggle
+                      ? "font-poppins text-[14px] font-normal text-black mt-3 ml-2"
+                      : "hidden"
+                  }
+                >
+                  At Tarangi, all orders are carefully packed and delivered
+                  within 5 to 15 business days. Delivery timelines may vary
+                  depending on the customer’s location and courier service
+                  availability.
+                </h5>
               </div>
-
             </div>
           </div>
         </div>
@@ -502,8 +552,10 @@ function Product_Description() {
 
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-x-[20px] gap-y-6 mt-[25px] sm:gap-x-[20px]">
               {youMayLike?.slice(0, 4).map((item) => {
-
-                const isOutOfStock = item?.variants?.every(item => item.inventoryQuantity === 0) || item?.inventoryQuantity === 0;
+                const isOutOfStock =
+                  item?.variants?.every(
+                    (item) => item.inventoryQuantity === 0,
+                  ) || item?.inventoryQuantity === 0;
                 const isRestocking = false;
 
                 const selectedIndex = selectedVariants[item?.productId] ?? 0;
@@ -517,7 +569,9 @@ function Product_Description() {
                         ? `/product_description/${item?.title.replace(/\s+/g, "-")}`
                         : "#"
                     }
-                    state={!isOutOfStock && !isRestocking ? { product: item, } : {}}
+                    state={
+                      !isOutOfStock && !isRestocking ? { product: item } : {}
+                    }
                     // onClick={isOutOfStock
                     //   ? handleOutOfStockClick
                     //   : isRestocking
@@ -541,31 +595,39 @@ function Product_Description() {
                     }}
                   >
                     <Swiper
-                      onSwiper={(swiper) => (swiperRefs.current[item.productId] = swiper)}
-
+                      onSwiper={(swiper) =>
+                        (swiperRefs.current[item.productId] = swiper)
+                      }
                       onSlideChange={(swiper) => {
                         setSelectedVariants((prev) => ({
-                          ...prev, [item.productId]: swiper.activeIndex,
-                        }))
+                          ...prev,
+                          [item.productId]: swiper.activeIndex,
+                        }));
                       }}
                     >
-                      {item?.variants !== null && item.variants.length > 0 ?
-                        item?.variants?.map((i) => {
-                          return (
-                            <SwiperSlide>
-                              <img className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-60" : ""} ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} src={i.image} alt={item?.title} />
-                            </SwiperSlide>
-                          )
-                        })
-                        :
-                        item.images.map((i) => {
-                          return (
-                            <SwiperSlide>
-                              <img className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-60" : ""} ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`} src={i} alt={item?.title} />
-                            </SwiperSlide>
-                          )
-                        })
-                      }
+                      {item?.variants !== null && item.variants.length > 0
+                        ? item?.variants?.map((i) => {
+                            return (
+                              <SwiperSlide>
+                                <img
+                                  className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-60" : ""} ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
+                                  src={i.image}
+                                  alt={item?.title}
+                                />
+                              </SwiperSlide>
+                            );
+                          })
+                        : item.images.map((i) => {
+                            return (
+                              <SwiperSlide>
+                                <img
+                                  className={`w-[173px] h-[174px] sm:w-[304px] sm:h-[307px] rounded-[16px] object-cover ${isOutOfStock ? "opacity-60" : ""} ${isRestocking ? "backdrop-blur-xs bg-black/50" : ""}`}
+                                  src={i}
+                                  alt={item?.title}
+                                />
+                              </SwiperSlide>
+                            );
+                          })}
                     </Swiper>
 
                     {/* SOLD OUT LABEL */}
@@ -591,49 +653,108 @@ function Product_Description() {
 
                       <div className="mt-1.3 flex flex-col sm:flex-row gap-y-2 items-start sm:items-center sm:justify-between w-full">
                         {/* Pricing without discount */}
-                        <h3 className={item?.compareAtPrice === null || item?.variants?.[selectedIndex]?.compareAtPrice === null ? "font-poppins text-[12px] sm:text-[16px] font-normal leading-normal" : "hidden"}>₹ {item.variants !== null && item.variants.length > 0 ? parseInt(item?.variants?.[selectedIndex]?.price).toLocaleString("en-IN") : parseInt(item?.price)?.toLocaleString("en-IN")}</h3>
+                        <h3
+                          className={
+                            item?.compareAtPrice === null ||
+                            item?.variants?.[selectedIndex]?.compareAtPrice ===
+                              null
+                              ? "font-poppins text-[12px] sm:text-[16px] font-normal leading-normal"
+                              : "hidden"
+                          }
+                        >
+                          ₹{" "}
+                          {item.variants !== null && item.variants.length > 0
+                            ? parseInt(
+                                item?.variants?.[selectedIndex]?.price,
+                              ).toLocaleString("en-IN")
+                            : parseInt(item?.price)?.toLocaleString("en-IN")}
+                        </h3>
 
                         {/* Pricing with discount */}
-                        {item?.variants?.length > 0 && item?.variants?.[selectedIndex]?.compareAtPrice !== null ?
-                          (
-                            <div className="flex flex-row items-center flex-nowrap gap-x-2">
-                              <h3 className="font-poppins text-[10px] sm:text-[14px]  leading-normal text-red-500 line-through font-semibold ">₹ {parseInt(item?.variants[selectedIndex]?.compareAtPrice).toLocaleString("en-IN")}</h3>
-                              <h3 className="font-poppins text-[12px] sm:text-[16px] font-normal leading-normal">₹ {parseInt(item?.variants[selectedIndex]?.price).toLocaleString("en-IN")}</h3>
-                            </div>
-                          )
-
-                          : (
-                            <div className={!item?.compareAtPrice || item?.compareAtPrice === null ? "hidden" : "flex flex-row items-center flex-nowrap gap-x-2"}>
-                              <h3 className="font-poppins text-[10px] sm:text-[14px]  leading-normal text-red-500 line-through font-semibold ">₹ {parseInt(item?.compareAtPrice).toLocaleString("en-IN")}</h3>
-                              <h3 className="font-poppins text-[12px] sm:text-[16px] font-normal leading-normal"> ₹{parseInt(item?.price).toLocaleString("en-IN")}</h3>
-                            </div>
-                          )
-                        }
+                        {item?.variants?.length > 0 &&
+                        item?.variants?.[selectedIndex]?.compareAtPrice !==
+                          null ? (
+                          <div className="flex flex-row items-center flex-nowrap gap-x-2">
+                            <h3 className="font-poppins text-[10px] sm:text-[14px]  leading-normal text-red-500 line-through font-semibold ">
+                              ₹{" "}
+                              {parseInt(
+                                item?.variants[selectedIndex]?.compareAtPrice,
+                              ).toLocaleString("en-IN")}
+                            </h3>
+                            <h3 className="font-poppins text-[12px] sm:text-[16px] font-normal leading-normal">
+                              ₹{" "}
+                              {parseInt(
+                                item?.variants[selectedIndex]?.price,
+                              ).toLocaleString("en-IN")}
+                            </h3>
+                          </div>
+                        ) : (
+                          <div
+                            className={
+                              !item?.compareAtPrice ||
+                              item?.compareAtPrice === null
+                                ? "hidden"
+                                : "flex flex-row items-center flex-nowrap gap-x-2"
+                            }
+                          >
+                            <h3 className="font-poppins text-[10px] sm:text-[14px]  leading-normal text-red-500 line-through font-semibold ">
+                              ₹{" "}
+                              {parseInt(item?.compareAtPrice).toLocaleString(
+                                "en-IN",
+                              )}
+                            </h3>
+                            <h3 className="font-poppins text-[12px] sm:text-[16px] font-normal leading-normal">
+                              {" "}
+                              ₹{parseInt(item?.price).toLocaleString("en-IN")}
+                            </h3>
+                          </div>
+                        )}
 
                         {/*  COLOR TOGGLE BUTTONS */}
-                        <div className={item?.variants?.some(v => colorAssets?.[v.colorVariant]) ? "flex flex-row items-center gap-x-2" : "hidden"}>
-                          {item?.variants !== null && item?.variants.length > 0 ?
-                            item.variants.map((variants, index) => {
-                              return (
-                                <>
-                                  <button type="button" disabled={variants?.inventoryQuantity === 0}>
-                                    <img key={variants?.variantId || index} src={colorAssets[variants?.colorVariant]} alt="color-assets" className={`w-[24px] h-[24px] cursor-pointer ${variants?.inventoryQuantity === 0 ? "opacity-[30%]" : ""} ${variants?.inventoryQuantity !== 0 && item?.variants?.length > 1 && selectedIndex === index ? "border-2 border-primary rounded-[24px] px-[0.2px]" : "border-none"}`}
-                                      onClick={(e) => { e.preventDefault(); changeVariant(item?.productId, index) }}
-                                    />
-                                  </button>
-                                </>
-                              )
-                            }) : ""
+                        <div
+                          className={
+                            item?.variants?.some(
+                              (v) => colorAssets?.[v.colorVariant],
+                            )
+                              ? "flex flex-row items-center gap-x-2"
+                              : "hidden"
                           }
+                        >
+                          {item?.variants !== null && item?.variants.length > 0
+                            ? item.variants.map((variants, index) => {
+                                return (
+                                  <>
+                                    <button
+                                      type="button"
+                                      disabled={
+                                        variants?.inventoryQuantity === 0
+                                      }
+                                    >
+                                      <img
+                                        key={variants?.variantId || index}
+                                        src={
+                                          colorAssets[variants?.colorVariant]
+                                        }
+                                        alt="color-assets"
+                                        className={`w-[24px] h-[24px] cursor-pointer ${variants?.inventoryQuantity === 0 ? "opacity-[30%]" : ""} ${variants?.inventoryQuantity !== 0 && item?.variants?.length > 1 && selectedIndex === index ? "border-2 border-primary rounded-[24px] px-[0.2px]" : "border-none"}`}
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          changeVariant(item?.productId, index);
+                                        }}
+                                      />
+                                    </button>
+                                  </>
+                                );
+                              })
+                            : ""}
                         </div>
                       </div>
                     </div>
                   </Link>
-                )
+                );
               })}
             </div>
           </div>
-
 
           <Recently_Viewed />
         </div>
@@ -663,45 +784,95 @@ function Product_Description() {
       />
 
       {/* Product Image Lightbox */}
-      <div className={lightBox === true ? "fixed inset-0 bg-black/60 flex items-center justify-center z-50 mx-auto" : "hidden"}>
+      <div
+        className={
+          lightBox === true
+            ? "fixed inset-0 bg-black/60 flex items-center justify-center z-50 mx-auto"
+            : "hidden"
+        }
+      >
         <div>
-          <div className={`relative max-w-7xl w-[380px] sm:w-[600px] rounded-[24px] `}>
-            <img src={closeIcon} alt="close_icon" className={ lightBoxClose ? "w-[30px] h-[30px] sm:w-[50px] sm:h-[50px] cursor-pointer absolute top-[-60px] right-0" : "hidden"} onClick={closeLightBox} />
+          <div
+            className={`relative max-w-7xl w-[380px] sm:w-[600px] rounded-[24px] `}
+          >
+            <img
+              src={closeIcon}
+              alt="close_icon"
+              className={
+                lightBoxClose
+                  ? "w-[30px] h-[30px] sm:w-[50px] sm:h-[50px] cursor-pointer absolute top-[-60px] right-0"
+                  : "hidden"
+              }
+              onClick={closeLightBox}
+            />
             <Swiper
-              onSwiper={(swiper) => lightBoxSwiper.current = swiper}
+              onSwiper={(swiper) => (lightBoxSwiper.current = swiper)}
               onSlideChange={(swiper) => {
                 setswiperActiveIndex(swiper.activeIndex);
               }}
               modules={[Navigation, Pagination]}
               navigation={{
                 prevEl: lightBox_prevRef.current,
-                nextEl: ligthBox_nextRef.current
+                nextEl: ligthBox_nextRef.current,
               }}
-              pagination={{ el: lightBox_pagination.current, dynamicBullets: true, clickable: true }}
+              pagination={{
+                el: lightBox_pagination.current,
+                dynamicBullets: true,
+                clickable: true,
+              }}
             >
-              {product?.variants !== null && product?.variants?.length > 0 ?
-                product?.variants?.map((item) => (
-                  <SwiperSlide>
-                    <img src={item.image} alt="lightbox_images" className=" sm:w-[600px] sm:h-[600px] w-[380px] h-[380px] object-contain rounded-[24px] cursor-zoom-out" onClick={closeLightBox} />
-                  </SwiperSlide>
-                )) : product?.images?.map((i) => (
-                  <div>
+              {product?.variants !== null && product?.variants?.length > 0
+                ? product?.variants?.map((item) => (
                     <SwiperSlide>
-                      <img src={i} alt="lightbox_images" className="sm:w-[600px] sm:h-[600px] w-[380px] h-[380px] object-contain rounded-[24px] cursor-zoom-out" onClick={closeLightBox} />
+                      <img
+                        src={item.image}
+                        alt="lightbox_images"
+                        className=" sm:w-[600px] sm:h-[600px] w-[380px] h-[380px] object-contain rounded-[24px] cursor-zoom-out"
+                        onClick={closeLightBox}
+                      />
                     </SwiperSlide>
-                  </div>
-                ))
-              }
+                  ))
+                : product?.images?.map((i) => (
+                    <div>
+                      <SwiperSlide>
+                        <img
+                          src={i}
+                          alt="lightbox_images"
+                          className="sm:w-[600px] sm:h-[600px] w-[380px] h-[380px] object-contain rounded-[24px] cursor-zoom-out"
+                          onClick={closeLightBox}
+                        />
+                      </SwiperSlide>
+                    </div>
+                  ))}
             </Swiper>
           </div>
-          <div className={lightBoxBottomClose ? "bg-light-sandal relative mx-auto w-[250px] sm:w-[400px] mt-5 py-4 sm:py-5 rounded-[24px] border-2 border-primary " : "hidden"}>
+          <div
+            className={
+              lightBoxBottomClose
+                ? "bg-light-sandal relative mx-auto w-[250px] sm:w-[400px] mt-5 py-4 sm:py-5 rounded-[24px] border-2 border-primary "
+                : "hidden"
+            }
+          >
             <div className="flex flex-row items-center justify-center flex-nowrap gap-x-8 sm:gap-x-12 mb-7">
               <button type="button" ref={lightBox_prevRef}>
-                <img src={arrow_left} alt="left_arrow" className="w-[30px] h-[30px] sm:w-[60px] sm:h-[60px]" />
+                <img
+                  src={arrow_left}
+                  alt="left_arrow"
+                  className="w-[30px] h-[30px] sm:w-[60px] sm:h-[60px]"
+                />
               </button>
-              <img src={closeIcon} alt="close_icon" className="w-[30px] h-[30px] sm:w-[50px] sm:h-[50px] cursor-pointer" onClick={closeLightBox} />
+              <img
+                src={closeIcon}
+                alt="close_icon"
+                className="w-[30px] h-[30px] sm:w-[50px] sm:h-[50px] cursor-pointer"
+                onClick={closeLightBox}
+              />
               <button type="button" ref={ligthBox_nextRef}>
-                <img src={arrow_right} alt="right_arrow" className="w-[30px] h-[30px] sm:w-[60px] sm:h-[60px]" />
+                <img
+                  src={arrow_right}
+                  alt="right_arrow"
+                  className="w-[30px] h-[30px] sm:w-[60px] sm:h-[60px]"
+                />
               </button>
             </div>
             <div className="sm:absolute sm:bottom-2 sm:left-[50%] sm:right-[50%]">
@@ -709,10 +880,7 @@ function Product_Description() {
             </div>
           </div>
         </div>
-
-
       </div>
-
     </>
   );
 }

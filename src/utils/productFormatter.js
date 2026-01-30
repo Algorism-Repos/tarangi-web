@@ -73,7 +73,7 @@ export function formatProduct(productNode) {
     featuredImage: featuredImage?.url,
     images: allImages,
     variants: formattedVariants,
-      productDetails,
+    productDetails,
 
   };
 }
